@@ -22,10 +22,16 @@ dependencies {
     compile name: 'javolution-5.5.1'
     compile name: 'javassist'
     compile name: 'HikariCP-java6-2.2.5'
+    runtime name: 'mysql-connector-java'
 }
 
 jar {
     manifest {
         attributes 'Implementation-Title': 'Game server'
     }
+}
+
+task game(type:JavaExec, dependsOn:[classes]) {
+    main = 'com.a4server.gameserver.GameServer'
+    classpath = sourceSets.main.runtimeClasspath
 }

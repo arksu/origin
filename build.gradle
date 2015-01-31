@@ -1,9 +1,5 @@
 // by arksu 31.01.2015
 
-dependencies {
-//    compile project(':server')
-}
-
 subprojects {
     apply plugin: 'java'
     sourceCompatibility = 1.7
@@ -27,3 +23,14 @@ idea {
     }
 }
 
+task "idea-config" (type: Sync) {
+    String src = "$rootDir/util/runConfigurations"
+    String dst = "$rootDir/.idea/runConfigurations"
+
+    from src
+    into dst
+
+    doLast {
+        println "Idea run configurations copied to '$dst'"
+    }
+}
