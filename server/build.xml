@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="a4server" default="build">
+    <description>
+        This script will build the Origin Server (a4).
+    </description>
+
+    <property name="build" location="build"/>
+    <property name="build.bin" location="${build}/bin"/>
+    <property name="build.dist" location="${build}/dist"/>
+    <property name="build.dist.doc" location="${build.dist}/doc"/>
+    <property name="build.dist.game" location="${build.dist}/game"/>
+    <property name="build.dist.login" location="${build.dist}/login"/>
+    <property name="build.dist.tools" location="${build.dist}/tools"/>
+
+    <property name="dist" location="dist"/>
+    <property name="db_name" value="a4ls"/>
+    <property name="script_start_login" location="${build.dist.login}/startLoginServer.sh"/>
+
+    <property name="libs" location="dist/libs"/>
+    <property name="src" location="src"/>
+
+    <path id="classpath">
+        <fileset dir="${libs}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="checkRequirements" description="Check Requirements.">
+        <fail message="Ant 1.8.2 is required. But your version is ${ant.version} and if you are using Eclipse probably is outdated.">
+            <condition>
+                <not>
+                    <antversion atleast="1.8.2"/>
+                </not>
+            </condition>
+        </fail>
+        <available classname="java.lang.AutoCloseable" property="JDK7.present"/>
+        <fail unless="JDK7.present"
+              message="Java 1.7 is required. But your version is Java ${ant.java.version} and probably JDK is not installed."/>
+    </target>
+
+    <target name="init" depends="checkRequirements"
+            description="Create the output directories.">
+        <delete dir="${build.bin}" quiet="true"/>
+        <mkdir dir="${build.bin}"/>
+    </target>
+
+    <target name="dist" depends="init" description="Export the files to the output directory.">
+        <sync todir="${build.dist}" includeemptydirs="true">
+            <fileset dir="dist"/>
+        </sync>
+        <!--<concat destfile="${build.dist.doc}/L2J_Server_CHANGELOG.txt">${l2j.changelog}</concat>-->
+        <concat destfile="${build.dist.game}/config/a4-version.properties">version=${a4.revision}${line.separator}builddate=${build.tstamp}</concat>
+    </target>
+
+    <target name="compile" depends="dist" description="Compile the source.">
+        <javac srcdir="${src}" classpathref="classpath" destdir="${build.bin}" compiler="javac1.7" debug="true"
+               debuglevel="lines,vars,source" includeantruntime="false" source="1.7" target="1.7" encoding="UTF-8">
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile" description="Create the jar files.">
+        <jar destfile="${build.dist.login}/login.jar" level="9">
+            <fileset dir="${build.bin}">
+                <exclude name="**/dbinstaller/**"/>
+                <exclude name="**/gameserver/**"/>
+            </fileset>
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <!--<attribute name="Built-Date" value="${build.tstamp}"/>-->
+                <attribute name="Implementation-URL" value="http://www.origin-world.com/"/>
+                <!--<attribute name="Implementation-Version" value="${a4.revision}"/>-->
+                <attribute name="Main-Class" value="com.a4server.loginserver.LoginServer"/>
+            </manifest>
+        </jar>
+        <chmod file="${script_start_login}" perm="a+x" />
+
+        <jar destfile="${build.dist.game}/server.jar" level="9">
+            <fileset dir="${build.bin}">
+                <exclude name="**/dbinstaller/**"/>
+                <exclude name="**/loginserver/**"/>
+            </fileset>
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <!--<attribute name="Built-Date" value="${build.tstamp}"/>-->
+                <attribute name="Implementation-URL" value="http://www.origin-world.com/"/>
+                <!--<attribute name="Implementation-Version" value="${a4.revision}"/>-->
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="build" depends="jar" description="Create the Zip file.">
+        <zip destfile="${build}/a4Server.zip" basedir="${build.dist}" level="9"/>
+    </target>
+
+
+</project>
