@@ -18,11 +18,71 @@ dependencies {
     runtime name: 'mysql-connector-java'
 }
 
-jar {
+task jarGame(type: Jar) {
+    baseName = "gameserver"
+    from(sourceSets.main.output) {
+        include '**'
+        exclude 'com/a4server/loginserver/**'
+    }
+
     manifest {
-        attributes 'Implementation-Title': 'Game server'
+        attributes 'Implementation-Title': 'Game server',
+                'Main-Class': 'com.a4server.gameserver.GameServer'
     }
 }
+
+task jarLogin(type: Jar) {
+    baseName = "loginserver"
+    from(sourceSets.main.output) {
+        include '**'
+        exclude 'com/a4server/gameserver/**'
+    }
+
+    manifest {
+        attributes 'Implementation-Title': 'Login server',
+                'Main-Class': 'com.a4server.loginserver.LoginServer'
+    }
+}
+
+build.doLast {
+    tasks.afterBuild.execute()
+    tasks.jarGame.execute()
+    tasks.jarLogin.execute()
+    tasks.makeDist.execute()
+}
+
+task afterBuild(dependsOn: build) {
+    def distDir = new File('build/dist')
+    distDir.mkdirs()
+}
+
+task makeDist(type: Sync) {
+    dependsOn afterBuild
+
+    from 'dist/'
+    into 'build/dist'
+
+    into ('game') {
+        from ('build/libs/') {
+            include 'gameserver.jar'
+            
+        }
+    }
+    into ('login') {
+        from ('build/libs/') {
+            include 'loginserver.jar'
+
+        }
+    }
+
+    into ('game/config') {
+        from 'config'
+    }
+    into ('login/config') {
+        from 'config'
+    }
+}
+
 
 task "run-gameserver" (type:JavaExec, dependsOn:[classes]) {
     main = 'com.a4server.gameserver.GameServer'
