@@ -1,0 +1,69 @@
+apply plugin: 'java'
+
+
+
+repositories {
+    flatDir {
+        dirs 'lib'
+    }
+}
+
+dependencies {
+    compile name: 'gdx'
+    compile name: 'netty'
+    compile name: 'gdx-backend-lwjgl'
+    compile name: 'slf4j-api-1.7.6'
+    compile name: 'slf4j-simple-1.7.6'
+    compile name: 'log4j-1.2.15'
+    runtime name: 'gdx-backend-lwjgl-natives'
+    runtime name: 'gdx-natives'
+ 
+}
+
+jar {
+    manifest {
+        def manifestClasspath = configurations.compile.collect { it.getName() }.join(' ')+' '+configurations.runtime.collect { it.getName() }.join(' ') 
+        attributes (
+            'Implementation-Title': 'Game client',
+            'Main-Class'          : 'com.a2client.Main',
+            'Class-Path'          : manifestClasspath
+        )
+    }
+
+    from ("${projectDir}/etc") {
+        include('*')
+    }
+    from ("${projectDir}/") {
+        include('client-log4j.xml')
+    }
+}
+
+build.doLast {
+    tasks.afterBuild.execute()
+    tasks.makeDist.execute()
+}
+
+task afterBuild(dependsOn: build) {
+    def distDir = new File('build/dist')
+    distDir.mkdirs()
+}
+
+task makeDist(type: Sync, ) {
+    dependsOn afterBuild
+
+    from 'lib/'
+    from('build/libs') {
+        include 'client.jar'
+    }
+
+    into 'build/dist'
+
+    into ('assets') {
+        from 'assets/'
+    }
+}
+
+task "run-client" (type:JavaExec, dependsOn:[classes]) {
+    main = 'com.a2client.Main'
+    classpath = sourceSets.main.runtimeClasspath
+}

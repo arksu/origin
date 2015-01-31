@@ -10,6 +10,14 @@ subprojects {
             excludeDirs += file('out')
         }
     }
+
+    sourceSets {
+        main {
+            java {
+                srcDir 'src'
+            }
+        }
+    }
 }
 
 apply plugin: 'idea'
@@ -23,7 +31,7 @@ idea {
     }
 }
 
-task "idea-config" (type: Sync) {
+task "idea-run" (type: Sync) {
     String src = "$rootDir/util/runConfigurations"
     String dst = "$rootDir/.idea/runConfigurations"
 

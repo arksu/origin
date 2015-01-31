@@ -1,12 +1,5 @@
 apply plugin: 'java'
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src/'
-        }
-    }
-}
 
 repositories {
     flatDir {

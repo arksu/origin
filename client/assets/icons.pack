@@ -1,0 +1,54 @@
+
+icons.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+icon_craft
+  rotate: false
+  xy: 0, 31
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+icon_apple
+  rotate: false
+  xy: 0, 1
+  size: 31, 28
+  orig: 32, 32
+  offset: 0, 2
+  index: -1
+icon_carrot
+  rotate: false
+  xy: 32, 33
+  size: 30, 30
+  orig: 32, 32
+  offset: 1, 1
+  index: -1
+icon_branch
+  rotate: false
+  xy: 62, 33
+  size: 29, 30
+  orig: 32, 32
+  offset: 1, 1
+  index: -1
+icon_seed
+  rotate: false
+  xy: 91, 43
+  size: 20, 20
+  orig: 32, 32
+  offset: 6, 6
+  index: -1
+icon_stone
+  rotate: false
+  xy: 91, 25
+  size: 19, 16
+  orig: 32, 32
+  offset: 6, 8
+  index: -1
+icon_bottle
+  rotate: false
+  xy: 111, 33
+  size: 13, 30
+  orig: 32, 32
+  offset: 9, 1
+  index: -1

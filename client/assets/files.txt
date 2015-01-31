@@ -1,0 +1,3 @@
+icons.pack
+origin_logo.png
+core_skin.png
