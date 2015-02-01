@@ -9,6 +9,8 @@ import com.a4server.util.Rnd;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Random;
+
 /**
  * описание позиции объекта в игровом мире
  * храним координаты. спавним привязанный объект в мир.
@@ -45,11 +47,14 @@ public class ObjectPosition
 
     /**
      * пробуем заспавнить привязанный объект в мир
+     * ищем грид по координатам
+     * просим у грида чтобы он добавил нас в себя
      *
      * @return истина если получилось
      */
     public boolean trySpawn()
     {
+        // получаем грид в указанной позиции
         Grid grid = World.getInstance().getGridInWorldCoord(_x, _y, _level);
         if (grid != null && _activeObject != null)
         {
@@ -65,6 +70,7 @@ public class ObjectPosition
                         _grid = grid;
                         return true;
                     }
+                    Thread.sleep(Rnd.get(20, 120));
                 }
                 // ежели не получилось туда. спавним рядом
                 for (int tries = 0; tries < 5; tries++)
@@ -75,6 +81,7 @@ public class ObjectPosition
                         _grid = grid;
                         return true;
                     }
+                    Thread.sleep(Rnd.get(20, 120));
                 }
             }
             catch (Exception e)
@@ -115,8 +122,6 @@ public class ObjectPosition
      */
     public void setXY(int x, int y)
     {
-        // если еще не инициализирован (не заспавнены в мире) выходим
-        if (_grid == null) return;
         _x = x;
         _y = y;
         updateGrid();
@@ -142,7 +147,7 @@ public class ObjectPosition
      */
     public void setGrid(Grid value)
     {
-        if ((_grid != null) && (getActiveObject() instanceof GameObject))
+        if ((_grid != null) && (getActiveObject() != null))
         {
             if (value != null)
             {

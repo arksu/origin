@@ -11,7 +11,11 @@ public class Move
     protected static final Logger _log = LoggerFactory.getLogger(MoveType.class.getName());
 
     public enum MoveType {
+        // используется только когда объект спавнится в мир, или телепорт в другое место
+        MOVE_SPAWN,
+        // передвижение по суше
         MOVE_WALK,
+        // плывет по воде
         MOVE_SWIMMING
     }
 }

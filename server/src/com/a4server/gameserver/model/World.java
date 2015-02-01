@@ -57,8 +57,8 @@ public class World
     /**
      * есть ли игрок с указанным ид в мире
      *
-     * @param objectId
-     * @return
+     * @param objectId ид игрока
+     * @return объект Player
      */
     public Player getPlayer(int objectId)
     {

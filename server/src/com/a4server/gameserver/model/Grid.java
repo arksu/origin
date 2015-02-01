@@ -11,6 +11,7 @@ import com.a4server.gameserver.model.collision.Collision;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
 import com.a4server.gameserver.model.collision.VirtualObject;
+import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import com.a4server.util.Rect;
 import com.a4server.util.Rnd;
 import javolution.util.FastList;
@@ -101,7 +102,7 @@ public class Grid
     /**
      * список объектов в гриде
      */
-    private FastList<GameObject> _objects = new FastList<GameObject>();
+    private FastList<GameObject> _objects = new FastList<>();
 
     /**
      * создаем грид
@@ -125,8 +126,31 @@ public class Grid
         return _objects;
     }
 
+    /**
+     * добавить объект в грид
+     * @param object
+     */
     public void addObject(GameObject object) {
+        // проверим есть ли уже такой объект в гриде
+        if (!_objects.contains(object)) {
+            _objects.add(object);
+            
+            // надо проинформировать всех о добавлении объекта
+            if (isActive()) {
+                for (Player pl : _activePlayers) {
+                    pl.onGridObjectAdded(object);
+                }
+            }
+        }
+    }
 
+    /**
+     * удалить объект из грида 
+     * @param object объект
+     */
+    public void removeObject(GameObject object) {
+        
+        
     }
 
     /**
@@ -386,24 +410,22 @@ public class Grid
             updateGrid();
 
             // обсчитаем коллизию
-            CollisionResult result = checkCollision(object, x, y, toX, toY, Move.MoveType.MOVE_WALK, null);
+            CollisionResult result = checkCollision(object, x, y, toX, toY, Move.MoveType.MOVE_SPAWN, null);
             switch (result.getResultType())
             {
                 // только если нет коллизий
                 case COLLISION_NONE:
-                    // надо активировать грид
-                    if (object instanceof Player)
-                    {
-                        activate((Player) object);
-                    }
+                    // добавим в объекты грида
+                    addObject(object);
 
-                    // обновим позицию
+                    // если сдвигали - обновим позицию
                     if (len > 0)
                     {
                         object.getPos().setXY(toX, toY);
                     }
 
                     return true;
+                
                 default:
                     return false;
             }
@@ -431,7 +453,7 @@ public class Grid
      */
     public void updateGrid()
     {
-
+        // TODO updateGrid
     }
 
     /**
@@ -560,13 +582,8 @@ public class Grid
         }
     }
 
-    public boolean tryLock(int time) throws InterruptedException
-    {
-        if (!_loaded)
-        {
-            return false;
-        }
-        return _mainLock.tryLock(time, TimeUnit.MILLISECONDS);
+    public boolean tryLock(int time) throws InterruptedException {
+        return _loaded && _mainLock.tryLock(time, TimeUnit.MILLISECONDS);
     }
 
     public void unlock()
@@ -626,7 +643,7 @@ public class Grid
 
         try
         {
-            // тут проведем полный обсчет грида
+            // если грид был НЕ активен. проведем полный обсчет грида
             if (!isActive())
             {
                 updateGrid();
@@ -637,6 +654,7 @@ public class Grid
                 _activePlayers.add(player);
             }
 
+            // скажем миру что этот грид теперь активен. и его надо обновлять
             World.getInstance().addActiveGrid(this);
         }
         finally
@@ -649,8 +667,10 @@ public class Grid
     public void deactivate(Player player)
     {
         _activePlayers.remove(player);
+        // если грид больше не активен
         if (_activePlayers.isEmpty())
         {
+            // скажем миру что обновлять этот грид больше не надо
             World.getInstance().removeActiveGrid(this);
         }
     }
@@ -663,9 +683,9 @@ public class Grid
     /**
      * разослать всем игрокам грида пакет
      */
-    public void broadcastPacket(int objectId) {
+    public void broadcastPacket(GameServerPacket pkt) {
         for (Player p : _activePlayers) {
-
+            p.getClient().sendPacket(pkt);
         }
     }
 }

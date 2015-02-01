@@ -180,7 +180,7 @@ public class GameClient extends NetClient
 
     public void sendPacket(BaseSendPacket pkt)
     {
-        if (_channel != null && !_channel.isRemoved())
+        if (_channel != null && !_channel.isRemoved() && pkt != null)
         {
             _channel.writeAndFlush(pkt);
         }

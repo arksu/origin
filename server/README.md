@@ -20,7 +20,7 @@ after it you will have 2 jar files for login and game server in dir: build/dist/
 	```cd build/dist/login/```
 	
 	```./startLoginServer.sh```
-
+	
 6. start game server:
 
 	```cd build/dist/game/```

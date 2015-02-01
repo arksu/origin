@@ -3,6 +3,8 @@ package com.a4server.gameserver.model;
 import com.a4server.Database;
 import com.a4server.gameserver.GameClient;
 import com.a4server.gameserver.model.position.ObjectPosition;
+import com.a4server.gameserver.network.serverpackets.GameServerPacket;
+import com.a4server.gameserver.network.serverpackets.ObjectAdd;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,6 +98,25 @@ public class Player extends MoveObject
     public void onGridChanged()
     {
 
+    }
+
+    /**
+     * добавили объект в грид в котором находится игрок 
+     */
+    public void onGridObjectAdded(GameObject object) {
+        // тут проверим видим ли мы этот объект (знаем ли мы его)
+        
+        // временно. 
+        // запросим у объекта его пакет для информирования других
+        getClient().sendPacket(object.makeAddPacket());
+    }
+    
+    /**
+     * создать пакет для отсылки другим игрокам
+     * @return
+     */
+    public GameServerPacket makeAddPacket() {
+        return new ObjectAdd(this);
     }
 
     /**

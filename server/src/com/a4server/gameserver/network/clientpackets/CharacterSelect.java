@@ -71,11 +71,13 @@ public class CharacterSelect extends GameClientPacket
                             return;
                         }
 
+                        // все ок. чар заспавнен в мир
                         // активируем 9 гридов вокруг игрока. "вдыхаем в них жизнь"
                         try
                         {
                             cha.loadGrids();
                             cha.activateGrids();
+                            // лишний раз убедимся что все нужные гриды загружены
                             if (!cha.isGridsLoaded())
                             {
                                 throw new Exception("grids not loaded");
@@ -113,7 +115,7 @@ public class CharacterSelect extends GameClientPacket
     private boolean trySpawn(Player cha)
     {
         // заспавнится в указанной точке не получилось
-        // пробуем 5 раз в случайном месте мира
+        // пробуем в случайном месте мира
         return cha.getPos().trySpawn() || cha.getPos().trySpawnRandom();
     }
 }

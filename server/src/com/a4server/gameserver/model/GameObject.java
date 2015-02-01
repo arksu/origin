@@ -1,6 +1,8 @@
 package com.a4server.gameserver.model;
 
 import com.a4server.gameserver.model.position.ObjectPosition;
+import com.a4server.gameserver.network.serverpackets.GameServerPacket;
+import com.a4server.gameserver.network.serverpackets.ObjectAdd;
 import com.a4server.util.Rect;
 
 /**
@@ -51,6 +53,11 @@ public abstract class GameObject
     public int getObjectId() {
         return _objectId;
     }
+    
+    public int getTypeId() {
+        return _typeId;
+
+    }
 
     public ObjectPosition getPos() {
         return _pos;
@@ -59,6 +66,14 @@ public abstract class GameObject
     public Rect getBoundRect()
     {
         return _boundRect;
+    }
+
+    /**
+     * создать пакет для отсылки другим игрокам
+     * @return
+     */
+    public GameServerPacket makeAddPacket() {
+        return new ObjectAdd(this);
     }
 
 }
