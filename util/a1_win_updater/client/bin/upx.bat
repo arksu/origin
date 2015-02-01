@@ -1,0 +1,1 @@
+..\..\..\upx\upx.exe -9 a1updater.exe
