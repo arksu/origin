@@ -20,7 +20,6 @@ public class CharSelected extends GameServerPacket
     @Override
     public void run()
     {
-        Log.info("CharSelected");
         Game.Show();
         Player.getInstance().setObjectId(_objectId);
         Player.getInstance().setName(_name);

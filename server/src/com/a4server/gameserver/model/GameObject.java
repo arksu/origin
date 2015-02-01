@@ -3,6 +3,7 @@ package com.a4server.gameserver.model;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import com.a4server.gameserver.network.serverpackets.ObjectAdd;
+import com.a4server.gameserver.network.serverpackets.ObjectRemove;
 import com.a4server.util.Rect;
 
 /**
@@ -70,10 +71,18 @@ public abstract class GameObject
 
     /**
      * создать пакет для отсылки другим игрокам
-     * @return
+     * @return пакет
      */
     public GameServerPacket makeAddPacket() {
         return new ObjectAdd(this);
+    }
+
+    /**
+     * создать пакет об удалении объекта из мира
+     * @return пакет
+     */
+    public GameServerPacket makeRemovePacket() {
+        return new ObjectRemove(this._objectId);
     }
 
 }

@@ -53,7 +53,7 @@ public class AuthGame extends GameClientPacket
                         long unixTime = System.currentTimeMillis() / 1000L;
                         if ((unixTime - lastactive) > 5)
                         {
-                            _log.warn("Try enter to game [" + login + "], but session timeout");
+                            _log.warn("Try enter to game account [" + login + "], but session is timeout");
                             // рвем коннект без объяснения причин
                             getConnect().close();
                         }
@@ -64,7 +64,7 @@ public class AuthGame extends GameClientPacket
                             getClient().setState(GameClient.GameClientState.AUTHED);
                             if (Config.DEBUG)
                             {
-                                _log.info("[" + login + "] enter in game...");
+                                _log.info("account [" + login + "] enter in game...");
                             }
                             // вышлем список чаров
                             sendPacket(new CharacterList(getClient()));

@@ -1,10 +1,7 @@
 package com.a4server.gameserver.model.position;
 
 import com.a4server.Config;
-import com.a4server.gameserver.model.GameObject;
-import com.a4server.gameserver.model.Grid;
-import com.a4server.gameserver.model.Player;
-import com.a4server.gameserver.model.World;
+import com.a4server.gameserver.model.*;
 import com.a4server.util.Rnd;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,7 +144,7 @@ public class ObjectPosition
      */
     public void setGrid(Grid value)
     {
-        if ((_grid != null) && (getActiveObject() != null))
+        if ((_grid != null) && (getActiveObject() instanceof GameObject))
         {
             if (value != null)
             {
@@ -161,9 +158,9 @@ public class ObjectPosition
             }
         }
 
-        if (getActiveObject() instanceof Player)
+        if (getActiveObject() instanceof Human)
         {
-            ((Player) getActiveObject()).onGridChanged();
+            ((Human) getActiveObject()).onGridChanged();
         }
         _grid = value;
     }
@@ -201,6 +198,36 @@ public class ObjectPosition
         _level = 0;
         _x = Rnd.get(Config.WORLD_SG_WIDTH * Grid.SUPERGRID_FULL_SIZE);
         _y = Rnd.get(Config.WORLD_SG_HEIGHT * Grid.SUPERGRID_FULL_SIZE);
+    }
+
+    /**
+     * получить дистанцию между позициями двух объектов
+     * @param otherPos
+     * @return
+     */
+    public int getDistance(ObjectPosition otherPos) {
+        if (otherPos == null) 
+        {
+            return 10000;
+        }
+        
+        if (_level != otherPos._level) 
+        {
+            _log.warn(otherPos.toString() + " level is different");
+            return 10000;
+        } 
+        else 
+        {
+            return (int) Math.round(Math.sqrt(Math.pow((_x - otherPos._x), 2) + Math.pow((_y - otherPos._y), 2)));
+        }
+    }
+    
+    public ObjectPosition clone() {
+        return new ObjectPosition(_x, _y, _level);
+    }
+    
+    public boolean equals(ObjectPosition p) {
+        return _x == p._x && _y == p._y && _level == p._level;
     }
 
 }

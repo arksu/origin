@@ -102,7 +102,7 @@ public class Grid
     /**
      * список объектов в гриде
      */
-    private FastList<GameObject> _objects = new FastList<>();
+    private FastList<GameObject> _objects = new FastList<GameObject>().shared();
 
     /**
      * создаем грид
@@ -128,9 +128,15 @@ public class Grid
 
     /**
      * добавить объект в грид
+     * перед вызовомгрид обязательно должен быть залочен!!! 
      * @param object
      */
-    public void addObject(GameObject object) {
+    public void addObject(GameObject object) throws RuntimeException {
+        // если грид не залочен - бросим исключение
+        if (!_mainLock.isLocked()) {
+            throw new RuntimeException("addObject: grid is not locked");
+        }
+        
         // проверим есть ли уже такой объект в гриде
         if (!_objects.contains(object)) {
             _objects.add(object);
@@ -149,8 +155,16 @@ public class Grid
      * @param object объект
      */
     public void removeObject(GameObject object) {
-        
-        
+        if (_objects.contains(object)) {
+            _objects.remove(object);
+
+            // надо проинформировать всех о добавлении объекта
+            if (isActive()) {
+                for (Player pl : _activePlayers) {
+                    pl.onGridObjectRemoved(object);
+                }
+            }
+        }
     }
 
     /**

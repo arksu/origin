@@ -5,6 +5,7 @@ import com.a4server.gameserver.GameClient;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import com.a4server.gameserver.network.serverpackets.ObjectAdd;
+import com.a4server.gameserver.network.serverpackets.PlayerAppearance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,28 +19,24 @@ import java.util.List;
 /**
  * Created by arksu on 04.01.2015.
  */
-public class Player extends MoveObject
+public class Player extends Human
 {
     private static final Logger _log = LoggerFactory.getLogger(Player.class);
 
     private static final String LOAD_CHARACTER = "SELECT account, charName, x, y, lvl, face, hairColor, hairStyle, sex, lastAccess, onlineTime, title, createDate FROM characters WHERE charId = ?";
 
-
     private GameClient _client = null;
     private boolean _isOnline = false;
     private final PcAppearance _appearance;
     private String _account;
-    /**
-     * список гридов в которых находится игрок. 9 штук.
-     */
-    private List<Grid> _grids = new ArrayList<>();
 
     public Player(int objectId, ResultSet rset)
     {
         super(objectId);
 
         _typeId = 1;
-        _appearance = new PcAppearance(rset);
+        _appearance = new PcAppearance(rset, objectId);
+        setVisibleDistance(100);
         try
         {
             _account = rset.getString("account");
@@ -97,7 +94,9 @@ public class Player extends MoveObject
      */
     public void onGridChanged()
     {
-
+        // надо обновить список гридов
+        // новые активировать
+        // старые деактивировать
     }
 
     /**
@@ -105,10 +104,33 @@ public class Player extends MoveObject
      */
     public void onGridObjectAdded(GameObject object) {
         // тут проверим видим ли мы этот объект (знаем ли мы его)
-        
-        // временно. 
-        // запросим у объекта его пакет для информирования других
-        getClient().sendPacket(object.makeAddPacket());
+        if (isObjectVisible(object)) {
+            addKnownObject(object);
+        }
+    }
+
+    /**
+     * добавить объект в список видимых объектов
+     * @param object
+     */
+    protected void addKnownObject(GameObject object) {
+        // такого объекта еще не было в списке
+        if (!_knownKist.contains(object)) 
+        {
+            _knownKist.add(object);
+
+            // запросим у объекта его пакет для информирования других
+            getClient().sendPacket(object.makeAddPacket());
+        }
+    }
+
+    /**
+     * грид говорит что какой то объект был удален 
+     */
+    public void onGridObjectRemoved(GameObject object) {
+        // надо проверить - знаем ли мы этот объект
+        // todo: onGridObjectRemoved known check
+        getClient().sendPacket(object.makeRemovePacket());
     }
     
     /**
@@ -116,7 +138,10 @@ public class Player extends MoveObject
      * @return
      */
     public GameServerPacket makeAddPacket() {
-        return new ObjectAdd(this);
+        GameServerPacket pkt = new ObjectAdd(this);
+        // раз это персонаж, отправим его представление, то как он должен выглядеть
+        pkt.addNext(new PlayerAppearance(_appearance));
+        return pkt;
     }
 
     /**
@@ -127,6 +152,9 @@ public class Player extends MoveObject
         // деактивировать занятые гриды
         for (Grid g : _grids) {
             g.deactivate(this);
+        }
+        if (getPos().getGrid() != null) {
+            getPos().getGrid().removeObject(this);
         }
 
         // удалим игрока из мира
@@ -145,11 +173,6 @@ public class Player extends MoveObject
     public String getName()
     {
         return _name;
-    }
-
-    public List<Grid> getGrids()
-    {
-        return _grids;
     }
 
     public boolean isOnline()
@@ -192,31 +215,6 @@ public class Player extends MoveObject
         _isOnline = status;
     }
 
-    /**
-     * получить окружающие гриды и дождаться их загрузки
-     */
-    public void loadGrids() throws Exception
-    {
-        _grids.clear();
-        int gridX = getPos().getGridX();
-        int gridY = getPos().getGridY();
-        for (int i = -1; i <= 1; i++)
-        {
-            for (int j = -1; j <= 1; j++)
-            {
-                Grid grid = World.getInstance().getGrid(gridX + i, gridY + j, getPos()._level);
-                if (grid != null)
-                {
-                    _grids.add(grid);
-                }
-            }
-        }
-
-        for (Grid grid : _grids)
-        {
-            grid.waitLoad();
-        }
-    }
 
     /**
      * активировать окружающие гриды
@@ -230,25 +228,7 @@ public class Player extends MoveObject
         {
             if (!g.activate(this))
             {
-                throw new RuntimeException("fail to activate player grids");
-            }
-        }
-        return true;
-    }
-
-    /**
-     * все нужные гриды реально загружены
-     *
-     * @return
-     */
-    public boolean isGridsLoaded()
-    {
-        for (Grid g : _grids)
-        {
-            // если хоть 1 не готов
-            if (!g.isLoaded())
-            {
-                return false;
+                throw new RuntimeException("fail to activate grids by "+this.toString());
             }
         }
         return true;
@@ -258,7 +238,7 @@ public class Player extends MoveObject
      * сохранить состояние персонажа в базу
      */
     public void storeInDb() {
-
+        // todo player storeInDb
     }
 
     @Override

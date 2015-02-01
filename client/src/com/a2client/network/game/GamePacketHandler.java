@@ -11,7 +11,7 @@ public class GamePacketHandler
         int opcode = data[0] & 0xff;
 
         GameServerPacket pkt = null;
-        Log.info("game packet opcode: " + opcode);
+        //Log.info("game packet opcode: " + opcode);
         switch (opcode)
         {
             case 0x01:
@@ -43,6 +43,15 @@ public class GamePacketHandler
                 break;
             case 0x10:
                 pkt = new WorldInfo();
+                break;
+            case 0x11:
+                pkt = new ObjectAdd();
+                break;
+            case 0x12:
+                pkt = new ObjectRemove();
+                break;
+            case 0x13:
+                pkt = new PlayerAppearance();
                 break;
             default:
                 debugOpcode(opcode);

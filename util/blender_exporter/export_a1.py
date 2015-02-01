@@ -439,7 +439,6 @@ def find_armature_and_mesh():
     armature		= None
     mesh			= None
 
-    # TODO:
     # this could be more intuitive
     bpy.ops.object.mode_set(mode='OBJECT')
     # try the active object

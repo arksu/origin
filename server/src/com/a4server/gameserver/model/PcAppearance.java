@@ -1,5 +1,8 @@
 package com.a4server.gameserver.model;
 
+import com.a4server.gameserver.network.serverpackets.GameServerPacket;
+import com.a4server.gameserver.network.serverpackets.PlayerAppearance;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -12,13 +15,15 @@ public class PcAppearance
      * представление игрока в мире. то как он выглядит
      */
 
-    private boolean _sex; // true = female; male = false;
+    private boolean _sex = false; // true = female; male = false;
 
-    private byte _hairColor;
-    private byte _hairStyle;
-    private byte _face;
+    private byte _hairColor = 0;
+    private byte _hairStyle = 0;
+    private byte _face = 0;
+    private int _objectId;
 
-    public PcAppearance(ResultSet set) {
+    public PcAppearance(ResultSet set, int objectId) {
+        _objectId = objectId;
         try
         {
             _face = set.getByte("face");
@@ -30,5 +35,25 @@ public class PcAppearance
         {
             e.printStackTrace();
         }
+    }
+    
+    public int getObjectId() {
+        return _objectId;
+    }
+    
+    public byte getHairColor() {
+        return _hairColor;
+    }
+
+    public byte getHairStyle() {
+        return _hairStyle;
+    }
+
+    public byte getFace() {
+        return _face;
+    }
+    
+    public boolean isFemale() {
+        return _sex;
     }
 }

@@ -95,6 +95,7 @@ public class CharacterSelect extends GameClientPacket
 
                         // последние штрихи
                         cha.setClient(client);
+                        cha.UpdateVisibleObjects(true);
                         client.setActiveChar(cha);
                         cha.setOnlineStatus(true);
 

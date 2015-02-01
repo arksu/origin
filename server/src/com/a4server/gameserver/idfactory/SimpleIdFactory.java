@@ -10,7 +10,7 @@ public class SimpleIdFactory extends IdFactory
     public SimpleIdFactory()
     {
         // загрузим последний использовавшийся ид
-        // todo
+        // todo SimpleIdFactory
         _lastId = 0;
 
         _initialized = true;

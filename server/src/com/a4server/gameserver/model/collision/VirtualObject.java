@@ -15,11 +15,11 @@ public class VirtualObject
     private int _x, _y;
     private GameObject _type;
 
-    public VirtualObject(int _x, int _y, GameObject _type)
+    public VirtualObject(int x, int y, GameObject type)
     {
-        this._x = _x;
-        this._y = _y;
-        this._type = _type;
+        this._x = x;
+        this._y = y;
+        this._type = type;
     }
 
     public int getX()
