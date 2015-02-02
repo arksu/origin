@@ -5,15 +5,18 @@ import com.a4server.gameserver.model.GameObject;
 /**
  * Created by arksu on 01.02.15.
  */
-public class ObjectAdd extends GameServerPacket {
+public class ObjectAdd extends GameServerPacket
+{
     GameObject _object;
-    
-    public ObjectAdd(GameObject object) {
+
+    public ObjectAdd(GameObject object)
+    {
         _object = object;
     }
-    
+
     @Override
-    protected void write() {
+    protected void write()
+    {
         writeC(0x11);
         writeD(_object.getObjectId());
         writeD(_object.getTypeId());

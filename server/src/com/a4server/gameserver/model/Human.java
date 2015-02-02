@@ -8,17 +8,17 @@ import java.util.List;
 
 /**
  * Created by arksu on 02.02.15.
- * объект описывающий поведение живых, активных объектов (игроки, животные) 
+ * объект описывающий поведение живых, активных объектов (игроки, животные)
  */
-public abstract class Human extends MoveObject {
-
+public abstract class Human extends MoveObject
+{
     /**
      * объекты которые известны мне, инфа о которых отправляется и синхронизирована с клиентом
      * любое добалвение в этот список, а равно как и удаление из него должно быть
      * синхронизировано с клиентом
      */
-    protected FastList <GameObject> _knownKist = new FastList<>();
-    
+    protected FastList<GameObject> _knownKist = new FastList<>();
+
     /**
      * список гридов в которых находится объект. 9 штук.
      */
@@ -31,7 +31,7 @@ public abstract class Human extends MoveObject {
     protected int _visibleDistance = 30;
 
     /**
-     * дистанция которую нужно пройти чтобы произошел апдейт видимых объектов 
+     * дистанция которую нужно пройти чтобы произошел апдейт видимых объектов
      */
     protected static final int VISIBLE_UPDATE_DISTANCE = 44;
 
@@ -41,7 +41,8 @@ public abstract class Human extends MoveObject {
      */
     private ObjectPosition _lastVisibleUpdatePos = null;
 
-    public Human(int objectId) {
+    public Human(int objectId)
+    {
         super(objectId);
     }
 
@@ -97,58 +98,69 @@ public abstract class Human extends MoveObject {
     /**
      * изменился грид в котором находимся. надо отреагировать
      */
-    public void onGridChanged() {
+    public void onGridChanged()
+    {
         // todo onGridChanged
         // надо обновить список гридов
         // новые активировать
         // старые деактивировать
-        
+
     }
-    
-    public void setVisibleDistance(int visibleDistance) {
+
+    public void setVisibleDistance(int visibleDistance)
+    {
         _visibleDistance = visibleDistance;
     }
 
     /**
      * обновить список видимых объектов
      * все новые что увидим - отправятся клиенту. старые что перестали видеть - будут удалены
+     *
      * @param force принудительно
      */
-    public void UpdateVisibleObjects(boolean force) {
+    public void UpdateVisibleObjects(boolean force)
+    {
         // только если отошли достаточно далеко от последней позиции апдейта
-        if (force || (getPos() != null && _lastVisibleUpdatePos != null && 
+        if (force || (getPos() != null && _lastVisibleUpdatePos != null &&
                 !getPos().equals(_lastVisibleUpdatePos) &&
-                getPos().getDistance(_lastVisibleUpdatePos) > VISIBLE_UPDATE_DISTANCE)) 
+                getPos().getDistance(_lastVisibleUpdatePos) > VISIBLE_UPDATE_DISTANCE))
         {
             // проходим по всем гридам в которых находимся
-            for (Grid g : _grids) {
+            for (Grid g : _grids)
+            {
                 // по всем объектам в гридах
                 FastList<GameObject> objs = g.getObjects();
-                for (GameObject o : objs) {
+                for (GameObject o : objs)
+                {
                     // только если мы видим объект
-                    if (isObjectVisible(o)) {
+                    if (isObjectVisible(o))
+                    {
                         // добавим его в список видимых
                         addKnownObject(o);
                     }
                 }
             }
             // запомним последнее место где произвели апдейт
-            if (getPos() != null) {
+            if (getPos() != null)
+            {
                 _lastVisibleUpdatePos = getPos().clone();
             }
         }
     }
-    
-    protected void addKnownObject(GameObject object) {
+
+    protected void addKnownObject(GameObject object)
+    {
         _knownKist.add(object);
     }
 
     /**
      * видим ли данный объект для меня
+     *
      * @param object
      * @return
      */
-    public boolean isObjectVisible(GameObject object) {
+    public boolean isObjectVisible(GameObject object)
+    {
         // по дефолту просто смотрим на расстояние мжеду нами
         return (getPos().getDistance(object.getPos()) < _visibleDistance);
     }

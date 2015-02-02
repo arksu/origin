@@ -12,7 +12,7 @@ public class MapGrid extends GameServerPacket
     protected static final Logger _log = LoggerFactory.getLogger(MapGrid.class.getName());
 
     Grid _grid;
-    int _px, _py;
+    int  _px, _py;
 
     public MapGrid(Grid grid, int px, int py)
     {
