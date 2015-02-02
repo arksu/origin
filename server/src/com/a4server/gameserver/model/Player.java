@@ -43,9 +43,9 @@ public class Player extends Human
             _name = rset.getString("charName");
             _title = rset.getString("title");
 
-//                    player._lastAccess = rset.getLong("lastAccess");
-//                    player.setOnlineTime(rset.getLong("onlinetime"));
-//                    player.getCreateDate().setTime(rset.getDate("createDate"));
+            //                    player._lastAccess = rset.getLong("lastAccess");
+            //                    player.setOnlineTime(rset.getLong("onlinetime"));
+            //                    player.getCreateDate().setTime(rset.getDate("createDate"));
             _pos = new ObjectPosition(rset.getInt("x"), rset.getInt("y"), rset.getInt("lvl"));
             _pos.setActiveObject(this);
         }
@@ -100,44 +100,63 @@ public class Player extends Human
     }
 
     /**
-     * добавили объект в грид в котором находится игрок 
+     * добавили объект в грид в котором находится игрок
      */
-    public void onGridObjectAdded(GameObject object) {
-        // тут проверим видим ли мы этот объект (знаем ли мы его)
-        if (isObjectVisible(object)) {
+    public void onGridObjectAdded(GameObject object)
+    {
+        // тут проверим видим ли мы этот объект
+        if (isObjectVisible(object))
+        {
             addKnownObject(object);
         }
     }
 
     /**
+     * грид говорит что какой то объект был удален
+     */
+    public void onGridObjectRemoved(GameObject object)
+    {
+        removeKnownObject(object);
+    }
+
+    /**
      * добавить объект в список видимых объектов
+     *
      * @param object
      */
-    protected void addKnownObject(GameObject object) {
+    @Override
+    protected void addKnownObject(GameObject object)
+    {
         // такого объекта еще не было в списке
-        if (!_knownKist.contains(object)) 
+        if (!_knownKist.contains(object))
         {
-            _knownKist.add(object);
-
-            // запросим у объекта его пакет для информирования других
+            super.addKnownObject(object);
             getClient().sendPacket(object.makeAddPacket());
         }
     }
 
     /**
-     * грид говорит что какой то объект был удален 
+     * удалить из списка видимых объектов
+     *
+     * @param object
      */
-    public void onGridObjectRemoved(GameObject object) {
-        // надо проверить - знаем ли мы этот объект
-        // todo: onGridObjectRemoved known check
-        getClient().sendPacket(object.makeRemovePacket());
+    @Override
+    protected void removeKnownObject(GameObject object)
+    {
+        if (_knownKist.contains(object))
+        {
+            super.removeKnownObject(object);
+            getClient().sendPacket(object.makeRemovePacket());
+        }
     }
-    
+
     /**
      * создать пакет для отсылки другим игрокам
+     *
      * @return
      */
-    public GameServerPacket makeAddPacket() {
+    public GameServerPacket makeAddPacket()
+    {
         GameServerPacket pkt = new ObjectAdd(this);
         // раз это персонаж, отправим его представление, то как он должен выглядеть
         pkt.addNext(new PlayerAppearance(_appearance));
@@ -150,10 +169,12 @@ public class Player extends Human
     public void deleteMe()
     {
         // деактивировать занятые гриды
-        for (Grid g : _grids) {
+        for (Grid g : _grids)
+        {
             g.deactivate(this);
         }
-        if (getPos().getGrid() != null) {
+        if (getPos().getGrid() != null)
+        {
             getPos().getGrid().removeObject(this);
         }
 
@@ -163,7 +184,8 @@ public class Player extends Human
             _log.warn("deleteMe: World remove player fail");
         }
 
-        if (_isOnline) {
+        if (_isOnline)
+        {
             // также тут надо сохранить состояние перса в базу.
             storeInDb();
         }
@@ -228,7 +250,7 @@ public class Player extends Human
         {
             if (!g.activate(this))
             {
-                throw new RuntimeException("fail to activate grids by "+this.toString());
+                throw new RuntimeException("fail to activate grids by " + this.toString());
             }
         }
         return true;
@@ -237,7 +259,8 @@ public class Player extends Human
     /**
      * сохранить состояние персонажа в базу
      */
-    public void storeInDb() {
+    public void storeInDb()
+    {
         // todo player storeInDb
     }
 

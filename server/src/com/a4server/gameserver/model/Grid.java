@@ -513,6 +513,7 @@ public class Grid
                 // если это не мы
                 if (grid != this)
                 {
+                    // пробуем залочить для обсчета коллизий
                     if (!tryLockForCollision(grid))
                     {
                         return CollisionResult.FAIL;

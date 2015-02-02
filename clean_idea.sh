@@ -1,5 +1,5 @@
 #!/bin/sh
 rm -fr .idea
-rm -fr origin_local.iml
+rm -fr origin.iml
 rm -fr server/server.iml
 rm -fr server/client.iml

@@ -125,6 +125,9 @@ public abstract class Human extends MoveObject
                 !getPos().equals(_lastVisibleUpdatePos) &&
                 getPos().getDistance(_lastVisibleUpdatePos) > VISIBLE_UPDATE_DISTANCE))
         {
+            // запомним те объекты которые видимы при текущем апдейте
+            FastList<GameObject> newList = new FastList<>();
+
             // проходим по всем гридам в которых находимся
             for (Grid g : _grids)
             {
@@ -137,8 +140,25 @@ public abstract class Human extends MoveObject
                     {
                         // добавим его в список видимых
                         addKnownObject(o);
+                        newList.add(o);
                     }
                 }
+            }
+            // какие объекты больше не видимы?
+            FastList<GameObject> del = new FastList<>();
+            for (GameObject o : _knownKist)
+            {
+                // если в новом списке нет - значит больше не видим,
+                // пометим на удаление
+                if (!newList.contains(o))
+                {
+                    del.add(o);
+                }
+            }
+            // удалим объекты которые больше не видим
+            for (GameObject o : del)
+            {
+                removeKnownObject(o);
             }
             // запомним последнее место где произвели апдейт
             if (getPos() != null)
@@ -151,6 +171,12 @@ public abstract class Human extends MoveObject
     protected void addKnownObject(GameObject object)
     {
         _knownKist.add(object);
+    }
+
+    protected void removeKnownObject(GameObject object)
+    {
+        _knownKist.remove(object);
+
     }
 
     /**
