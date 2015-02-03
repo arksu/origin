@@ -2,6 +2,8 @@ package com.a4server.gameserver.model;
 
 import com.a4server.gameserver.model.position.ObjectPosition;
 import javolution.util.FastList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
  */
 public abstract class Human extends MoveObject
 {
+    protected static final Logger _log = LoggerFactory.getLogger(Grid.class.getName());
+
     /**
      * объекты которые известны мне, инфа о которых отправляется и синхронизирована с клиентом
      * любое добалвение в этот список, а равно как и удаление из него должно быть
@@ -100,11 +104,55 @@ public abstract class Human extends MoveObject
      */
     public void onGridChanged()
     {
-        // todo onGridChanged
-        // надо обновить список гридов
-        // новые активировать
-        // старые деактивировать
+        try
+        {
+            // надо обновить список гридов
+            ArrayList<Grid> newList = new ArrayList<>();
+            int gridX = getPos().getGridX();
+            int gridY = getPos().getGridY();
 
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    Grid grid = World.getInstance().getGrid(gridX + i, gridY + j, getPos()._level);
+                    // если грид существует
+                    if (grid != null)
+                    {
+                        // только новые гриды в которые мы входим
+                        if (!_grids.contains(grid))
+                        {
+                            _grids.add(grid);
+
+                            // новые активировать
+                            grid.waitLoad();
+                            if (this instanceof Player)
+                            {
+                                grid.activate((Player) this);
+                            }
+                        }
+                        newList.add(grid);
+                    }
+                }
+            }
+            // старые гриды деактивируем
+            if ((this instanceof Player) && !newList.isEmpty())
+            {
+                for (Grid grid : _grids)
+                {
+                    if (!newList.contains(grid))
+                    {
+                        grid.deactivate((Player)this);
+                    }
+                }
+            }
+            _grids = newList;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            _log.error("onGridChanged failed " + this.toString());
+        }
     }
 
     public void setVisibleDistance(int visibleDistance)
