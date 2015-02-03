@@ -4,6 +4,7 @@ import com.a4server.Database;
 import com.a4server.gameserver.GameClient;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
+import com.a4server.gameserver.network.serverpackets.MapGrid;
 import com.a4server.gameserver.network.serverpackets.ObjectAdd;
 import com.a4server.gameserver.network.serverpackets.PlayerAppearance;
 import org.slf4j.Logger;
@@ -89,14 +90,13 @@ public class Player extends Human
         return player;
     }
 
-    /**
-     * изменился грид в котором находимся. надо отреагировать
-     */
-    public void onGridChanged()
+    @Override
+    protected void onEnterGrid(Grid grid)
     {
-        // надо обновить список гридов
-        // новые активировать
-        // старые деактивировать
+        if (getClient() != null)
+        {
+            getClient().sendPacket(new MapGrid(grid, getPos()._x, getPos()._y));
+        }
     }
 
     /**

@@ -84,7 +84,7 @@ public class Config
     // режим быстрого входа с последним вырбарным чаром
     public static boolean quick_login_mode = false;
     // загружать перевод
-    public static boolean load_translate = true;
+    public static boolean download_translate = true;
 
     public static void ParseCMD(String[] args)
     {
@@ -117,8 +117,8 @@ public class Config
                     quick_login_mode = true;
                 }
                 if (arg.equals("-nl"))
-                { // dont load translate. Format: "-nl"
-                    load_translate = false;
+                { // dont download translate. Format: "-nl"
+                    download_translate = false;
                 }
                 //                if (arg.equals("-dev_tile"))
                 //                { // Format: -dev_tile <filename tiles.xml>

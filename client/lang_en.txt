@@ -41,6 +41,7 @@ welcome=Welcome to Origin world!
 login=Log in...
 disconnected=Dicsonnected
 refused=Connection refused
+refused_game=Game server refused connection
 connect_error=Network error
 wrong_password=Wrong password
 user_not_found=User not found

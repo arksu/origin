@@ -64,9 +64,13 @@ public class Lang
     static public String getTranslate(String section, String text)
     {
         if (lang_file != null)
+        {
             return lang_file.getProperty(section, text, section + "_" + text);
+        }
         else
+        {
             return section + "_" + text;
+        }
     }
 
 
@@ -74,9 +78,10 @@ public class Lang
     {
         if (Config.current_lang != null && Config.current_lang.length() >= 1)
         {
-            if (!LoadFromDisk())
-                if (Config.load_translate)
-                    LoadFromSite();
+            if (!LoadFromDisk() && Config.download_translate)
+            {
+                LoadFromSite();
+            }
         }
     }
 
@@ -116,8 +121,12 @@ public class Lang
             String fname = "lang_?.txt".replace("?", Config.current_lang);
             File file = new File(fname);
             if (file.exists())
+            {
                 if (!file.delete())
+                {
                     _log.warn("cant delete lang file: " + fname);
+                }
+            }
             // пишем получаемые данные на диск и в поток
             OutputStream outputStream = new FileOutputStream(file);
             ByteArrayOutputStream bout = new ByteArrayOutputStream();

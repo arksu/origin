@@ -123,26 +123,21 @@ public abstract class Human extends MoveObject
                         if (!_grids.contains(grid))
                         {
                             _grids.add(grid);
-
-                            // новые активировать
                             grid.waitLoad();
-                            if (this instanceof Player)
-                            {
-                                grid.activate((Player) this);
-                            }
+                            onEnterGrid(grid);
                         }
                         newList.add(grid);
                     }
                 }
             }
             // старые гриды деактивируем
-            if ((this instanceof Player) && !newList.isEmpty())
+            if (!newList.isEmpty())
             {
                 for (Grid grid : _grids)
                 {
                     if (!newList.contains(grid))
                     {
-                        grid.deactivate((Player)this);
+                        onLeaveGrid(grid);
                     }
                 }
             }
@@ -154,6 +149,24 @@ public abstract class Human extends MoveObject
             _log.error("onGridChanged failed " + this.toString());
         }
     }
+
+    /**
+     * входим в новый для объекта грид, нужно отреагировать
+     *
+     * @param grid
+     */
+    protected void onEnterGrid(Grid grid)
+    {
+    }
+
+    /**
+     * покидаем грид
+     * @param grid 
+     */
+    public void onLeaveGrid(Grid grid)
+    {
+    }
+
 
     public void setVisibleDistance(int visibleDistance)
     {

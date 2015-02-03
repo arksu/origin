@@ -90,9 +90,13 @@ public class NettyConnection
     synchronized private BaseRecvPacket takePacket()
     {
         if (_packet_queue.isEmpty())
+        {
             return null;
+        }
         else
+        {
             return _packet_queue.removeFirst();
+        }
     }
 
     public void ProcessPackets()
@@ -167,7 +171,14 @@ public class NettyConnection
                 _log.error("connection error: " + e.getMessage());
                 if (e.getMessage().contains("refused"))
                 {
-                    Login.Error("refused");
+                    if (_type == ConnectionType.LOGIN_SERVER)
+                    {
+                        Login.Error("refused");
+                    }
+                    else
+                    {
+                        Login.Error("refused_game");
+                    }
                 }
                 else
                 {
