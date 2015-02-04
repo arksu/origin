@@ -128,22 +128,28 @@ public class Grid
 
     /**
      * добавить объект в грид
-     * перед вызовомгрид обязательно должен быть залочен!!! 
+     * перед вызовомгрид обязательно должен быть залочен!!!
+     *
      * @param object
      */
-    public void addObject(GameObject object) throws RuntimeException {
+    public void addObject(GameObject object) throws RuntimeException
+    {
         // если грид не залочен - бросим исключение
-        if (!_mainLock.isLocked()) {
+        if (!_mainLock.isLocked())
+        {
             throw new RuntimeException("addObject: grid is not locked");
         }
-        
+
         // проверим есть ли уже такой объект в гриде
-        if (!_objects.contains(object)) {
+        if (!_objects.contains(object))
+        {
             _objects.add(object);
-            
+
             // надо проинформировать всех о добавлении объекта
-            if (isActive()) {
-                for (Player pl : _activePlayers) {
+            if (isActive())
+            {
+                for (Player pl : _activePlayers)
+                {
                     pl.onGridObjectAdded(object);
                 }
             }
@@ -151,16 +157,21 @@ public class Grid
     }
 
     /**
-     * удалить объект из грида 
+     * удалить объект из грида
+     *
      * @param object объект
      */
-    public void removeObject(GameObject object) {
-        if (_objects.contains(object)) {
+    public void removeObject(GameObject object)
+    {
+        if (_objects.contains(object))
+        {
             _objects.remove(object);
 
             // надо проинформировать всех о добавлении объекта
-            if (isActive()) {
-                for (Player pl : _activePlayers) {
+            if (isActive())
+            {
+                for (Player pl : _activePlayers)
+                {
                     pl.onGridObjectRemoved(object);
                 }
             }
@@ -229,7 +240,10 @@ public class Grid
         // подождем выполнения задания
         _loadFuture.get(2000, TimeUnit.MILLISECONDS);
         // если после его выполнения грид не загружен - ошибка
-        if (!_loaded) throw new RuntimeException("failed to load grid");
+        if (!_loaded)
+        {
+            throw new RuntimeException("failed to load grid");
+        }
     }
 
     /**
@@ -439,7 +453,7 @@ public class Grid
                     }
 
                     return true;
-                
+
                 default:
                     return false;
             }
@@ -597,7 +611,8 @@ public class Grid
         }
     }
 
-    public boolean tryLock(int time) throws InterruptedException {
+    public boolean tryLock(int time) throws InterruptedException
+    {
         return _loaded && _mainLock.tryLock(time, TimeUnit.MILLISECONDS);
     }
 
@@ -698,8 +713,10 @@ public class Grid
     /**
      * разослать всем игрокам грида пакет
      */
-    public void broadcastPacket(GameServerPacket pkt) {
-        for (Player p : _activePlayers) {
+    public void broadcastPacket(GameServerPacket pkt)
+    {
+        for (Player p : _activePlayers)
+        {
             p.getClient().sendPacket(pkt);
         }
     }

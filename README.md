@@ -1,5 +1,5 @@
 # origin
-Origin MMO game
+Origin is survival MMO game
 
 redeploy project:
 

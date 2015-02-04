@@ -21,7 +21,7 @@ public class IsometricCamera extends OrthographicCamera
 
         view.idt();
         view.scale((float) (Math.sqrt(2.0) / 2.0), (float) (Math.sqrt(2.0) / 4.0), 1.0f);
-        view.rotate(0.0f, 0.0f, 1.0f, -45.0f);
+        view.rotate(0.0f, 0.0f, 1.0f, -25.0f);
         view.translate(position);
 
         combined.set(projection);

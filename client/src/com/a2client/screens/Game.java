@@ -127,7 +127,7 @@ public class Game extends BaseScreen
                     if (_camera.frustum.pointInFrustum(px.x, px.y, 0))
                     {
                         _renderer.setColor(Grid.getTileColor(grid._tiles[y][x]));
-                        _renderer.box(px.x, px.y, 0, 1, 1, 0.3f);
+                        _renderer.box(px.x, px.y, 0, 1, 1, 0.7f);
                     }
                 }
             }
@@ -147,7 +147,7 @@ public class Game extends BaseScreen
 
         _camera = new IsometricCamera(camWidth, camHeight);
         _camera.update();
-        _camera.zoom = 2.6f;
+        _camera.zoom = 0.6f;
     }
 
     public Vector2 screen2world(int x, int y)
