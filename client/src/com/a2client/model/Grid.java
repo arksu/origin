@@ -1,4 +1,4 @@
-package com.a2client;
+package com.a2client.model;
 
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.graphics.Color;
@@ -8,7 +8,10 @@ import static com.a2client.MapCache.*;
 public class Grid
 {
     public byte[][] _tiles;
-    Vec2i _gc;
+    /**
+     * координаты грида
+     */
+    private Vec2i _gc;
 
     public Grid(Vec2i c, byte[] data)
     {

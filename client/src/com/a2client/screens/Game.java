@@ -4,6 +4,7 @@ import com.a2client.*;
 import com.a2client.gui.GUI;
 import com.a2client.gui.GUI_Button;
 import com.a2client.gui.GUI_Label;
+import com.a2client.model.Grid;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -42,6 +43,8 @@ public class Game extends BaseScreen
     public Game()
     {
         Player.init();
+        ObjectCache.init();
+        MapCache.clear();
 
         GUI.reCreate();
         _lblStatus = new GUI_Label(GUI.rootNormal());
@@ -60,6 +63,16 @@ public class Game extends BaseScreen
         _btnExit.SetSize(100, 25);
         _btnExit.SetPos(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 35);
 
+    }
+
+    @Override
+    public void dispose()
+    {
+        Player.getInstance().dispose();
+        ObjectCache.getInstance().dispose();
+        MapCache.clear();
+        _instance = null;
+        super.dispose();
     }
 
     @Override
@@ -161,14 +174,6 @@ public class Game extends BaseScreen
     public void setState(GameState state)
     {
         _state = state;
-    }
-
-    @Override
-    public void dispose()
-    {
-        Player.getInstance().dispose();
-        _instance = null;
-        super.dispose();
     }
 
     static public Game getInstance()

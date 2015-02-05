@@ -51,7 +51,7 @@ public class GameServerAuth extends LoginServerPacket
         Net.CloseConnection();
 
         // идем на гейм сервер
-        _log.debug("connect to gameserver: " + Login._gameserver_host + " : " + Login._gameserver_port);
+        _log.debug("connecting to gameserver: " + Login._gameserver_host + " : " + Login._gameserver_port);
         Net.NewConnection(Login._gameserver_host, Login._gameserver_port, NettyConnection.ConnectionType.GAME_SERVER);
 
     }

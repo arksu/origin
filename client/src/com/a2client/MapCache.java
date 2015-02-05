@@ -1,5 +1,6 @@
 package com.a2client;
 
+import com.a2client.model.Grid;
 import com.a2client.util.Vec2i;
 
 import java.util.LinkedList;
@@ -17,6 +18,12 @@ public class MapCache
 
     public static List<Grid> grids = new LinkedList<Grid>();
 
+    /**
+     * удалить гриды за пределами активности игрока (область 3 на 3)
+     *
+     * @param px координаты игрока
+     * @param py координаты игрока
+     */
     public static void removeOutsideGrids(int px, int py)
     {
         int i = 0;
@@ -30,7 +37,9 @@ public class MapCache
                 grids.remove(i);
             }
             else
+            {
                 i++;
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 package com.a2client.network.game.serverpackets;
 
-import com.a2client.Grid;
+import com.a2client.model.Grid;
 import com.a2client.MapCache;
 import com.a2client.util.Vec2i;
 

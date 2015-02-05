@@ -26,18 +26,24 @@ public class EnterWorld extends GameClientPacket
         GameClient client = getClient();
 
         // ПОЕХАЛИ!
-        // начинаем слать клиенту игровую информацию
-        sendPacket(new WorldInfo());
-        sendPacket(new TimeUpdate());
-        sendPacket(new CharInfo(getClient().getActiveChar()));
-
-        // сначала гриды
-        int px = client.getActiveChar().getPos()._x;
-        int py = client.getActiveChar().getPos()._y;
-        for (Grid grid : client.getActiveChar().getGrids())
+        // только если у нас есть активный чар
+        if (client.getActiveChar() != null)
         {
-            sendPacket(new MapGrid(grid, px, py));
-        }
+            // начинаем слать клиенту игровую информацию
+            sendPacket(new WorldInfo());
+            sendPacket(new TimeUpdate());
+            sendPacket(new CharInfo(getClient().getActiveChar()));
 
+            // сначала гриды
+            int px = client.getActiveChar().getPos()._x;
+            int py = client.getActiveChar().getPos()._y;
+            for (Grid grid : client.getActiveChar().getGrids())
+            {
+                sendPacket(new MapGrid(grid, px, py));
+            }
+            
+            // обновим список видимости. автоматически вышлет клиенту новые объекты
+            client.getActiveChar().UpdateVisibleObjects(true);
+        }
     }
 }

@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.InputStream;
 
 public class Main extends com.badlogic.gdx.Game
 {
@@ -152,7 +151,8 @@ public class Main extends com.badlogic.gdx.Game
 
         Net.CloseConnection();
 
-        MapCache.clear();
+
+
         freeScreen();
         getInstance().setScreen(new Login());
     }
