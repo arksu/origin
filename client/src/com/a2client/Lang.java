@@ -18,7 +18,8 @@
 package com.a2client;
 
 import com.a2client.util.INIFile;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URI;
@@ -29,7 +30,7 @@ import java.util.List;
 
 public class Lang
 {
-    private static final Logger _log = Logger.getLogger(Lang.class);
+    private static final Logger _log = LoggerFactory.getLogger(Lang.class.getName());
 
     static public List<LangItem> langs = new ArrayList<LangItem>();
 

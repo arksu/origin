@@ -8,7 +8,8 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.ConnectException;
 import java.net.SocketException;
@@ -16,7 +17,7 @@ import java.util.LinkedList;
 
 public class NettyConnection
 {
-    private static final Logger _log = Logger.getLogger(NettyConnection.class);
+    private static final Logger _log = LoggerFactory.getLogger(NettyConnection.class.getName());
 
     public enum ConnectionType
     {

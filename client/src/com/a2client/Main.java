@@ -12,13 +12,15 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.InputStream;
 
 public class Main extends com.badlogic.gdx.Game
 {
-    public static final Logger _log = Logger.getLogger(Main.class);
+    public static Logger _log = LoggerFactory.getLogger(Main.class.getName());
     public static Input _input;
     public static long DT;
     private static long _last_tick;

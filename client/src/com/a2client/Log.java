@@ -17,8 +17,8 @@
 
 package com.a2client;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -27,26 +27,26 @@ import java.net.URL;
 public class Log
 {
 
-    private static final Logger _log = Logger.getLogger(Main.class);
+    private static final Logger _log = LoggerFactory.getLogger(Main.class);
 
     public static void init()
     {
-        URL u = Main.class.getResource("/client-log4j.xml");
-        if (u == null)
-        {
-            File f = new File("client-log4j.xml");
-            try
-            {
-                u = f.toURI().toURL();
-            }
-            catch (MalformedURLException e)
-            {
-                e.printStackTrace();
-            }
-
-        }
-
-        DOMConfigurator.configure(u);
+//        URL u = Main.class.getResource("/client-log4j.xml");
+//        if (u == null)
+//        {
+//            File f = new File("client-log4j.xml");
+//            try
+//            {
+//                u = f.toURI().toURL();
+//            }
+//            catch (MalformedURLException e)
+//            {
+//                e.printStackTrace();
+//            }
+//
+//        }
+//
+//        DOMConfigurator.configure(u);
     }
 
     public static void info(String msg)
@@ -65,7 +65,7 @@ public class Log
     }
 
 
-    public static void error(Object msg)
+    public static void error(String msg)
     {
         _log.error(msg);
     }

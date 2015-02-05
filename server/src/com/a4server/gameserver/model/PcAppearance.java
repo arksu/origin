@@ -21,6 +21,8 @@ public class PcAppearance
     private byte _hairStyle = 0;
     private byte _face = 0;
     private int _objectId;
+    private String _name;
+    private String _title;
 
     public PcAppearance(ResultSet set, int objectId) {
         _objectId = objectId;

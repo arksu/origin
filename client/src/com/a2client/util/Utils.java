@@ -287,7 +287,7 @@ public class Utils
     }
 
     // установить иконку приложения
-    private static void SetIcon()
+    public static void SetIcon()
     {
         ByteBuffer[] bb = new ByteBuffer[3];
         try

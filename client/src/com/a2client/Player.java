@@ -1,10 +1,11 @@
 package com.a2client;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Player
 {
-    private static final Logger _log = Logger.getLogger(Player.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(Player.class.getName());
     private static Player _instance;
 
     private int _objectId;

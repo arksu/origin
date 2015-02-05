@@ -20,11 +20,12 @@ package com.a2client;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.lwjgl.LwjglPreferences;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Config
 {
-    private static final Logger _log = Logger.getLogger(Config.class);
+    private static final Logger _log = LoggerFactory.getLogger(Config.class.getName());
 
     static
     {

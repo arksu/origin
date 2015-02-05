@@ -4,14 +4,15 @@ import com.a2client.Main;
 import com.a2client.network.Net;
 import com.a2client.network.netty.NettyConnection;
 import com.a2client.screens.Login;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class GameServerAuth extends LoginServerPacket
 {
-    public static final Logger _log = Logger.getLogger(GameServerAuth.class);
+    public static final Logger _log = LoggerFactory.getLogger(GameServerAuth.class.getName());
 
     byte[] _host;
 

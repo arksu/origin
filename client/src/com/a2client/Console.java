@@ -17,12 +17,12 @@
 
 package com.a2client;
 
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Console
 {
-    private static final Logger _log = Logger.getLogger(Lang.class);
+    private static final Logger _log = LoggerFactory.getLogger(Console.class.getName());
 
     static public boolean ExecuteCommand(String cmd)
     {

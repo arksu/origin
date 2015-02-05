@@ -2,10 +2,7 @@ package com.a4server.gameserver.network.clientpackets;
 
 import com.a4server.gameserver.GameClient;
 import com.a4server.gameserver.model.Grid;
-import com.a4server.gameserver.network.serverpackets.Init;
-import com.a4server.gameserver.network.serverpackets.MapGrid;
-import com.a4server.gameserver.network.serverpackets.TimeUpdate;
-import com.a4server.gameserver.network.serverpackets.WorldInfo;
+import com.a4server.gameserver.network.serverpackets.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +27,9 @@ public class EnterWorld extends GameClientPacket
 
         // ПОЕХАЛИ!
         // начинаем слать клиенту игровую информацию
-        sendPacket(new WorldInfo().addNext(new TimeUpdate().addNext(new Init())));
+        sendPacket(new WorldInfo());
+        sendPacket(new TimeUpdate());
+        sendPacket(new CharInfo(getClient().getActiveChar()));
 
         // сначала гриды
         int px = client.getActiveChar().getPos()._x;

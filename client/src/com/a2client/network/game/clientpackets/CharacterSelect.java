@@ -1,11 +1,12 @@
 package com.a2client.network.game.clientpackets;
 
 import com.a2client.Config;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CharacterSelect extends GameClientPacket
 {
-    private static final Logger _log = Logger.getLogger(CharacterSelect.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(CharacterSelect.class.getName());
     private final int _char_id;
 
     public CharacterSelect(int char_id)
