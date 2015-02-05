@@ -125,7 +125,6 @@ public class Login extends BaseScreen
     {
         if (edit_login.text.isEmpty() || edit_password.text.isEmpty())
         {
-            Config.quick_login_mode = false;
             return;
         }
 
@@ -133,7 +132,6 @@ public class Login extends BaseScreen
         _password = edit_password.text;
         Config.account = edit_login.text;
         Config.password = edit_password.text;
-        Config.quick_login_mode = false;
         Config.SaveOptions();
         _status = "login";
 
@@ -157,6 +155,7 @@ public class Login extends BaseScreen
     static public void Error(String s)
     {
         _status = s;
+        Config.quick_login_mode = false;
         Main.ReleaseAll();
     }
 

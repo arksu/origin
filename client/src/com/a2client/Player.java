@@ -3,6 +3,10 @@ package com.a2client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * описывает класс моего персонажа и всего что с ним связано
+ * параметры, статы, скиллы и прочее
+ */
 public class Player
 {
     private static final Logger _log = LoggerFactory.getLogger(Player.class.getName());

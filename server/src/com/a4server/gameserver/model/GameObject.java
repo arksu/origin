@@ -57,7 +57,15 @@ public abstract class GameObject
     
     public int getTypeId() {
         return _typeId;
-
+    }
+    
+    public String getName()
+    {
+        return _name;
+    }
+    
+    public String getTitle() {
+        return _title;
     }
 
     public ObjectPosition getPos() {

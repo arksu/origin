@@ -14,8 +14,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by arksu on 04.01.2015.
@@ -25,6 +23,7 @@ public class Player extends Human
     private static final Logger _log = LoggerFactory.getLogger(Player.class);
 
     private static final String LOAD_CHARACTER = "SELECT account, charName, x, y, lvl, face, hairColor, hairStyle, sex, lastAccess, onlineTime, title, createDate FROM characters WHERE charId = ?";
+    private static final String UPDATE_LAST_CHAR = "UPDATE accounts SET lastChar = ? WHERE login = ?";
 
     private GameClient _client = null;
     private boolean _isOnline = false;
@@ -192,11 +191,6 @@ public class Player extends Human
 
     }
 
-    public String getName()
-    {
-        return _name;
-    }
-
     public boolean isOnline()
     {
         return _isOnline;
@@ -262,6 +256,21 @@ public class Player extends Human
     public void storeInDb()
     {
         // todo player storeInDb
+    }
+    
+    public void UpdateLastChar() {
+        try
+        {
+            try (Connection con = Database.getInstance().getConnection();
+                 PreparedStatement ps = con.prepareStatement(UPDATE_LAST_CHAR))
+            {
+                ps.setInt(1, getObjectId());
+                ps.setString(2, _account);
+                ps.execute();
+            }
+        } catch (SQLException e) {
+            
+        }
     }
 
     @Override

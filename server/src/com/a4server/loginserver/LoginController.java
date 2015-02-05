@@ -172,7 +172,10 @@ public class LoginController
 //                {
 //                    Log.add("'" + user + "' " + address.getHostAddress() + " - ERR : AccountBanned", "loginlog");
 //                }
-
+                if (Config.DEBUG)
+                {
+                    _log.debug("account " + user + " access < 0");
+                }
                 client.setAccessLevel(access);
                 return false;
             }
@@ -187,7 +190,7 @@ public class LoginController
             {
                 if (Config.DEBUG)
                 {
-                    _log.debug("password matched");
+                    _log.debug("password matched, SUCCESS");
                 }
                 client.setAccessLevel(access);
                 long unixTime = System.currentTimeMillis() / 1000L;

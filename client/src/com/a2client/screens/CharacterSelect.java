@@ -143,7 +143,7 @@ public class CharacterSelect extends BaseScreen
         lblStatus.caption = _statusText;
     }
 
-    protected void charSelected(int id)
+    public void charSelected(int id)
     {
         new com.a2client.network.game.clientpackets.CharacterSelect(id).Send();
     }

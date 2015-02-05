@@ -1,5 +1,7 @@
 package com.a2client.network.game.serverpackets;
 
+import com.a2client.Config;
+import com.a2client.Main;
 import com.a2client.screens.CharacterSelect;
 
 import java.util.ArrayList;
@@ -41,5 +43,11 @@ public class CharacterList extends GameServerPacket
     public void run()
     {
         CharacterSelect.Show();
+        if (Config.quick_login_mode) {
+            if (Main.getInstance().getScreen() instanceof CharacterSelect) {
+                ((CharacterSelect)Main.getInstance().getScreen()).charSelected(_last_char);
+            }
+        }
+        Config.quick_login_mode = false;
     }
 }
