@@ -16,7 +16,6 @@ dependencies {
     compile name: 'slf4j-simple-1.7.6'
     runtime name: 'gdx-backend-lwjgl-natives'
     runtime name: 'gdx-natives'
- 
 }
 
 jar {
@@ -28,10 +27,6 @@ jar {
             'Class-Path'          : manifestClasspath
         )
     }
-
-//    from ("${projectDir}/etc") {
-//        include('*')
-//    }
 }
 
 build.doLast {
@@ -62,5 +57,5 @@ task makeDist(type: Sync, ) {
 task "run-client" (type:JavaExec, dependsOn:[classes]) {
     main = 'com.a2client.Main'
     classpath = sourceSets.main.runtimeClasspath
-    args = ['-s', 'localhost', '-p', '2040']
+    args = ['-s', 'localhost', '-p', '2040', '-q']
 }

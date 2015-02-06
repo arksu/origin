@@ -17,6 +17,8 @@
 
 package com.a2client.util;
 
+import com.badlogic.gdx.math.Vector2;
+
 public class Vec2i
 {
     public int x, y;
@@ -217,6 +219,11 @@ public class Vec2i
     public int area()
     {
         return x * y;
+    }
+    
+    public Vector2 getVector2() 
+    {
+        return new Vector2(x, y);
     }
 
 }

@@ -4,10 +4,12 @@ import com.a2client.*;
 import com.a2client.gui.GUI;
 import com.a2client.gui.GUI_Button;
 import com.a2client.gui.GUI_Label;
+import com.a2client.model.GameObject;
 import com.a2client.model.Grid;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -40,6 +42,8 @@ public class Game extends BaseScreen
     private ShapeRenderer _renderer = new ShapeRenderer();
     private Vector2 _world_mouse_pos = new Vector2();
 
+    static final float MOVE_STEP = 0.2f;
+
     public Game()
     {
         Player.init();
@@ -48,7 +52,7 @@ public class Game extends BaseScreen
 
         GUI.reCreate();
         _lblStatus = new GUI_Label(GUI.rootNormal());
-        _lblStatus.SetPos(100, 100);
+        _lblStatus.SetPos(10, 10);
 
         _btnExit = new GUI_Button(GUI.rootNormal())
         {
@@ -82,24 +86,24 @@ public class Game extends BaseScreen
         //_player_pos.x += -0.1f * Gdx.graphics.getDeltaTime();
 
 
-        _world_mouse_pos = screen2world(Gdx.input.getX(), Gdx.input.getY());
+        _world_mouse_pos = screen2world(Gdx.input.getX(), Gdx.input.getY()).sub(getOffset()).sub(_player_pos);
 
         //_player_pos = new Vector2();
         if (com.a2client.Input.KeyDown(Input.Keys.W))
         {
-            _player_pos.x += 1;
+            _player_pos.y -= MOVE_STEP;
         }
         if (com.a2client.Input.KeyDown(Input.Keys.S))
         {
-            _player_pos.x -= 1;
+            _player_pos.y += MOVE_STEP;
         }
         if (com.a2client.Input.KeyDown(Input.Keys.A))
         {
-            _player_pos.y += 1;
+            _player_pos.x += MOVE_STEP;
         }
         if (com.a2client.Input.KeyDown(Input.Keys.D))
         {
-            _player_pos.y -= 1;
+            _player_pos.x -= MOVE_STEP;
         }
 
         if (com.a2client.Input.isWheelUpdated())
@@ -112,9 +116,15 @@ public class Game extends BaseScreen
         {
             _statusText = _world_mouse_pos.toString();
         }
-        _lblStatus.caption = _statusText;
+        _lblStatus.caption = "FPS: "+Gdx.graphics.getFramesPerSecond()+" "+ _statusText;
 
-        _camera.position.set(_player_pos, 0);
+        if (ObjectCache.getInstance().getMe() != null)
+        {
+            Vec2i pp = ObjectCache.getInstance().getMe().getCoord().div(11);
+            pp = pp.sub(pp.mul(2));
+            //            _player_pos = pp.getVector2();
+        }
+        _camera.position.set(Vector2.Zero, 0);
         _camera.update();
 
     }
@@ -122,8 +132,13 @@ public class Game extends BaseScreen
     @Override
     public void onRender3D()
     {
+        // оффсет
+        Vector2 offset = getOffset();
 
-        Vec2i px = new Vec2i();
+        offset.add(_player_pos);
+
+        // координаты тайла который рендерим
+        Vector2 tc = new Vector2();
 
         _renderer.setProjectionMatrix(_camera.combined);
         _renderer.begin(ShapeType.Filled);
@@ -134,19 +149,39 @@ public class Game extends BaseScreen
             {
                 for (int y = 0; y < MapCache.GRID_SIZE; y++)
                 {
-                    px.x = (grid.getGC().x / MapCache.TILE_SIZE) + x;
-                    px.y = (grid.getGC().y / MapCache.TILE_SIZE) + y;
+                    tc.x = (grid.getGC().x / MapCache.TILE_SIZE) + x + offset.x;
+                    tc.y = (grid.getGC().y / MapCache.TILE_SIZE) + y + offset.y;
 
-                    if (_camera.frustum.pointInFrustum(px.x, px.y, 0))
+                    // все вершины тайла попадают в угол обзора
+                    if (
+                            _camera.frustum.pointInFrustum(tc.x, tc.y, 0) ||
+                                    _camera.frustum.pointInFrustum(tc.x + 1, tc.y, 0) ||
+                                    _camera.frustum.pointInFrustum(tc.x, tc.y + 1, 0) ||
+                                    _camera.frustum.pointInFrustum(tc.x + 1, tc.y + 1, 0)
+                            )
                     {
                         _renderer.setColor(Grid.getTileColor(grid._tiles[y][x]));
-                        _renderer.box(px.x, px.y, 0, 1, 1, 0.7f);
+                        _renderer.box(tc.x, tc.y, 0, 1, 1, 0.7f);
                     }
                 }
             }
         }
 
+        for (GameObject o : ObjectCache.getInstance().getObjects())
+        {
+            renderObject(o);
+        }
+
         _renderer.end();
+    }
+
+    private void renderObject(GameObject object)
+    {
+        Vector2 oc = object.getCoord().div(11).getVector2().add(getOffset()).add(_player_pos);
+
+        _renderer.setColor(Color.RED);
+        float sz = 0.5f;
+        _renderer.box(oc.x-sz, oc.y-sz, 0, sz, sz, 0.7f);
     }
 
     @Override
@@ -169,6 +204,18 @@ public class Game extends BaseScreen
         _camera.unproject(touch);
         // touch.mul(_invTransform);
         return new Vector2(touch.x, touch.y);
+    }
+
+    public Vector2 getOffset()
+    {
+        Vector2 offset = Vector2.Zero;
+        if (ObjectCache.getInstance().getMe() != null)
+        {
+            Vec2i pp = ObjectCache.getInstance().getMe().getCoord().div(11);
+            pp = pp.sub(pp.mul(2));
+            offset = pp.getVector2();
+        }
+        return offset;
     }
 
     public void setState(GameState state)

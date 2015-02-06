@@ -19,16 +19,22 @@ public class ObjectCache
     List<GameObject> _objects = new ArrayList<>();
 
     /**
-     * объект моего персонажа 
+     * объект моего персонажа
      */
     GameObject _me;
 
     public void addObject(GameObject object)
     {
         _objects.add(object);
-        if (object.getObjectId() == Player.getInstance().getObjectId()) {
+        if (object.getObjectId() == Player.getInstance().getObjectId())
+        {
             _me = object;
         }
+    }
+
+    public List<GameObject> getObjects()
+    {
+        return _objects;
     }
 
     public void clear()
@@ -39,9 +45,11 @@ public class ObjectCache
 
     /**
      * получить объект моего персонажа
+     *
      * @return
      */
-    public GameObject getMe() {
+    public GameObject getMe()
+    {
         return _me;
     }
 
