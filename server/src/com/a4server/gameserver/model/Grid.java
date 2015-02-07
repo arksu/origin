@@ -720,4 +720,10 @@ public class Grid
             p.getClient().sendPacket(pkt);
         }
     }
+
+    @Override
+    public String toString()
+    {
+        return "(" + _x + ", " + _y + ")";
+    }
 }

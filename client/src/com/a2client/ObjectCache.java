@@ -32,6 +32,26 @@ public class ObjectCache
         }
     }
 
+    public void removeObject(int objectId)
+    {
+        GameObject toRemove = null;
+        for (GameObject o : _objects)
+        {
+            if (o.getObjectId() == objectId)
+            {
+                toRemove = o;
+            }
+        }
+        if (toRemove != null)
+        {
+            _objects.remove(toRemove);
+            if (_me == toRemove)
+            {
+                _me = null;
+            }
+        }
+    }
+
     public List<GameObject> getObjects()
     {
         return _objects;

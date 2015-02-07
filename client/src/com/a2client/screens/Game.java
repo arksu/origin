@@ -37,7 +37,7 @@ public class Game extends BaseScreen
     private GameState _state = GameState.ENTERING;
     private OrthographicCamera _camera;
 
-    private Vector2 _player_pos = new Vector2(0, 0);
+    private Vector2 _camera_offset = new Vector2(0, 0);
 
     private ShapeRenderer _renderer = new ShapeRenderer();
     private Vector2 _world_mouse_pos = new Vector2();
@@ -83,27 +83,27 @@ public class Game extends BaseScreen
     public void onUpdate()
     {
 
-        //_player_pos.x += -0.1f * Gdx.graphics.getDeltaTime();
+        //_camera_offset.x += -0.1f * Gdx.graphics.getDeltaTime();
 
 
-        _world_mouse_pos = screen2world(Gdx.input.getX(), Gdx.input.getY()).sub(getOffset()).sub(_player_pos);
+        _world_mouse_pos = screen2world(Gdx.input.getX(), Gdx.input.getY()).sub(getOffset()).sub(_camera_offset);
 
-        //_player_pos = new Vector2();
+        //_camera_offset = new Vector2();
         if (com.a2client.Input.KeyDown(Input.Keys.W))
         {
-            _player_pos.y -= MOVE_STEP;
+            _camera_offset.y -= MOVE_STEP;
         }
         if (com.a2client.Input.KeyDown(Input.Keys.S))
         {
-            _player_pos.y += MOVE_STEP;
+            _camera_offset.y += MOVE_STEP;
         }
         if (com.a2client.Input.KeyDown(Input.Keys.A))
         {
-            _player_pos.x += MOVE_STEP;
+            _camera_offset.x += MOVE_STEP;
         }
         if (com.a2client.Input.KeyDown(Input.Keys.D))
         {
-            _player_pos.x -= MOVE_STEP;
+            _camera_offset.x -= MOVE_STEP;
         }
 
         if (com.a2client.Input.isWheelUpdated())
@@ -122,7 +122,7 @@ public class Game extends BaseScreen
         {
             Vec2i pp = ObjectCache.getInstance().getMe().getCoord().div(11);
             pp = pp.sub(pp.mul(2));
-            //            _player_pos = pp.getVector2();
+            //            _camera_offset = pp.getVector2();
         }
         _camera.position.set(Vector2.Zero, 0);
         _camera.update();
@@ -135,7 +135,7 @@ public class Game extends BaseScreen
         // оффсет
         Vector2 offset = getOffset();
 
-        offset.add(_player_pos);
+        offset.add(_camera_offset);
 
         // координаты тайла который рендерим
         Vector2 tc = new Vector2();
@@ -177,7 +177,7 @@ public class Game extends BaseScreen
 
     private void renderObject(GameObject object)
     {
-        Vector2 oc = object.getCoord().div(11).getVector2().add(getOffset()).add(_player_pos);
+        Vector2 oc = object.getCoord().div(11).getVector2().add(getOffset()).add(_camera_offset);
 
         _renderer.setColor(Color.RED);
         float sz = 0.5f;

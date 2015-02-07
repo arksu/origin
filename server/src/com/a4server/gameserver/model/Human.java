@@ -32,7 +32,7 @@ public abstract class Human extends MoveObject
      * дистанция на которой мы видим объекты
      * может изменяться динамически (ночью видим хуже)
      */
-    protected int _visibleDistance = 30;
+    protected int _visibleDistance = 100;
 
     /**
      * дистанция которую нужно пройти чтобы произошел апдейт видимых объектов
@@ -237,7 +237,6 @@ public abstract class Human extends MoveObject
     protected void removeKnownObject(GameObject object)
     {
         _knownKist.remove(object);
-
     }
 
     /**

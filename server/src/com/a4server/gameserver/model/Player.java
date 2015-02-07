@@ -36,7 +36,7 @@ public class Player extends Human
 
         _typeId = 1;
         _appearance = new PcAppearance(rset, objectId);
-        setVisibleDistance(100);
+        setVisibleDistance(1000);
         try
         {
             _account = rset.getString("account");
