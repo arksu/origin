@@ -10,13 +10,13 @@ public class CharInfo extends GameServerPacket
 
     private int _objectId;
     private String _name;
-    
+
     @Override
     public void readImpl()
     {
-        _log.debug("CharInfo");
         _objectId = readD();
         _name = readS();
+        _log.debug("CharInfo: " + _name + " id=" + _objectId);
     }
 
     @Override

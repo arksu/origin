@@ -1,5 +1,6 @@
 package com.a2client.screens;
 
+import com.a2client.Config;
 import com.a2client.Input;
 import com.a2client.gui.GUI;
 import com.a2client.gui.GUIGDX;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class BaseScreen implements Screen
 {
@@ -41,6 +43,7 @@ public class BaseScreen implements Screen
         Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
         onRender3D();
+
         GUIGDX.getSpriteBatch().begin();
         onRender();
         GUI.getInstance().Render();
@@ -53,7 +56,14 @@ public class BaseScreen implements Screen
     @Override
     public void resize(int width, int height)
     {
+        Config.WindowWidth = width;
+        Config.WindowHeight = height;
 
+        OrthographicCamera camera = new OrthographicCamera();
+        camera.setToOrtho(false, Config.getScreenWidth(), Config.getScreenHeight());
+        GUIGDX.getSpriteBatch().setProjectionMatrix(camera.combined);
+
+        GUI.getInstance().ResolutionChanged();
     }
 
     @Override

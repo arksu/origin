@@ -40,6 +40,7 @@ public class ObjectCache
             if (o.getObjectId() == objectId)
             {
                 toRemove = o;
+                break;
             }
         }
         if (toRemove != null)

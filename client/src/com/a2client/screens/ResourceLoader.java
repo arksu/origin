@@ -2,6 +2,7 @@ package com.a2client.screens;
 
 import com.a2client.Main;
 import com.a2client.Lang;
+import com.a2client.gui.GUI;
 import com.a2client.gui.GUIGDX;
 import com.a2client.gui.Skin;
 import com.a2client.gui.Skin_MyGUI;
@@ -183,7 +184,7 @@ public class ResourceLoader implements Screen
     @Override
     public void resize(int width, int height)
     {
-
+        GUI.getInstance().ResolutionChanged();
     }
 
     @Override

@@ -151,8 +151,6 @@ public class Main extends com.badlogic.gdx.Game
 
         Net.CloseConnection();
 
-
-
         freeScreen();
         getInstance().setScreen(new Login());
     }
