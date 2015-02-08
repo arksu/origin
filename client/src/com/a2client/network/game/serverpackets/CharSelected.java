@@ -1,12 +1,17 @@
 package com.a2client.network.game.serverpackets;
 
-import com.a2client.Log;
 import com.a2client.Player;
+import com.a2client.network.game.GamePacketHandler;
 import com.a2client.network.game.clientpackets.EnterWorld;
 import com.a2client.screens.Game;
 
 public class CharSelected extends GameServerPacket
 {
+    static
+    {
+        GamePacketHandler.AddPacketType(0x0A, CharSelected.class);
+    }
+
     int _objectId;
     String _name;
 

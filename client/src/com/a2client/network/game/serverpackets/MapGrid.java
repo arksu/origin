@@ -2,10 +2,16 @@ package com.a2client.network.game.serverpackets;
 
 import com.a2client.model.Grid;
 import com.a2client.MapCache;
+import com.a2client.network.game.GamePacketHandler;
 import com.a2client.util.Vec2i;
 
 public class MapGrid extends GameServerPacket
 {
+    static
+    {
+        GamePacketHandler.AddPacketType(0x0B, MapGrid.class);
+    }
+
     int _px, _py;
     Vec2i _gc;
     byte[] _data;

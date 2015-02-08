@@ -2,6 +2,7 @@ package com.a2client.network.game.serverpackets;
 
 import com.a2client.ObjectCache;
 import com.a2client.model.GameObject;
+import com.a2client.network.game.GamePacketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +11,11 @@ import org.slf4j.LoggerFactory;
  */
 public class ObjectAdd extends GameServerPacket
 {
+    static
+    {
+        GamePacketHandler.AddPacketType(0x11, ObjectAdd.class);
+    }
+
     private static final Logger _log = LoggerFactory.getLogger(ObjectAdd.class.getName());
 
     public int _objectId;

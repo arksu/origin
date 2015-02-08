@@ -1,5 +1,6 @@
 package com.a4server.gameserver.network.clientpackets;
 
+import com.a4server.gameserver.model.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,10 @@ public class MouseClick extends GameClientPacket
     @Override
     public void run()
     {
-
+        Player player = client.getActiveChar();
+        if (player != null)
+        {
+//            player
+        }
     }
 }
