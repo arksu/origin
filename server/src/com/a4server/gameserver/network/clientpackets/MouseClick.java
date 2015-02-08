@@ -28,10 +28,23 @@ public class MouseClick extends GameClientPacket
     @Override
     public void run()
     {
+        boolean isDown = _button >= 10;
+        _button = _button >= 10 ? _button - 10 : _button;
         Player player = client.getActiveChar();
         if (player != null)
         {
-//            player
+            if (isDown)
+            {
+                switch (_button)
+                {
+                    // LEFT
+                    case 0 :
+                        // если кликнули не в объект
+                        if (_objectId == 0) {
+                            player.MoveToPoint(_x, _y);
+                        }
+                }
+            }
         }
     }
 }

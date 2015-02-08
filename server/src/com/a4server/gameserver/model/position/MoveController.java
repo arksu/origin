@@ -4,6 +4,8 @@ import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.MoveObject;
 
 /**
+ * реализует передвижения объектов
+ * расчитывает новую позицию. ставит ее клиенту и уведомляет всех о смене позиции
  * Created by arksu on 09.01.2015.
  */
 public abstract class MoveController

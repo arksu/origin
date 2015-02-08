@@ -1,4 +1,4 @@
-# origin
+# Origin
 Origin is survival MMO game
 
 redeploy project:
@@ -8,8 +8,6 @@ redeploy project:
 - run ```gradle wrapper``` in project dir
 
 - open idea. menu File->Import project, select dir with clonned rep, select build.gradle
-
-- open Project structure change Project language level, set it to 7
 
 - run command ```gradle idea-run``` (for import all run configurations)
 

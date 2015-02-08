@@ -2,6 +2,7 @@ package com.a4server.gameserver.model;
 
 import com.a4server.Database;
 import com.a4server.gameserver.GameClient;
+import com.a4server.gameserver.model.position.MoveToPoint;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import com.a4server.gameserver.network.serverpackets.MapGrid;
@@ -273,9 +274,23 @@ public class Player extends Human
         }
     }
 
+    /**
+     * получить текущую скорость игрока
+     * @return скорость в единицах координат в секунду (в тайле TILE_SIZE единиц)
+     */
     @Override
     public int getSpeed()
     {
         return 10;
+    }
+
+    /**
+     * двигаться к заданной точке на карте
+     * @param x точка на карте
+     * @param y точка на карте
+     */
+    public void MoveToPoint(int x, int y)
+    {
+        _moveController = new MoveToPoint(x, y);
     }
 }

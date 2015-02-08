@@ -6,8 +6,6 @@ import com.a4server.util.Rnd;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Random;
-
 /**
  * описание позиции объекта в игровом мире
  * храним координаты. спавним привязанный объект в мир.
@@ -159,9 +157,9 @@ public class ObjectPosition
         }
 
         // проинформируем объект что перешли в другой грид
-        if (getActiveObject() instanceof Human)
+        if (getActiveObject() instanceof MoveObject)
         {
-            ((Human) getActiveObject()).onGridChanged();
+            ((MoveObject) getActiveObject()).onGridChanged();
         }
         _grid = value;
     }
