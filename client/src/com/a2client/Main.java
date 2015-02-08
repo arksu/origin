@@ -4,6 +4,7 @@ import com.a2client.dialogs.Dialog;
 import com.a2client.gui.GUI;
 import com.a2client.gui.GUIGDX;
 import com.a2client.network.Net;
+import com.a2client.network.game.GamePacketHandler;
 import com.a2client.screens.Login;
 import com.a2client.screens.ResourceLoader;
 import com.a2client.util.Utils;
@@ -61,6 +62,8 @@ public class Main extends com.badlogic.gdx.Game
         // загрузим нативные либы
         LoadNativeLibs();
 
+        GamePacketHandler.InitPackets();
+        
         // запускаем приложение
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
         cfg.title = "Origin v2.0";

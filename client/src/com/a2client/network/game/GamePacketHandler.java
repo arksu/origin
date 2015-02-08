@@ -1,14 +1,48 @@
 package com.a2client.network.game;
 
-import com.a2client.Log;
-import com.a2client.network.game.serverpackets.GameServerPacket;
+import com.a2client.network.game.serverpackets.*;
 import com.a2client.screens.Login;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class GamePacketHandler
 {
+    public static Logger _log = LoggerFactory.getLogger(GamePacketHandler.class.getName());
+
+    private static Class<?>[] _pktClasses = {
+            Init.class,
+            CharacterCreateFail.class,
+            CharacterList.class,
+            CharInfo.class,
+            CharSelected.class,
+            MapGrid.class,
+            ObjectAdd.class,
+            ObjectRemove.class,
+            PlayerAppearance.class,
+            ServerClose.class,
+            StatusUpdate.class,
+            TimeUpdate.class,
+            WorldInfo.class
+    };
+
+    static public void InitPackets()
+    {
+        try
+        {
+            for (Class<?> c : _pktClasses)
+            {
+                Class.forName(c.getName(), true, c.getClassLoader());
+            }
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     static private Map<Integer, Class<? extends GameServerPacket>> _packets = new HashMap<>();
 
     static public GameServerPacket HandlePacket(byte[] data)
@@ -22,7 +56,7 @@ public class GamePacketHandler
         {
             try
             {
-                pkt = pktClass.getConstructor().newInstance();
+                pkt = pktClass.newInstance();
             }
             catch (Exception e)
             {
@@ -34,53 +68,6 @@ public class GamePacketHandler
         {
             debugOpcode(opcode);
         }
-
-        //Log.info("game packet opcode: " + opcode);
-//        switch (opcode)
-//        {
-//            case 0x01:
-//                pkt = new Init();
-//                break;
-//            case 0x03:
-//                pkt = new CharacterList();
-//                break;
-//            case 0x07:
-//                pkt = new CharacterCreateFail();
-//                break;
-//            case 0x08:
-//                pkt = new ServerClose();
-//                break;
-//            case 0x0A:
-//                pkt = new CharSelected();
-//                break;
-//            case 0x0B:
-//                pkt = new MapGrid();
-//                break;
-//            case 0x0C:
-//                pkt = new TimeUpdate();
-//                break;
-//            case 0x0D:
-//                pkt = new CharInfo();
-//                break;
-//            case 0x0F:
-//                pkt = new StatusUpdate();
-//                break;
-//            case 0x10:
-//                pkt = new WorldInfo();
-//                break;
-//            case 0x11:
-//                pkt = new ObjectAdd();
-//                break;
-//            case 0x12:
-//                pkt = new ObjectRemove();
-//                break;
-//            case 0x13:
-//                pkt = new PlayerAppearance();
-//                break;
-//            default:
-//                debugOpcode(opcode);
-//                break;
-//        }
 
         // установим данные в пакет
         if (pkt != null)
@@ -95,17 +82,9 @@ public class GamePacketHandler
         _packets.put(opcode, pkt);
     }
     
-    static public void InitPackets() {
-//        Reflections reflections = new Reflections("my.project.prefix");
-//
-//        Set<Class<? extends Object>> allClasses =
-//                reflections.getSubTypesOf(Object.class);
-        
-    }
-
     static private void debugOpcode(int opcode)
     {
-        Log.info("Unknown game server packet opcode: " + opcode);
+        _log.info("Unknown game server packet opcode: " + opcode);
         Login.Error("packet");
     }
 }
