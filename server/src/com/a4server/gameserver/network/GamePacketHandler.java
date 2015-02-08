@@ -2,10 +2,7 @@ package com.a4server.gameserver.network;
 
 import com.a4server.gameserver.GameClient;
 import com.a4server.gameserver.GameClient.GameClientState;
-import com.a4server.gameserver.network.clientpackets.AuthGame;
-import com.a4server.gameserver.network.clientpackets.CharacterSelect;
-import com.a4server.gameserver.network.clientpackets.EnterWorld;
-import com.a4server.gameserver.network.clientpackets.GameClientPacket;
+import com.a4server.gameserver.network.clientpackets.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,9 +56,9 @@ public class GamePacketHandler
                     case 0x09:
                         pkt = new EnterWorld();
                         break;
-//                    case 0x0E:
-//                        pkt = new MoveBackwardToLocation();
-//                        break;
+                    case 0x0E:
+                        pkt = new MouseClick();
+                        break;
 
                     default:
                         debugOpcode(opcode, state);

@@ -6,6 +6,7 @@ import com.a2client.gui.GUI_Button;
 import com.a2client.gui.GUI_Label;
 import com.a2client.model.GameObject;
 import com.a2client.model.Grid;
+import com.a2client.network.game.clientpackets.MouseClick;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -41,6 +42,7 @@ public class Game extends BaseScreen
 
     private ShapeRenderer _renderer = new ShapeRenderer();
     private Vector2 _world_mouse_pos = new Vector2();
+    private boolean[] mouse_btns = new boolean[3];
 
     static final float MOVE_STEP = 0.2f;
 
@@ -116,17 +118,41 @@ public class Game extends BaseScreen
         {
             _statusText = _world_mouse_pos.toString();
         }
-        _lblStatus.caption = "FPS: "+Gdx.graphics.getFramesPerSecond()+" "+ _statusText;
+        _lblStatus.caption = "FPS: " + Gdx.graphics.getFramesPerSecond() + " " + _statusText;
 
         if (ObjectCache.getInstance().getMe() != null)
         {
-            Vec2i pp = ObjectCache.getInstance().getMe().getCoord().div(11);
+            Vec2i pp = ObjectCache.getInstance().getMe().getCoord().div(MapCache.TILE_SIZE);
             pp = pp.sub(pp.mul(2));
             //            _camera_offset = pp.getVector2();
         }
         _camera.position.set(Vector2.Zero, 0);
         _camera.update();
 
+        UpdateMouseButtons();
+    }
+
+    protected void UpdateMouseButtons()
+    {
+        boolean[] old_btns = new boolean[3];
+        old_btns[0] = mouse_btns[0];
+        old_btns[1] = mouse_btns[1];
+        old_btns[2] = mouse_btns[2];
+        for (int i = 0; i < 3; i++)
+        {
+            mouse_btns[i] = com.a2client.Input.MouseBtns[i];
+            // узнаем на какую кнопку нажали
+            if (mouse_btns[i] != old_btns[i])
+            {
+                new MouseClick(
+                        mouse_btns[i],
+                        i,
+                        Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE),
+                        Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE),
+                        0
+                ).Send();
+            }
+        }
     }
 
     @Override
@@ -177,11 +203,11 @@ public class Game extends BaseScreen
 
     private void renderObject(GameObject object)
     {
-        Vector2 oc = object.getCoord().div(11).getVector2().add(getOffset()).add(_camera_offset);
+        Vector2 oc = object.getCoord().div(MapCache.TILE_SIZE).getVector2().add(getOffset()).add(_camera_offset);
 
         _renderer.setColor(Color.RED);
         float sz = 0.5f;
-        _renderer.box(oc.x-sz, oc.y-sz, 0, sz, sz, 0.7f);
+        _renderer.box(oc.x - sz, oc.y - sz, 0, sz, sz, 0.7f);
     }
 
     @Override
@@ -211,7 +237,7 @@ public class Game extends BaseScreen
         Vector2 offset = Vector2.Zero;
         if (ObjectCache.getInstance().getMe() != null)
         {
-            Vec2i pp = ObjectCache.getInstance().getMe().getCoord().div(11);
+            Vec2i pp = ObjectCache.getInstance().getMe().getCoord().div(MapCache.TILE_SIZE);
             pp = pp.sub(pp.mul(2));
             offset = pp.getVector2();
         }
