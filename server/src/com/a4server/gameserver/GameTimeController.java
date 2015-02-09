@@ -1,6 +1,7 @@
 package com.a4server.gameserver;
 
 import com.a4server.Config;
+import com.a4server.ThreadPoolManager;
 import com.a4server.gameserver.model.MoveObject;
 import com.a4server.gameserver.model.position.MoveController;
 import com.a4server.util.StackTrace;
@@ -38,10 +39,10 @@ public class GameTimeController extends Thread
     public static final int TICKS_PER_IG_MINUTE = TICKS_PER_IG_DAY / (24 * 60);
 
     private static GameTimeController _instance;
-    
+
     private volatile int _tickCount;
     /**
-     * список объектов которые двигаются в данный момент, которые будем обновлять каждый тик 
+     * список объектов которые двигаются в данный момент, которые будем обновлять каждый тик
      */
     private final FastMap<Integer, MoveObject> _movingObjects = new FastMap<Integer, MoveObject>().shared();
 
@@ -71,7 +72,6 @@ public class GameTimeController extends Thread
 
     /**
      * количество абсолютных игровых минут
-     *
      * @return
      */
     public final int getGameTime()
@@ -102,28 +102,50 @@ public class GameTimeController extends Thread
     private void moveObjects() throws Exception
     {
         MoveObject obj;
-        for (FastMap.Entry<Integer, MoveObject> e = _movingObjects.head(), tail = _movingObjects.tail(); (e = e.getNext()) != tail;)
+        for (FastMap.Entry<Integer, MoveObject> e = _movingObjects.head(), tail = _movingObjects.tail(); (e = e
+                .getNext()) != tail; )
         {
             obj = e.getValue();
 
             MoveController controller = obj.getMoveController();
-            if (controller != null) {
-                controller.updateMove();
-            }
+            if (controller != null)
             {
-                //obj.getMoveController().
-                // Destination reached. Remove from map and execute arrive event.
-                _movingObjects.remove(e.getKey());
-                //fireCharacterArrived(obj);
+                // обновим и узнаем закончено ли движение?
+                if (controller.updateMove())
+                {
+                    // удалим из списка передвижений. больше ему не надо никуда двигаться
+                    _movingObjects.remove(e.getKey());
+                    // скажем объекту что он дошел куда надо
+                    obj.onArrived();
+                }
+            }
+            else
+            {
+                // ошибка. объект в списке передвижения но контроллера у него нет.
+                _log.warn("moveObjects: object no controller! " + obj.toString());
             }
         }
     }
 
     /**
+     * добавим объект который передвгиается
+     */
+    public void AddMovingObject(MoveObject object)
+    {
+        // проверим что контроллер есть у объекта, иначе нет смысла добавлять его в очередь передвижения
+        if (object.getMoveController() == null)
+        {
+            return;
+        }
+        _movingObjects.putIfAbsent(object.getObjectId(), object);
+    }
+
+    /**
      * произошел игровой тик. надо обсчитать объекты. обновить их состояние
      */
-    private void doGameTick() {
-        
+    private void doGameTick()
+    {
+
     }
 
     /**
@@ -148,7 +170,7 @@ public class GameTimeController extends Thread
     {
         if (Config.DEBUG)
         {
-            _log.debug("store time in db: "+_tickCount);
+            _log.debug("store time in db: " + _tickCount);
         }
         GlobalVariablesManager.getInstance().saveVarInt("server_time", _tickCount);
     }
@@ -208,14 +230,14 @@ public class GameTimeController extends Thread
                     if (getGameTicks() - gameTickTimer > 10)
                     {
                         // запишем значение времени в базу
-//                        ThreadPoolManager.getInstance().executeAi(new Runnable()
-//                        {
-//                            @Override
-//                            public final void run()
-//                            {
-//                                store();
-//                            }
-//                        });
+                        ThreadPoolManager.getInstance().scheduleGeneral(new Runnable()
+                        {
+                            @Override
+                            public final void run()
+                            {
+                                store();
+                            }
+                        }, 0);
                         gameTickTimer = getGameTicks();
                         // игровой тик сменился. надо обсчитывать объекты
                     }

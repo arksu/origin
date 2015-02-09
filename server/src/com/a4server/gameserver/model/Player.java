@@ -291,6 +291,7 @@ public class Player extends Human
      */
     public void MoveToPoint(int x, int y)
     {
-        _moveController = new MoveToPoint(x, y);
+        // запустим движение. создадим контроллер для этого
+        StartMove(new MoveToPoint(x, y));
     }
 }

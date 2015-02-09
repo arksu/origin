@@ -44,7 +44,6 @@ public class ObjectPosition
      * пробуем заспавнить привязанный объект в мир
      * ищем грид по координатам
      * просим у грида чтобы он добавил нас в себя
-     *
      * @return истина если получилось
      */
     public boolean trySpawn()
@@ -87,11 +86,14 @@ public class ObjectPosition
         return false;
     }
 
-    public boolean trySpawnRandom() {
+    public boolean trySpawnRandom()
+    {
         int tries = 5;
-        while (tries > 0) {
+        while (tries > 0)
+        {
             setRandomPostion();
-            if (trySpawn()) {
+            if (trySpawn())
+            {
                 return true;
             }
             tries--;
@@ -111,7 +113,6 @@ public class ObjectPosition
 
     /**
      * изменить координаты в пределах уровня
-     *
      * @param x
      * @param y
      */
@@ -120,6 +121,11 @@ public class ObjectPosition
         _x = x;
         _y = y;
         updateGrid();
+    }
+
+    public void setXY(double x, double y)
+    {
+        setXY((int) Math.round(x), (int) Math.round(y));
     }
 
     /**
@@ -137,7 +143,6 @@ public class ObjectPosition
 
     /**
      * установить грид в котором находимся
-     *
      * @param value
      */
     public void setGrid(Grid value)
@@ -171,7 +176,6 @@ public class ObjectPosition
 
     /**
      * получить X в координатах гридов
-     *
      * @return
      */
     public int getGridX()
@@ -181,7 +185,6 @@ public class ObjectPosition
 
     /**
      * получить Y в координатах гридов
-     *
      * @return
      */
     public int getGridY()
@@ -204,28 +207,31 @@ public class ObjectPosition
      * @param otherPos
      * @return
      */
-    public int getDistance(ObjectPosition otherPos) {
-        if (otherPos == null) 
+    public int getDistance(ObjectPosition otherPos)
+    {
+        if (otherPos == null)
         {
             return 10000;
         }
-        
-        if (_level != otherPos._level) 
+
+        if (_level != otherPos._level)
         {
             _log.warn(otherPos.toString() + " level is different");
             return 10000;
-        } 
-        else 
+        }
+        else
         {
             return (int) Math.round(Math.sqrt(Math.pow((_x - otherPos._x), 2) + Math.pow((_y - otherPos._y), 2)));
         }
     }
-    
-    public ObjectPosition clone() {
+
+    public ObjectPosition clone()
+    {
         return new ObjectPosition(_x, _y, _level);
     }
-    
-    public boolean equals(ObjectPosition p) {
+
+    public boolean equals(ObjectPosition p)
+    {
         return _x == p._x && _y == p._y && _level == p._level;
     }
 

@@ -1,6 +1,5 @@
 package com.a4server.gameserver.model.position;
 
-import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.MoveObject;
 
 /**
@@ -12,21 +11,20 @@ public abstract class MoveController
 {
     protected MoveObject _activeObject;
 
+    public void setActiveObject(MoveObject object)
+    {
+        _activeObject = object;
+    }
+
     /**
      * обработать тик передвижения
-     * @return объект в который уперлись
+     * @return движение завершено? (уперлись во чтото или прибыли в пункт назначения)
      */
-    public abstract GameObject updateMove();
+    public abstract boolean updateMove();
 
     /**
      * находится ли объект в реально движении или стоит на месте
      * @return движется ли?
      */
     public abstract boolean isMoving();
-
-    /**
-     * достигли точки назначения, больше работа контроллера не требуется. он никогда не получит updateMove
-     * @return достигли?
-     */
-    public abstract boolean isArrived();
 }

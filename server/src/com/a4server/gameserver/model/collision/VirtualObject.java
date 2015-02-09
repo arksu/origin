@@ -5,7 +5,8 @@ import com.a4server.util.Rect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
+/** 
+ * виртуальный объект. нужен для возможности поставить объект виртуально и получить с ним коллизию.
  * Created by arksu on 07.01.2015.
  */
 public class VirtualObject

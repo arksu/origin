@@ -1,5 +1,7 @@
 package com.a4server.gameserver.model;
 
+import com.a4server.gameserver.GameTimeController;
+import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.position.MoveController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +17,15 @@ public abstract class MoveObject extends GameObject
 {
     protected static final Logger _log = LoggerFactory.getLogger(MoveObject.class.getName());
 
+    /**
+     * контроллер который управляет передвижением объекта
+     */
     protected MoveController _moveController = null;
+
+    /**
+     * результат передвижения 
+     */
+    protected CollisionResult _moveResult = null;
 
     /**
      * список гридов в которых находится объект. 9 штук.
@@ -27,11 +37,44 @@ public abstract class MoveObject extends GameObject
         super(objectId);
     }
 
+    /**
+     * получить скорость объекта 
+     * @return скорость в единицах координат в секунду
+     */
     public abstract int getSpeed();
 
     public MoveController getMoveController()
     {
         return _moveController;
+    }
+
+    /**
+     * начать передвижение объекта
+     * @param controller
+     */
+    public void StartMove(MoveController controller)
+    {
+        _moveController = controller;
+        _moveController.setActiveObject(this);
+        _moveResult = null;
+        GameTimeController.getInstance().AddMovingObject(this);
+    }
+
+    /**
+     * прекратить движение объекта по той или иной причине
+     */
+    public void StopMove() {
+        _moveController = null;
+        _moveResult = null;
+    }
+
+    /**
+     * прибыли в место назначения при передвижении
+     */
+    public void onArrived()
+    {
+        // занулим мув контроллер, чтобы корректно завершить движение
+        _moveController = null;
     }
 
     public List<Grid> getGrids()
@@ -67,7 +110,6 @@ public abstract class MoveObject extends GameObject
 
     /**
      * все нужные гриды реально загружены
-     *
      * @return
      */
     public boolean isGridsLoaded()
@@ -136,7 +178,6 @@ public abstract class MoveObject extends GameObject
 
     /**
      * входим в новый для объекта грид, нужно отреагировать
-     *
      * @param grid
      */
     protected void onEnterGrid(Grid grid)
@@ -145,7 +186,6 @@ public abstract class MoveObject extends GameObject
 
     /**
      * покидаем грид
-     *
      * @param grid
      */
     public void onLeaveGrid(Grid grid)

@@ -1,6 +1,5 @@
 package com.a4server.gameserver.model.position;
 
-import com.a4server.gameserver.model.GameObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,9 +12,9 @@ public class MoveFollow extends MoveController
     protected static final Logger _log = LoggerFactory.getLogger(MoveFollow.class.getName());
 
     @Override
-    public GameObject updateMove()
+    public boolean updateMove()
     {
-        return null;
+        return true;
     }
 
     @Override
@@ -24,9 +23,4 @@ public class MoveFollow extends MoveController
         return false;
     }
 
-    @Override
-    public boolean isArrived()
-    {
-        return false;
-    }
 }

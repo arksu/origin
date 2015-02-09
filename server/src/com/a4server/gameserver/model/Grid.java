@@ -106,7 +106,6 @@ public class Grid
 
     /**
      * создаем грид
-     *
      * @param x координата грида по сетке гридов (не игровых координат!)
      * @param y координата
      */
@@ -129,7 +128,6 @@ public class Grid
     /**
      * добавить объект в грид
      * перед вызовомгрид обязательно должен быть залочен!!!
-     *
      * @param object
      */
     public void addObject(GameObject object) throws RuntimeException
@@ -158,7 +156,6 @@ public class Grid
 
     /**
      * удалить объект из грида
-     *
      * @param object объект
      */
     public void removeObject(GameObject object)
@@ -180,7 +177,6 @@ public class Grid
 
     /**
      * получить тайл грида
-     *
      * @param index индекс внутри массива тайлов
      * @return тайл
      */
@@ -191,7 +187,6 @@ public class Grid
 
     /**
      * получить сырые данные массива тайлов
-     *
      * @return
      */
     public byte[] getTilesBlob()
@@ -230,7 +225,6 @@ public class Grid
     /**
      * подождать полной загрузки грида, блокирует вызывающий поток
      * если в процессе загрузки произошла ошибка бросит исключение
-     *
      * @throws InterruptedException
      * @throws ExecutionException
      * @throws TimeoutException
@@ -363,9 +357,8 @@ public class Grid
     /**
      * попробовать заспавнить рядом с исходными координатами игрока
      * грид может быть и не активирован
-     *
      * @param object игрок
-     * @param len    максимально допустимое расстояние спавна от исходной точки
+     * @param len максимально допустимое расстояние спавна от исходной точки
      * @return успешно ли
      */
     public boolean trySpawnNear(GameObject object, int len) throws Exception
@@ -466,7 +459,6 @@ public class Grid
 
     /**
      * точка в мировых координатах находится внутри грида
-     *
      * @param x
      * @param y
      * @return
@@ -486,7 +478,6 @@ public class Grid
 
     /**
      * проверить коллизию при передвижении
-     *
      * @return
      */
     public synchronized CollisionResult checkCollision(GameObject object,
@@ -626,7 +617,6 @@ public class Grid
 
     /**
      * попробовать залочить для обсчета коллизий
-     *
      * @param grid
      * @return
      */
@@ -647,7 +637,6 @@ public class Grid
      * активировать грид
      * только пока есть хоть 1 игрок связанный с гридом - он будет считатся активным
      * если ни одного игрока нет грид становится не активным и не обновляет свое состояние
-     *
      * @param player игрок который связывается с гридом
      * @return только если удалось активировать
      */
