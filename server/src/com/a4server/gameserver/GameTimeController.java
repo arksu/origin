@@ -1,7 +1,10 @@
 package com.a4server.gameserver;
 
 import com.a4server.Config;
+import com.a4server.gameserver.model.MoveObject;
+import com.a4server.gameserver.model.position.MoveController;
 import com.a4server.util.StackTrace;
+import javolution.util.FastMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +38,12 @@ public class GameTimeController extends Thread
     public static final int TICKS_PER_IG_MINUTE = TICKS_PER_IG_DAY / (24 * 60);
 
     private static GameTimeController _instance;
+    
     private volatile int _tickCount;
+    /**
+     * список объектов которые двигаются в данный момент, которые будем обновлять каждый тик 
+     */
+    private final FastMap<Integer, MoveObject> _movingObjects = new FastMap<Integer, MoveObject>().shared();
 
     private GameTimeController()
     {
@@ -87,9 +95,35 @@ public class GameTimeController extends Thread
         _log.info("Stopping " + getClass().getSimpleName());
     }
 
+    /**
+     * передвинуть все объекты которые есть в списке
+     * @throws Exception
+     */
     private void moveObjects() throws Exception
     {
-        //        sleep(1000);
+        MoveObject obj;
+        for (FastMap.Entry<Integer, MoveObject> e = _movingObjects.head(), tail = _movingObjects.tail(); (e = e.getNext()) != tail;)
+        {
+            obj = e.getValue();
+
+            MoveController controller = obj.getMoveController();
+            if (controller != null) {
+                controller.updateMove();
+            }
+            {
+                //obj.getMoveController().
+                // Destination reached. Remove from map and execute arrive event.
+                _movingObjects.remove(e.getKey());
+                //fireCharacterArrived(obj);
+            }
+        }
+    }
+
+    /**
+     * произошел игровой тик. надо обсчитать объекты. обновить их состояние
+     */
+    private void doGameTick() {
+        
     }
 
     /**
@@ -97,9 +131,11 @@ public class GameTimeController extends Thread
      */
     public void load()
     {
+        // загрузим значение тиков из базы
         _tickCount = GlobalVariablesManager.getInstance().getVarInt("server_time");
         if (_tickCount < 0)
         {
+            // если оно не корректно - поправим
             _tickCount = 0;
         }
         _log.info("Server time: " + _tickCount + " ticks");

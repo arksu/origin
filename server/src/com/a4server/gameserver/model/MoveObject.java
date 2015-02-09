@@ -15,7 +15,7 @@ public abstract class MoveObject extends GameObject
 {
     protected static final Logger _log = LoggerFactory.getLogger(MoveObject.class.getName());
 
-    MoveController _moveController = null;
+    protected MoveController _moveController = null;
 
     /**
      * список гридов в которых находится объект. 9 штук.
@@ -28,6 +28,11 @@ public abstract class MoveObject extends GameObject
     }
 
     public abstract int getSpeed();
+
+    public MoveController getMoveController()
+    {
+        return _moveController;
+    }
 
     public List<Grid> getGrids()
     {
@@ -140,6 +145,7 @@ public abstract class MoveObject extends GameObject
 
     /**
      * покидаем грид
+     *
      * @param grid
      */
     public void onLeaveGrid(Grid grid)

@@ -13,6 +13,9 @@ public class ThreadPoolManager
 {
     protected static final Logger _log = LoggerFactory.getLogger(ThreadPoolManager.class.getName());
 
+    /**
+     * основной пул потоков для обычных тасков
+     */
     protected ScheduledThreadPoolExecutor _generalScheduledThreadPool;
 
     /**

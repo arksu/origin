@@ -5,20 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * движение объекта к заданной точке на карте 
- * Created by arksu on 08.02.15.
+ * двигаться на привязке к указанному объекту. всегда стремится догнать его
+ * Created by arksu on 09.02.15.
  */
-public class MoveToPoint extends MoveController
+public class MoveFollow extends MoveController
 {
-    protected static final Logger _log = LoggerFactory.getLogger(MoveToPoint.class.getName());
-    
-    private int _toX;
-    private int _toY;
-    
-    public MoveToPoint(int x, int y) {
-        _toX = x;
-        _toY = y;
-    }
+    protected static final Logger _log = LoggerFactory.getLogger(MoveFollow.class.getName());
 
     @Override
     public GameObject updateMove()
