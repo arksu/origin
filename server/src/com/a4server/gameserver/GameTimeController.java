@@ -146,7 +146,7 @@ public class GameTimeController extends Thread
      */
     private void doGameTick()
     {
-        _log.info("doGameTick "+getGameTicks());
+//        _log.debug("doGameTick "+getGameTicks());
     }
 
     /**

@@ -510,6 +510,7 @@ public class Grid
         {
             return CollisionResult.FAIL;
         }
+        _log.debug("checkCollision ("+fromX+", "+fromY+") -> ("+toX+", "+toY+")");
 
         // посмотрим сколько нам нужно гридов для проверки коллизий
         Rect r = new Rect(fromX, fromY, toX, toY);

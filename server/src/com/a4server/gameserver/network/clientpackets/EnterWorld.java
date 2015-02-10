@@ -22,7 +22,7 @@ public class EnterWorld extends GameClientPacket
     @Override
     public void run()
     {
-        _log.info("EnterWorld");
+        _log.debug("EnterWorld");
         GameClient client = getClient();
 
         // ПОЕХАЛИ!

@@ -16,12 +16,6 @@ public class MoveToPoint extends MoveController
     private int _toX;
     private int _toY;
 
-    /**
-     * текущие координаты объекта. double для сглаживания.
-     */
-    private double _currentX;
-    private double _currentY;
-
     private Move.MoveType _moveType = Move.MoveType.MOVE_WALK;
 
     public MoveToPoint(int x, int y)
@@ -55,9 +49,11 @@ public class MoveToPoint extends MoveController
         double tmpX = _currentX + (tdx / td) * d;
         double tmpY = _currentY + (tdy / td) * d;
 
-        if (Update(_currentX, _currentY, tmpX, tmpY, Move.MoveType.MOVE_WALK, null))
+        if (Update(tmpX, tmpY, Move.MoveType.MOVE_WALK, null))
         {
-            td = Math.sqrt(Math.pow(_currentX+tmpX - _toX, 2) + Math.pow(_currentY+tmpY - _toY, 2));
+            
+            td = Math.sqrt(Math.pow(_currentX - _toX, 2) + Math.pow(_currentY - _toY, 2));
+            _log.debug("td="+Double.toString(td));
 
             // предел расстояния до конечной точки на котором считаем что пришли куда надо
             return td <= 0.5f;

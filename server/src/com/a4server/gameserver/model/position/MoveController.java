@@ -19,6 +19,12 @@ public abstract class MoveController
 
     protected MoveObject _activeObject;
 
+    /**
+     * текущие координаты объекта. double для сглаживания.
+     */
+    protected double _currentX;
+    protected double _currentY;
+
     public void setActiveObject(MoveObject object)
     {
         _activeObject = object;
@@ -38,17 +44,13 @@ public abstract class MoveController
 
     /**
      * обсчитать одну итерацию движения объекта
-     * @param fromX откуда
-     * @param fromY откуда
      * @param toX куда пробуем передвинутся
      * @param toY куда пробуем передвинутся
      * @param moveType тип передвижения. идем, плывем и тд
      * @param virtualObject виртуальный объект который может дать коллизию
      * @return истину если все ок. ложь если не успешно
      */
-    protected boolean Update(double fromX,
-                             double fromY,
-                             double toX,
+    protected boolean Update(double toX,
                              double toY,
                              Move.MoveType moveType,
                              VirtualObject virtualObject)
@@ -65,8 +67,8 @@ public abstract class MoveController
                     grid.tryLock(10);
                     // обсчитаем коллизию на это передвижение
                     CollisionResult collision = grid.checkCollision(_activeObject,
-                                                                    (int) Math.round(fromX),
-                                                                    (int) Math.round(fromY),
+                                                                    (int) Math.round(_currentX),
+                                                                    (int) Math.round(_currentY),
                                                                     (int) Math.round(toX),
                                                                     (int) Math.round(toY),
                                                                     moveType, virtualObject);
@@ -77,6 +79,8 @@ public abstract class MoveController
                         case COLLISION_NONE:
                             // можно ставить новую позицию объекту
                             _activeObject.getPos().setXY(toX, toY);
+                            _currentX = toX;
+                            _currentY = toY;
                             break;
                         default:
                             // остальные варианты пока не учитываем. но тут будет очень много всего ))
