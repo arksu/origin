@@ -107,6 +107,7 @@ public class GameTimeController extends Thread
         {
             obj = e.getValue();
 
+            // получим контроллера
             MoveController controller = obj.getMoveController();
             if (controller != null)
             {
@@ -145,7 +146,7 @@ public class GameTimeController extends Thread
      */
     private void doGameTick()
     {
-
+        _log.info("doGameTick "+getGameTicks());
     }
 
     /**
@@ -192,6 +193,7 @@ public class GameTimeController extends Thread
 
         long nextTickTime, sleepTime;
         int gameTickTimer = getGameTicks();
+        int lastGameTick = getGameTicks();
         //        boolean isNight = isNight();
 
         // делаем что-то ночью. спавним кого-то
@@ -227,6 +229,15 @@ public class GameTimeController extends Thread
                 {
                     Thread.sleep(sleepTime);
                     _tickCount++;
+
+                    // если надо обсчитаем игровой тик
+                    if (getGameTicks() != lastGameTick)
+                    {
+                        doGameTick();
+                        lastGameTick = getGameTicks();
+                    }
+
+                    // раз в 10 игровых тиков сохраним состояние в базу
                     if (getGameTicks() - gameTickTimer > 10)
                     {
                         // запишем значение времени в базу
@@ -239,12 +250,11 @@ public class GameTimeController extends Thread
                             }
                         }, 0);
                         gameTickTimer = getGameTicks();
-                        // игровой тик сменился. надо обсчитывать объекты
                     }
                 }
                 catch (final InterruptedException e)
                 {
-                    _log.warn("GameTimeController interrupted");
+                    _log.warn("GameTimeController: interrupted");
                 }
             }
 

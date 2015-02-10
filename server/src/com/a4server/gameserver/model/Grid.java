@@ -23,10 +23,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -225,18 +223,39 @@ public class Grid
     /**
      * подождать полной загрузки грида, блокирует вызывающий поток
      * если в процессе загрузки произошла ошибка бросит исключение
-     * @throws InterruptedException
-     * @throws ExecutionException
-     * @throws TimeoutException
+     * @throws GridLoadException
      */
-    public void waitLoad() throws Exception
+    public void waitLoad() throws GridLoadException
     {
-        // подождем выполнения задания
-        _loadFuture.get(2000, TimeUnit.MILLISECONDS);
+        try
+        {
+            // подождем выполнения задания
+            _loadFuture.get(2000, TimeUnit.MILLISECONDS);
+        }
+        catch (Exception e)
+        {
+            throw new GridLoadException("future get failed", e);
+        }
         // если после его выполнения грид не загружен - ошибка
         if (!_loaded)
         {
-            throw new RuntimeException("failed to load grid");
+            throw new GridLoadException("grid not loaded");
+        }
+    }
+
+    /**
+     * исключение при попытке загрузить грид
+     */
+    public class GridLoadException extends Exception
+    {
+        public GridLoadException(String message)
+        {
+            super(message);
+        }
+
+        public GridLoadException(String message, Throwable cause)
+        {
+            super(message, cause);
         }
     }
 
@@ -485,7 +504,7 @@ public class Grid
                                                        int toX, int toY,
                                                        Move.MoveType moveType,
                                                        VirtualObject virtual)
-            throws Exception
+            throws GridLoadException
     {
         if (!_mainLock.isLocked())
         {
