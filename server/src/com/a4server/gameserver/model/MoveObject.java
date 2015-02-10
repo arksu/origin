@@ -63,9 +63,10 @@ public abstract class MoveObject extends GameObject
     /**
      * прекратить движение объекта по той или иной причине
      */
-    public void StopMove() {
+    public void StopMove(CollisionResult result, int x, int y) {
         _moveController = null;
-        _moveResult = null;
+        _moveResult = result;
+        getPos().setXY(x, y);
     }
 
     /**

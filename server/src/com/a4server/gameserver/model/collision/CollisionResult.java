@@ -40,8 +40,8 @@ public class CollisionResult
     private Tile _tile = null;
     private GameObject _object = null;
     private VirtualObject _virtualObject = null;
-    private int _x;
-    private int _y;
+    private int _x = -1;
+    private int _y = -1;
 
     public CollisionResult(CollisionType resultType)
     {
@@ -79,5 +79,15 @@ public class CollisionResult
     public CollisionType getResultType()
     {
         return _resultType;
+    }
+
+    public int getX()
+    {
+        return _x;
+    }
+
+    public int getY()
+    {
+        return _y;
     }
 }

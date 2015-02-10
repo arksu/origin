@@ -1,5 +1,6 @@
 package com.a4server.gameserver.model.position;
 
+import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,12 @@ public class MoveFollow extends MoveController
     public boolean isMoving()
     {
         return false;
+    }
+
+    @Override
+    public GameServerPacket makeMovePacket()
+    {
+        return null;
     }
 
 }

@@ -193,9 +193,12 @@ public class Game extends BaseScreen
             }
         }
 
-        for (GameObject o : ObjectCache.getInstance().getObjects())
+        if (ObjectCache.getInstance() != null)
         {
-            renderObject(o);
+            for (GameObject o : ObjectCache.getInstance().getObjects())
+            {
+                renderObject(o);
+            }
         }
 
         _renderer.end();
