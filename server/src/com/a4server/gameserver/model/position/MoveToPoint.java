@@ -1,5 +1,6 @@
 package com.a4server.gameserver.model.position;
 
+import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import com.a4server.gameserver.network.serverpackets.ObjectMove;
@@ -63,7 +64,13 @@ public class MoveToPoint extends MoveController
             _log.debug("td=" + Double.toString(td));
 
             // предел расстояния до конечной точки на котором считаем что пришли куда надо
-            return td <= FINAL_DELTA;
+            boolean arrive = td <= FINAL_DELTA;
+            // если уже дошли - остановим движение
+            if (arrive)
+            {
+                _activeObject.StopMove(CollisionResult.NONE, _toX, _toY);
+            }
+            return arrive;
         }
         return true;
     }

@@ -23,7 +23,7 @@ public abstract class MoveObject extends GameObject
     protected MoveController _moveController = null;
 
     /**
-     * результат передвижения 
+     * результат передвижения
      */
     protected CollisionResult _moveResult = null;
 
@@ -38,7 +38,7 @@ public abstract class MoveObject extends GameObject
     }
 
     /**
-     * получить скорость объекта 
+     * получить скорость объекта
      * @return скорость в единицах координат в секунду
      */
     public abstract int getSpeed();
@@ -63,7 +63,9 @@ public abstract class MoveObject extends GameObject
     /**
      * прекратить движение объекта по той или иной причине
      */
-    public void StopMove(CollisionResult result, int x, int y) {
+    public void StopMove(CollisionResult result, int x, int y)
+    {
+        _log.debug("StopMove: " + result + " at " + x + ", " + y);
         _moveController = null;
         _moveResult = result;
         getPos().setXY(x, y);

@@ -90,4 +90,10 @@ public class CollisionResult
     {
         return _y;
     }
+
+    @Override
+    public String toString()
+    {
+        return _resultType.name();
+    }
 }

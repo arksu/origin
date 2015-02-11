@@ -267,7 +267,7 @@ public class Player extends Human
         }
         catch (SQLException e)
         {
-            _log.warn("failed: UpdateLastChar "+e.getMessage());
+            _log.warn("failed: UpdateLastChar " + e.getMessage());
         }
     }
 
@@ -288,6 +288,7 @@ public class Player extends Human
      */
     public void MoveToPoint(int x, int y)
     {
+        _log.debug("MoveToPoint to " + x + ", " + y);
         // запустим движение. создадим контроллер для этого
         StartMove(new MoveToPoint(x, y));
     }
