@@ -13,7 +13,7 @@ import com.a4server.gameserver.model.collision.Collision;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
 import com.a4server.gameserver.model.collision.VirtualObject;
-import com.a4server.gameserver.network.serverpackets.GameServerPacket;
+import com.a4server.gameserver.model.event.AbstractObjectEvent;
 import com.a4server.util.Rect;
 import com.a4server.util.Rnd;
 import javolution.util.FastList;
@@ -512,7 +512,7 @@ public class Grid
         {
             return CollisionResult.FAIL;
         }
-        _log.debug("checkCollision ("+fromX+", "+fromY+") -> ("+toX+", "+toY+")");
+        _log.debug("checkCollision (" + fromX + ", " + fromY + ") -> (" + toX + ", " + toY + ")");
 
         // посмотрим сколько нам нужно гридов для проверки коллизий
         Rect r = new Rect(fromX, fromY, toX, toY);
@@ -722,13 +722,18 @@ public class Grid
     }
 
     /**
-     * разослать всем игрокам грида пакет
+     * разослать всем игрокам грида событие на которое они должны отреагировать
      */
-    public void broadcastPacket(GameServerPacket pkt)
+    public void broadcastEvent(AbstractObjectEvent event)
     {
         for (Player p : _activePlayers)
         {
-            p.getClient().sendPacket(pkt);
+            // если игрок обработал это событие. и оно касается его
+            if (p.HandleEvent(event))
+            {
+                // отправим пакет
+                p.getClient().sendPacket(event.getPacket());
+            }
         }
     }
 

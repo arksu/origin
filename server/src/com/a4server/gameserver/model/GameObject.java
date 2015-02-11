@@ -29,9 +29,9 @@ public abstract class GameObject
     private Rect _boundRect;
 
     /**
-     * ид объекта
+     * ид объекта, задается лишь единожды
      */
-    protected int _objectId;
+    protected final int _objectId;
 
     /**
      * имя которое отображается над объектом
@@ -44,31 +44,40 @@ public abstract class GameObject
     protected String _title = "";
 
 
-    public GameObject(int objectId) {
+    public GameObject(int objectId)
+    {
+        if (objectId == 0)
+        {
+            throw new RuntimeException("objectId can not be zero");
+        }
         _objectId = objectId;
         _width = 10;
         _height = 10;
-        _boundRect = new Rect(-_width/2,-_height/2,_width/2,_height/2);
+        _boundRect = new Rect(-_width / 2, -_height / 2, _width / 2, _height / 2);
     }
 
-    public int getObjectId() {
+    public int getObjectId()
+    {
         return _objectId;
     }
-    
-    public int getTypeId() {
+
+    public int getTypeId()
+    {
         return _typeId;
     }
-    
+
     public String getName()
     {
         return _name;
     }
-    
-    public String getTitle() {
+
+    public String getTitle()
+    {
         return _title;
     }
 
-    public ObjectPosition getPos() {
+    public ObjectPosition getPos()
+    {
         return _pos;
     }
 
@@ -78,10 +87,11 @@ public abstract class GameObject
     }
 
     /**
-     * создать пакет для отсылки другим игрокам
+     * создать пакет о добавлении меня в мир
      * @return пакет
      */
-    public GameServerPacket makeAddPacket() {
+    public GameServerPacket makeAddPacket()
+    {
         return new ObjectAdd(this);
     }
 
@@ -89,8 +99,24 @@ public abstract class GameObject
      * создать пакет об удалении объекта из мира
      * @return пакет
      */
-    public GameServerPacket makeRemovePacket() {
+    public GameServerPacket makeRemovePacket()
+    {
         return new ObjectRemove(this._objectId);
     }
 
+    @Override
+    public String toString()
+    {
+        return "(" + getClass().getSimpleName() + ": " + _name + " id=" + _objectId + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof GameObject)
+        {
+            return ((GameObject) obj)._objectId == _objectId;
+        }
+        return super.equals(obj);
+    }
 }

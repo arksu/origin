@@ -105,7 +105,7 @@ public class Player extends Human
     public void onGridObjectAdded(GameObject object)
     {
         // тут проверим видим ли мы этот объект
-        if (isObjectVisible(object))
+        if (isObjectVisibleForMe(object))
         {
             addKnownObject(object);
         }

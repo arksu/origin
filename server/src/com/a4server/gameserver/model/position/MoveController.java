@@ -5,6 +5,8 @@ import com.a4server.gameserver.model.MoveObject;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
 import com.a4server.gameserver.model.collision.VirtualObject;
+import com.a4server.gameserver.model.event.AbstractObjectEvent;
+import com.a4server.gameserver.model.event.EventMove;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +47,17 @@ public abstract class MoveController
      * @return движется ли?
      */
     public abstract boolean isMoving();
+
+    /**
+     * создать игровое событие о движении объекта 
+     * @return событие
+     */
+    public AbstractObjectEvent getEvent()
+    {
+        EventMove evt = new EventMove(_activeObject, (int) Math.round(_currentX), (int) Math.round(_currentY));
+        evt.setPacket(makeMovePacket());
+        return evt;
+    }
 
     /**
      * создать пакет о том как движется объект
@@ -91,8 +104,8 @@ public abstract class MoveController
                             _activeObject.getPos().setXY(toX, toY);
                             _currentX = toX;
                             _currentY = toY;
-                            // разошлем всем пакет о том что объект передвинулся
-                            _activeObject.getPos().getGrid().broadcastPacket(makeMovePacket());
+                            // расскажем всем о том что мы передвинулись
+                            _activeObject.getPos().getGrid().broadcastEvent(getEvent());
                             return true;
 
                         case COLLISION_OBJECT:
