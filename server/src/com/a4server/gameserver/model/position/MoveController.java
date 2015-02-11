@@ -1,6 +1,7 @@
 package com.a4server.gameserver.model.position;
 
 import com.a4server.gameserver.model.Grid;
+import com.a4server.gameserver.model.Human;
 import com.a4server.gameserver.model.MoveObject;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
@@ -49,7 +50,7 @@ public abstract class MoveController
     public abstract boolean isMoving();
 
     /**
-     * создать игровое событие о движении объекта 
+     * создать игровое событие о движении объекта
      * @return событие
      */
     public AbstractObjectEvent getEvent()
@@ -106,6 +107,11 @@ public abstract class MoveController
                             _currentY = toY;
                             // расскажем всем о том что мы передвинулись
                             _activeObject.getPos().getGrid().broadcastEvent(getEvent());
+
+                            if (_activeObject instanceof Human)
+                            {
+                                ((Human) _activeObject).UpdateVisibleObjects(false);
+                            }
                             return true;
 
                         case COLLISION_OBJECT:

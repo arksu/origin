@@ -54,7 +54,7 @@ task makeDist(type: Sync, ) {
     }
 }
 
-task "run-client" (type:JavaExec, dependsOn:[classes]) {
+task "rc" (type:JavaExec, dependsOn:[classes]) {
     main = 'com.a2client.Main'
     classpath = sourceSets.main.runtimeClasspath
     args = ['-s', 'localhost', '-p', '2040', '-q']

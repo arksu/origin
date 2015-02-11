@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * базовый игровой объект  
+ * базовый игровой объект
  * Created by arksu on 06.02.15.
  */
 public class GameObject
@@ -18,24 +18,34 @@ public class GameObject
     private Vec2i _coord;
     private String _name;
     private String _title;
-    
-    public GameObject(ObjectAdd pkt) {
+
+    public GameObject(ObjectAdd pkt)
+    {
         _name = pkt._name;
         _title = pkt._title;
         _coord = new Vec2i(pkt._x, pkt._y);
         _objectId = pkt._objectId;
         _typeId = pkt._typeId;
     }
-    
-    public int getObjectId() {
+
+    public int getObjectId()
+    {
         return _objectId;
     }
-    
-    public int getTypeId() {
+
+    public int getTypeId()
+    {
         return _typeId;
     }
-    
-    public Vec2i getCoord() {
+
+    public Vec2i getCoord()
+    {
         return _coord;
+    }
+
+    public void setCoord(int x, int y)
+    {
+        _coord.x = x;
+        _coord.y = y;
     }
 }

@@ -17,7 +17,7 @@ public class ObjectPosition
 
     public volatile int _x;
     public volatile int _y;
-    private volatile int _z;
+//    private volatile int _z;
     /**
      * уровень земли
      */
@@ -35,7 +35,7 @@ public class ObjectPosition
     {
         _x = x;
         _y = y;
-        _z = 0;
+//        _z = 0;
         _level = level;
         _grid = null;
     }
@@ -113,8 +113,8 @@ public class ObjectPosition
 
     /**
      * изменить координаты в пределах уровня
-     * @param x
-     * @param y
+     * @param x координата
+     * @param y координата
      */
     public void setXY(int x, int y)
     {
@@ -143,11 +143,11 @@ public class ObjectPosition
 
     /**
      * установить грид в котором находимся
-     * @param value
+     * @param value грид
      */
     public void setGrid(Grid value)
     {
-        if ((_grid != null) && (getActiveObject() instanceof GameObject))
+        if ((_grid != null) && (getActiveObject() != null))
         {
             if (value != null)
             {
@@ -176,7 +176,7 @@ public class ObjectPosition
 
     /**
      * получить X в координатах гридов
-     * @return
+     * @return координата
      */
     public int getGridX()
     {
@@ -185,7 +185,7 @@ public class ObjectPosition
 
     /**
      * получить Y в координатах гридов
-     * @return
+     * @return координата
      */
     public int getGridY()
     {
@@ -204,8 +204,8 @@ public class ObjectPosition
 
     /**
      * получить дистанцию между позициями двух объектов
-     * @param otherPos
-     * @return
+     * @param otherPos позиция другого объекта
+     * @return дистанция в единицах координат
      */
     public int getDistance(ObjectPosition otherPos)
     {

@@ -14,17 +14,42 @@ public abstract class BaseSendPacket
 {
     protected Logger _log = LoggerFactory.getLogger(getClass().getName());
 
+    /**
+     * буфер для записи данных пакета
+     */
     private final ByteArrayOutputStream _bao;
+
+    /**
+     * следующий пакет, можно объединять в цепочку
+     */
     protected BaseSendPacket _next;
+
+    /**
+     * пакет записал себя в буфер
+     */
+    private boolean encoded = false;
 
     protected BaseSendPacket()
     {
         _bao = new ByteArrayOutputStream(32);
     }
 
+    synchronized private void doEncode()
+    {
+        if (encoded)
+        {
+            return;
+        }
+        write();
+        encoded = true;
+    }
+
     public void EncodePacket(ByteBuf out)
     {
-        write();
+        if (!encoded)
+        {
+            doEncode();
+        }
         // len
         int len = _bao.size();
         out.writeByte(len & 0xff);
@@ -33,12 +58,14 @@ public abstract class BaseSendPacket
         out.writeBytes(_bao.toByteArray());
 
         // если есть следующий прикрепленный пакет - отправим и его
-        if (_next != null) {
+        if (_next != null)
+        {
             _next.EncodePacket(out);
         }
     }
 
-    public BaseSendPacket addNext(BaseSendPacket pkt) {
+    public BaseSendPacket addNext(BaseSendPacket pkt)
+    {
         _next = pkt;
         return this;
     }

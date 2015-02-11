@@ -32,6 +32,18 @@ public class ObjectCache
         }
     }
 
+    public GameObject getObject(int objectId)
+    {
+        for (GameObject o : _objects)
+        {
+            if (o.getObjectId() == objectId)
+            {
+                return o;
+            }
+        }
+        return null;
+    }
+
     public void removeObject(int objectId)
     {
         GameObject toRemove = null;
@@ -66,7 +78,6 @@ public class ObjectCache
 
     /**
      * получить объект моего персонажа
-     *
      * @return
      */
     public GameObject getMe()

@@ -1,5 +1,6 @@
 package com.a2client.network.game.serverpackets;
 
+import com.a2client.ObjectCache;
 import com.a2client.network.game.GamePacketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,7 @@ public class ObjectMove extends GameServerPacket
     @Override
     public void run()
     {
-        _log.debug("ObjectMove "+_tox+", "+_toy);
+        _log.debug("ObjectMove "+_objectId+" "+_tox+", "+_toy);
+        ObjectCache.getInstance().getObject(_objectId).setCoord(_tox, _toy);
     }
 }

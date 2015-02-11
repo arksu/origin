@@ -134,7 +134,8 @@ public abstract class Human extends MoveObject
     public boolean isObjectVisibleForMe(GameObject object)
     {
         // по дефолту просто смотрим на расстояние мжеду нами
-        return (getPos().getDistance(object.getPos()) < _visibleDistance);
+        // себя всегда видим!
+        return  object.getObjectId() == getObjectId() || (getPos().getDistance(object.getPos()) < _visibleDistance);
     }
 
     /**

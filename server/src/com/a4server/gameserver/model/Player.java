@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * игрок и все что с ним связано
  * Created by arksu on 04.01.2015.
  */
 public class Player extends Human
@@ -37,7 +38,7 @@ public class Player extends Human
 
         _typeId = 1;
         _appearance = new PcAppearance(rset, objectId);
-        setVisibleDistance(1000);
+        setVisibleDistance(100);
         try
         {
             _account = rset.getString("account");
@@ -278,7 +279,7 @@ public class Player extends Human
     @Override
     public int getSpeed()
     {
-        return 10;
+        return 15;
     }
 
     /**
@@ -288,7 +289,7 @@ public class Player extends Human
      */
     public void MoveToPoint(int x, int y)
     {
-        _log.debug("MoveToPoint to " + x + ", " + y);
+        _log.debug("MoveToPoint to (" + x + ", " + y + ")");
         // запустим движение. создадим контроллер для этого
         StartMove(new MoveToPoint(x, y));
     }

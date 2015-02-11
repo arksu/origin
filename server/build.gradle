@@ -84,12 +84,12 @@ task makeDist(type: Sync) {
 }
 
 
-task "run-gameserver" (type:JavaExec, dependsOn:[classes]) {
+task "rg" (type:JavaExec, dependsOn:[classes]) {
     main = 'com.a4server.gameserver.GameServer'
     classpath = sourceSets.main.runtimeClasspath
 }
 
-task "run-loginserver" (type:JavaExec, dependsOn:[classes]) {
+task "rl" (type:JavaExec, dependsOn:[classes]) {
     main = 'com.a4server.loginserver.LoginServer'
     classpath = sourceSets.main.runtimeClasspath
 }

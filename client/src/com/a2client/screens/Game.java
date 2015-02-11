@@ -206,7 +206,7 @@ public class Game extends BaseScreen
 
     private void renderObject(GameObject object)
     {
-        Vector2 oc = object.getCoord().div(MapCache.TILE_SIZE).getVector2().add(getOffset()).add(_camera_offset);
+        Vector2 oc = new Vector2(object.getCoord().x, object.getCoord().y).div(MapCache.TILE_SIZE).add(getOffset()).add(_camera_offset);
 
         _renderer.setColor(Color.RED);
         float sz = 0.5f;
@@ -240,9 +240,10 @@ public class Game extends BaseScreen
         Vector2 offset = Vector2.Zero;
         if (ObjectCache.getInstance().getMe() != null)
         {
-            Vec2i pp = ObjectCache.getInstance().getMe().getCoord().div(MapCache.TILE_SIZE);
-            pp = pp.sub(pp.mul(2));
-            offset = pp.getVector2();
+            Vec2i op = ObjectCache.getInstance().getMe().getCoord();
+            Vector2 pp = new Vector2(op.x, op.y).div(MapCache.TILE_SIZE);
+            pp = pp.sub(pp.x * 2, pp.y * 2);
+            offset = pp;
         }
         return offset;
     }

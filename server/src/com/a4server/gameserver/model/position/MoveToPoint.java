@@ -46,12 +46,12 @@ public class MoveToPoint extends MoveController
     {
         // время прошедшее с последнего апдейта. пока тупо захардкодим
         double dt = 0.1f;
-        // расстояние которое прошли
-        double d = dt * _activeObject.getSpeed();
         // вычислим единичный вектор
         double tdx = _toX - _currentX;
         double tdy = _toY - _currentY;
         double td = Math.sqrt(Math.pow(tdx, 2) + Math.pow(tdy, 2));
+        // расстояние которое прошли за 1 тик. не более оставшегося до конечной точки
+        double d = Math.min(dt * _activeObject.getSpeed(), td);
 
         // помножим расстояние которое должны пройти на единичный вектор
         double tmpX = _currentX + (tdx / td) * d;

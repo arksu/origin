@@ -31,6 +31,6 @@ public class ObjectPos extends GameServerPacket
     @Override
     public void run()
     {
-
+        _log.debug("ObjectPos "+_objectId+" "+_x+", "+_y);
     }
 }
