@@ -45,7 +45,11 @@ public abstract class MoveController
      * @return движется ли?
      */
     public abstract boolean isMoving();
-    
+
+    /**
+     * создать пакет о том как движется объект
+     * @return пакет
+     */
     public abstract GameServerPacket makeMovePacket();
 
     /**

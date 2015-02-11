@@ -25,7 +25,9 @@ public class GamePacketHandler
             ServerClose.class,
             StatusUpdate.class,
             TimeUpdate.class,
-            WorldInfo.class
+            WorldInfo.class,
+            ObjectMove.class,
+            ObjectPos.class
     };
 
     static public void InitPackets()

@@ -108,8 +108,14 @@ public class NettyConnection
 
             if (pkt != null)
             {
-                pkt.readImpl();
-                pkt.run();
+                try
+                {
+                    pkt.readImpl();
+                    pkt.run();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Login.Error("packet");
+                }
             }
             else
             {

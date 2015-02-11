@@ -1,0 +1,40 @@
+package com.a2client.network.game.serverpackets;
+
+import com.a2client.network.game.GamePacketHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Created by arksu on 11.02.15.
+ */
+public class ObjectMove extends GameServerPacket
+{
+    static
+    {
+        GamePacketHandler.AddPacketType(0x14, ObjectMove.class);
+    }
+    
+    protected static final Logger _log = LoggerFactory.getLogger(ObjectMove.class.getName());
+
+    private int _objectId;
+    private int _tox;
+    private int _toy;
+    private int _vx;
+    private int _vy;
+    
+    @Override
+    public void readImpl()
+    {
+        _objectId = readD();
+        _tox = readD();
+        _toy = readD();
+        _vx = readD();
+        _vy = readD();
+    }
+
+    @Override
+    public void run()
+    {
+        _log.debug("ObjectMove "+_tox+", "+_toy);
+    }
+}

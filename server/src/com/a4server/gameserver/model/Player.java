@@ -121,8 +121,7 @@ public class Player extends Human
 
     /**
      * добавить объект в список видимых объектов
-     *
-     * @param object
+     * @param object объект
      */
     @Override
     protected void addKnownObject(GameObject object)
@@ -137,8 +136,7 @@ public class Player extends Human
 
     /**
      * удалить из списка видимых объектов
-     *
-     * @param object
+     * @param object объект
      */
     @Override
     protected void removeKnownObject(GameObject object)
@@ -152,8 +150,7 @@ public class Player extends Human
 
     /**
      * создать пакет для отсылки другим игрокам
-     *
-     * @return
+     * @return пакет
      */
     public GameServerPacket makeAddPacket()
     {
@@ -235,11 +232,9 @@ public class Player extends Human
 
     /**
      * активировать окружающие гриды
-     *
-     * @return
      * @throws InterruptedException
      */
-    public boolean activateGrids() throws InterruptedException
+    public void activateGrids() throws InterruptedException
     {
         for (Grid g : _grids)
         {
@@ -248,7 +243,6 @@ public class Player extends Human
                 throw new RuntimeException("fail to activate grids by " + this.toString());
             }
         }
-        return true;
     }
 
     /**
@@ -258,8 +252,9 @@ public class Player extends Human
     {
         // todo player storeInDb
     }
-    
-    public void UpdateLastChar() {
+
+    public void UpdateLastChar()
+    {
         try
         {
             try (Connection con = Database.getInstance().getConnection();
@@ -269,8 +264,10 @@ public class Player extends Human
                 ps.setString(2, _account);
                 ps.execute();
             }
-        } catch (SQLException e) {
-            
+        }
+        catch (SQLException e)
+        {
+            _log.warn("failed: UpdateLastChar "+e.getMessage());
         }
     }
 
