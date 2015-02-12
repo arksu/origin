@@ -37,7 +37,7 @@ public class ObjectMove extends GameServerPacket
     public void run()
     {
         _log.debug("ObjectMove " + _objectId + " " + _tox + ", " + _toy);
-        ObjectCache.getInstance().getObject(_objectId).setCoord(_tox, _toy);
-//        ObjectCache.getInstance().getObject(_objectId).Move(_tox, _toy, _vx, _vy);
+//        ObjectCache.getInstance().getObject(_objectId).setCoord(_tox, _toy);
+        ObjectCache.getInstance().getObject(_objectId).Move(_tox, _toy, _vx, _vy);
     }
 }

@@ -2,6 +2,7 @@ package com.a4server.gameserver.model;
 
 import com.a4server.gameserver.model.event.AbstractObjectEvent;
 import com.a4server.gameserver.model.event.EventMove;
+import com.a4server.gameserver.model.event.EventStopMove;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import javolution.util.FastList;
 import org.slf4j.Logger;
@@ -147,7 +148,7 @@ public abstract class Human extends MoveObject
     public boolean HandleEvent(AbstractObjectEvent event)
     {
         // событие движения
-        if (event instanceof EventMove)
+        if (event instanceof EventMove || event instanceof EventStopMove)
         {
             // знаю ли я этот объект?
             if (isKnownObject(event.getObject()))

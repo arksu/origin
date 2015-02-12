@@ -76,6 +76,8 @@ public class GameObject
 
     public void Update()
     {
-
+        if (_mover != null) {
+            _mover.Update();
+        }
     }
 }

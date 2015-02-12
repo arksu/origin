@@ -2,6 +2,7 @@ package com.a4server.gameserver.model;
 
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.collision.CollisionResult;
+import com.a4server.gameserver.model.event.EventStopMove;
 import com.a4server.gameserver.model.position.MoveController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,7 @@ public abstract class MoveObject extends GameObject
 
     /**
      * начать передвижение объекта
-     * @param controller
+     * @param controller контроллер движения
      */
     public void StartMove(MoveController controller)
     {
@@ -74,6 +75,7 @@ public abstract class MoveObject extends GameObject
         _moveController = null;
         _moveResult = result;
         getPos().setXY(x, y);
+        getPos().getGrid().broadcastEvent(new EventStopMove(this));
     }
 
     /**
@@ -118,7 +120,7 @@ public abstract class MoveObject extends GameObject
 
     /**
      * все нужные гриды реально загружены
-     * @return
+     * @return загружены все?
      */
     public boolean isGridsLoaded()
     {
@@ -186,7 +188,7 @@ public abstract class MoveObject extends GameObject
 
     /**
      * входим в новый для объекта грид, нужно отреагировать
-     * @param grid
+     * @param grid грид
      */
     protected void onEnterGrid(Grid grid)
     {
@@ -194,9 +196,9 @@ public abstract class MoveObject extends GameObject
 
     /**
      * покидаем грид
-     * @param grid
+     * @param grid грид
      */
-    public void onLeaveGrid(Grid grid)
+    protected void onLeaveGrid(Grid grid)
     {
     }
 }
