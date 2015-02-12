@@ -14,7 +14,7 @@ public class ObjectMove extends GameServerPacket
     {
         GamePacketHandler.AddPacketType(0x14, ObjectMove.class);
     }
-    
+
     protected static final Logger _log = LoggerFactory.getLogger(ObjectMove.class.getName());
 
     private int _objectId;
@@ -22,7 +22,7 @@ public class ObjectMove extends GameServerPacket
     private int _toy;
     private int _vx;
     private int _vy;
-    
+
     @Override
     public void readImpl()
     {
@@ -36,7 +36,8 @@ public class ObjectMove extends GameServerPacket
     @Override
     public void run()
     {
-        _log.debug("ObjectMove "+_objectId+" "+_tox+", "+_toy);
+        _log.debug("ObjectMove " + _objectId + " " + _tox + ", " + _toy);
         ObjectCache.getInstance().getObject(_objectId).setCoord(_tox, _toy);
+//        ObjectCache.getInstance().getObject(_objectId).Move(_tox, _toy, _vx, _vy);
     }
 }

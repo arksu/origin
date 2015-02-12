@@ -25,6 +25,12 @@ public class MoveFollow extends MoveController
     }
 
     @Override
+    public boolean canMoving()
+    {
+        return false;
+    }
+
+    @Override
     public GameServerPacket makeMovePacket()
     {
         return null;

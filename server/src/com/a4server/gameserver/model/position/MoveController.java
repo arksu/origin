@@ -50,6 +50,12 @@ public abstract class MoveController
     public abstract boolean isMoving();
 
     /**
+     * возможно ли начать движение
+     * @return
+     */
+    public abstract boolean canMoving();
+
+    /**
      * создать игровое событие о движении объекта
      * @return событие
      */
@@ -74,15 +80,62 @@ public abstract class MoveController
      * @param virtualObject виртуальный объект который может дать коллизию
      * @return истина если все ок. ложь если не успешно
      */
-    protected boolean Update(double toX,
-                             double toY,
-                             Move.MoveType moveType,
-                             VirtualObject virtualObject)
+    protected boolean Process(double toX,
+                              double toY,
+                              Move.MoveType moveType,
+                              VirtualObject virtualObject)
+    {
+        CollisionResult collision = checkColiision(toX, toY, moveType, virtualObject);
+        switch (collision.getResultType())
+        {
+            // коллизий нет
+            case COLLISION_NONE:
+                // можно ставить новую позицию объекту
+                _activeObject.getPos().setXY(toX, toY);
+                _currentX = toX;
+                _currentY = toY;
+                // расскажем всем о том что мы передвинулись
+                _activeObject.getPos().getGrid().broadcastEvent(getEvent());
+
+                if (_activeObject instanceof Human)
+                {
+                    ((Human) _activeObject).UpdateVisibleObjects(false);
+                }
+                return true;
+
+            case COLLISION_OBJECT:
+            case COLLISION_TILE:
+            case COLLISION_WORLD:
+            case COLLISION_VIRTUAL:
+                _activeObject.StopMove(collision, collision.getX(), collision.getY());
+                return false;
+
+            case COLLISION_FAIL:
+                _activeObject.StopMove(collision, (int) Math.round(_currentX),
+                                       (int) Math.round(_currentY));
+                return false;
+
+            default:
+                // возможно какая то ошибка зарылась
+                _log.error(this.getClass().getSimpleName() + " process error, unknown collision " +
+                                   collision.toString());
+
+                _activeObject.StopMove(CollisionResult.FAIL, (int) Math.round(_currentX),
+                                       (int) Math.round(_currentY));
+                return false;
+        }
+
+    }
+
+    protected CollisionResult checkColiision(double toX,
+                                             double toY,
+                                             Move.MoveType moveType,
+                                             VirtualObject virtualObject)
     {
         Grid grid = _activeObject.getPos().getGrid();
+        // а теперь пошла самая магия!)))
         if (grid != null)
         {
-            // а теперь пошла самая магия!)))
             try
             {
                 boolean locked = false;
@@ -91,50 +144,12 @@ public abstract class MoveController
                     // пробуем залочить грид, ждем всего 10 мс
                     locked = grid.tryLock(10);
                     // обсчитаем коллизию на это передвижение
-                    CollisionResult collision = grid.checkCollision(_activeObject,
-                                                                    (int) Math.round(_currentX),
-                                                                    (int) Math.round(_currentY),
-                                                                    (int) Math.round(toX),
-                                                                    (int) Math.round(toY),
-                                                                    moveType, virtualObject);
-                    switch (collision.getResultType())
-                    {
-                        // коллизий нет
-                        case COLLISION_NONE:
-                            // можно ставить новую позицию объекту
-                            _activeObject.getPos().setXY(toX, toY);
-                            _currentX = toX;
-                            _currentY = toY;
-                            // расскажем всем о том что мы передвинулись
-                            _activeObject.getPos().getGrid().broadcastEvent(getEvent());
-
-                            if (_activeObject instanceof Human)
-                            {
-                                ((Human) _activeObject).UpdateVisibleObjects(false);
-                            }
-                            return true;
-
-                        case COLLISION_OBJECT:
-                        case COLLISION_TILE:
-                        case COLLISION_WORLD:
-                        case COLLISION_VIRTUAL:
-                            _activeObject.StopMove(collision, collision.getX(), collision.getY());
-                            return false;
-
-                        case COLLISION_FAIL:
-                            _activeObject.StopMove(CollisionResult.FAIL, (int) Math.round(_currentX),
-                                                   (int) Math.round(_currentY));
-                            return false;
-
-                        default:
-                            // возможно какая то ошибка зарылась
-                            _log.error(this.getClass().getSimpleName() + " update error, unknown collision " +
-                                               collision.toString());
-
-                            _activeObject.StopMove(CollisionResult.FAIL, (int) Math.round(_currentX),
-                                                   (int) Math.round(_currentY));
-                            return false;
-                    }
+                    return grid.checkCollision(_activeObject,
+                                               (int) Math.round(_currentX),
+                                               (int) Math.round(_currentY),
+                                               (int) Math.round(toX),
+                                               (int) Math.round(toY),
+                                               moveType, virtualObject);
                 }
                 finally
                 {
@@ -147,24 +162,20 @@ public abstract class MoveController
             }
             catch (Grid.GridLoadException e)
             {
-                _log.warn("updateMove: GridLoadException " + e.getMessage() + " " + _activeObject
+                _log.warn("checkColiision: GridLoadException " + e.getMessage() + " " + _activeObject
                         .toString() + "; " + toString());
-                _activeObject.StopMove(CollisionResult.FAIL, (int) Math.round(_currentX),
-                                       (int) Math.round(_currentY));
-                return false;
+                return CollisionResult.FAIL;
             }
             catch (InterruptedException e)
             {
-                _log.warn("updateMove: cant lock grid " + _activeObject.toString() + "; " + toString());
-                _activeObject.StopMove(CollisionResult.FAIL, (int) Math.round(_currentX), (int) Math.round(_currentY));
-                return false;
+                _log.warn("checkColiision: cant lock grid " + _activeObject.toString() + "; " + toString());
+                return CollisionResult.FAIL;
             }
         }
         else
         {
-            _log.warn("updateMove: grid is null! " + _activeObject.toString() + "; " + toString());
-            return false;
+            _log.warn("checkColiision: grid is null! " + _activeObject.toString() + "; " + toString());
+            return CollisionResult.FAIL;
         }
-
     }
 }

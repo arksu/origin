@@ -29,6 +29,7 @@ public class ObjectMove extends GameServerPacket
     @Override
     protected void write()
     {
+        _log.debug("ObjectMove");
         writeC(0x14);
         writeD(_objectId);
         writeD(_tox);

@@ -120,6 +120,15 @@ public class Game extends BaseScreen
         }
         _lblStatus.caption = "FPS: " + Gdx.graphics.getFramesPerSecond() + " " + _statusText;
 
+
+        if (ObjectCache.getInstance() != null)
+        {
+            for (GameObject o : ObjectCache.getInstance().getObjects())
+            {
+                o.Update();
+            }
+        }
+        
         if (ObjectCache.getInstance().getMe() != null)
         {
             Vec2i pp = ObjectCache.getInstance().getMe().getCoord().div(MapCache.TILE_SIZE);

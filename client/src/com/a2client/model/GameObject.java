@@ -18,6 +18,7 @@ public class GameObject
     private Vec2i _coord;
     private String _name;
     private String _title;
+    private Mover _mover = null;
 
     public GameObject(ObjectAdd pkt)
     {
@@ -47,5 +48,34 @@ public class GameObject
     {
         _coord.x = x;
         _coord.y = y;
+    }
+
+    /**
+     * сервер сообщает о движении объекта
+     * @param cx текущие координаты
+     * @param cy текущие координаты
+     * @param vx вектор движения
+     * @param vy вектор движения
+     */
+    public void Move(int cx, int cy, int vx, int vy)
+    {
+        if (_mover != null)
+        {
+            _mover.UpdateMove(cx, cy, vx, vy);
+        }
+        else
+        {
+            _mover = new Mover(this, cx, cy, vx, vy);
+        }
+    }
+
+    public boolean isMoving()
+    {
+        return _mover != null;
+    }
+
+    public void Update()
+    {
+
     }
 }

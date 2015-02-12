@@ -54,10 +54,15 @@ public abstract class MoveObject extends GameObject
      */
     public void StartMove(MoveController controller)
     {
-        _moveController = controller;
-        _moveController.setActiveObject(this);
-        _moveResult = null;
-        GameTimeController.getInstance().AddMovingObject(this);
+        controller.setActiveObject(this);
+        // сначала проверим возможно ли вообще движение?
+        if (controller.canMoving())
+        {
+            _moveController = controller;
+            _moveResult = null;
+            getPos().getGrid().broadcastEvent(controller.getEvent());
+            GameTimeController.getInstance().AddMovingObject(this);
+        }
     }
 
     /**
