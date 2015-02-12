@@ -1,5 +1,6 @@
 package com.a2client.network.game.serverpackets;
 
+import com.a2client.ObjectCache;
 import com.a2client.network.game.GamePacketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,5 +33,7 @@ public class ObjectPos extends GameServerPacket
     public void run()
     {
         _log.debug("ObjectPos "+_objectId+" "+_x+", "+_y);
+        ObjectCache.getInstance().getObject(_objectId).setCoord(_x, _y);
+        ObjectCache.getInstance().getObject(_objectId).StopMove();
     }
 }

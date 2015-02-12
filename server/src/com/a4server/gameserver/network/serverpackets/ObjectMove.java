@@ -16,14 +16,16 @@ public class ObjectMove extends GameServerPacket
     private int _toy;
     private int _vx;
     private int _vy;
+    private int _speed;
 
-    public ObjectMove(int objectId, int tox, int toy, int vx, int vy)
+    public ObjectMove(int objectId, int tox, int toy, int vx, int vy, int speed)
     {
         _objectId = objectId;
         _tox = tox;
         _toy = toy;
         _vx = vx;
         _vy = vy;
+        _speed = speed;
     }
 
     @Override
@@ -36,5 +38,6 @@ public class ObjectMove extends GameServerPacket
         writeD(_toy);
         writeD(_vx);
         writeD(_vy);
+        writeH(_speed);
     }
 }

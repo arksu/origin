@@ -22,6 +22,7 @@ public class ObjectMove extends GameServerPacket
     private int _toy;
     private int _vx;
     private int _vy;
+    private int _speed;
 
     @Override
     public void readImpl()
@@ -31,13 +32,14 @@ public class ObjectMove extends GameServerPacket
         _toy = readD();
         _vx = readD();
         _vy = readD();
+        _speed = readH();
     }
 
     @Override
     public void run()
     {
-        _log.debug("ObjectMove " + _objectId + " " + _tox + ", " + _toy);
+        _log.debug("ObjectMove " + _objectId + " " + _tox + ", " + _toy+" to >> "+_vx+", "+_vy+" speed="+_speed);
 //        ObjectCache.getInstance().getObject(_objectId).setCoord(_tox, _toy);
-        ObjectCache.getInstance().getObject(_objectId).Move(_tox, _toy, _vx, _vy);
+        ObjectCache.getInstance().getObject(_objectId).Move(_tox, _toy, _vx, _vy, _speed);
     }
 }

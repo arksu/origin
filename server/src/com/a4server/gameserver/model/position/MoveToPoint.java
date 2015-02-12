@@ -115,7 +115,8 @@ public class MoveToPoint extends MoveController
                               _activeObject.getPos()._x,
                               _activeObject.getPos()._y,
                               _toX,
-                              _toY
+                              _toY,
+                              _activeObject.getSpeed()
         );
     }
 

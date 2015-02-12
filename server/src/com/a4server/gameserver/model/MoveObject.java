@@ -61,6 +61,7 @@ public abstract class MoveObject extends GameObject
         {
             _moveController = controller;
             _moveResult = null;
+            // расскажем всем что мы начали движение, тут же отправится пакет клиенту
             getPos().getGrid().broadcastEvent(controller.getEvent());
             GameTimeController.getInstance().AddMovingObject(this);
         }
@@ -75,6 +76,7 @@ public abstract class MoveObject extends GameObject
         _moveController = null;
         _moveResult = result;
         getPos().setXY(x, y);
+        // расскажем всем что мы остановились
         getPos().getGrid().broadcastEvent(new EventStopMove(this));
     }
 

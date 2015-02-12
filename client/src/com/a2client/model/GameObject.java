@@ -2,6 +2,7 @@ package com.a2client.model;
 
 import com.a2client.network.game.serverpackets.ObjectAdd;
 import com.a2client.util.Vec2i;
+import com.badlogic.gdx.math.Vector2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +51,19 @@ public class GameObject
         _coord.y = y;
     }
 
+    public void setCoord(Vec2i c)
+    {
+        _coord.x = c.x;
+        _coord.y = c.y;
+    }
+
+    public void setCoord(Vector2 c)
+    {
+        _coord.x = Math.round(c.x);
+        _coord.y = Math.round(c.y);
+    }
+
+
     /**
      * сервер сообщает о движении объекта
      * @param cx текущие координаты
@@ -57,16 +71,20 @@ public class GameObject
      * @param vx вектор движения
      * @param vy вектор движения
      */
-    public void Move(int cx, int cy, int vx, int vy)
+    public void Move(int cx, int cy, int vx, int vy, int speed)
     {
         if (_mover != null)
         {
-            _mover.UpdateMove(cx, cy, vx, vy);
+            _mover.NewMove(cx, cy, vx, vy, speed);
         }
         else
         {
-            _mover = new Mover(this, cx, cy, vx, vy);
+            _mover = new Mover(this, cx, cy, vx, vy, speed);
         }
+    }
+    
+    public void StopMove() {
+        _mover = null;
     }
 
     public boolean isMoving()
@@ -76,8 +94,12 @@ public class GameObject
 
     public void Update()
     {
-        if (_mover != null) {
+        if (_mover != null)
+        {
             _mover.Update();
+            if (_mover._arrived) {
+                _mover = null;
+            }
         }
     }
 }
