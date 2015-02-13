@@ -1,5 +1,6 @@
 package com.a4server.gameserver.model;
 
+import com.a4server.Config;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.event.EventStopMove;
@@ -64,6 +65,13 @@ public abstract class MoveObject extends GameObject
             // расскажем всем что мы начали движение, тут же отправится пакет клиенту
             getPos().getGrid().broadcastEvent(controller.getEvent());
             GameTimeController.getInstance().AddMovingObject(this);
+        }
+        else
+        {
+            if (Config.DEBUG)
+            {
+                _log.debug("cant start move");
+            }
         }
     }
 
