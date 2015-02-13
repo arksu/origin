@@ -16,6 +16,7 @@ dependencies {
     compile name: 'javassist'
     compile name: 'HikariCP-java6-2.2.5'
     runtime name: 'mysql-connector-java'
+    compile name: 'gson-2.3.1'
 }
 
 task jarGame(type: Jar) {
