@@ -339,7 +339,7 @@ public class Grid
                         loadTiles();
 
                         // todo загрузить объекты
-
+                        loadObjects();
                     }
                 }
             }
@@ -349,6 +349,14 @@ public class Grid
             _log.warn("Cant load grid sg=" + sg + " grid=" + grid);
             throw new RuntimeException("Cant load grid sg=" + sg + " grid=" + grid);
         }
+    }
+
+    /**
+     * загрузить объекты грида
+     */
+    private void loadObjects()
+    {
+        
     }
 
     /**

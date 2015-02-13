@@ -15,6 +15,7 @@ import java.util.List;
 import static com.a4server.gameserver.model.collision.CollisionResult.CollisionType.*;
 
 /**
+ * обсчет коллизий между объектами
  * Created by arksu on 07.01.2015.
  */
 public class Collision
