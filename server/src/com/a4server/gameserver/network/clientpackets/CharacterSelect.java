@@ -54,15 +54,18 @@ public class CharacterSelect extends GameClientPacket
                         client.close(ServerClose.STATIC_PACKET);
                         return;
                     }
+                    _log.debug("character spawn: " + cha.toString());
 
                     // добавим игрока в мир чтобы нельзя было повторно зайти персом
-                    if (World.getInstance().addPlayer(cha)) {
+                    if (World.getInstance().addPlayer(cha))
+                    {
                         // пробуем заспавнить игрока
                         if (!trySpawn(cha))
                         {
                             // если не получилось - надо выгрузить персонажа и везде удалить упоминания о нем
                             // удалим игрока из игры
-                            if (!World.getInstance().removePlayer(_charId)) {
+                            if (!World.getInstance().removePlayer(_charId))
+                            {
                                 _log.warn("World does not contains loaded player for spawn");
                             }
                             // закроем соединение с клиентом

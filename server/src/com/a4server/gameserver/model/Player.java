@@ -24,7 +24,7 @@ public class Player extends Human
 {
     private static final Logger _log = LoggerFactory.getLogger(Player.class);
 
-    private static final String LOAD_CHARACTER = "SELECT account, charName, x, y, lvl, face, hairColor, hairStyle, sex, lastAccess, onlineTime, title, createDate FROM characters WHERE charId = ?";
+    private static final String LOAD_CHARACTER = "SELECT account, charName, x, y, lvl, face, hairColor, hairStyle, sex, lastAccess, onlineTime, title, createDate FROM characters WHERE del=0 AND charId = ?";
     private static final String UPDATE_LAST_CHAR = "UPDATE accounts SET lastChar = ? WHERE login = ?";
 
     private GameClient _client = null;
@@ -64,7 +64,6 @@ public class Player extends Human
         try (Connection con = Database.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(LOAD_CHARACTER))
         {
-            // Retrieve the L2PcInstance from the characters table of the database
             statement.setInt(1, objectId);
             try (ResultSet rset = statement.executeQuery())
             {

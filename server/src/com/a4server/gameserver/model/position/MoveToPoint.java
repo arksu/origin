@@ -61,7 +61,7 @@ public class MoveToPoint extends MoveController
         {
 
             td = Math.sqrt(Math.pow(_currentX - _toX, 2) + Math.pow(_currentY - _toY, 2));
-            _log.debug("td=" + Double.toString(td));
+//            _log.debug("td=" + Double.toString(td));
 
             // предел расстояния до конечной точки на котором считаем что пришли куда надо
             boolean arrive = td <= FINAL_DELTA;

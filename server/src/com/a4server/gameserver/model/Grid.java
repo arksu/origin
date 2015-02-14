@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -36,6 +37,9 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Grid
 {
     protected static final Logger _log = LoggerFactory.getLogger(Grid.class.getName());
+
+    private static final String LOAD_OBJECTS = "SELECT id, x, y, type, hp, data, create_tick, last_tick FROM sg_0_obj WHERE del=0 AND grid = ?";
+    private static final String LOAD_GRID = "SELECT data, last_tick FROM sg_0 WHERE id = ?";
 
     /**
      * размер одного тайла в игровых единицах длины
@@ -78,6 +82,7 @@ public class Grid
      * координаты грида в мире (грид сетка)
      */
     private int _x, _y, _level;
+    private int _sg, _grid;
     /**
      * координаты начальной точки грида в мировых координатах
      */
@@ -115,9 +120,14 @@ public class Grid
         _y = y;
         _wx = x * GRID_FULL_SIZE;
         _wy = y * GRID_FULL_SIZE;
+        // номер супергрида
+        _sg = _x / SUPERGRID_SIZE + (_y / SUPERGRID_SIZE) * Config.WORLD_SG_HEIGHT;
+        // номер грида внутри супергрида
+        _grid = _x % SUPERGRID_SIZE + (_y % SUPERGRID_SIZE) * SUPERGRID_SIZE + _level * SUPERGRID_SIZE * SUPERGRID_SIZE;
         _level = level;
         _loaded = false;
         _loading = false;
+        _log.debug("grid create " + toString());
     }
 
     public FastList<GameObject> getObjects()
@@ -296,6 +306,15 @@ public class Grid
         // ктото другой уже загружает этот грид
         if (!_loadLock.tryLock())
         {
+            _log.warn("failed lock for load grid " + toString());
+            return;
+        }
+
+        // если загружен или в процессе загрузки - выходим
+        if (_loaded || _loading)
+        {
+            _log.warn("grid already loaded or loading " + toString());
+            _loadLock.unlock();
             return;
         }
         try
@@ -317,19 +336,15 @@ public class Grid
      */
     private void loadInternal()
     {
-        // номер супергрида
-        int sg = _x / SUPERGRID_SIZE + (_y / SUPERGRID_SIZE) * Config.WORLD_SG_HEIGHT;
-        // номер грида внутри супергрида
-        int grid = _x % SUPERGRID_SIZE + (_y % SUPERGRID_SIZE) * SUPERGRID_SIZE + _level * SUPERGRID_SIZE * SUPERGRID_SIZE;
-
-        String query = "SELECT data, last_tick FROM sg_" + sg + " WHERE id = ?";
+        String query = LOAD_GRID;
+        query = query.replaceFirst("sg_0", "sg_" + Integer.toString(_sg));
 
         try
         {
             try (Connection con = Database.getInstance().getConnection();
                  PreparedStatement ps = con.prepareStatement(query))
             {
-                ps.setInt(1, grid);
+                ps.setInt(1, _grid);
                 try (ResultSet rset = ps.executeQuery())
                 {
                     if (rset.next())
@@ -337,26 +352,51 @@ public class Grid
                         _last_tick = rset.getInt("last_tick");
                         _blob = rset.getBlob("data").getBytes(1, GRID_BLOB_SIZE);
                         loadTiles();
-
-                        // todo загрузить объекты
-                        loadObjects();
                     }
                 }
             }
         }
-        catch (Exception e)
+        catch (SQLException e)
         {
-            _log.warn("Cant load grid sg=" + sg + " grid=" + grid);
-            throw new RuntimeException("Cant load grid sg=" + sg + " grid=" + grid);
+            _log.warn("Cant load grid " + toString());
+            throw new RuntimeException("Cant load grid " + toString());
         }
+
+        // загрузить объекты
+        query = LOAD_OBJECTS;
+        query = query.replaceFirst("sg_0", "sg_" + Integer.toString(_sg));
+        _log.debug(query);
+
+        try
+        {
+            try (Connection con = Database.getInstance().getConnection();
+                 PreparedStatement ps = con.prepareStatement(query))
+            {
+                ps.setInt(1, _grid);
+                try (ResultSet rset = ps.executeQuery())
+                {
+                    if (rset.next())
+                    {
+                        loadObject(rset);
+                    }
+                }
+            }
+        }
+        catch (SQLException e)
+        {
+            _log.warn("Cant load grid " + toString());
+            throw new RuntimeException("Cant load grid " + toString());
+        }
+
     }
 
     /**
-     * загрузить объекты грида
+     * загрузить объект грида
      */
-    private void loadObjects()
+    private void loadObject(ResultSet rset) throws SQLException
     {
-        
+        GameObject object = new GameObject(rset);
+        _objects.add(object);
     }
 
     /**
@@ -364,7 +404,7 @@ public class Grid
      */
     private void loadTiles()
     {
-        _log.debug("grid " + _x + "x" + _y + " lvl:" + _level + ": load tiles...");
+        _log.debug("grid " + toString() + " load tiles...");
         _tiles = new Tile[GRID_SIZE * GRID_SIZE];
         int n = 0;
         for (int x = 0; x < GRID_SIZE; x++)
@@ -375,7 +415,7 @@ public class Grid
                 n++;
             }
         }
-        _log.debug("grid " + _x + "x" + _y + " lvl:" + _level + ": tiles loaded");
+        _log.debug("grid " + toString() + " tiles loaded");
     }
 
     public boolean trySpawn(GameObject player) throws Exception
@@ -520,7 +560,7 @@ public class Grid
         {
             return CollisionResult.FAIL;
         }
-        _log.debug("checkCollision (" + fromX + ", " + fromY + ") -> (" + toX + ", " + toY + ")");
+        //        _log.debug("checkCollision (" + fromX + ", " + fromY + ") -> (" + toX + ", " + toY + ")");
 
         // посмотрим сколько нам нужно гридов для проверки коллизий
         Rect r = new Rect(fromX, fromY, toX, toY);
@@ -748,6 +788,6 @@ public class Grid
     @Override
     public String toString()
     {
-        return "(" + _x + ", " + _y + ")";
+        return "(" + _x + ", " + _y + " lvl=" + _level + " sg=" + _sg + " id=" + _grid + ")";
     }
 }

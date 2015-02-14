@@ -16,7 +16,7 @@ import java.util.Map;
 public class CharacterList extends GameServerPacket
 {
     // SQL Queries
-    private static final String CHARACTERS_SELECT = "SELECT charId, charName, accessLevel FROM characters WHERE account=?";
+    private static final String CHARACTERS_SELECT = "SELECT charId, charName, accessLevel FROM characters WHERE del=0 AND account=?";
 
     private final Map<Integer, CharacterData> _chars;
     private final int _last_char;

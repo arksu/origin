@@ -89,23 +89,25 @@ public class GameClient extends NetClient
         _charsInfo = null;
         _activeChar = null;
 
-//        if (Config.CHAR_STORE_INTERVAL > 0)
-//        {
-//            _autoSaveInDB = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoSaveTask(), 300000L, (Config.CHAR_STORE_INTERVAL * 1000L));
-//        }
-//        else
-//        {
-//            _autoSaveInDB = null;
-//        }
+        //        if (Config.CHAR_STORE_INTERVAL > 0)
+        //        {
+        //            _autoSaveInDB = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoSaveTask(), 300000L, (Config.CHAR_STORE_INTERVAL * 1000L));
+        //        }
+        //        else
+        //        {
+        //            _autoSaveInDB = null;
+        //        }
 
     }
 
-    public Player loadCharacter(int charId) {
+    public Player loadCharacter(int charId)
+    {
         Player character;
 
         // проверим есть ли такой персонаж уже в игре?
         character = World.getInstance().getPlayer(charId);
-        if (character != null) {
+        if (character != null)
+        {
             _log.error("Attempt of double login: " + character.getName() + "(" + charId + ") " + getAccount());
             // кикнем того кто в игре
             character.kick();
@@ -113,10 +115,13 @@ public class GameClient extends NetClient
         }
 
         character = Player.load(charId);
-        if (character != null) {
+        if (character != null)
+        {
             // установим параметры перса
             // скорость бега и тд...
-        } else {
+        }
+        else
+        {
             _log.warn("failed load player character");
         }
 
@@ -221,7 +226,8 @@ public class GameClient extends NetClient
             return; // offline shop
         }
 
-        if (pkt != null) {
+        if (pkt != null)
+        {
             try
             {
                 // шлем пакет, ждем когда уйдет.
@@ -242,7 +248,9 @@ public class GameClient extends NetClient
             {
                 e.printStackTrace();
             }
-        } else {
+        }
+        else
+        {
             _channel.close();
             _channel = null;
         }
@@ -276,23 +284,23 @@ public class GameClient extends NetClient
             try
             {
                 // отменим автосейв, сохранять будем в ручном режиме
-//                if (_autoSaveInDB != null)
-//                {
-//                    _autoSaveInDB.cancel(true);
-//                }
+                //                if (_autoSaveInDB != null)
+                //                {
+                //                    _autoSaveInDB.cancel(true);
+                //                }
 
                 if (getActiveChar() != null) // this should only happen on connection loss
                 {
-//                    if (getActiveChar().isLocked())
-//                    {
-//                        _log.log(Level.WARNING, "Player " + getActiveChar().getName() + " still performing subclass actions during disconnect.");
-//                    }
-//
-//                    // we store all data from players who are disconnected while in an event in order to restore it in the next login
-//                    if (L2Event.isParticipant(getActiveChar()))
-//                    {
-//                        L2Event.savePlayerEventStatus(getActiveChar());
-//                    }
+                    //                    if (getActiveChar().isLocked())
+                    //                    {
+                    //                        _log.log(Level.WARNING, "Player " + getActiveChar().getName() + " still performing subclass actions during disconnect.");
+                    //                    }
+                    //
+                    //                    // we store all data from players who are disconnected while in an event in order to restore it in the next login
+                    //                    if (L2Event.isParticipant(getActiveChar()))
+                    //                    {
+                    //                        L2Event.savePlayerEventStatus(getActiveChar());
+                    //                    }
 
                     // prevent closing again
                     getActiveChar().setClient(null);
@@ -308,10 +316,10 @@ public class GameClient extends NetClient
             {
                 _log.warn("Error while cleanup client.", e1);
             }
-//            finally
-//            {
-//                LoginServerThread.getInstance().sendLogout(getAccountName());
-//            }
+            //            finally
+            //            {
+            //                LoginServerThread.getInstance().sendLogout(getAccountName());
+            //            }
         }
     }
 
@@ -319,7 +327,6 @@ public class GameClient extends NetClient
      * обработка пакета в очереди
      * метод synchronized для того чтобы очередь этого клиента обрабатывалась последовательно
      * т.е. когда пакетов в очереди много, только 1 поток может их обрабатывать
-     *
      * @throws InterruptedException
      */
     public void ProcessPacket() throws InterruptedException
@@ -370,8 +377,9 @@ public class GameClient extends NetClient
     public void onDisconnect()
     {
         _isDetached = true;
-        if (_activeChar != null) {
-            _log.info("["+_activeChar.getName()+"] disconnected");
+        if (_activeChar != null)
+        {
+            _log.info(_activeChar.toString() + " disconnected");
             _activeChar.deleteMe();
             _activeChar = null;
         }

@@ -2,6 +2,7 @@ package com.a4server.gameserver.network.clientpackets;
 
 import com.a4server.gameserver.GameClient;
 import com.a4server.gameserver.model.Grid;
+import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.network.serverpackets.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,17 +23,18 @@ public class EnterWorld extends GameClientPacket
     @Override
     public void run()
     {
-        _log.debug("EnterWorld");
         GameClient client = getClient();
 
         // ПОЕХАЛИ!
+        Player cha = getClient().getActiveChar();
         // только если у нас есть активный чар
-        if (client.getActiveChar() != null)
+        if (cha != null)
         {
+            _log.debug("EnterWorld " + cha.toString());
             // начинаем слать клиенту игровую информацию
             sendPacket(new WorldInfo());
             sendPacket(new TimeUpdate());
-            sendPacket(new CharInfo(getClient().getActiveChar()));
+            sendPacket(new CharInfo(cha));
 
             // сначала гриды
             int px = client.getActiveChar().getPos()._x;
@@ -41,9 +43,9 @@ public class EnterWorld extends GameClientPacket
             {
                 sendPacket(new MapGrid(grid, px, py));
             }
-            
+
             // обновим список видимости. автоматически вышлет клиенту новые объекты
-            client.getActiveChar().UpdateVisibleObjects(true);
+            cha.UpdateVisibleObjects(true);
         }
     }
 }

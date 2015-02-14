@@ -150,11 +150,6 @@ public class World
                 g = new Grid(gx, gy, level);
                 g.scheduleLoad();
                 _grids[gx][gy][level] = g;
-
-                if (Config.DEBUG)
-                {
-                    _log.debug("grid " + gx + "x" + gy + " lvl:" + level + " created");
-                }
             }
             finally
             {

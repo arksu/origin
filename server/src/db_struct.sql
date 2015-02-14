@@ -48,8 +48,8 @@ CREATE TABLE `sg_0_obj` (
   `type` smallint(5) unsigned NOT NULL COMMENT 'тип',
   `hp` smallint(5) unsigned NOT NULL,
   `data` text,
-  `create_time` int(10) unsigned NOT NULL COMMENT 'время создания, тик',
-  `update_time` int(10) unsigned DEFAULT '0' COMMENT 'время последнего апдейта, тик',
+  `create_tick` int(10) unsigned NOT NULL COMMENT 'время создания, тик',
+  `last_tick` int(10) unsigned DEFAULT '0' COMMENT 'время последнего апдейта, тик',
   `del` tinyint(3) unsigned DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `grid` (`grid`)

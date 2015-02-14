@@ -6,10 +6,13 @@ import com.a4server.gameserver.network.serverpackets.ObjectAdd;
 import com.a4server.gameserver.network.serverpackets.ObjectRemove;
 import com.a4server.util.Rect;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * игровой объект
  */
-public abstract class GameObject
+public class GameObject
 {
     /**
      * позиция объекта в мире
@@ -54,6 +57,12 @@ public abstract class GameObject
         _width = 10;
         _height = 10;
         _boundRect = new Rect(-_width / 2, -_height / 2, _width / 2, _height / 2);
+    }
+
+    public GameObject(ResultSet rset) throws SQLException
+    {
+        _objectId = rset.getInt("id");
+        _typeId = rset.getInt("type");
     }
 
     public int getObjectId()
