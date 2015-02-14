@@ -13,12 +13,6 @@ public class MoveFollow extends MoveController
     protected static final Logger _log = LoggerFactory.getLogger(MoveFollow.class.getName());
 
     @Override
-    public boolean updateMove()
-    {
-        return true;
-    }
-
-    @Override
     public boolean isMoving()
     {
         return false;
@@ -36,4 +30,9 @@ public class MoveFollow extends MoveController
         return null;
     }
 
+    @Override
+    public boolean MoveImplement(double dt)
+    {
+        return false;
+    }
 }

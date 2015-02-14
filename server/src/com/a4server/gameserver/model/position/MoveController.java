@@ -29,6 +29,13 @@ public abstract class MoveController
     protected double _currentX;
     protected double _currentY;
 
+    private long _lastMoveTime;
+
+    public MoveController()
+    {
+        _lastMoveTime = System.currentTimeMillis();
+    }
+
     public void setActiveObject(MoveObject object)
     {
         _activeObject = object;
@@ -38,12 +45,6 @@ public abstract class MoveController
     }
 
     /**
-     * обработать тик передвижения
-     * @return движение завершено? (уперлись во чтото или прибыли в пункт назначения)
-     */
-    public abstract boolean updateMove();
-
-    /**
      * находится ли объект в реально движении или стоит на месте
      * @return движется ли?
      */
@@ -51,7 +52,7 @@ public abstract class MoveController
 
     /**
      * возможно ли начать движение
-     * @return
+     * @return да или нет
      */
     public abstract boolean canMoving();
 
@@ -71,6 +72,27 @@ public abstract class MoveController
      * @return пакет
      */
     public abstract GameServerPacket makeMovePacket();
+
+    /**
+     * внутренняя реализация движения. надо определить куда должны передвинутся за тик
+     * @return движение завершено? (истина ежели уперлись во чтото или прибыли в пункт назначения)
+     */
+    public abstract boolean MoveImplement(double dt);
+
+    /**
+     * обработать тик передвижения
+     * @return движение завершено? (истина ежели уперлись во чтото или прибыли в пункт назначения)
+     */
+    public final boolean updateMove()
+    {
+        long currTime = System.currentTimeMillis();
+        if (_lastMoveTime < currTime) {
+            boolean result = MoveImplement((double)(currTime - _lastMoveTime) / 1000);
+            _lastMoveTime = currTime;
+            return result;
+        }
+        return false;
+    }
 
     /**
      * обсчитать одну итерацию движения объекта

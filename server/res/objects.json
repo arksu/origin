@@ -1,11 +1,11 @@
 {
   "appleTree": {
-    "typeId": 11,
-    "name": ""
+    "typeId": 11
   },
 
   "oakTree": {
-    "typeId": 12
+    "typeId": 12,
+    "size": 20
   },
 
   "firTree": {

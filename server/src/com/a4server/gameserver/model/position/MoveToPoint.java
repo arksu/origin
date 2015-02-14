@@ -39,13 +39,12 @@ public class MoveToPoint extends MoveController
 
     /**
      * обработать тик движения
+     * @param dt время прошедшее с последнего апдейта
      * @return истина если движение завершилось. ложь если еще надо обновлять
      */
     @Override
-    public boolean updateMove()
+    public boolean MoveImplement(double dt  )
     {
-        // время прошедшее с последнего апдейта. пока тупо захардкодим
-        double dt = 0.1f;
         // вычислим единичный вектор
         double tdx = _toX - _currentX;
         double tdy = _toY - _currentY;
