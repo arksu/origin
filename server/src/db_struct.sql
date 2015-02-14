@@ -29,6 +29,7 @@ CREATE TABLE `characters` (
   `lastAccess` int(10) unsigned NOT NULL,
   `createDate` int(10) unsigned NOT NULL,
   `onlineTime` int(10) unsigned NOT NULL,
+  `del` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`charId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -40,14 +41,16 @@ CREATE TABLE `global_variables` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `sg_0_obj` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `grid` int(10) unsigned NOT NULL COMMENT 'номер грида',
   `x` int(11) NOT NULL,
   `y` int(11) NOT NULL,
   `type` smallint(5) unsigned NOT NULL COMMENT 'тип',
   `hp` smallint(5) unsigned NOT NULL,
-  `data` blob NOT NULL,
-  `create_time` int(10) unsigned NOT NULL COMMENT 'время создания',
+  `data` text,
+  `create_time` int(10) unsigned NOT NULL COMMENT 'время создания, тик',
+  `update_time` int(10) unsigned DEFAULT '0' COMMENT 'время последнего апдейта, тик',
+  `del` tinyint(3) unsigned DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `grid` (`grid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
