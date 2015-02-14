@@ -95,12 +95,7 @@ public class Mover
             _current.add(_start);
         }
 
-        _log.info("dt= " + dt + " cur=" + _current.toString() + " cur_len=" + _len + " speed=" + _speed);
+//        _log.info("dt= " + dt + " cur=" + _current.toString() + " cur_len=" + _len + " speed=" + _speed);
         _object.setCoord(_current);
     }
-
-    //    protected double getDelta()
-    //    {
-    //
-    //    }
 }

@@ -219,7 +219,9 @@ public class Collision
 
     private static double distance(double x1, double y1, double x2, double y2)
     {
-        return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     /**

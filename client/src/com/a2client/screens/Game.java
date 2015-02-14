@@ -7,7 +7,6 @@ import com.a2client.gui.GUI_Label;
 import com.a2client.model.GameObject;
 import com.a2client.model.Grid;
 import com.a2client.network.game.clientpackets.MouseClick;
-import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -131,8 +130,8 @@ public class Game extends BaseScreen
         
         if (ObjectCache.getInstance().getMe() != null)
         {
-            Vec2i pp = ObjectCache.getInstance().getMe().getCoord().div(MapCache.TILE_SIZE);
-            pp = pp.sub(pp.mul(2));
+//            Vec2i pp = ObjectCache.getInstance().getMe().getCoord().div(MapCache.TILE_SIZE);
+//            pp = pp.sub(pp.mul(2));
             //            _camera_offset = pp.getVector2();
         }
         _camera.position.set(Vector2.Zero, 0);
@@ -249,7 +248,7 @@ public class Game extends BaseScreen
         Vector2 offset = Vector2.Zero;
         if (ObjectCache.getInstance().getMe() != null)
         {
-            Vec2i op = ObjectCache.getInstance().getMe().getCoord();
+            Vector2 op = ObjectCache.getInstance().getMe().getCoord();
             Vector2 pp = new Vector2(op.x, op.y).div(MapCache.TILE_SIZE);
             pp = pp.sub(pp.x * 2, pp.y * 2);
             offset = pp;

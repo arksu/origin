@@ -1,0 +1,26 @@
+{
+  "appleTree": {
+    "typeId": 11,
+    "name": ""
+  },
+
+  "oakTree": {
+    "typeId": 12
+  },
+
+  "firTree": {
+    "typeId": 13,
+    "collision": {
+      "all": "no",
+      "exclude": ["player"]
+    }
+  },
+
+  "pineTree": {
+    "typeId": 14,
+    "collision": {
+      "all": "yes",
+      "exclude": ["player"]
+    }
+  }
+}

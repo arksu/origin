@@ -16,7 +16,7 @@ public class GameObject
 
     private int _objectId;
     private int _typeId;
-    private Vec2i _coord;
+    private Vector2 _coord;
     private String _name;
     private String _title;
     private Mover _mover = null;
@@ -25,7 +25,7 @@ public class GameObject
     {
         _name = pkt._name;
         _title = pkt._title;
-        _coord = new Vec2i(pkt._x, pkt._y);
+        _coord = new Vector2(pkt._x, pkt._y);
         _objectId = pkt._objectId;
         _typeId = pkt._typeId;
     }
@@ -40,7 +40,7 @@ public class GameObject
         return _typeId;
     }
 
-    public Vec2i getCoord()
+    public Vector2 getCoord()
     {
         return _coord;
     }
@@ -59,8 +59,8 @@ public class GameObject
 
     public void setCoord(Vector2 c)
     {
-        _coord.x = Math.round(c.x);
-        _coord.y = Math.round(c.y);
+        _coord.x = c.x;
+        _coord.y = c.y;
     }
 
 
