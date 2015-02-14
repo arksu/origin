@@ -80,7 +80,7 @@ public abstract class MoveObject extends GameObject
      */
     public void StopMove(CollisionResult result, int x, int y)
     {
-        _log.debug("StopMove: " + result + " at " + x + ", " + y);
+        _log.debug("StopMove: " + result.toString() + " at " + x + ", " + y);
         _moveController = null;
         _moveResult = result;
         getPos().setXY(x, y);

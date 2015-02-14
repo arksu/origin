@@ -71,7 +71,7 @@ public class Collision
         }
 
         // проверяем коллизию на исходных координатах
-        Rect rr = object.getBoundRect().clone().move(object.getPos()._x, object.getPos()._y);
+        Rect rr = object.getBoundRect().clone().move(fromX, fromY);
         Rect ro;
         Rect vrr = null;
         for (GameObject obj : objects)

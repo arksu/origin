@@ -94,6 +94,19 @@ public class CollisionResult
     @Override
     public String toString()
     {
-        return _resultType.name();
+        String result = _resultType.name();
+        switch (_resultType)
+        {
+            case COLLISION_OBJECT:
+                result += ": " + _object.toString();
+                break;
+            case COLLISION_TILE:
+                result += ": " + _tile.toString();
+                break;
+            case COLLISION_VIRTUAL:
+                result += ": " + _virtualObject.toString();
+                break;
+        }
+        return result;
     }
 }

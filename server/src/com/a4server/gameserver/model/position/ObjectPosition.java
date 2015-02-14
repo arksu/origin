@@ -1,7 +1,11 @@
 package com.a4server.gameserver.model.position;
 
 import com.a4server.Config;
-import com.a4server.gameserver.model.*;
+import com.a4server.gameserver.model.GameObject;
+import com.a4server.gameserver.model.Grid;
+import com.a4server.gameserver.model.MoveObject;
+import com.a4server.gameserver.model.World;
+import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.util.Rnd;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,14 +56,15 @@ public class ObjectPosition
         Grid grid = World.getInstance().getGridInWorldCoord(_x, _y, _level);
         if (grid != null && _activeObject != null)
         {
+            _log.debug("try spawn " + _activeObject.toString() + " at " + toString());
             try
             {
-                boolean success;
+                CollisionResult result;
                 // сначала пытаемся 5 раз заспавнить в указанные координаты
                 for (int tries = 0; tries < 5; tries++)
                 {
-                    success = grid.trySpawn(_activeObject);
-                    if (success)
+                    result = grid.trySpawn(_activeObject);
+                    if (result != null && result.getResultType() == CollisionResult.CollisionType.COLLISION_NONE)
                     {
                         _grid = grid;
                         return true;
@@ -67,14 +72,15 @@ public class ObjectPosition
                     Thread.sleep(Rnd.get(20, 120));
                 }
                 // ежели не получилось туда. спавним рядом
-                for (int tries = 0; tries < 5; tries++)
+                for (int tries = 0; tries < 10; tries++)
                 {
-                    success = grid.trySpawnNear(_activeObject, 20);
-                    if (success)
+                    result = grid.trySpawnNear(_activeObject, Grid.TILE_SIZE * 3, false);
+                    if (result != null && result.getResultType() == CollisionResult.CollisionType.COLLISION_NONE)
                     {
                         _grid = grid;
                         return true;
                     }
+                    _log.debug("collision " + result.toString());
                     Thread.sleep(Rnd.get(20, 120));
                 }
             }
@@ -83,6 +89,7 @@ public class ObjectPosition
                 e.printStackTrace();
             }
         }
+        _log.debug("spawn failed " + toString());
         return false;
     }
 
@@ -92,6 +99,7 @@ public class ObjectPosition
         while (tries > 0)
         {
             setRandomPostion();
+            _log.debug("try spawn random...");
             if (trySpawn())
             {
                 return true;
@@ -225,6 +233,8 @@ public class ObjectPosition
         }
     }
 
+
+    @Override
     public ObjectPosition clone()
     {
         return new ObjectPosition(_x, _y, _level);
@@ -235,4 +245,9 @@ public class ObjectPosition
         return _x == p._x && _y == p._y && _level == p._level;
     }
 
+    @Override
+    public String toString()
+    {
+        return "(" + _x + ", " + _y + ", " + _level + ")";
+    }
 }

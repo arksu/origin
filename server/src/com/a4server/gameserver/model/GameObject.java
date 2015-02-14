@@ -59,10 +59,15 @@ public class GameObject
         _boundRect = new Rect(-_width / 2, -_height / 2, _width / 2, _height / 2);
     }
 
-    public GameObject(ResultSet rset) throws SQLException
+    public GameObject(Grid grid, ResultSet rset) throws SQLException
     {
         _objectId = rset.getInt("id");
         _typeId = rset.getInt("type");
+        _pos = new ObjectPosition(rset.getInt("x"), rset.getInt("y"), grid.getLevel());
+        // заполним дефолтными абстрактными данными
+        _width = 10;
+        _height = 10;
+        _boundRect = new Rect(-_width / 2, -_height / 2, _width / 2, _height / 2);
     }
 
     public int getObjectId()
@@ -116,7 +121,8 @@ public class GameObject
     @Override
     public String toString()
     {
-        return "(" + getClass().getSimpleName() + ": " + _name + " id=" + _objectId + ")";
+        return "(" + getClass().getSimpleName() + ": " + (!_name
+                .isEmpty() ? _name + " " : "") + "id=" + _objectId + ")";
     }
 
     @Override

@@ -214,6 +214,11 @@ public class Grid
         return _wy;
     }
 
+    public int getLevel()
+    {
+        return _level;
+    }
+
     /**
      * создать задание на загрузку грида
      */
@@ -395,7 +400,7 @@ public class Grid
      */
     private void loadObject(ResultSet rset) throws SQLException
     {
-        GameObject object = new GameObject(rset);
+        GameObject object = new GameObject(this, rset);
         _objects.add(object);
     }
 
@@ -418,9 +423,9 @@ public class Grid
         _log.debug("grid " + toString() + " tiles loaded");
     }
 
-    public boolean trySpawn(GameObject player) throws Exception
+    public CollisionResult trySpawn(GameObject player) throws Exception
     {
-        return trySpawnNear(player, 0);
+        return trySpawnNear(player, 0, false);
     }
 
     /**
@@ -428,14 +433,15 @@ public class Grid
      * грид может быть и не активирован
      * @param object игрок
      * @param len максимально допустимое расстояние спавна от исходной точки
-     * @return успешно ли
+     * @param moveLen двигать ли пробуя переместить на указанную длину, либо просто пытаемся заспавнуть в ту точку сразу
+     * @return null=false, успешно только если результат коллизий вернет COLLISION_NONE
      */
-    public boolean trySpawnNear(GameObject object, int len) throws Exception
+    public CollisionResult trySpawnNear(GameObject object, int len, boolean moveLen) throws Exception
     {
         if (object.getPos()._level != _level)
         {
             _log.warn("trySpawn not in player grid! " + object + " " + this.toString());
-            return false;
+            return null;
         }
 
         int x = object.getPos()._x;
@@ -444,7 +450,7 @@ public class Grid
                 y < (_y * GRID_FULL_SIZE) || y >= ((_y + 1) * GRID_FULL_SIZE))
         {
             _log.warn("trySpawn: player coord not in grid! " + object + " " + this.toString());
-            return false;
+            return null;
         }
 
 
@@ -458,8 +464,8 @@ public class Grid
             {
                 int dx = Rnd.get(len * 2) - len;
                 int dy = Rnd.get(len * 2) - len;
-                // минимум сдвигаем на 8, подальше от изначальной позиции
-                if (Math.abs(dx) < 8 && Math.abs(dy) < 8)
+                // сдвигаем подальше от изначальной позиции
+                if (Math.abs(dx) < TILE_SIZE && Math.abs(dy) < TILE_SIZE)
                 {
                     continue;
                 }
@@ -478,7 +484,7 @@ public class Grid
             }
             if (!found)
             {
-                return false;
+                return null;
             }
         }
 
@@ -491,7 +497,7 @@ public class Grid
         // пытаемся захватить лок на грид
         if (!_mainLock.tryLock(MAX_WAIT_LOCK, TimeUnit.MILLISECONDS))
         {
-            return false;
+            return null;
         }
 
         try
@@ -500,7 +506,17 @@ public class Grid
             updateGrid();
 
             // обсчитаем коллизию
-            CollisionResult result = checkCollision(object, x, y, toX, toY, Move.MoveType.MOVE_SPAWN, null);
+            CollisionResult result;
+            _log.debug("try spawn (" + x + ", " + y + ") >> (" + toX + ", " + toY + ")");
+            if (moveLen)
+            {
+                result = checkCollision(object, x, y, toX, toY, Move.MoveType.MOVE_SPAWN, null);
+            }
+            else
+            {
+                result = checkCollision(object, toX, toY, toX, toY, Move.MoveType.MOVE_SPAWN, null);
+            }
+
             switch (result.getResultType())
             {
                 // только если нет коллизий
@@ -514,11 +530,9 @@ public class Grid
                         object.getPos().setXY(toX, toY);
                     }
 
-                    return true;
-
-                default:
-                    return false;
+                    break;
             }
+            return result;
         }
         finally
         {
