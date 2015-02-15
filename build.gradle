@@ -28,7 +28,6 @@ idea {
     project {
         //if you want to set specific jdk and language level
         jdkName = '1.7'
-        // now broken :( need to set in jidea manually
         languageLevel = '1.7'
         vcs = 'Git'
     }

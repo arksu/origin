@@ -9,15 +9,15 @@
   "firTree": {
     "typeId": 13,
     "collision": {
-      "all": "no",
+      "all": "false",
       "exclude": ["player"]
     }
   },
   "pineTree": {
     "typeId": 14,
     "collision": {
-      "all": "yes",
-      "exclude": ["player"]
+      "all": "true",
+      "exclude": ["player", "rabbit"]
     }
   }
 }

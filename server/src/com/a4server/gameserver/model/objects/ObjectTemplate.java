@@ -1,5 +1,7 @@
 package com.a4server.gameserver.model.objects;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import org.slf4j.Logger;
@@ -48,6 +50,11 @@ public class ObjectTemplate
         return _name;
     }
 
+    public Collision getCollision()
+    {
+        return _collision;
+    }
+
     public void read(JsonReader in) throws IOException
     {
         while (in.hasNext())
@@ -82,57 +89,17 @@ public class ObjectTemplate
         }
         else if ("collision".equalsIgnoreCase(paramName))
         {
-            in.beginObject();
-            _collision = new Collision(in);
-            in.endObject();
+            Gson gson = new Gson();
+            _collision = gson.fromJson(in, Collision.class);
         }
     }
 
     public class Collision
     {
+        @SerializedName ("all")
         private boolean _allYes = true;
+
+        @SerializedName ("exclude")
         private List<String> _exclude = new ArrayList<>();
-
-        public Collision(JsonReader in) throws IOException
-        {
-            while (in.hasNext())
-            {
-                JsonToken tkn = in.peek();
-                switch (tkn)
-                {
-                    case NAME:
-                        readParam(in);
-                        break;
-                    case END_OBJECT:
-                        return;
-                    default:
-                        _log.warn(getClass().getSimpleName() + ": wrong token " + tkn);
-                        return;
-                }
-            }
-        }
-
-        protected void readParam(JsonReader in) throws IOException
-        {
-            String paramName = in.nextName();
-            if ("all".equalsIgnoreCase(paramName))
-            {
-                _allYes = in.nextString().equalsIgnoreCase("yes");
-            }
-            else if ("exclude".equalsIgnoreCase(paramName))
-            {
-                in.beginArray();
-                while (in.hasNext())
-                {
-                    JsonToken tkn = in.peek();
-                    switch (tkn)
-                    {
-                        case STRING:
-                            _exclude.add(in.nextString());
-                    }
-                }
-                in.endArray();
-            }
-        }
     }
 }
