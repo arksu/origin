@@ -26,6 +26,7 @@ public class Player extends Human
 
     private static final String LOAD_CHARACTER = "SELECT account, charName, x, y, lvl, face, hairColor, hairStyle, sex, lastAccess, onlineTime, title, createDate FROM characters WHERE del=0 AND charId = ?";
     private static final String UPDATE_LAST_CHAR = "UPDATE accounts SET lastChar = ? WHERE login = ?";
+    private static final String UPDATE_CHARACTER = "UPDATE characters SET x=?, y=? WHERE charId=?";
 
     private GameClient _client = null;
     private boolean _isOnline = false;
@@ -251,6 +252,21 @@ public class Player extends Human
     public void storeInDb()
     {
         // todo player storeInDb
+        try
+        {
+            try (Connection con = Database.getInstance().getConnection();
+                 PreparedStatement ps = con.prepareStatement(UPDATE_CHARACTER))
+            {
+                ps.setInt(1, getPos()._x);
+                ps.setInt(2, getPos()._y);
+                ps.setInt(3, getObjectId());
+                ps.execute();
+            }
+        }
+        catch (SQLException e)
+        {
+            _log.warn("failed: storeInDb " + e.getMessage());
+        }
     }
 
     public void UpdateLastChar()

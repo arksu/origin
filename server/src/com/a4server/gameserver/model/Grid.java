@@ -370,7 +370,6 @@ public class Grid
         // загрузить объекты
         query = LOAD_OBJECTS;
         query = query.replaceFirst("sg_0", "sg_" + Integer.toString(_sg));
-        _log.debug(query);
 
         try
         {

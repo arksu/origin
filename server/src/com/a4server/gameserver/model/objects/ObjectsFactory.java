@@ -23,7 +23,7 @@ public class ObjectsFactory
 
     private static final String CONFIG_NAME = "/objects.json";
 
-    Map<String, ObjectTemplate> _templates = new HashMap<>();
+    Map<Integer, ObjectTemplate> _templates = new HashMap<>();
 
     public ObjectsFactory()
     {
@@ -45,7 +45,8 @@ public class ObjectsFactory
                     case NAME:
                         String name = in.nextName();
                         _log.debug("object: " + name);
-                        _templates.put(name, readObjectTemplate(name, in));
+                        ObjectTemplate template = readObjectTemplate(name, in);
+                        _templates.put(template.getTypeId(), template);
                         break;
                     default:
                         _log.warn("LoadInternalConfig: wrong token " + tkn.name());
@@ -64,7 +65,7 @@ public class ObjectsFactory
             _log.warn("LoadInternalConfig: io error");
         }
         catch (Exception e) {
-            _log.error("LoadInternalConfig unexcepted error: "+e.getMessage());
+            _log.error("LoadInternalConfig unexpected error: "+e.getMessage());
             e.printStackTrace();
         }
     }

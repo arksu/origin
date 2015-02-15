@@ -28,6 +28,26 @@ public class ObjectTemplate
         _name = name;
     }
 
+    public int getTypeId()
+    {
+        return _typeId;
+    }
+
+    public int getWidth()
+    {
+        return _width;
+    }
+
+    public int getHeight()
+    {
+        return _height;
+    }
+
+    public String getName()
+    {
+        return _name;
+    }
+
     public void read(JsonReader in) throws IOException
     {
         while (in.hasNext())
@@ -68,11 +88,13 @@ public class ObjectTemplate
         }
     }
 
-    public class Collision {
+    public class Collision
+    {
         private boolean _allYes = true;
         private List<String> _exclude = new ArrayList<>();
 
-        public Collision(JsonReader in) throws IOException {
+        public Collision(JsonReader in) throws IOException
+        {
             while (in.hasNext())
             {
                 JsonToken tkn = in.peek();
@@ -96,9 +118,12 @@ public class ObjectTemplate
             if ("all".equalsIgnoreCase(paramName))
             {
                 _allYes = in.nextString().equalsIgnoreCase("yes");
-            } else if ("exclude".equalsIgnoreCase(paramName)) {
+            }
+            else if ("exclude".equalsIgnoreCase(paramName))
+            {
                 in.beginArray();
-                while (in.hasNext()) {
+                while (in.hasNext())
+                {
                     JsonToken tkn = in.peek();
                     switch (tkn)
                     {
