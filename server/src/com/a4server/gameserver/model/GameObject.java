@@ -15,9 +15,9 @@ import java.sql.SQLException;
 public class GameObject
 {
     /**
-     * позиция объекта в мире
+     * ид объекта, задается лишь единожды
      */
-    protected ObjectPosition _pos;
+    protected final int _objectId;
 
     /**
      * тип объекта
@@ -25,16 +25,16 @@ public class GameObject
     protected int _typeId;
 
     /**
+     * позиция объекта в мире
+     */
+    protected ObjectPosition _pos;
+
+    /**
      * размеры объекта
      */
     private int _width;
     private int _height;
     private Rect _boundRect;
-
-    /**
-     * ид объекта, задается лишь единожды
-     */
-    protected final int _objectId;
 
     /**
      * имя которое отображается над объектом

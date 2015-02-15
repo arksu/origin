@@ -276,9 +276,9 @@ public class Player extends Human
      * @return скорость в единицах координат в секунду (в тайле TILE_SIZE единиц)
      */
     @Override
-    public int getSpeed()
+    public double getMoveSpeed()
     {
-        return 15;
+        return 15f;
     }
 
     /**

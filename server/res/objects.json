@@ -2,12 +2,10 @@
   "appleTree": {
     "typeId": 11
   },
-
   "oakTree": {
     "typeId": 12,
     "size": 20
   },
-
   "firTree": {
     "typeId": 13,
     "collision": {
@@ -15,7 +13,6 @@
       "exclude": ["player"]
     }
   },
-
   "pineTree": {
     "typeId": 14,
     "collision": {

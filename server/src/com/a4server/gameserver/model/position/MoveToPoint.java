@@ -43,14 +43,14 @@ public class MoveToPoint extends MoveController
      * @return истина если движение завершилось. ложь если еще надо обновлять
      */
     @Override
-    public boolean MoveImplement(double dt  )
+    public boolean MoveImplement(double dt)
     {
         // вычислим единичный вектор
         double tdx = _toX - _currentX;
         double tdy = _toY - _currentY;
         double td = Math.sqrt(Math.pow(tdx, 2) + Math.pow(tdy, 2));
         // расстояние которое прошли за 1 тик. не более оставшегося до конечной точки
-        double d = Math.min(dt * _activeObject.getSpeed(), td);
+        double d = Math.min(dt * _activeObject.getMoveSpeed(), td);
 
         // помножим расстояние которое должны пройти на единичный вектор
         double tmpX = _currentX + (tdx / td) * d;
@@ -86,7 +86,7 @@ public class MoveToPoint extends MoveController
     public boolean canMoving()
     {
         // COPYPAST! ^^^
-        
+
         // время прошедшее с последнего апдейта. пока тупо захардкодим
         double dt = 0.1f;
         // вычислим единичный вектор
@@ -94,13 +94,13 @@ public class MoveToPoint extends MoveController
         double tdy = _toY - _currentY;
         double td = Math.sqrt(Math.pow(tdx, 2) + Math.pow(tdy, 2));
         // расстояние которое прошли за 1 тик. не более оставшегося до конечной точки
-        double d = Math.min(dt * _activeObject.getSpeed(), td);
+        double d = Math.min(dt * _activeObject.getMoveSpeed(), td);
 
         // помножим расстояние которое должны пройти на единичный вектор
         double tmpX = _currentX + (tdx / td) * d;
         double tmpY = _currentY + (tdy / td) * d;
 
-        return (checkColiision(tmpX,tmpY, _moveType, null) == CollisionResult.NONE);
+        return (checkColiision(tmpX, tmpY, _moveType, null) == CollisionResult.NONE);
     }
 
     /**
@@ -115,7 +115,7 @@ public class MoveToPoint extends MoveController
                               _activeObject.getPos()._y,
                               _toX,
                               _toY,
-                              _activeObject.getSpeed()
+                              (int) Math.round(_activeObject.getMoveSpeed())
         );
     }
 

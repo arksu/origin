@@ -23,7 +23,7 @@ public class GameTimeController extends Thread
     /**
      * игровых тиков в реальной секунде (на передвижение)
      */
-    public static final int TICKS_PER_SECOND = 10;
+    public static final int TICKS_PER_SECOND = 5;
     public static final int MILLIS_IN_TICK = 1000 / TICKS_PER_SECOND;
     /**
      * игровых дней в реальных сутках
@@ -211,7 +211,7 @@ public class GameTimeController extends Thread
 
         while (true)
         {
-            nextTickTime = ((System.currentTimeMillis() / MILLIS_IN_TICK) * MILLIS_IN_TICK) + 100;
+            nextTickTime = ((System.currentTimeMillis() / MILLIS_IN_TICK) * MILLIS_IN_TICK) + MILLIS_IN_TICK;
 
             try
             {

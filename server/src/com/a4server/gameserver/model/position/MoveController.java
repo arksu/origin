@@ -119,18 +119,12 @@ public abstract class MoveController
                 // расскажем всем о том что мы передвинулись
                 _activeObject.getPos().getGrid().broadcastEvent(getEvent());
 
+                // обновим видимые объекты
                 if (_activeObject instanceof Human)
                 {
                     ((Human) _activeObject).UpdateVisibleObjects(false);
                 }
                 return true;
-
-            case COLLISION_OBJECT:
-            case COLLISION_TILE:
-            case COLLISION_WORLD:
-            case COLLISION_VIRTUAL:
-                _activeObject.StopMove(collision, collision.getX(), collision.getY());
-                return false;
 
             case COLLISION_FAIL:
                 _activeObject.StopMove(collision, (int) Math.round(_currentX),
@@ -138,12 +132,7 @@ public abstract class MoveController
                 return false;
 
             default:
-                // возможно какая то ошибка зарылась
-                _log.error(this.getClass().getSimpleName() + " process error, unknown collision " +
-                                   collision.toString());
-
-                _activeObject.StopMove(CollisionResult.FAIL, (int) Math.round(_currentX),
-                                       (int) Math.round(_currentY));
+                _activeObject.StopMove(collision, collision.getX(), collision.getY());
                 return false;
         }
 

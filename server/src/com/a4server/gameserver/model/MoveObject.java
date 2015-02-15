@@ -43,7 +43,7 @@ public abstract class MoveObject extends GameObject
      * получить скорость объекта
      * @return скорость в единицах координат в секунду
      */
-    public abstract int getSpeed();
+    public abstract double getMoveSpeed();
 
     public MoveController getMoveController()
     {

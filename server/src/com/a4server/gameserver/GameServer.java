@@ -6,6 +6,7 @@ import com.a4server.Server;
 import com.a4server.ThreadPoolManager;
 import com.a4server.gameserver.idfactory.IdFactory;
 import com.a4server.gameserver.model.World;
+import com.a4server.gameserver.model.objects.ObjectsFactory;
 import com.a4server.gameserver.network.GameServerHandler;
 import com.a4server.util.network.AsyncPacketReader;
 import com.a4server.util.network.PacketDecoder;
@@ -61,6 +62,7 @@ public class GameServer
         }
 
         ThreadPoolManager.getInstance();
+        ObjectsFactory.getInstance();
         logPrintSection("World");
         GameTimeController.init();
         World.getInstance();
