@@ -2,6 +2,7 @@ package com.a4server.gameserver.model;
 
 import com.a4server.Database;
 import com.a4server.gameserver.GameClient;
+import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.position.MoveToPoint;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
@@ -29,7 +30,7 @@ public class Player extends Human
     private static final String UPDATE_CHARACTER = "UPDATE characters SET x=?, y=? WHERE charId=?";
 
     private GameClient _client = null;
-    private boolean _isOnline = false;
+    private volatile boolean _isOnline = false;
     private final PcAppearance _appearance;
     private String _account;
 
@@ -166,6 +167,7 @@ public class Player extends Human
      */
     public void deleteMe()
     {
+        _log.debug("deleteMe");
         // деактивировать занятые гриды
         for (Grid g : _grids)
         {
@@ -184,8 +186,14 @@ public class Player extends Human
 
         if (_isOnline)
         {
+            _isOnline = false;
             // также тут надо сохранить состояние перса в базу.
             storeInDb();
+            if (_moveController != null) {
+                _moveController.setActiveObject(null);
+                _moveController = null;
+            }
+            GameTimeController.getInstance().RemoveMovingObject(this);
         }
 
     }
@@ -213,7 +221,7 @@ public class Player extends Human
 
     public void setClient(GameClient client)
     {
-        if (_client != null)
+        if (_client != null && client != null)
         {
             _log.warn("Player.client not null");
         }
@@ -253,6 +261,7 @@ public class Player extends Human
     public void storeInDb()
     {
         // todo player storeInDb
+        _log.debug("storeInDb " + toString());
         try
         {
             try (Connection con = Database.getInstance().getConnection();

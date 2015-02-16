@@ -22,6 +22,11 @@ public abstract class MoveController
     protected static final Logger _log = LoggerFactory.getLogger(MoveController.class.getName());
 
     /**
+     * расстояние через которое будет обновлятся позиция в базе данных
+     */
+    protected static final int UPDATE_DB_DISTANCE = Grid.TILE_SIZE * 5;
+
+    /**
      * объект который двигаем
      */
     protected MoveObject _activeObject;
@@ -31,6 +36,12 @@ public abstract class MoveController
      */
     protected double _currentX;
     protected double _currentY;
+
+    /**
+     * когда было последнее сохранение в базу
+     */
+    protected double _storedX;
+    protected double _storedY;
 
     /**
      * время последнего апдейта движения
@@ -45,9 +56,14 @@ public abstract class MoveController
     public void setActiveObject(MoveObject object)
     {
         _activeObject = object;
-        // получим текущие координаты
-        _currentX = object.getPos()._x;
-        _currentY = object.getPos()._y;
+        if (object != null)
+        {
+            // получим текущие координаты
+            _currentX = object.getPos()._x;
+            _currentY = object.getPos()._y;
+            _storedX = _currentX;
+            _storedY = _currentY;
+        }
     }
 
     /**
@@ -92,9 +108,21 @@ public abstract class MoveController
     public final boolean updateMove()
     {
         long currTime = System.currentTimeMillis();
-        if (_lastMoveTime < currTime) {
+        if (_lastMoveTime < currTime)
+        {
             // узнаем сколько времени прошло между апдейтами
             boolean result = MovingImpl((double) (currTime - _lastMoveTime) / 1000);
+            if (_activeObject.getMoveController() == this)
+            {
+                double dx = _currentX - _storedX;
+                double dy = _currentY - _storedY;
+                if (Math.pow(UPDATE_DB_DISTANCE, 2) < (Math.pow(dx, 2) + Math.pow(dy, 2)))
+                {
+                    _activeObject.storeInDb();
+                    _storedX = _currentX;
+                    _storedY = _currentY;
+                }
+            }
             _lastMoveTime = currTime;
             return result;
         }

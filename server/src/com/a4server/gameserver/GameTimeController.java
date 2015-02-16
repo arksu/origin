@@ -142,6 +142,15 @@ public class GameTimeController extends Thread
     }
 
     /**
+     * удалить объект из списка передвижений
+     * @param object объект
+     */
+    public void RemoveMovingObject(MoveObject object)
+    {
+        _movingObjects.remove(object.getObjectId());
+    }
+
+    /**
      * произошел игровой тик. надо обсчитать объекты. обновить их состояние
      */
     private void doGameTick()

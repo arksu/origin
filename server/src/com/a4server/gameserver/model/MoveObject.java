@@ -97,6 +97,7 @@ public abstract class MoveObject extends GameObject
         _moveController = null;
         _moveResult = result;
         getPos().setXY(x, y);
+        storeInDb();
         // расскажем всем что мы остановились
         getPos().getGrid().broadcastEvent(new EventStopMove(this));
     }
