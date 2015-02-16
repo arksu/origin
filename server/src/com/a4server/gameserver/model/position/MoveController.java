@@ -21,6 +21,9 @@ public abstract class MoveController
 {
     protected static final Logger _log = LoggerFactory.getLogger(MoveController.class.getName());
 
+    /**
+     * объект который двигаем
+     */
     protected MoveObject _activeObject;
 
     /**
@@ -29,6 +32,9 @@ public abstract class MoveController
     protected double _currentX;
     protected double _currentY;
 
+    /**
+     * время последнего апдейта движения
+     */
     private long _lastMoveTime;
 
     public MoveController()
@@ -54,7 +60,7 @@ public abstract class MoveController
      * возможно ли начать движение
      * @return да или нет
      */
-    public abstract boolean canMoving();
+    public abstract boolean canStartMoving();
 
     /**
      * создать игровое событие о движении объекта
@@ -77,7 +83,7 @@ public abstract class MoveController
      * внутренняя реализация движения. надо определить куда должны передвинутся за тик
      * @return движение завершено? (истина ежели уперлись во чтото или прибыли в пункт назначения)
      */
-    public abstract boolean MoveImplement(double dt);
+    public abstract boolean MovingImpl(double dt);
 
     /**
      * обработать тик передвижения
@@ -87,7 +93,8 @@ public abstract class MoveController
     {
         long currTime = System.currentTimeMillis();
         if (_lastMoveTime < currTime) {
-            boolean result = MoveImplement((double)(currTime - _lastMoveTime) / 1000);
+            // узнаем сколько времени прошло между апдейтами
+            boolean result = MovingImpl((double) (currTime - _lastMoveTime) / 1000);
             _lastMoveTime = currTime;
             return result;
         }
@@ -138,6 +145,14 @@ public abstract class MoveController
 
     }
 
+    /**
+     * проверить коллизию при движении к указанной точке
+     * @param toX куда пытаемся передвинуть объект
+     * @param toY куда пытаемся передвинуть объект
+     * @param moveType тип движения
+     * @param virtualObject виртуальный объект если он есть
+     * @return вернет коллизию или null если была ошибка
+     */
     protected CollisionResult checkColiision(double toX,
                                              double toY,
                                              Move.MoveType moveType,

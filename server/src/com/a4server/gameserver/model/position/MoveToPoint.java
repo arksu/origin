@@ -43,7 +43,7 @@ public class MoveToPoint extends MoveController
      * @return истина если движение завершилось. ложь если еще надо обновлять
      */
     @Override
-    public boolean MoveImplement(double dt)
+    public boolean MovingImpl(double dt)
     {
         // вычислим единичный вектор
         double tdx = _toX - _currentX;
@@ -82,8 +82,12 @@ public class MoveToPoint extends MoveController
         return td <= FINAL_DELTA;
     }
 
+    /**
+     * можем ли мы вообще начать движение?
+     * @return истина если можем
+     */
     @Override
-    public boolean canMoving()
+    public boolean canStartMoving()
     {
         // COPYPAST! ^^^
 
@@ -100,6 +104,7 @@ public class MoveToPoint extends MoveController
         double tmpX = _currentX + (tdx / td) * d;
         double tmpY = _currentY + (tdy / td) * d;
 
+        // проверим коллизию на передвижение за 1 тик
         return (checkColiision(tmpX, tmpY, _moveType, null) == CollisionResult.NONE);
     }
 

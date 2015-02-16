@@ -156,6 +156,8 @@ public class Main extends com.badlogic.gdx.Game
 
         freeScreen();
         getInstance().setScreen(new Login());
+
+        ObjectCache.getInstance().clear();
     }
 
 }

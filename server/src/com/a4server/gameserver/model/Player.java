@@ -249,6 +249,7 @@ public class Player extends Human
     /**
      * сохранить состояние персонажа в базу
      */
+    @Override
     public void storeInDb()
     {
         // todo player storeInDb

@@ -19,7 +19,7 @@ public class MoveFollow extends MoveController
     }
 
     @Override
-    public boolean canMoving()
+    public boolean canStartMoving()
     {
         return false;
     }
@@ -31,7 +31,7 @@ public class MoveFollow extends MoveController
     }
 
     @Override
-    public boolean MoveImplement(double dt)
+    public boolean MovingImpl(double dt)
     {
         return false;
     }

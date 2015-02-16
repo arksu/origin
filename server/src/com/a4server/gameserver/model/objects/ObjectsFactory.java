@@ -79,7 +79,7 @@ public class ObjectsFactory
         return template;
     }
 
-    public GameObject makeObject(int typeId)
+    public GameObject newObject(int typeId)
     {
         return null;
     }

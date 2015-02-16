@@ -45,6 +45,13 @@ public abstract class MoveObject extends GameObject
      */
     public abstract double getMoveSpeed();
 
+    /**
+     * сохранить состояние объекта в базу (позиция)
+     */
+    public void storeInDb()
+    {
+    }
+
     public MoveController getMoveController()
     {
         return _moveController;
@@ -58,8 +65,14 @@ public abstract class MoveObject extends GameObject
     {
         controller.setActiveObject(this);
         // сначала проверим возможно ли вообще движение?
-        if (controller.canMoving())
+        if (controller.canStartMoving())
         {
+            // если уже стоял контроллер - возможно двигались.
+            if (_moveController != null)
+            {
+                // сохраним состояние объекта в базу
+                storeInDb();
+            }
             _moveController = controller;
             _moveResult = null;
             // расскажем всем что мы начали движение, тут же отправится пакет клиенту
