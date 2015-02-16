@@ -371,6 +371,7 @@ public class Grid
         query = LOAD_OBJECTS;
         query = query.replaceFirst("sg_0", "sg_" + Integer.toString(_sg));
 
+        int objLoaded = 0;
         try
         {
             try (Connection con = Database.getInstance().getConnection();
@@ -379,9 +380,10 @@ public class Grid
                 ps.setInt(1, _grid);
                 try (ResultSet rset = ps.executeQuery())
                 {
-                    if (rset.next())
+                    while (rset.next())
                     {
                         loadObject(rset);
+                        objLoaded++;
                     }
                 }
             }
@@ -391,7 +393,7 @@ public class Grid
             _log.warn("Cant load grid " + toString());
             throw new RuntimeException("Cant load grid " + toString());
         }
-
+        _log.debug("objects loaded: " + objLoaded);
     }
 
     /**

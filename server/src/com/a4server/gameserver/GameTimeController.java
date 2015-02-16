@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * глобальное управление игровым временем
+ * передвижения объектов
  * Created by arksu on 08.01.2015.
  */
 public class GameTimeController extends Thread
@@ -20,11 +22,13 @@ public class GameTimeController extends Thread
      * игровой тик на обновление объектов, сколько обычных тиков
      */
     public static final int GAMETICK_PERIOD = 50;
+
     /**
      * игровых тиков в реальной секунде (на передвижение)
      */
     public static final int TICKS_PER_SECOND = 5;
     public static final int MILLIS_IN_TICK = 1000 / TICKS_PER_SECOND;
+
     /**
      * игровых дней в реальных сутках
      */
@@ -32,6 +36,7 @@ public class GameTimeController extends Thread
     public static final int MILLIS_PER_IG_DAY = (3600000 * 24) / IG_DAYS_PER_DAY;
     public static final int SECONDS_PER_IG_DAY = MILLIS_PER_IG_DAY / 1000;
     public static final int MINUTES_PER_IG_DAY = SECONDS_PER_IG_DAY / 60;
+
     /**
      * игровых тиков в игровом дне
      */
@@ -72,7 +77,7 @@ public class GameTimeController extends Thread
 
     /**
      * количество абсолютных игровых минут
-     * @return
+     * @return сколько всего игровых минут прошло
      */
     public final int getGameTime()
     {
@@ -111,6 +116,7 @@ public class GameTimeController extends Thread
             MoveController controller = obj.getMoveController();
             if (controller != null)
             {
+                long startt = System.nanoTime();
                 // обновим и узнаем закончено ли движение?
                 if (controller.updateMove())
                 {
@@ -119,6 +125,8 @@ public class GameTimeController extends Thread
                     // скажем объекту что он дошел куда надо
                     obj.onArrived();
                 }
+                long dd = (System.nanoTime() - startt) / 1000;
+                _log.debug("move: "+dd / 1000 + "."+dd % 1000);
             }
             else
             {

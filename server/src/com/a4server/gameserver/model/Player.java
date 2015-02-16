@@ -9,6 +9,7 @@ import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import com.a4server.gameserver.network.serverpackets.MapGrid;
 import com.a4server.gameserver.network.serverpackets.ObjectAdd;
 import com.a4server.gameserver.network.serverpackets.PlayerAppearance;
+import com.a4server.util.Rnd;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,7 @@ public class Player extends Human
 
         _typeId = 1;
         _appearance = new PcAppearance(rset, objectId);
-        setVisibleDistance(100);
+        setVisibleDistance(500);
         try
         {
             _account = rset.getString("account");
@@ -189,7 +190,8 @@ public class Player extends Human
             _isOnline = false;
             // также тут надо сохранить состояние перса в базу.
             storeInDb();
-            if (_moveController != null) {
+            if (_moveController != null)
+            {
                 _moveController.setActiveObject(null);
                 _moveController = null;
             }
@@ -317,5 +319,44 @@ public class Player extends Human
         _log.debug("MoveToPoint to (" + x + ", " + y + ")");
         // запустим движение. создадим контроллер для этого
         StartMove(new MoveToPoint(x, y));
+
+        //randomGrid();
+    }
+
+    public void randomGrid()
+    {
+        int ido = 100;
+        int gx = 44;
+        int gy = 27;
+        int grid;
+        for (int i = 0; i < 2000; i++)
+        {
+            int rx = Rnd.get(0, Grid.GRID_FULL_SIZE) + (gx * 1200);
+            int ry = Rnd.get(0, Grid.GRID_FULL_SIZE) + (gy * 1200);
+            grid = rx / Grid.GRID_FULL_SIZE + ry / Grid.GRID_FULL_SIZE * Grid.SUPERGRID_SIZE;
+            ido++;
+            _log.debug("create obj " + ido);
+
+            String q = "INSERT INTO sg_0_obj (id, grid, x, y, type, hp, create_tick) VALUES (?,?,?,?,?,?,?);";
+            try
+            {
+                try (Connection con = Database.getInstance().getConnection();
+                     PreparedStatement ps = con.prepareStatement(q))
+                {
+                    ps.setInt(1, ido);
+                    ps.setInt(2, grid);
+                    ps.setInt(3, rx);
+                    ps.setInt(4, ry);
+                    ps.setInt(5, 11);
+                    ps.setInt(6, 100);
+                    ps.setInt(7, GameTimeController.getInstance().getTickCount());
+                    ps.execute();
+                }
+            }
+            catch (SQLException e)
+            {
+                _log.warn("failed: storeInDb " + e.getMessage());
+            }
+        }
     }
 }

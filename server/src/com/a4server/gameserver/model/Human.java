@@ -32,7 +32,7 @@ public abstract class Human extends MoveObject
     /**
      * дистанция которую нужно пройти чтобы произошел апдейт видимых объектов
      */
-    protected static final int VISIBLE_UPDATE_DISTANCE = 44;
+    protected static final int VISIBLE_UPDATE_DISTANCE = 5 * Grid.TILE_SIZE;
 
     /**
      * последняя позиция в которой было обновление видимых объектов
