@@ -59,6 +59,9 @@ public class GamePacketHandler
                     case 0x0E:
                         pkt = new MouseClick();
                         break;
+                    case 0x16:
+                        pkt = new ChatMessage();
+                        break;
 
                     default:
                         debugOpcode(opcode, state);

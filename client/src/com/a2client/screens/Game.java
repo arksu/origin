@@ -1,12 +1,11 @@
 package com.a2client.screens;
 
 import com.a2client.*;
-import com.a2client.gui.GUI;
-import com.a2client.gui.GUI_Button;
-import com.a2client.gui.GUI_Label;
+import com.a2client.gui.*;
 import com.a2client.model.GameObject;
 import com.a2client.model.Grid;
 import com.a2client.network.game.clientpackets.MouseClick;
+import com.a2client.network.game.clientpackets.ChatMessage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -32,6 +31,8 @@ public class Game extends BaseScreen
 
     private GUI_Label _lblStatus;
     private GUI_Button _btnExit;
+    private GUI_Memo _chatMemo;
+    private GUI_Edit _chatEdit;
 
     private static Game _instance;
     private GameState _state = GameState.ENTERING;
@@ -67,6 +68,29 @@ public class Game extends BaseScreen
         _btnExit.caption = Lang.getTranslate("generic", "cancel");
         _btnExit.SetSize(100, 25);
         _btnExit.SetPos(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 35);
+
+        int hc = 100;
+        int wc = 200;
+        int py = Config.getScreenHeight() - hc - 30;
+        _chatMemo = new GUI_Memo(GUI.rootNormal());
+        _chatMemo.SetPos(5, py);
+        _chatMemo.SetSize(wc, hc);
+
+        _chatEdit = new GUI_Edit(GUI.rootNormal())
+        {
+            @Override
+            public void DoEnter()
+            {
+                if (_chatEdit.text.isEmpty())
+                {
+                    return;
+                }
+                new ChatMessage(0, _chatEdit.text).Send();
+                _chatEdit.SetText("");
+            }
+        };
+        _chatEdit.SetPos(5, py + _chatMemo.Height() + 5);
+        _chatEdit.SetSize(_chatMemo.Width(), 20);
 
     }
 
@@ -127,7 +151,7 @@ public class Game extends BaseScreen
                 o.Update();
             }
         }
-        
+
         if (ObjectCache.getInstance().getMe() != null)
         {
 //            Vec2i pp = ObjectCache.getInstance().getMe().getCoord().div(MapCache.TILE_SIZE);
@@ -214,7 +238,8 @@ public class Game extends BaseScreen
 
     private void renderObject(GameObject object)
     {
-        Vector2 oc = new Vector2(object.getCoord().x, object.getCoord().y).div(MapCache.TILE_SIZE).add(getOffset()).add(_camera_offset);
+        Vector2 oc = new Vector2(object.getCoord().x, object.getCoord().y).div(MapCache.TILE_SIZE).add(getOffset())
+                                                                          .add(_camera_offset);
 
         _renderer.setColor(Color.RED);
         float sz = 0.5f;

@@ -27,7 +27,8 @@ public class GamePacketHandler
             TimeUpdate.class,
             WorldInfo.class,
             ObjectMove.class,
-            ObjectPos.class
+            ObjectPos.class,
+            CreatureSay.class
     };
 
     static public void InitPackets()

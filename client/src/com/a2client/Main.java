@@ -13,6 +13,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.graphics.GL20;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,8 @@ public class Main extends com.badlogic.gdx.Game
 
         // установим дефолт курсор
         Cursor.getInstance().setCursor("");
+
+        _log.debug("gl ver: "+Gdx.gl.glGetString(GL20.GL_VERSION));
 
         // экран загрузки ресурсов
         this.setScreen(new ResourceLoader());

@@ -1,6 +1,7 @@
 package com.a4server.gameserver.model;
 
 import com.a4server.gameserver.model.event.AbstractObjectEvent;
+import com.a4server.gameserver.model.event.EventChatGeneralMessage;
 import com.a4server.gameserver.model.event.EventMove;
 import com.a4server.gameserver.model.event.EventStopMove;
 import com.a4server.gameserver.model.position.ObjectPosition;
@@ -40,11 +41,20 @@ public abstract class Human extends MoveObject
      */
     private ObjectPosition _lastVisibleUpdatePos = null;
 
+    /**
+     * объект в процессе удаления и ни на какие события больше не должен реагировать
+     */
+    protected boolean _isDeleteing = false;
+
     public Human(int objectId)
     {
         super(objectId);
     }
 
+    public boolean isDeleteing()
+    {
+        return _isDeleteing;
+    }
 
     public void setVisibleDistance(int visibleDistance)
     {
@@ -136,7 +146,7 @@ public abstract class Human extends MoveObject
     {
         // по дефолту просто смотрим на расстояние мжеду нами
         // себя всегда видим!
-        return  object.getObjectId() == getObjectId() || (getPos().getDistance(object.getPos()) < _visibleDistance);
+        return object.getObjectId() == getObjectId() || (getPos().getDistance(object.getPos()) < _visibleDistance);
     }
 
     /**
@@ -175,6 +185,12 @@ public abstract class Human extends MoveObject
                     return true;
                 }
             }
+        }
+        // ктото сказал в общий чат
+        else if (event instanceof EventChatGeneralMessage)
+        {
+            // если мы знаем такой объект - пошлем пакет клиенту
+            return isKnownObject(event.getObject());
         }
         return false;
     }

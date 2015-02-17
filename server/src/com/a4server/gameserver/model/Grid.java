@@ -792,7 +792,7 @@ public class Grid
         for (Player p : _activePlayers)
         {
             // если игрок обработал это событие. и оно касается его
-            if (p.HandleEvent(event))
+            if (!p.isDeleteing() && p.HandleEvent(event))
             {
                 // отправим пакет
                 p.getClient().sendPacket(event.getPacket());
