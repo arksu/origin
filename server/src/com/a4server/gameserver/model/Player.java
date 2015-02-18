@@ -3,12 +3,12 @@ package com.a4server.gameserver.model;
 import com.a4server.Database;
 import com.a4server.gameserver.GameClient;
 import com.a4server.gameserver.GameTimeController;
+import com.a4server.gameserver.idfactory.IdFactory;
+import com.a4server.gameserver.model.event.AbstractObjectEvent;
+import com.a4server.gameserver.model.event.EventChatGeneralMessage;
 import com.a4server.gameserver.model.position.MoveToPoint;
 import com.a4server.gameserver.model.position.ObjectPosition;
-import com.a4server.gameserver.network.serverpackets.GameServerPacket;
-import com.a4server.gameserver.network.serverpackets.MapGrid;
-import com.a4server.gameserver.network.serverpackets.ObjectAdd;
-import com.a4server.gameserver.network.serverpackets.PlayerAppearance;
+import com.a4server.gameserver.network.serverpackets.*;
 import com.a4server.util.Rnd;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class Player extends Human
 {
     private static final Logger _log = LoggerFactory.getLogger(Player.class);
 
-    private static final String LOAD_CHARACTER = "SELECT account, charName, x, y, lvl, face, hairColor, hairStyle, sex, lastAccess, onlineTime, title, createDate FROM characters WHERE del=0 AND charId = ?";
+    private static final String LOAD_CHARACTER = "SELECT account, charName, x, y, lvl, accessLevel, face, hairColor, hairStyle, sex, lastAccess, onlineTime, title, createDate FROM characters WHERE del=0 AND charId = ?";
     private static final String UPDATE_LAST_CHAR = "UPDATE accounts SET lastChar = ? WHERE login = ?";
     private static final String UPDATE_CHARACTER = "UPDATE characters SET x=?, y=? WHERE charId=?";
 
@@ -34,6 +34,7 @@ public class Player extends Human
     private volatile boolean _isOnline = false;
     private final PcAppearance _appearance;
     private String _account;
+    private int _accessLevel;
 
     public Player(int objectId, ResultSet rset)
     {
@@ -44,6 +45,7 @@ public class Player extends Human
         setVisibleDistance(500);
         try
         {
+            _accessLevel = rset.getInt("accessLevel");
             _account = rset.getString("account");
             _name = rset.getString("charName");
             _title = rset.getString("title");
@@ -360,5 +362,40 @@ public class Player extends Human
                 _log.warn("failed: storeInDb " + e.getMessage());
             }
         }
+    }
+
+    @Override
+    public boolean HandleEvent(AbstractObjectEvent event)
+    {
+        if (event instanceof EventChatGeneralMessage)
+        {
+            EventChatGeneralMessage em = (EventChatGeneralMessage) event;
+            if (em.getMessage().startsWith("/"))
+            {
+                if (_accessLevel >= 100)
+                {
+                    _log.debug("console command: " + em.getMessage());
+                    if ("/randomgrid".equalsIgnoreCase(em.getMessage()))
+                    {
+                        randomGrid();
+                    }
+                    else if ("/nextid".equalsIgnoreCase(em.getMessage()))
+                    {
+                        IdFactory.getInstance().getNextId();
+                        IdFactory.getInstance().getNextId();
+                        IdFactory.getInstance().getNextId();
+                        int nextId = IdFactory.getInstance().getNextId();
+                        getClient().sendPacket(new CreatureSay(getObjectId(), "next id: " + nextId));
+                        _log.debug("nextid: " + nextId);
+                    }
+                }
+
+                // тут исполняем обычные команды доступные для всех
+
+                // консольные команды проглотим
+                return false;
+            }
+        }
+        return super.HandleEvent(event);
     }
 }

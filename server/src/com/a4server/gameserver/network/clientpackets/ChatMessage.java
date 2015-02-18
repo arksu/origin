@@ -25,17 +25,20 @@ public class ChatMessage extends GameClientPacket
     @Override
     public void run()
     {
-         if (client.getActiveChar() != null) {
-             // смотрим в каком канале отправили сообщение
-             switch (_channelId) {
-                 // основной канал - общий чат вокруг объекта
-                 case 0:
-                     client.getActiveChar().getPos().getGrid().broadcastEvent(new EventChatGeneralMessage(
-                             client.getActiveChar(),
-                             _message
-                     ));
-                     break;
-             }
-         }
+        if (client.getActiveChar() != null)
+        {
+            _log.debug("chat " + client.getActiveChar() + ": " + _message);
+            // смотрим в каком канале отправили сообщение
+            switch (_channelId)
+            {
+                // основной канал - общий чат вокруг объекта
+                case 0:
+                    client.getActiveChar().getPos().getGrid().broadcastEvent(new EventChatGeneralMessage(
+                            client.getActiveChar(),
+                            _message
+                    ));
+                    break;
+            }
+        }
     }
 }

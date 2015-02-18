@@ -27,4 +27,9 @@ public class EventChatGeneralMessage extends AbstractObjectEvent
     {
         return new CreatureSay(_object.getObjectId(), _message);
     }
+
+    public String getMessage()
+    {
+        return _message;
+    }
 }
