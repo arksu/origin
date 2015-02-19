@@ -65,7 +65,7 @@ public class SimpleIdFactory extends IdFactory
      */
     protected void Extend()
     {
-        _log.debug("extend last=" + _lastId + " capacity=" + CAPACITY + " store=" + (_lastId + CAPACITY));
+        _log.debug("take id's from " + (_lastId+1) + " to " + (_lastId + CAPACITY));
         _freeCount += CAPACITY;
         GlobalVariablesManager.getInstance().saveVarInt(DB_VALUE, _lastId + CAPACITY);
     }

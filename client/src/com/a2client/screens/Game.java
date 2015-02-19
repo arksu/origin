@@ -114,21 +114,24 @@ public class Game extends BaseScreen
         _world_mouse_pos = screen2world(Gdx.input.getX(), Gdx.input.getY()).sub(getOffset()).sub(_camera_offset);
 
         //_camera_offset = new Vector2();
-        if (com.a2client.Input.KeyDown(Input.Keys.W))
+        if (GUI.getInstance().focused_control == null)
         {
-            _camera_offset.y -= MOVE_STEP;
-        }
-        if (com.a2client.Input.KeyDown(Input.Keys.S))
-        {
-            _camera_offset.y += MOVE_STEP;
-        }
-        if (com.a2client.Input.KeyDown(Input.Keys.A))
-        {
-            _camera_offset.x += MOVE_STEP;
-        }
-        if (com.a2client.Input.KeyDown(Input.Keys.D))
-        {
-            _camera_offset.x -= MOVE_STEP;
+            if (com.a2client.Input.KeyDown(Input.Keys.W))
+            {
+                _camera_offset.y -= MOVE_STEP;
+            }
+            if (com.a2client.Input.KeyDown(Input.Keys.S))
+            {
+                _camera_offset.y += MOVE_STEP;
+            }
+            if (com.a2client.Input.KeyDown(Input.Keys.A))
+            {
+                _camera_offset.x += MOVE_STEP;
+            }
+            if (com.a2client.Input.KeyDown(Input.Keys.D))
+            {
+                _camera_offset.x -= MOVE_STEP;
+            }
         }
 
         if (com.a2client.Input.isWheelUpdated())
@@ -176,13 +179,16 @@ public class Game extends BaseScreen
             // узнаем на какую кнопку нажали
             if (mouse_btns[i] != old_btns[i])
             {
-                new MouseClick(
-                        mouse_btns[i],
-                        i,
-                        Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE),
-                        Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE),
-                        0
-                ).Send();
+                if ((mouse_btns[i] && GUI.getInstance().mouse_in_control == null) || (!mouse_btns[i]))
+                {
+                    new MouseClick(
+                            mouse_btns[i],
+                            i,
+                            Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE),
+                            Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE),
+                            0
+                    ).Send();
+                }
             }
         }
     }

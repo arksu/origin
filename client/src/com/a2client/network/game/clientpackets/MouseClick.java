@@ -18,6 +18,7 @@ public class MouseClick extends GameClientPacket
 
     public MouseClick(boolean isDown, int button, int x, int y, int objectId)
     {
+        // если кнопку подняли - то добавим 10
         _button = button + (isDown ? 0 : 10);
         _x = x;
         _y = y;

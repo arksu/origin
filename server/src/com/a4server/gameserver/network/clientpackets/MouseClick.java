@@ -28,7 +28,8 @@ public class MouseClick extends GameClientPacket
     @Override
     public void run()
     {
-        boolean isDown = _button >= 10;
+        // нажатая кнопка < 10
+        boolean isDown = _button < 10;
         _button = _button >= 10 ? _button - 10 : _button;
         Player player = client.getActiveChar();
         if (player != null)
