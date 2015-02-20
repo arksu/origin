@@ -142,7 +142,8 @@ public class Game extends BaseScreen
 
         if (_state == GameState.IN_GAME)
         {
-            _statusText = _world_mouse_pos.toString();
+            _statusText = "mouse coord: "+Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE)+", "+
+                    Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE);
         }
         _lblStatus.caption = "FPS: " + Gdx.graphics.getFramesPerSecond() + " " + _statusText;
 
