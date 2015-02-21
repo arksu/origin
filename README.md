@@ -13,6 +13,6 @@ redeploy project:
 
 - now you can build all parts, just run ```gradle build```
 
-- also you can see all available tasks by ```gradle tasks``` (more useful is: run-client, run-gameserver, run-loginserver)
+- also you can see all available tasks by ```gradle tasks``` (more useful is: rc, rg, rl)
 
 if you have any questions please contact me (skype: ark.su, or email: ark@ark.su)

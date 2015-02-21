@@ -45,6 +45,11 @@ public class GameObject
         return _coord;
     }
 
+    public String getName()
+    {
+        return _name;
+    }
+
     public void setCoord(int x, int y)
     {
         _coord.x = x;

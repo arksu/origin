@@ -31,7 +31,7 @@ public class Game extends BaseScreen
 
     private GUI_Label _lblStatus;
     private GUI_Button _btnExit;
-    private GUI_Memo _chatMemo;
+    public GUI_Memo _chatMemo;
     private GUI_Edit _chatEdit;
 
     private static Game _instance;
@@ -86,6 +86,7 @@ public class Game extends BaseScreen
                     return;
                 }
                 new ChatMessage(0, _chatEdit.text).Send();
+                ChatHistory.add(_chatEdit.text);
                 _chatEdit.SetText("");
             }
         };
@@ -133,6 +134,25 @@ public class Game extends BaseScreen
                 _camera_offset.x -= MOVE_STEP;
             }
         }
+        else if (GUI.getInstance().focused_control == _chatEdit)
+        {
+            String h;
+            if (com.a2client.Input.KeyHit(Input.Keys.UP))
+            {
+                h = ChatHistory.prev();
+                if (!h.isEmpty())
+                {
+                    _chatEdit.SetText(h);
+                    _chatEdit.SetCursor(999);
+                }
+            }
+            if (com.a2client.Input.KeyHit(Input.Keys.DOWN))
+            {
+                h = ChatHistory.next();
+                _chatEdit.SetText(h);
+                _chatEdit.SetCursor(999);
+            }
+        }
 
         if (com.a2client.Input.isWheelUpdated())
         {
@@ -142,7 +162,7 @@ public class Game extends BaseScreen
 
         if (_state == GameState.IN_GAME)
         {
-            _statusText = "mouse coord: "+Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE)+", "+
+            _statusText = "mouse coord: " + Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE) + ", " +
                     Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE);
         }
         _lblStatus.caption = "FPS: " + Gdx.graphics.getFramesPerSecond() + " " + _statusText;

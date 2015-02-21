@@ -1,6 +1,10 @@
 package com.a2client.network.game.serverpackets;
 
+import com.a2client.Main;
+import com.a2client.ObjectCache;
+import com.a2client.model.GameObject;
 import com.a2client.network.game.GamePacketHandler;
+import com.a2client.screens.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,5 +34,8 @@ public class CreatureSay extends GameServerPacket
     public void run()
     {
         _log.debug("CreatureSay: " + _objectId + ": " + _message);
+        GameObject obj = ObjectCache.getInstance().getObject(_objectId);
+        String msg = (obj != null ? obj.getName() : "*") + ": " + _message;
+        ((Game)Main.getInstance().getScreen())._chatMemo.AddLine(msg);
     }
 }

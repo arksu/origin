@@ -154,6 +154,7 @@ public class Main extends com.badlogic.gdx.Game
     {
         Config.SaveOptions();
         Dialog.HideAll();
+        ChatHistory.clear();
 
         Net.CloseConnection();
 

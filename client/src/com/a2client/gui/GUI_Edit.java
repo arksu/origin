@@ -118,7 +118,7 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
         marking = true;
     }
 
-    protected void SetCursor(int p)
+    public void SetCursor(int p)
     {
         pos1 = Math.min(getVisualText().length(), Math.max(0, p));
         pos2 = pos1;
