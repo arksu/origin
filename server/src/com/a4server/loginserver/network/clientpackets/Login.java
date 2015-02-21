@@ -14,14 +14,13 @@ import java.sql.SQLException;
 public class Login extends LoginClientPacket
 {
     private String _login;
-    private byte[] _hash;
+    private String _hash;
 
     @Override
     public void readImpl()
     {
         _login = readS();
-        int len = readH();
-        _hash = readB(len);
+        _hash = readS();
     }
 
     @Override

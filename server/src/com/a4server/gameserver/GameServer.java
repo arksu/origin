@@ -80,7 +80,8 @@ public class GameServer
             }
             catch (UnknownHostException e)
             {
-                _log.warn("WARNING: The LoginServer bind address is invalid, using all avaliable IPs. Reason: " + e.getMessage(), e);
+                _log.warn("WARNING: The LoginServer bind address is invalid, using all avaliable IPs. Reason: " + e
+                        .getMessage(), e);
             }
         }
 
@@ -107,15 +108,15 @@ public class GameServer
             b.option(ChannelOption.SO_BACKLOG, 256);
             b.option(ChannelOption.TCP_NODELAY, true);
             b.group(bossGroup, workerGroup)
-                    .channel(NioServerSocketChannel.class)
-                    .childHandler(new ChannelInitializer<SocketChannel>()
-                    {
-                        @Override
-                        public void initChannel(SocketChannel ch) throws Exception
-                        {
-                            ch.pipeline().addLast(new PacketDecoder(), new PacketEncoder(), new GameServerHandler(_reader));
-                        }
-                    });
+             .channel(NioServerSocketChannel.class)
+             .childHandler(new ChannelInitializer<SocketChannel>()
+             {
+                 @Override
+                 public void initChannel(SocketChannel ch) throws Exception
+                 {
+                     ch.pipeline().addLast(new PacketDecoder(), new PacketEncoder(), new GameServerHandler(_reader));
+                 }
+             });
 
             _log.info("Game server bind to " + Config.GAME_SERVER_HOST + " : " + Config.GAME_SERVER_PORT + "...");
             // Bind and start to accept incoming connections.
@@ -129,7 +130,8 @@ public class GameServer
                     + Runtime.getRuntime().freeMemory()) / 1048576;
             long totalMem = Runtime.getRuntime().maxMemory() / 1048576;
             long usedMem = Runtime.getRuntime().totalMemory() / 1048576;
-            _log.info(getClass().getSimpleName() + ": Started, free memory " + freeMem + " Mb of " + totalMem + " Mb used :" + usedMem + " Mb");
+            _log.info(getClass()
+                              .getSimpleName() + ": Started, free memory " + freeMem + " Mb of " + totalMem + " Mb used :" + usedMem + " Mb");
 
             future.sync().channel().closeFuture().sync();
         }

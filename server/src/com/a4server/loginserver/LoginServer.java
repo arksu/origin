@@ -7,6 +7,7 @@ import com.a4server.loginserver.network.LoginServerHandler;
 import com.a4server.util.network.AsyncPacketReader;
 import com.a4server.util.network.PacketDecoder;
 import com.a4server.util.network.PacketEncoder;
+import com.a4server.util.scrypt.SCryptUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -41,6 +42,20 @@ public class LoginServer
 
     public LoginServer()
     {
+        logPrintSection("SCrypt");
+        long t = System.currentTimeMillis();
+        String hash = SCryptUtil.scrypt("123", Config.SCRYPT_N, Config.SCRYPT_R, Config.SCRYPT_P);
+        _log.debug("scrypt: time " + (System.currentTimeMillis() - t) + " ms pass: 123 hash: " + hash);
+        t = System.currentTimeMillis();
+        if (SCryptUtil.check("123", hash))
+        {
+            _log.debug("scrypt: time " + (System.currentTimeMillis() - t) + " ms check: OK");
+        }
+        else
+        {
+            _log.debug("scrypt: FALSE");
+        }
+
         // Load Config
         Config.load();
 

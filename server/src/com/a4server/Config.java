@@ -18,21 +18,29 @@ public class Config
 
     public static boolean DEBUG;
 
-
     public static String LOGIN_BIND_ADDRESS;
     // куда коннектится клиенту
     public static String GAME_SERVER_HOST;
     public static int GAME_SERVER_PORT;
     public static int PORT_LOGIN;
+    // сколько потоков обслуживают сеть
     public static int LOGIN_NET_WORKER_THREADS;
+    // сколько потоков разбирают пакеты
     public static int LOGIN_NET_READER_THREADS;
+    // сколько потоков обслуживают сеть
     public static int GAME_NET_WORKER_THREADS;
+    // сколько потоков разбирают пакеты
     public static int GAME_NET_READER_THREADS;
     public static int DATABASE_MAX_CONNECTIONS;
     public static int DATABASE_MAX_IDLE_TIME;
+    // таймаут на закрытие соединения с базой.
     public static int DATABASE_CONNECTION_CLOSE_TIME;
-
+    // размер очереди для чтения пакетов
     public static int NET_PACKET_RECV_QUEUE_SIZE;
+    // параметры для хэширования scrypt
+    public static int SCRYPT_N = 2048;
+    public static int SCRYPT_R = 8;
+    public static int SCRYPT_P = 1;
     /**
      * размер пула потоков для general заданий
      */
@@ -65,11 +73,12 @@ public class Config
         LOGIN_NET_READER_THREADS = 2;
         GAME_SERVER_HOST = "127.0.0.1";
         GAME_SERVER_PORT = 2041;
+        SCRYPT_N = 2048;
     }
 
     public static void load()
     {
-        NET_PACKET_RECV_QUEUE_SIZE = 10;
+        NET_PACKET_RECV_QUEUE_SIZE = 16;
         DEBUG = true;
         DATABASE_CONNECTION_CLOSE_TIME = 500;
         THREAD_P_GENERAL = 2;

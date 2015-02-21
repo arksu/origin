@@ -16,5 +16,9 @@ public class Init extends LoginServerPacket
 
         // proto version
         writeC(Config.LOGIN_PROTO_VERSION);
+
+        writeD(Config.SCRYPT_N);
+        writeD(Config.SCRYPT_P);
+        writeD(Config.SCRYPT_R);
     }
 }

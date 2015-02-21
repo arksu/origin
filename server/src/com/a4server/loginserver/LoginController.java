@@ -4,18 +4,17 @@ import com.a4server.Config;
 import com.a4server.Database;
 import com.a4server.loginserver.network.serverpackets.LoginFail;
 import com.a4server.util.Rnd;
+import com.a4server.util.scrypt.SCryptUtil;
 import javolution.util.FastMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.security.GeneralSecurityException;
-import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 
 /**
  * Created by arksu on 03.01.2015.
@@ -66,13 +65,12 @@ public class LoginController
 
     /**
      * авторизация на логин сервере
-     *
      * @param account логин
-     * @param hash    хэш от пароля
-     * @param client  клиент
+     * @param hash хэш от пароля
+     * @param client клиент
      * @return подробные причины отказа или успех
      */
-    public AuthLoginResult tryAuthLogin(String account, byte[] hash, LoginClient client)
+    public AuthLoginResult tryAuthLogin(String account, String hash, LoginClient client)
     {
         AuthLoginResult ret = AuthLoginResult.INVALID_PASSWORD;
         // check auth
@@ -115,7 +113,7 @@ public class LoginController
         return false;
     }
 
-    public boolean loginValid(String user, byte[] hash, LoginClient client)// throws HackingException
+    public boolean loginValid(String user, String hash, LoginClient client)// throws HackingException
     {
         boolean ok = false;
         InetAddress address = client.getInetAddress();
@@ -180,12 +178,10 @@ public class LoginController
                 return false;
             }
 
-            // check password hash
-            MessageDigest md = MessageDigest.getInstance("SHA");
-            byte[] raw = password.getBytes("UTF-8");
-            byte[] expected = md.digest(raw);
             // проверим хэш пароля
-            ok = Arrays.equals(hash, expected);
+            long time = System.currentTimeMillis();
+            ok = SCryptUtil.check(password, hash);
+            _log.debug("scrypt check time: " + (System.currentTimeMillis() - time) + " ms");
             if (ok)
             {
                 if (Config.DEBUG)

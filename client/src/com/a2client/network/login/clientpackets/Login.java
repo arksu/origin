@@ -1,6 +1,7 @@
 package com.a2client.network.login.clientpackets;
 
-import java.security.MessageDigest;
+import com.a2client.network.login.Crypt;
+import com.a2client.util.scrypt.SCryptUtil;
 
 public class Login extends LoginClientPacket
 {
@@ -20,20 +21,6 @@ public class Login extends LoginClientPacket
         writeC(0x02);
 
         writeS(_login);
-
-        try
-        {
-            MessageDigest md = MessageDigest.getInstance("SHA");
-            byte[] raw = _pass.getBytes("UTF-8");
-            byte[] hash = md.digest(raw);
-
-            writeH(hash.length);
-            writeB(hash);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-
-        }
+        writeS(SCryptUtil.scrypt(_pass, Crypt.SCRYPT_N, Crypt.SCRYPT_R, Crypt.SCRYPT_P));
     }
 }
