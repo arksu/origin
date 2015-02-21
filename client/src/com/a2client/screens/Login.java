@@ -1,21 +1,29 @@
 package com.a2client.screens;
 
 import com.a2client.Config;
-import com.a2client.Main;
 import com.a2client.Input;
 import com.a2client.Lang;
+import com.a2client.Main;
 import com.a2client.gui.*;
 import com.a2client.network.Net;
 import com.a2client.network.netty.NettyConnection;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Texture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Login extends BaseScreen
 {
+    private static final Logger _log = LoggerFactory.getLogger(Login.class.getName());
+
     static public String _account;
     static public String _password;
     static private String _status = "";
+    /**
+     * текст ошибки в процессе логина. если установлено - выполнится onError()
+     */
+    static public String _login_error = null;
 
     static public String _gameserver_host;
     static public int _gameserver_port;
@@ -43,7 +51,7 @@ public class Login extends BaseScreen
         ypos = Math.max(ypos, (Gdx.graphics.getHeight() / 2) - 90);
 
         lbl_login = new GUI_Label(GUI.rootNormal());
-        lbl_login.caption = Lang.getTranslate("login", "account");
+        lbl_login.caption = Lang.getTranslate("LoginScreen.account");
         lbl_login.SetPos(10, ypos);
         lbl_login.UpdateSize();
         lbl_login.CenterX();
@@ -55,7 +63,7 @@ public class Login extends BaseScreen
         edit_login.text = Config.account;
 
         lbl_password = new GUI_Label(GUI.rootNormal());
-        lbl_password.caption = Lang.getTranslate("login", "password");
+        lbl_password.caption = Lang.getTranslate("LoginScreen.password");
         lbl_password.SetPos(edit_login.pos.add(0, 40));
         lbl_password.UpdateSize();
         lbl_password.CenterX();
@@ -77,7 +85,7 @@ public class Login extends BaseScreen
                 doLogin();
             }
         };
-        btn_login.caption = Lang.getTranslate("login", "login");
+        btn_login.caption = Lang.getTranslate("LoginScreen.login");
         btn_login.SetPos(edit_password.pos.add(0, 40));
         btn_login.SetSize(100, 25);
         btn_login.CenterX();
@@ -95,12 +103,12 @@ public class Login extends BaseScreen
                 System.exit(0);
             }
         };
-        btn_exit.caption = Lang.getTranslate("generic", "quit");
+        btn_exit.caption = Lang.getTranslate("LoginScreen.quit");
         btn_exit.SetSize(100, 25);
         btn_exit.SetPos(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 35);
 
         btn_options = new GUI_Button(GUI.rootNormal());
-        btn_options.caption = Lang.getTranslate("generic", "options");
+        btn_options.caption = Lang.getTranslate("LoginScreen.options");
         btn_options.SetSize(100, 25);
         btn_options.SetPos(btn_exit.pos.add(0, -35));
         btn_options.enabled = false;
@@ -112,7 +120,9 @@ public class Login extends BaseScreen
         }
 
         if (Config.quick_login_mode)
+        {
             doLogin();
+        }
 
         // тут запустим музыку в фоне
         if (!LwjglApplicationConfiguration.disableAudio)
@@ -154,7 +164,12 @@ public class Login extends BaseScreen
 
     static public void Error(String s)
     {
-        _status = s;
+        _login_error = s;
+    }
+
+    static public void onError() {
+        _status = _login_error;
+        _login_error = null;
         Config.quick_login_mode = false;
         Main.ReleaseAll();
     }
@@ -166,9 +181,13 @@ public class Login extends BaseScreen
         if (Input.KeyHit(com.badlogic.gdx.Input.Keys.TAB))
         {
             if (!edit_login.isFocused())
+            {
                 GUI.getInstance().SetFocus(edit_login);
+            }
             else if (!edit_password.isFocused())
+            {
                 GUI.getInstance().SetFocus(edit_password);
+            }
         }
 
         if (Input.KeyHit(com.badlogic.gdx.Input.Keys.ENTER) && !Input.isAltPressed() && !Input.isCtrlPressed() && !Input
@@ -179,17 +198,17 @@ public class Login extends BaseScreen
 
         if (!_status.isEmpty())
         {
-            lbl_status.caption = Lang.getTranslate("net_error", _status);
+            lbl_status.caption = Lang.getTranslate("LoginScreen.status." + _status);
             UpdateStatusLbl();
         }
         else if (Net.getConnection() != null)
         {
-            lbl_status.caption = Lang.getTranslate("net_error", "connect_error");
+            lbl_status.caption = Lang.getTranslate("LoginScreen.status.connect_error");
             UpdateStatusLbl();
         }
         else
         {
-            lbl_status.caption = Lang.getTranslate("net_error", "disconnected");
+            lbl_status.caption = Lang.getTranslate("LoginScreen.status.disconnected");
             UpdateStatusLbl();
         }
     }

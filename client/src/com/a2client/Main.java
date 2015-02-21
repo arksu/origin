@@ -42,7 +42,7 @@ public class Main extends com.badlogic.gdx.Game
         // установим дефолт курсор
         Cursor.getInstance().setCursor("");
 
-        _log.debug("gl ver: "+Gdx.gl.glGetString(GL20.GL_VERSION));
+        _log.debug("gl ver: " + Gdx.gl.glGetString(GL20.GL_VERSION));
 
         // экран загрузки ресурсов
         this.setScreen(new ResourceLoader());
@@ -66,7 +66,7 @@ public class Main extends com.badlogic.gdx.Game
         LoadNativeLibs();
 
         GamePacketHandler.InitPackets();
-        
+
         // запускаем приложение
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
         cfg.title = "Origin v2.0";
@@ -74,9 +74,13 @@ public class Main extends com.badlogic.gdx.Game
         cfg.vSyncEnabled = Config.vSync;
         cfg.foregroundFPS = Config.FrameFate;
         if (Config.ReduceInBackground)
+        {
             cfg.backgroundFPS = 7;
+        }
         else
+        {
             cfg.backgroundFPS = Config.FrameFate;
+        }
         cfg.width = Config.getScreenWidth();
         cfg.height = Config.getScreenHeight();
 
@@ -110,6 +114,10 @@ public class Main extends com.badlogic.gdx.Game
         _last_tick = now;
 
         Net.ProcessPackets();
+        if (Login._login_error != null)
+        {
+            Login.onError();
+        }
 
         if (Net.getConnection() != null)
         {
@@ -147,7 +155,9 @@ public class Main extends com.badlogic.gdx.Game
     {
         Screen screen = getInstance().getScreen();
         if (screen != null)
+        {
             screen.dispose();
+        }
     }
 
     static public void ReleaseAll()

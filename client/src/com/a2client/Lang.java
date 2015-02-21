@@ -27,12 +27,13 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class Lang
 {
     private static final Logger _log = LoggerFactory.getLogger(Lang.class.getName());
-
     static public List<LangItem> langs = new ArrayList<LangItem>();
+    private static Lang _instance = new Lang();
 
     public static class LangItem
     {
@@ -53,6 +54,7 @@ public class Lang
     }
 
     static private INIFile lang_file;
+    static private Properties _props;
 
     static
     {
@@ -62,8 +64,19 @@ public class Lang
         langs.add(new LangItem("pl", "Polish"));
     }
 
+    static public String getTranslate(String key)
+    {
+        String msg = _props.getProperty(key);
+        if (msg == null)
+        {
+            msg = key;
+        }
+        return msg;
+    }
+
     static public String getTranslate(String section, String text)
     {
+
         if (lang_file != null)
         {
             return lang_file.getProperty(section, text, section + "_" + text);
@@ -83,6 +96,15 @@ public class Lang
             {
                 LoadFromSite();
             }
+        }
+        _props = new Properties();
+        try
+        {
+            _props.load(_instance.getClass().getResourceAsStream("/translate/login.en_US.properties"));
+        }
+        catch (IOException e)
+        {
+            _log.warn("failed ");
         }
     }
 

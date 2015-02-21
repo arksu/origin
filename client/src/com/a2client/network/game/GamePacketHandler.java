@@ -64,7 +64,7 @@ public class GamePacketHandler
             catch (Exception e)
             {
                 e.printStackTrace();
-                Login.Error("unknown_error");
+                Login.Error("unknown");
             }
         }
         else

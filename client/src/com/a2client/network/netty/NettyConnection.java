@@ -180,11 +180,11 @@ public class NettyConnection
                 {
                     if (_type == ConnectionType.LOGIN_SERVER)
                     {
-                        Login.Error("refused");
+                        Login.Error("loginserver_refused");
                     }
                     else
                     {
-                        Login.Error("refused_game");
+                        Login.Error("gameserver_refused");
                     }
                 }
                 else
