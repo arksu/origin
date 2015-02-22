@@ -14,8 +14,11 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +45,7 @@ public class Game extends BaseScreen
 
     private Vector2 _camera_offset = new Vector2(0, 0);
     private float _cameraDistance = 20;
+    private final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
 
     private ShapeRenderer _renderer = new ShapeRenderer();
     private ShaderProgram _shader;
@@ -152,11 +156,7 @@ public class Game extends BaseScreen
     public void onUpdate()
     {
 
-        //_camera_offset.x += -0.1f * Gdx.graphics.getDeltaTime();
-
-
-        _world_mouse_pos = screen2world(Gdx.input.getX(), Gdx.input.getY()).sub(getOffset())
-                                                                           .sub(_camera_offset);
+        _world_mouse_pos = screen2world(Gdx.input.getX(), Gdx.input.getY());
 
         //_camera_offset = new Vector2();
         if (GUI.getInstance().focused_control == null)
@@ -200,7 +200,6 @@ public class Game extends BaseScreen
 
         if (com.a2client.Input.isWheelUpdated())
         {
-//            _camera.zoom += com.a2client.Input.MouseWheel / 10f;
             _cameraDistance += com.a2client.Input.MouseWheel / 10f;
             com.a2client.Input.MouseWheel = 0;
         }
@@ -231,7 +230,6 @@ public class Game extends BaseScreen
             //            _camera_offset = pp.getVector2();
         }
         _camera.position.set(new Vector3(_camera_offset.x+_cameraDistance, _cameraDistance, _camera_offset.y+_cameraDistance));
-//        _camera.position.set(50, 50, 50);
         _camera.lookAt(new Vector3(_camera_offset.x, 0, _camera_offset.y));
         _camera.update();
 
@@ -267,18 +265,9 @@ public class Game extends BaseScreen
     @Override
     public void onRender3D()
     {
-        // оффсет
-        Vector2 offset = getOffset();
-
-//        offset.add(_camera_offset);
-
-        // координаты тайла который рендерим
-//        Vector2 tc = new Vector2();
-
         _shader.begin();
         _shader.setUniformMatrix("u_MVPMatrix", _camera.combined);
         _shader.setUniformi("u_texture", 0);
-
 
         Main.getAssetManager().get(Config.RESOURCE_DIR + "tiles_atlas.png", Texture.class).bind();
         _chunksRendered = 0;
@@ -324,19 +313,18 @@ public class Game extends BaseScreen
         float camHeight = camWidth * ((float) height / (float) width);
 
 
-        _camera = new PerspectiveCamera(30, camWidth, camHeight);//new IsometricCamera(camWidth, camHeight);
-        _camera.near = 0.01f;
+        _camera = new PerspectiveCamera(30, camWidth, camHeight);
+        _camera.near = 1f;
         _camera.far = 1000f;
         _camera.update();
-//        _camera.zoom = 0.6f;
     }
 
     public Vector2 screen2world(int x, int y)
     {
-        Vector3 touch = new Vector3(x, y, 0);
-        _camera.unproject(touch);
-        // touch.mul(_invTransform);
-        return new Vector2(touch.x, touch.y);
+        Vector3 intersection = new Vector3();
+        Ray ray = _camera.getPickRay(x, y);
+        Intersector.intersectRayPlane(ray, xzPlane, intersection);
+        return new Vector2(intersection.x, intersection.z);
     }
 
     public Vector2 getOffset()
