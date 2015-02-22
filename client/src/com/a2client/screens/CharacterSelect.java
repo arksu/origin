@@ -124,7 +124,7 @@ public class CharacterSelect extends BaseScreen
         btnCancel.caption = Lang.getTranslate("Game.cancel");
 
         GUI_Label lblText = new GUI_Label(wnd);
-        lblText.caption = "Delete character " + name + "?";
+        lblText.caption = Lang.getTranslate("Game.character.delete_lbl")+ " " + name + "?";
         lblText.align = Align.Align_Center;
         lblText.SetSize(300, 20);
         lblText.SetPos(0, 80);

@@ -21,48 +21,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class Lang
 {
     private static final Logger _log = LoggerFactory.getLogger(Lang.class.getName());
-    static public List<LangItem> langs = new ArrayList<LangItem>();
-    private static Lang _instance = new Lang();
-
-    public static class LangItem
-    {
-        public String full_name;
-        public String name;
-
-        public LangItem(String name, String full_name)
-        {
-            this.full_name = full_name;
-            this.name = name;
-        }
-
-        @Override
-        public String toString()
-        {
-            return name + ": " + full_name;
-        }
-    }
-
-    static private Properties _props;
-
-    static
-    {
-        langs.add(new LangItem("ru", "Russian"));
-        langs.add(new LangItem("en", "English"));
-        langs.add(new LangItem("ua", "Ukrainian"));
-        langs.add(new LangItem("pl", "Polish"));
-    }
+    static private Set<Properties> _props = new HashSet<>();
 
     static public String getTranslate(String key)
     {
-        String msg = _props.getProperty(key);
-        if (msg == null)
+        String msg = "";
+        for (Properties p : _props)
+        {
+            msg = p.getProperty(key);
+            if (msg != null && !msg.isEmpty())
+            {
+                return msg;
+            }
+        }
+        if (msg == null || msg.isEmpty())
         {
             msg = key;
         }
@@ -71,14 +48,19 @@ public class Lang
 
     static public void LoadTranslate()
     {
-        _props = new Properties();
         try
         {
-            _props.load(_instance.getClass().getResourceAsStream("/translate/login.en_US.properties"));
+            Properties p = new Properties();
+            p.load(Main.class.getResourceAsStream("/translate/login.en_US.properties"));
+            _props.add(p);
+            p = new Properties();
+            p.load(Main.class.getResourceAsStream("/translate/game.en_US.properties"));
+            _props.add(p);
         }
         catch (IOException e)
         {
-            _log.warn("failed ");
+            _log.warn("LoadTranslate error "+e.getMessage());
+            e.printStackTrace();
         }
     }
 }

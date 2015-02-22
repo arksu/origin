@@ -44,6 +44,7 @@ public class Main extends com.badlogic.gdx.Game
         _input = new Input();
         Gdx.input.setInputProcessor(_input);
         GUIGDX.Init();
+        Utils.SetIcon();
 
         // установим дефолт курсор
         Cursor.getInstance().setCursor("");
