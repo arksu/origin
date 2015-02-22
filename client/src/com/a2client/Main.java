@@ -114,10 +114,6 @@ public class Main extends com.badlogic.gdx.Game
         _last_tick = now;
 
         Net.ProcessPackets();
-        if (Login._login_error != null)
-        {
-            Login.onError();
-        }
 
         if (Net.getConnection() != null)
         {

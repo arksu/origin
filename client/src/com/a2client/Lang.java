@@ -17,14 +17,10 @@
 
 package com.a2client;
 
-import com.a2client.util.INIFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -53,7 +49,6 @@ public class Lang
         }
     }
 
-    static private INIFile lang_file;
     static private Properties _props;
 
     static
@@ -74,29 +69,8 @@ public class Lang
         return msg;
     }
 
-    static public String getTranslate(String section, String text)
-    {
-
-        if (lang_file != null)
-        {
-            return lang_file.getProperty(section, text, section + "_" + text);
-        }
-        else
-        {
-            return section + "_" + text;
-        }
-    }
-
-
     static public void LoadTranslate()
     {
-        if (Config.current_lang != null && Config.current_lang.length() >= 1)
-        {
-            if (!LoadFromDisk() && Config.download_translate)
-            {
-                LoadFromSite();
-            }
-        }
         _props = new Properties();
         try
         {
@@ -106,72 +80,5 @@ public class Lang
         {
             _log.warn("failed ");
         }
-    }
-
-    static protected boolean LoadFromDisk()
-    {
-        String fname = "lang_?.txt".replace("?", Config.current_lang);
-        File file = new File(fname);
-        if (file.exists() && file.canRead())
-        {
-            try
-            {
-                FileInputStream fin = new FileInputStream(file);
-                lang_file = new INIFile(fin);
-                return true;
-
-            }
-            catch (Exception e)
-            {
-                _log.warn("lang file not found on disk: " + fname);
-            }
-        }
-        return false;
-    }
-
-    static protected void LoadFromSite()
-    {
-        try
-        {
-            String path = Config.lang_path.replace("?", Config.current_lang);
-            URL lang_url = new URL(new URI("http", Config.lang_remote_host, path, "").toASCIIString());
-            _log.info("load translate: " + lang_url.toString());
-            URLConnection c;
-            c = lang_url.openConnection();
-            c.addRequestProperty("User-Agent", Config.user_agent);
-            InputStream in = c.getInputStream();
-
-            String fname = "lang_?.txt".replace("?", Config.current_lang);
-            File file = new File(fname);
-            if (file.exists())
-            {
-                if (!file.delete())
-                {
-                    _log.warn("cant delete lang file: " + fname);
-                }
-            }
-            // пишем получаемые данные на диск и в поток
-            OutputStream outputStream = new FileOutputStream(file);
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            int n = -1;
-            byte[] buffer = new byte[4096];
-            while ((n = in.read(buffer)) != -1)
-            {
-                outputStream.write(buffer, 0, n);
-                bout.write(buffer, 0, n);
-            }
-            outputStream.close();
-            in.close();
-
-            // полученный поток читаем из памяти
-            ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
-            lang_file = new INIFile(bin);
-        }
-        catch (Exception e)
-        {
-            _log.warn("failed load translate: " + Config.current_lang);
-            e.printStackTrace();
-        }
-
     }
 }

@@ -20,7 +20,7 @@ public class CharacterCreate extends BaseScreen
         GUI.reCreate();
 
         lblNickname = new GUI_Label(GUI.rootNormal());
-        lblNickname.caption = Lang.getTranslate("generic", "nickname");
+        lblNickname.caption = Lang.getTranslate("Game.character.nickname");
         lblNickname.align = Align.Align_Center;
         lblNickname.SetSize(150, 25);
         lblNickname.SetPos(0, 100);
@@ -42,7 +42,7 @@ public class CharacterCreate extends BaseScreen
                 }
             }
         };
-        btnCreate.caption = Lang.getTranslate("generic", "create");
+        btnCreate.caption = Lang.getTranslate("Game.character.create");
         btnCreate.SetSize(150, 25);
         btnCreate.SetPos(editNickname.pos.add(0, 45));
         btnCreate.CenterX();
@@ -55,7 +55,7 @@ public class CharacterCreate extends BaseScreen
                 CharacterSelect.Show();
             }
         };
-        btnExit.caption = Lang.getTranslate("generic", "cancel");
+        btnExit.caption = Lang.getTranslate("Game.cancel");
         btnExit.SetSize(100, 25);
         btnExit.SetPos(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 35);
 

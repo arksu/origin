@@ -65,7 +65,7 @@ public class Game extends BaseScreen
                 Login.setStatus("disconnected");
             }
         };
-        _btnExit.caption = Lang.getTranslate("generic", "cancel");
+        _btnExit.caption = Lang.getTranslate("Game.cancel");
         _btnExit.SetSize(100, 25);
         _btnExit.SetPos(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 35);
 

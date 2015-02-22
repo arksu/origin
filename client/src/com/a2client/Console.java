@@ -39,7 +39,7 @@ public class Console
         //
         if ("lang".equals(cmd))
         {
-            Lang.LoadFromSite();
+//            Lang.LoadFromSite();
             return true;
         }
 

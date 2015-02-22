@@ -37,7 +37,7 @@ public class CharacterSelect extends BaseScreen
             }
         };
         btnCreate.SetPos(0, posY);
-        btnCreate.caption = Lang.getTranslate("generic", "create");
+        btnCreate.caption = Lang.getTranslate("Game.character.create");
         btnCreate.SetSize(150, 25);
         btnCreate.CenterX();
 
@@ -69,7 +69,7 @@ public class CharacterSelect extends BaseScreen
                     showDeleteConfirm(charId, cname);
                 }
             };
-            btnDelete.caption = Lang.getTranslate("generic", "delete");
+            btnDelete.caption = Lang.getTranslate("Game.character.delete");
             btnDelete.SetPos(btn.pos.add(160, 0));
             btnDelete.SetSize(150, 25);
 
@@ -85,7 +85,7 @@ public class CharacterSelect extends BaseScreen
                 Login.setStatus("disconnected");
             }
         };
-        btnExit.caption = Lang.getTranslate("generic", "cancel");
+        btnExit.caption = Lang.getTranslate("Game.cancel");
         btnExit.SetSize(100, 25);
         btnExit.SetPos(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 35);
     }
@@ -94,7 +94,7 @@ public class CharacterSelect extends BaseScreen
     {
         final GUI_Window wnd = new GUI_Window(GUI.rootModal());
         wnd.set_close_button(false);
-        wnd.caption = Lang.getTranslate("generic", "confirm");
+        wnd.caption = Lang.getTranslate("Game.character.delete_confirm");
         wnd.SetSize(325, 200); // 25 + 25 +25 : 250 = 125 * 2
         wnd.Center();
 
@@ -109,7 +109,7 @@ public class CharacterSelect extends BaseScreen
         };
         btnOk.SetPos(25, 120);
         btnOk.SetSize(125, 25);
-        btnOk.caption = Lang.getTranslate("generic", "ok");
+        btnOk.caption = Lang.getTranslate("Game.ok");
 
         GUI_Button btnCancel = new GUI_Button(wnd)
         {
@@ -121,7 +121,7 @@ public class CharacterSelect extends BaseScreen
         };
         btnCancel.SetPos(175, 120);
         btnCancel.SetSize(125, 25);
-        btnCancel.caption = Lang.getTranslate("generic", "cancel");
+        btnCancel.caption = Lang.getTranslate("Game.cancel");
 
         GUI_Label lblText = new GUI_Label(wnd);
         lblText.caption = "Delete character " + name + "?";

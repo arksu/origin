@@ -1,6 +1,7 @@
 package com.a2client.network;
 
 import com.a2client.network.netty.NettyConnection;
+import com.a2client.screens.Login;
 
 public class Net
 {
@@ -34,5 +35,10 @@ public class Net
     {
         if (_connection != null)
             _connection.ProcessPackets();
+
+        if (Login._login_error != null)
+        {
+            Login.onError();
+        }
     }
 }

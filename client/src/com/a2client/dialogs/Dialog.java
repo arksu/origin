@@ -27,7 +27,6 @@ public abstract class Dialog
     public static Map<String, Dialog> dialogs = new TreeMap<String, Dialog>();
     public static Map<String, DialogFactory> dialog_types = new TreeMap<String, DialogFactory>();
     public static Class<?>[] types = {
-            dlg_Chars.class
     };
 
     static public void Init()
