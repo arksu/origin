@@ -4,14 +4,15 @@ import com.a2client.*;
 import com.a2client.gui.*;
 import com.a2client.model.GameObject;
 import com.a2client.model.Grid;
-import com.a2client.network.game.clientpackets.MouseClick;
 import com.a2client.network.game.clientpackets.ChatMessage;
+import com.a2client.network.game.clientpackets.MouseClick;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import org.slf4j.Logger;
@@ -41,13 +42,53 @@ public class Game extends BaseScreen
     private Vector2 _camera_offset = new Vector2(0, 0);
 
     private ShapeRenderer _renderer = new ShapeRenderer();
+    private ShaderProgram _shader;
     private Vector2 _world_mouse_pos = new Vector2();
+    private int _chunksRendered=0;
     private boolean[] mouse_btns = new boolean[3];
 
     static final float MOVE_STEP = 0.2f;
 
     public Game()
     {
+        _shader = new ShaderProgram(
+                "#version 120\n" +
+                        "attribute vec4 a_position;\n" +
+                        "attribute vec3 a_normal;\n" +
+                        "attribute vec2 a_texCoord;\n" +
+                        "attribute vec4 a_color;\n" +
+                        "\n" +
+                        "uniform mat4 u_MVPMatrix;\n" +
+                        "\n" +
+                        "varying float intensity;\n" +
+                        "varying vec2 texCoords;\n" +
+                        "varying vec4 v_color;\n" +
+                        "\n" +
+                        "void main() {\n" +
+                        "\n" +
+                        "    texCoords = a_texCoord;\n" +
+                        "\n" +
+                        "    gl_Position = u_MVPMatrix * a_position;\n" +
+                        "}",
+
+                "#version 120\n" +
+                        "\n" +
+                        "uniform sampler2D u_texture;\n" +
+                        "\n" +
+                        "varying vec2 texCoords;\n" +
+                        "\n" +
+                        "\n" +
+                        "void main() {\n" +
+                        "    gl_FragColor = texture2D(u_texture, texCoords);\n" +
+                        "}"
+        );
+        if (!_shader.isCompiled())
+        {
+            Gdx.app.log("Shader", _shader.getLog());
+            Gdx.app.log("Shader V", _shader.getVertexShaderSource());
+            Gdx.app.log("Shader F", _shader.getFragmentShaderSource());
+        }
+
         Player.init();
         ObjectCache.init();
         MapCache.clear();
@@ -165,7 +206,7 @@ public class Game extends BaseScreen
             _statusText = "mouse coord: " + Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE) + ", " +
                     Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE);
         }
-        _lblStatus.caption = "FPS: " + Gdx.graphics.getFramesPerSecond() + " " + _statusText;
+        _lblStatus.caption = "FPS: " + Gdx.graphics.getFramesPerSecond() + " " + _statusText+" chunks: "+_chunksRendered;
 
 
         if (ObjectCache.getInstance() != null)
@@ -182,7 +223,7 @@ public class Game extends BaseScreen
 //            pp = pp.sub(pp.mul(2));
             //            _camera_offset = pp.getVector2();
         }
-        _camera.position.set(Vector2.Zero, 0);
+        _camera.position.set(_camera_offset, 0);
         _camera.update();
 
         UpdateMouseButtons();
@@ -225,42 +266,56 @@ public class Game extends BaseScreen
         // координаты тайла который рендерим
         Vector2 tc = new Vector2();
 
-        _renderer.setProjectionMatrix(_camera.combined);
-        _renderer.begin(ShapeType.Filled);
+        _shader.begin();
 
+        _shader.setUniformMatrix("u_MVPMatrix", _camera.combined);
+        _shader.setUniformi("u_texture", 0);
+
+
+        Main.getAssetManager().get(Config.RESOURCE_DIR + "grass1.png", Texture.class).bind();
+        _chunksRendered = 0;
         for (Grid grid : MapCache.grids)
         {
-            for (int x = 0; x < MapCache.GRID_SIZE; x++)
-            {
-                for (int y = 0; y < MapCache.GRID_SIZE; y++)
-                {
-                    tc.x = (grid.getGC().x / MapCache.TILE_SIZE) + x + offset.x;
-                    tc.y = (grid.getGC().y / MapCache.TILE_SIZE) + y + offset.y;
-
-                    // все вершины тайла попадают в угол обзора
-                    if (
-                            _camera.frustum.pointInFrustum(tc.x, tc.y, 0) ||
-                                    _camera.frustum.pointInFrustum(tc.x + 1, tc.y, 0) ||
-                                    _camera.frustum.pointInFrustum(tc.x, tc.y + 1, 0) ||
-                                    _camera.frustum.pointInFrustum(tc.x + 1, tc.y + 1, 0)
-                            )
-                    {
-                        _renderer.setColor(Grid.getTileColor(grid._tiles[y][x]));
-                        _renderer.box(tc.x, tc.y, 0, 1, 1, 0.7f);
-                    }
-                }
-            }
+            _chunksRendered += grid.render(_shader, _camera);
         }
+        _shader.end();
 
-        if (ObjectCache.getInstance() != null)
-        {
-            for (GameObject o : ObjectCache.getInstance().getObjects())
-            {
-                renderObject(o);
-            }
-        }
-
-        _renderer.end();
+//        _renderer.setProjectionMatrix(_camera.combined);
+//        _renderer.begin(ShapeType.Filled);
+//
+//        for (Grid grid : MapCache.grids)
+//        {
+//            for (int x = 0; x < MapCache.GRID_SIZE; x++)
+//            {
+//                for (int y = 0; y < MapCache.GRID_SIZE; y++)
+//                {
+//                    tc.x = (grid.getGC().x / MapCache.TILE_SIZE) + x + offset.x;
+//                    tc.y = (grid.getGC().y / MapCache.TILE_SIZE) + y + offset.y;
+//
+//                    // все вершины тайла попадают в угол обзора
+//                    if (
+//                            _camera.frustum.pointInFrustum(tc.x, tc.y, 0) ||
+//                                    _camera.frustum.pointInFrustum(tc.x + 1, tc.y, 0) ||
+//                                    _camera.frustum.pointInFrustum(tc.x, tc.y + 1, 0) ||
+//                                    _camera.frustum.pointInFrustum(tc.x + 1, tc.y + 1, 0)
+//                            )
+//                    {
+//                        _renderer.setColor(Grid.getTileColor(grid._tiles[y][x]));
+//                        _renderer.box(tc.x, tc.y, 0, 1, 1, 0.7f);
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (ObjectCache.getInstance() != null)
+//        {
+//            for (GameObject o : ObjectCache.getInstance().getObjects())
+//            {
+//                renderObject(o);
+//            }
+//        }
+//
+//        _renderer.end();
     }
 
     private void renderObject(GameObject object)

@@ -1,9 +1,13 @@
 package com.a2client.model;
 
 import com.a2client.util.Vec2i;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 
-import static com.a2client.MapCache.*;
+import static com.a2client.MapCache.GRID_SIZE;
 
 public class Grid
 {
@@ -13,13 +17,42 @@ public class Grid
      */
     private Vec2i _gc;
 
+    private GridChunk[] _chunks;
+
     public Grid(Vec2i c, byte[] data)
     {
         this._gc = c;
         _tiles = new byte[GRID_SIZE][GRID_SIZE];
         fillTiles(data);
         makeTerrainObjects();
-        //        save_debug();
+        fillChunks();
+    }
+
+    public void fillChunks()
+    {
+        int chunksCount = GRID_SIZE / GridChunk.CHUNK_SIZE;
+        _chunks = new GridChunk[chunksCount * chunksCount];
+        for (int x = 0; x < chunksCount; x++)
+        {
+            for (int y = 0; y < chunksCount; y++)
+            {
+                _chunks[x + y * chunksCount] = new GridChunk(this, x * GridChunk.CHUNK_SIZE, y * GridChunk.CHUNK_SIZE);
+            }
+        }
+    }
+
+    public int render(ShaderProgram shaderProgram, Camera camera)
+    {
+        int result = 0;
+        for (GridChunk c : _chunks)
+        {
+            if (camera.frustum.boundsInFrustum(c.getBoundingBox()))
+            {
+                c.getMesh().render(shaderProgram, GL20.GL_TRIANGLES);
+                result++;
+            }
+        }
+        return result;
     }
 
     public static Color getTileColor(byte tile)
@@ -27,16 +60,21 @@ public class Grid
         switch (tile)
         {
             case 30:
-                return new Color(0.5f, 1, 0, 1);
+                return new Color(0.5f, 0.8f, 0, 1);
+            case 35:
+                return new Color(0, 0.8f, 0.1f, 1);
             case 1:
                 return new Color(0.2f, 0, 1f, 1);
             case 2:
                 return Color.BLUE;
-            case 35:
-                return Color.GREEN;
             default:
                 return Color.WHITE;
         }
+    }
+
+    public static Vector2 getTileUV(byte tile)
+    {
+        return Vector2.Zero;
     }
 
     private void fillTiles(byte[] data)

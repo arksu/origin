@@ -77,7 +77,7 @@ public class Main extends com.badlogic.gdx.Game
         // запускаем приложение
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
         cfg.title = "Origin v2.0";
-        cfg.useGL20 = false;
+        cfg.useGL20 = true;
         cfg.vSyncEnabled = Config.vSync;
         cfg.foregroundFPS = Config.FrameFate;
         if (Config.ReduceInBackground)
