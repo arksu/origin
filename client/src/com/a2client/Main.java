@@ -30,6 +30,12 @@ public class Main extends com.badlogic.gdx.Game
     private static Main _instance;
 
     @Override
+    public void resume()
+    {
+        Cursor.getInstance().setCursor("");
+    }
+
+    @Override
     public void create()
     {
         _instance = this;
@@ -100,6 +106,7 @@ public class Main extends com.badlogic.gdx.Game
     @Override
     public void render()
     {
+//        Cursor.getInstance().setCursor("");
         update();
         super.render();
 

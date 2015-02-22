@@ -39,7 +39,7 @@ public class ObjectAdd extends GameServerPacket
     @Override
     public void run()
     {
-        _log.debug("ObjectAdd " + _objectId + " type=" + _typeId);
+        _log.debug("ObjectAdd " + _objectId + " type=" + _typeId+" ("+_x+", "+_y+")");
         ObjectCache.getInstance().addObject(new GameObject(this));
     }
 }

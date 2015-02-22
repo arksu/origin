@@ -170,6 +170,12 @@ public class Grid
      */
     public void removeObject(GameObject object)
     {
+        // если грид не залочен - бросим исключение
+        if (!_mainLock.isLocked())
+        {
+            throw new RuntimeException("removeObject: grid is not locked");
+        }
+
         if (_objects.contains(object))
         {
             _objects.remove(object);
@@ -511,11 +517,11 @@ public class Grid
             _log.debug("try spawn (" + x + ", " + y + ") >> (" + toX + ", " + toY + ")");
             if (moveLen)
             {
-                result = checkCollision(object, x, y, toX, toY, Move.MoveType.MOVE_SPAWN, null);
+                result = checkCollision(object, x, y, toX, toY, Move.MoveType.MOVE_SPAWN, null, false);
             }
             else
             {
-                result = checkCollision(object, toX, toY, toX, toY, Move.MoveType.MOVE_SPAWN, null);
+                result = checkCollision(object, toX, toY, toX, toY, Move.MoveType.MOVE_SPAWN, null, false);
             }
 
             switch (result.getResultType())
@@ -562,20 +568,21 @@ public class Grid
 
     /**
      * проверить коллизию при передвижении
-     * @return
+     * @param isMove в результате обсчета надо еще переместить объект между гридами (если перешли из одного в другой)
+     * @return результат обсчета в виде CollisionResult
      */
     public synchronized CollisionResult checkCollision(GameObject object,
                                                        int fromX, int fromY,
                                                        int toX, int toY,
                                                        Move.MoveType moveType,
-                                                       VirtualObject virtual)
+                                                       VirtualObject virtual,
+                                                       boolean isMove)
             throws GridLoadException
     {
         if (!_mainLock.isLocked())
         {
             return CollisionResult.FAIL;
         }
-        //        _log.debug("checkCollision (" + fromX + ", " + fromY + ") -> (" + toX + ", " + toY + ")");
 
         // посмотрим сколько нам нужно гридов для проверки коллизий
         Rect r = new Rect(fromX, fromY, toX, toY);
@@ -589,7 +596,6 @@ public class Grid
         grids.add(this);
         try
         {
-
             // смотрим на 4 точки прямоугольника. в каких гридах они находятся
             // пробуем залочить каждый из них и внести в список гридов по которым будем искать коллизии
             gx = r.getLeft();
@@ -673,7 +679,35 @@ public class Grid
             }
 
             // гриды залочены, проходим итерациями и ищем коллизию
-            return Collision.checkCollision(object, fromX, fromY, toX, toY, moveType, virtual, grids, 0);
+            CollisionResult result = Collision
+                    .checkCollision(object, fromX, fromY, toX, toY, moveType, virtual, grids, 0);
+
+            // узнаем переместился ли объект из одного грида в другой
+            // и только в том случае если в передвижении участвует больше 1 грида
+            if (isMove && grids.size() > 1)
+            {
+                int fx = toX;
+                int fy = toY;
+                if (result.getResultType() != CollisionResult.CollisionType.COLLISION_NONE)
+                {
+                    fx = result.getX();
+                    fy = result.getY();
+                }
+                grid = World.getInstance().getGridInWorldCoord(fx, fy, _level);
+                // реально передвинулись в тот грид
+                if (grid != this && grids.contains(grid))
+                {
+                    // все условия соблюдены. знаем куда надо передвинуть объект
+                    // поскольку все гриды залочены - спокойно делаем свое черное дело
+                    // вся эта байда с залочиванием и получением списка гридов делалась именно для этого
+                    // получился свой велосипед по типу транзакций для обеспечения целостности данных между гридами
+                    _log.debug("swap grids " + object + " " + this + " >> " + grid);
+                    _objects.remove(object);
+                    grid._objects.add(object);
+                }
+            }
+
+            return result;
         }
         finally
         {
@@ -755,6 +789,7 @@ public class Grid
 
             if (!_activePlayers.contains(player))
             {
+                _log.debug("activate " + toString() + " " + player.toString());
                 _activePlayers.add(player);
             }
 

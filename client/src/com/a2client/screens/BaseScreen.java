@@ -1,10 +1,8 @@
 package com.a2client.screens;
 
 import com.a2client.Config;
-import com.a2client.Input;
 import com.a2client.gui.GUI;
 import com.a2client.gui.GUIGDX;
-import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -48,7 +46,7 @@ public class BaseScreen implements Screen
         onRender();
         GUI.getInstance().Render();
 
-        GUIGDX.FillRect(new Vec2i(Input.MouseX, Input.MouseY), new Vec2i(10, 10), Color.RED);
+        //GUIGDX.FillRect(new Vec2i(Input.MouseX, Input.MouseY), new Vec2i(10, 10), Color.RED);
 
         GUIGDX.getSpriteBatch().end();
     }

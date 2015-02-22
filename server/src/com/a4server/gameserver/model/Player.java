@@ -178,9 +178,22 @@ public class Player extends Human
         {
             g.deactivate(this);
         }
-        if (getPos().getGrid() != null)
+        Grid grid = getPos().getGrid();
+        if (grid != null)
         {
-            getPos().getGrid().removeObject(this);
+            try
+            {
+                grid.tryLock(Grid.MAX_WAIT_LOCK);
+                grid.removeObject(this);
+            }
+            catch (InterruptedException e) {
+                _log.warn("deleteMe: InterruptedException ");
+                e.printStackTrace();
+            }
+            finally
+            {
+                grid.unlock();
+            }
         }
 
         // удалим игрока из мира

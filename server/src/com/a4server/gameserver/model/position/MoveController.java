@@ -203,7 +203,7 @@ public abstract class MoveController
                                                (int) Math.round(_currentY),
                                                (int) Math.round(toX),
                                                (int) Math.round(toY),
-                                               moveType, virtualObject);
+                                               moveType, virtualObject, true);
                 }
                 finally
                 {

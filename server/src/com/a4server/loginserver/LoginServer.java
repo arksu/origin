@@ -42,27 +42,21 @@ public class LoginServer
 
     public LoginServer()
     {
-        logPrintSection("SCrypt");
-        long t = System.currentTimeMillis();
-        String hash = SCryptUtil.scrypt("123", Config.SCRYPT_N, Config.SCRYPT_R, Config.SCRYPT_P);
-        _log.debug("scrypt: time " + (System.currentTimeMillis() - t) + " ms pass: 123 hash: " + hash);
-        t = System.currentTimeMillis();
-        if (SCryptUtil.check("123", hash))
-        {
-            _log.debug("scrypt: time " + (System.currentTimeMillis() - t) + " ms check: OK");
-        }
-        else
-        {
-            _log.debug("scrypt: FALSE");
-        }
-
         // Load Config
         Config.load();
 
-        if (Config.DEBUG)
+        logPrintSection("SCrypt");
+        long t = System.currentTimeMillis();
+        String hash = SCryptUtil.scrypt("123", Config.SCRYPT_N, Config.SCRYPT_R, Config.SCRYPT_P);
+        _log.debug("SCrypt: time " + (System.currentTimeMillis() - t) + " ms pass: 123 hash: " + hash);
+        t = System.currentTimeMillis();
+        if (SCryptUtil.check("123", hash))
         {
-            // System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "debug");
-            _log.debug("dfdf");
+            _log.debug("SCrypt: time " + (System.currentTimeMillis() - t) + " ms check: OK");
+        }
+        else
+        {
+            _log.debug("SCrypt: FALSE");
         }
 
         logPrintSection("Database");
@@ -99,6 +93,7 @@ public class LoginServer
         catch (Exception e)
         {
             _log.warn("WARNING: Start listen failed. Reason: " + e.getMessage(), e);
+            System.exit(-1);
         }
     }
 

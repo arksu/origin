@@ -12,7 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static com.a4server.gameserver.model.collision.CollisionResult.CollisionType.*;
+import static com.a4server.gameserver.model.collision.CollisionResult.CollisionType.COLLISION_VIRTUAL;
+import static com.a4server.gameserver.model.collision.CollisionResult.CollisionType.COLLISION_WORLD;
 
 /**
  * обсчет коллизий между объектами

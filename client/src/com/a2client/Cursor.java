@@ -17,6 +17,9 @@
 
 package com.a2client;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
+
 public class Cursor
 {
     static private Cursor _instance;
@@ -40,6 +43,12 @@ public class Cursor
         //            ByteArrayInputStream in = new ByteArrayInputStream(c.png_data);
         //            CursorLoader.SetCursor(in, c.offx, c.offy);
         //        }
+
+
+        Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor1.png"));
+        Gdx.input.setCursorImage(pm, 0, 0);
+
+        pm.dispose();
     }
 
     public void render()

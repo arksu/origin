@@ -94,6 +94,7 @@ public class GameServer
         catch (Exception e)
         {
             _log.warn("WARNING: Start listen failed. Reason: " + e.getMessage(), e);
+            System.exit(-1);
         }
 
     }

@@ -126,7 +126,7 @@ public class GameTimeController extends Thread
                     obj.onArrived();
                 }
                 long dd = (System.nanoTime() - startt) / 1000;
-                _log.debug("move: "+dd / 1000 + "."+dd % 1000);
+//                _log.debug("move: "+dd / 1000 + "."+dd % 1000);
             }
             else
             {
