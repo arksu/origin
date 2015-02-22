@@ -9,7 +9,7 @@ import com.a2client.gui.Skin_MyGUI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -101,7 +101,7 @@ public class ResourceLoader implements Screen
         float t = 0.7f * ((float) _state_timer / 1000f);
 
         Gdx.gl.glClearColor(t, t, t, 1f);
-        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         GUIGDX.getSpriteBatch().begin();
         //        spr.setColor(Color.RED);

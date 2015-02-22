@@ -6,7 +6,7 @@ import com.a2client.gui.GUIGDX;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class BaseScreen implements Screen
@@ -38,7 +38,7 @@ public class BaseScreen implements Screen
         onUpdate();
 
         Gdx.gl.glClearColor(_bgcolor.r, _bgcolor.g, _bgcolor.b, _bgcolor.a);
-        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         onRender3D();
 
