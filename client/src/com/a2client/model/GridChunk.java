@@ -14,14 +14,17 @@ import org.slf4j.LoggerFactory;
 import static com.a2client.model.Tile.TILE_ATLAS_SIZE;
 
 /**
+ * кусочек грида для оптимизации рендера карты
  * Created by arksu on 22.02.15.
  */
 public class GridChunk
 {
     private static final Logger _log = LoggerFactory.getLogger(GridChunk.class.getName());
 
+    /**
+     * размер чанка в тайлах
+     */
     public static final int CHUNK_SIZE = 10;
-    public static final boolean RANDOM_HEIGHT = false;
 
     /**
      * меш
@@ -38,6 +41,9 @@ public class GridChunk
      */
     private short[] _index;
 
+    /**
+     * границы чанка для определения видимости
+     */
     private BoundingBox _boundingBox;
 
     public Mesh getMesh()
@@ -89,15 +95,15 @@ public class GridChunk
 
                 tx = ox + x;
                 ty = oy + y;
-                int h = tx+ty+x+y;
-                f = -(h % 10) / 40f;
+                int h = tx+ty*3+x*5+y;
+                f = (h % 10) / 40f;
 
                 // 0 =====
                 _vertex[idx++] = tx;
-                _vertex[idx++] = 0;//f;
+                _vertex[idx++] = f;
                 _vertex[idx++] = ty;
 
-                //norm
+                // normal
                 _vertex[idx++] = 0;
                 _vertex[idx++] = 1f;
                 _vertex[idx++] = 0;
@@ -111,10 +117,10 @@ public class GridChunk
 
                 // 1 =====
                 _vertex[idx++] = tx + 1;
-                _vertex[idx++] = 0;//f;
+                _vertex[idx++] = f;
                 _vertex[idx++] = ty;
 
-                //norm
+                // normal
                 _vertex[idx++] = 0;
                 _vertex[idx++] = 1f;
                 _vertex[idx++] = 0;
@@ -127,10 +133,10 @@ public class GridChunk
 
                 // 2 =====
                 _vertex[idx++] = tx;
-                _vertex[idx++] = 0;//f;
+                _vertex[idx++] = f;
                 _vertex[idx++] = ty + 1;
 
-                //norm
+                // normal
                 _vertex[idx++] = 0;
                 _vertex[idx++] = 1f;
                 _vertex[idx++] = 0;
@@ -143,10 +149,10 @@ public class GridChunk
 
                 // 3 =====
                 _vertex[idx++] = tx + 1;
-                _vertex[idx++] = 0;//f;
+                _vertex[idx++] = f;
                 _vertex[idx++] = ty + 1;
 
-                //norm
+                // normal
                 _vertex[idx++] = 0;
                 _vertex[idx++] = 1f;
                 _vertex[idx++] = 0;
@@ -157,8 +163,7 @@ public class GridChunk
                 _vertex[idx++] = uv.y + TILE_ATLAS_SIZE;
 
                 //index
-
-                _index[idv++] = (vertex_count);
+                _index[idv++] = vertex_count;
                 _index[idv++] = (short) (vertex_count + 1);
                 _index[idv++] = (short) (vertex_count + 2);
                 _index[idv++] = (short) (vertex_count + 2);

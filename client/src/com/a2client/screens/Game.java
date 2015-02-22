@@ -20,7 +20,6 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
@@ -51,10 +50,10 @@ public class Game extends BaseScreen
     private Camera _camera;
 
     private Vector2 _camera_offset = new Vector2(0, 0);
+    private Vector2 _cameraPos = new Vector2(0, 0);
     private float _cameraDistance = 20;
     private final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
 
-    private ShapeRenderer _renderer = new ShapeRenderer();
     private ShaderProgram _shader;
     private Vector2 _world_mouse_pos = new Vector2();
     private int _chunksRendered = 0;
@@ -225,7 +224,7 @@ public class Game extends BaseScreen
 
         if (com.a2client.Input.isWheelUpdated())
         {
-            _cameraDistance += com.a2client.Input.MouseWheel / 10f;
+            _cameraDistance += (_cameraDistance / 15f) * com.a2client.Input.MouseWheel;
             com.a2client.Input.MouseWheel = 0;
         }
 
@@ -250,13 +249,14 @@ public class Game extends BaseScreen
 
         if (ObjectCache.getInstance().getMe() != null)
         {
-//            Vec2i pp = ObjectCache.getInstance().getMe().getCoord().div(MapCache.TILE_SIZE);
-//            pp = pp.sub(pp.mul(2));
-            //            _camera_offset = pp.getVector2();
+            Vector2 pp = new Vector2(ObjectCache.getInstance().getMe().getCoord());
+            pp = pp.scl(1f / MapCache.TILE_SIZE);
+            _cameraPos = pp;
         }
-        _camera.position.set(new Vector3(_camera_offset.x + _cameraDistance, _cameraDistance * 1.3f,
-                                         _camera_offset.y + _cameraDistance));
-        _camera.lookAt(new Vector3(_camera_offset.x, 0, _camera_offset.y));
+        _cameraPos.add(_camera_offset);
+        _camera.position.set(new Vector3(_cameraPos.x + _cameraDistance, _cameraDistance * 1.9f,
+                                         _cameraPos.y + _cameraDistance));
+        _camera.lookAt(new Vector3(_cameraPos.x, 0, _cameraPos.y));
         _camera.update();
 
         UpdateMouseButtons();
@@ -303,9 +303,6 @@ public class Game extends BaseScreen
         }
         _shader.end();
 
-//        _renderer.setProjectionMatrix(_camera.combined);
-//        _renderer.begin(ShapeRenderer.ShapeType.Filled);
-
         if (ObjectCache.getInstance() != null)
         {
             modelBatch.begin(_camera);
@@ -315,8 +312,6 @@ public class Game extends BaseScreen
             }
             modelBatch.end();
         }
-
-//        _renderer.end();
     }
 
     private void renderObject(GameObject object)
@@ -324,12 +319,9 @@ public class Game extends BaseScreen
         Vector2 oc = new Vector2(object.getCoord().x, object.getCoord().y);
         oc.x = oc.x / MapCache.TILE_SIZE;
         oc.y = oc.y / MapCache.TILE_SIZE;
-        oc = oc.add(getOffset()).add(_camera_offset);
+        oc = oc.add(getOffset()).add(_cameraPos).sub(_camera_offset);
 
-//        _renderer.setColor(Color.RED);
-//        float sz = 1f;
-//        _renderer.box(oc.x - sz, 0, oc.y - sz, sz, sz, sz);
-        instance.transform.setToTranslation(oc.x, 1, oc.y);
+        instance.transform.setToTranslation(oc.x, 0.5f, oc.y);
         modelBatch.render(instance, environment);
     }
 
@@ -339,7 +331,6 @@ public class Game extends BaseScreen
         super.resize(width, height);
 
         float camWidth = width / 48f;
-
         float camHeight = camWidth * ((float) height / (float) width);
 
 
@@ -362,8 +353,7 @@ public class Game extends BaseScreen
         Vector2 offset = Vector2.Zero;
         if (ObjectCache.getInstance().getMe() != null)
         {
-            Vector2 op = ObjectCache.getInstance().getMe().getCoord();
-            Vector2 pp = new Vector2(op.x, op.y);
+            Vector2 pp = new Vector2(ObjectCache.getInstance().getMe().getCoord());
             pp.x = pp.x / MapCache.TILE_SIZE;
             pp.y = pp.y / MapCache.TILE_SIZE;
             pp = pp.sub(pp.x * 2, pp.y * 2);
