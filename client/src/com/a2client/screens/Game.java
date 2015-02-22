@@ -8,8 +8,9 @@ import com.a2client.network.game.clientpackets.ChatMessage;
 import com.a2client.network.game.clientpackets.MouseClick;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -37,9 +38,10 @@ public class Game extends BaseScreen
 
     private static Game _instance;
     private GameState _state = GameState.ENTERING;
-    private OrthographicCamera _camera;
+    private Camera _camera;
 
     private Vector2 _camera_offset = new Vector2(0, 0);
+    private float _cameraDistance = 20;
 
     private ShapeRenderer _renderer = new ShapeRenderer();
     private ShaderProgram _shader;
@@ -153,7 +155,8 @@ public class Game extends BaseScreen
         //_camera_offset.x += -0.1f * Gdx.graphics.getDeltaTime();
 
 
-        _world_mouse_pos = screen2world(Gdx.input.getX(), Gdx.input.getY()).sub(getOffset()).sub(_camera_offset);
+        _world_mouse_pos = screen2world(Gdx.input.getX(), Gdx.input.getY()).sub(getOffset())
+                                                                           .sub(_camera_offset);
 
         //_camera_offset = new Vector2();
         if (GUI.getInstance().focused_control == null)
@@ -197,7 +200,8 @@ public class Game extends BaseScreen
 
         if (com.a2client.Input.isWheelUpdated())
         {
-            _camera.zoom += com.a2client.Input.MouseWheel / 10f;
+//            _camera.zoom += com.a2client.Input.MouseWheel / 10f;
+            _cameraDistance += com.a2client.Input.MouseWheel / 10f;
             com.a2client.Input.MouseWheel = 0;
         }
 
@@ -208,8 +212,8 @@ public class Game extends BaseScreen
         }
         _lblStatus.caption =
                 "FPS: " + Gdx.graphics.getFramesPerSecond() +
-                " " + _statusText +
-                " chunks: " + _chunksRendered;
+                        " " + _statusText +
+                        " chunks: " + _chunksRendered;
 
 
         if (ObjectCache.getInstance() != null)
@@ -226,7 +230,9 @@ public class Game extends BaseScreen
 //            pp = pp.sub(pp.mul(2));
             //            _camera_offset = pp.getVector2();
         }
-        _camera.position.set(_camera_offset, 0);
+        _camera.position.set(new Vector3(_camera_offset.x+_cameraDistance, _cameraDistance, _camera_offset.y+_cameraDistance));
+//        _camera.position.set(50, 50, 50);
+        _camera.lookAt(new Vector3(_camera_offset.x, 0, _camera_offset.y));
         _camera.update();
 
         UpdateMouseButtons();
@@ -264,10 +270,10 @@ public class Game extends BaseScreen
         // оффсет
         Vector2 offset = getOffset();
 
-        offset.add(_camera_offset);
+//        offset.add(_camera_offset);
 
         // координаты тайла который рендерим
-        Vector2 tc = new Vector2();
+//        Vector2 tc = new Vector2();
 
         _shader.begin();
         _shader.setUniformMatrix("u_MVPMatrix", _camera.combined);
@@ -304,8 +310,8 @@ public class Game extends BaseScreen
         oc = oc.add(getOffset()).add(_camera_offset);
 
         _renderer.setColor(Color.RED);
-        float sz = 0.5f;
-        _renderer.box(oc.x - sz, oc.y - sz, 0, sz, sz, 0.7f);
+        float sz = 1f;
+        _renderer.box(oc.x - sz, 0, oc.y - sz, sz, sz, sz);
     }
 
     @Override
@@ -317,9 +323,12 @@ public class Game extends BaseScreen
 
         float camHeight = camWidth * ((float) height / (float) width);
 
-        _camera = new IsometricCamera(camWidth, camHeight);
+
+        _camera = new PerspectiveCamera(30, camWidth, camHeight);//new IsometricCamera(camWidth, camHeight);
+        _camera.near = 0.01f;
+        _camera.far = 1000f;
         _camera.update();
-        _camera.zoom = 0.6f;
+//        _camera.zoom = 0.6f;
     }
 
     public Vector2 screen2world(int x, int y)

@@ -21,7 +21,7 @@ public class GridChunk
     private static final Logger _log = LoggerFactory.getLogger(GridChunk.class.getName());
 
     public static final int CHUNK_SIZE = 10;
-    public static final boolean RANDOM_HEIGHT = true;
+    public static final boolean RANDOM_HEIGHT = false;
 
     /**
      * меш
@@ -74,8 +74,8 @@ public class GridChunk
         int idv = 0;
         int ox = (grid.getGC().x / MapCache.TILE_SIZE);
         int oy = (grid.getGC().y / MapCache.TILE_SIZE);
-        _boundingBox = new BoundingBox(new Vector3(ox + gx, oy + gy, -1),
-                                       new Vector3(ox + gx + CHUNK_SIZE, oy + gy + CHUNK_SIZE, 3));
+        _boundingBox = new BoundingBox(new Vector3(ox + gx, -1, oy + gy),
+                                       new Vector3(ox + gx + CHUNK_SIZE, 3, oy + gy + CHUNK_SIZE));
 
         short vertex_count = 0;
         for (int x = gx; x < gx + CHUNK_SIZE; x++)
@@ -87,39 +87,56 @@ public class GridChunk
                 float f;
                 Vector2 uv;
 
-                // 0 =====
                 tx = ox + x;
                 ty = oy + y;
                 int h = tx+ty+x+y;
-                _vertex[idx++] = tx;
-                _vertex[idx++] = ty;
                 f = -(h % 10) / 40f;
-                _vertex[idx++] = f;
+
+                // 0 =====
+                _vertex[idx++] = tx;
+                _vertex[idx++] = 0;//f;
+                _vertex[idx++] = ty;
+
                 idx += 4;
+
                 uv = Tile.getTileUV(grid._tiles[y][x]);
                 _vertex[idx++] = uv.x;
                 _vertex[idx++] = uv.y;
+
+
                 // 1 =====
                 _vertex[idx++] = tx + 1;
+                _vertex[idx++] = 0;//f;
                 _vertex[idx++] = ty;
-                _vertex[idx++] = f;
+
                 idx += 4;
+
                 _vertex[idx++] = uv.x + TILE_ATLAS_SIZE;
                 _vertex[idx++] = uv.y;
+
+
                 // 2 =====
                 _vertex[idx++] = tx;
+                _vertex[idx++] = 0;//f;
                 _vertex[idx++] = ty + 1;
-                _vertex[idx++] = f;
+
                 idx += 4;
+
                 _vertex[idx++] = uv.x;
                 _vertex[idx++] = uv.y + TILE_ATLAS_SIZE;
+
+
                 // 3 =====
                 _vertex[idx++] = tx + 1;
+                _vertex[idx++] = 0;//f;
                 _vertex[idx++] = ty + 1;
-                _vertex[idx++] = f;
+
                 idx += 4;
+
                 _vertex[idx++] = uv.x + TILE_ATLAS_SIZE;
                 _vertex[idx++] = uv.y + TILE_ATLAS_SIZE;
+
+                //index
 
                 _index[idv++] = (vertex_count);
                 _index[idv++] = (short) (vertex_count + 1);
