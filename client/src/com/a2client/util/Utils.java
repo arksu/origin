@@ -292,9 +292,9 @@ public class Utils
         ByteBuffer[] bb = new ByteBuffer[3];
         try
         {
-            bb[0] = IconLoader.LoadIconFromPNG(Main.class.getResourceAsStream("/etc/a1_16.png"));
-            bb[1] = IconLoader.LoadIconFromPNG(Main.class.getResourceAsStream("/etc/a1_32.png"));
-            bb[2] = IconLoader.LoadIconFromPNG(Main.class.getResourceAsStream("/etc/a1_128.png"));
+            bb[0] = IconLoader.LoadIconFromPNG(Main.class.getResourceAsStream("/assets/a1_16.png"));
+            bb[1] = IconLoader.LoadIconFromPNG(Main.class.getResourceAsStream("/assets/a1_32.png"));
+            bb[2] = IconLoader.LoadIconFromPNG(Main.class.getResourceAsStream("/assets/a1_128.png"));
         }
         catch (IOException e)
         {

@@ -8,6 +8,7 @@ import com.a2client.network.game.GamePacketHandler;
 import com.a2client.screens.Login;
 import com.a2client.screens.ResourceLoader;
 import com.a2client.util.Utils;
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
@@ -44,7 +45,6 @@ public class Main extends com.badlogic.gdx.Game
         _input = new Input();
         Gdx.input.setInputProcessor(_input);
         GUIGDX.Init();
-        Utils.SetIcon();
 
         // установим дефолт курсор
         Cursor.getInstance().setCursor("");
@@ -77,6 +77,9 @@ public class Main extends com.badlogic.gdx.Game
         // запускаем приложение
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
         cfg.title = "Origin v2.0";
+        cfg.addIcon("assets/a1_16.png", Files.FileType.Internal);
+        cfg.addIcon("assets/a1_32.png", Files.FileType.Internal);
+        cfg.addIcon("assets/a1_128.png", Files.FileType.Internal);
         cfg.useGL20 = true;
         cfg.vSyncEnabled = Config.vSync;
         cfg.foregroundFPS = Config.FrameFate;

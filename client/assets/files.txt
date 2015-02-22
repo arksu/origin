@@ -1,4 +1,4 @@
 icons.pack
 origin_logo.png
 core_skin.png
-grass1.png
+tiles_atlas.png

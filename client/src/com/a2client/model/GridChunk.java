@@ -11,6 +11,8 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.a2client.model.Tile.TILE_ATLAS_SIZE;
+
 /**
  * Created by arksu on 22.02.15.
  */
@@ -19,7 +21,7 @@ public class GridChunk
     private static final Logger _log = LoggerFactory.getLogger(GridChunk.class.getName());
 
     public static final int CHUNK_SIZE = 10;
-    public static final float TILE_ATLAS_SIZE = 1f;
+    public static final boolean RANDOM_HEIGHT = true;
 
     /**
      * меш
@@ -51,7 +53,8 @@ public class GridChunk
                 true,
                 _vertex.length / 3,
                 _index.length,
-                new VertexAttribute(VertexAttributes.Usage.Position, 3,
+                new VertexAttribute(
+                        VertexAttributes.Usage.Position, 3,
                                     ShaderProgram.POSITION_ATTRIBUTE),
                 new VertexAttribute(
                         VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
@@ -59,7 +62,8 @@ public class GridChunk
                                     ShaderProgram.COLOR_ATTRIBUTE),
                 new VertexAttribute(
                         VertexAttributes.Usage.TextureCoordinates, 2,
-                        ShaderProgram.TEXCOORD_ATTRIBUTE));
+                        ShaderProgram.TEXCOORD_ATTRIBUTE)
+        );
 
         makeMesh(grid, gx, gy);
     }
@@ -70,8 +74,9 @@ public class GridChunk
         int idv = 0;
         int ox = (grid.getGC().x / MapCache.TILE_SIZE);
         int oy = (grid.getGC().y / MapCache.TILE_SIZE);
-        _boundingBox = new BoundingBox(new Vector3(ox + gx, oy + gy, 0),
-                                       new Vector3(ox + gx + CHUNK_SIZE, oy + gy + CHUNK_SIZE, 1));
+        _boundingBox = new BoundingBox(new Vector3(ox + gx, oy + gy, -1),
+                                       new Vector3(ox + gx + CHUNK_SIZE, oy + gy + CHUNK_SIZE, 3));
+
         short vertex_count = 0;
         for (int x = gx; x < gx + CHUNK_SIZE; x++)
         {
@@ -79,36 +84,39 @@ public class GridChunk
             {
                 int tx;
                 int ty;
+                float f;
                 Vector2 uv;
 
                 // 0 =====
                 tx = ox + x;
                 ty = oy + y;
+                int h = tx+ty+x+y;
                 _vertex[idx++] = tx;
                 _vertex[idx++] = ty;
-                _vertex[idx++] = 0;
+                f = -(h % 10) / 40f;
+                _vertex[idx++] = f;
                 idx += 4;
-                uv = Grid.getTileUV(grid._tiles[y][x]);
+                uv = Tile.getTileUV(grid._tiles[y][x]);
                 _vertex[idx++] = uv.x;
                 _vertex[idx++] = uv.y;
                 // 1 =====
                 _vertex[idx++] = tx + 1;
                 _vertex[idx++] = ty;
-                _vertex[idx++] = 0;
+                _vertex[idx++] = f;
                 idx += 4;
                 _vertex[idx++] = uv.x + TILE_ATLAS_SIZE;
                 _vertex[idx++] = uv.y;
                 // 2 =====
                 _vertex[idx++] = tx;
                 _vertex[idx++] = ty + 1;
-                _vertex[idx++] = 0;
+                _vertex[idx++] = f;
                 idx += 4;
                 _vertex[idx++] = uv.x;
                 _vertex[idx++] = uv.y + TILE_ATLAS_SIZE;
                 // 3 =====
                 _vertex[idx++] = tx + 1;
                 _vertex[idx++] = ty + 1;
-                _vertex[idx++] = 0;
+                _vertex[idx++] = f;
                 idx += 4;
                 _vertex[idx++] = uv.x + TILE_ATLAS_SIZE;
                 _vertex[idx++] = uv.y + TILE_ATLAS_SIZE;

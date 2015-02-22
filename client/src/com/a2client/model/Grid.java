@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Vector2;
 
 import static com.a2client.MapCache.GRID_SIZE;
 
@@ -70,11 +69,6 @@ public class Grid
             default:
                 return Color.WHITE;
         }
-    }
-
-    public static Vector2 getTileUV(byte tile)
-    {
-        return Vector2.Zero;
     }
 
     private void fillTiles(byte[] data)

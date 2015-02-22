@@ -44,7 +44,7 @@ public class Game extends BaseScreen
     private ShapeRenderer _renderer = new ShapeRenderer();
     private ShaderProgram _shader;
     private Vector2 _world_mouse_pos = new Vector2();
-    private int _chunksRendered=0;
+    private int _chunksRendered = 0;
     private boolean[] mouse_btns = new boolean[3];
 
     static final float MOVE_STEP = 0.2f;
@@ -206,7 +206,10 @@ public class Game extends BaseScreen
             _statusText = "mouse coord: " + Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE) + ", " +
                     Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE);
         }
-        _lblStatus.caption = "FPS: " + Gdx.graphics.getFramesPerSecond() + " " + _statusText+" chunks: "+_chunksRendered;
+        _lblStatus.caption =
+                "FPS: " + Gdx.graphics.getFramesPerSecond() +
+                " " + _statusText +
+                " chunks: " + _chunksRendered;
 
 
         if (ObjectCache.getInstance() != null)
@@ -267,12 +270,11 @@ public class Game extends BaseScreen
         Vector2 tc = new Vector2();
 
         _shader.begin();
-
         _shader.setUniformMatrix("u_MVPMatrix", _camera.combined);
         _shader.setUniformi("u_texture", 0);
 
 
-        Main.getAssetManager().get(Config.RESOURCE_DIR + "grass1.png", Texture.class).bind();
+        Main.getAssetManager().get(Config.RESOURCE_DIR + "tiles_atlas.png", Texture.class).bind();
         _chunksRendered = 0;
         for (Grid grid : MapCache.grids)
         {
@@ -280,42 +282,18 @@ public class Game extends BaseScreen
         }
         _shader.end();
 
-//        _renderer.setProjectionMatrix(_camera.combined);
-//        _renderer.begin(ShapeType.Filled);
-//
-//        for (Grid grid : MapCache.grids)
-//        {
-//            for (int x = 0; x < MapCache.GRID_SIZE; x++)
-//            {
-//                for (int y = 0; y < MapCache.GRID_SIZE; y++)
-//                {
-//                    tc.x = (grid.getGC().x / MapCache.TILE_SIZE) + x + offset.x;
-//                    tc.y = (grid.getGC().y / MapCache.TILE_SIZE) + y + offset.y;
-//
-//                    // все вершины тайла попадают в угол обзора
-//                    if (
-//                            _camera.frustum.pointInFrustum(tc.x, tc.y, 0) ||
-//                                    _camera.frustum.pointInFrustum(tc.x + 1, tc.y, 0) ||
-//                                    _camera.frustum.pointInFrustum(tc.x, tc.y + 1, 0) ||
-//                                    _camera.frustum.pointInFrustum(tc.x + 1, tc.y + 1, 0)
-//                            )
-//                    {
-//                        _renderer.setColor(Grid.getTileColor(grid._tiles[y][x]));
-//                        _renderer.box(tc.x, tc.y, 0, 1, 1, 0.7f);
-//                    }
-//                }
-//            }
-//        }
-//
-//        if (ObjectCache.getInstance() != null)
-//        {
-//            for (GameObject o : ObjectCache.getInstance().getObjects())
-//            {
-//                renderObject(o);
-//            }
-//        }
-//
-//        _renderer.end();
+        _renderer.setProjectionMatrix(_camera.combined);
+        _renderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        if (ObjectCache.getInstance() != null)
+        {
+            for (GameObject o : ObjectCache.getInstance().getObjects())
+            {
+                renderObject(o);
+            }
+        }
+
+        _renderer.end();
     }
 
     private void renderObject(GameObject object)
