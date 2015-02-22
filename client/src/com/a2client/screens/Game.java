@@ -8,10 +8,17 @@ import com.a2client.network.game.clientpackets.ChatMessage;
 import com.a2client.network.game.clientpackets.MouseClick;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.assets.loaders.ModelLoader;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
@@ -54,6 +61,15 @@ public class Game extends BaseScreen
     private boolean[] mouse_btns = new boolean[3];
 
     static final float MOVE_STEP = 0.2f;
+
+
+    //
+
+    public Model model;
+    public ModelInstance instance;
+    private ModelBatch modelBatch;
+
+    private Environment environment;
 
     public Game()
     {
@@ -140,6 +156,15 @@ public class Game extends BaseScreen
         _chatEdit.SetPos(5, py + _chatMemo.Height() + 5);
         _chatEdit.SetSize(_chatMemo.Width(), 20);
 
+        environment = new Environment();
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+
+        modelBatch = new ModelBatch();
+
+        ModelLoader loader = new ObjLoader();
+        model = loader.loadModel(Gdx.files.internal("assets/ship.obj"));
+        instance = new ModelInstance(model);
     }
 
     @Override
@@ -229,7 +254,8 @@ public class Game extends BaseScreen
 //            pp = pp.sub(pp.mul(2));
             //            _camera_offset = pp.getVector2();
         }
-        _camera.position.set(new Vector3(_camera_offset.x+_cameraDistance, _cameraDistance, _camera_offset.y+_cameraDistance));
+        _camera.position.set(new Vector3(_camera_offset.x + _cameraDistance, _cameraDistance * 1.3f,
+                                         _camera_offset.y + _cameraDistance));
         _camera.lookAt(new Vector3(_camera_offset.x, 0, _camera_offset.y));
         _camera.update();
 
@@ -277,18 +303,20 @@ public class Game extends BaseScreen
         }
         _shader.end();
 
-        _renderer.setProjectionMatrix(_camera.combined);
-        _renderer.begin(ShapeRenderer.ShapeType.Filled);
+//        _renderer.setProjectionMatrix(_camera.combined);
+//        _renderer.begin(ShapeRenderer.ShapeType.Filled);
 
         if (ObjectCache.getInstance() != null)
         {
+            modelBatch.begin(_camera);
             for (GameObject o : ObjectCache.getInstance().getObjects())
             {
                 renderObject(o);
             }
+            modelBatch.end();
         }
 
-        _renderer.end();
+//        _renderer.end();
     }
 
     private void renderObject(GameObject object)
@@ -298,9 +326,11 @@ public class Game extends BaseScreen
         oc.y = oc.y / MapCache.TILE_SIZE;
         oc = oc.add(getOffset()).add(_camera_offset);
 
-        _renderer.setColor(Color.RED);
-        float sz = 1f;
-        _renderer.box(oc.x - sz, 0, oc.y - sz, sz, sz, sz);
+//        _renderer.setColor(Color.RED);
+//        float sz = 1f;
+//        _renderer.box(oc.x - sz, 0, oc.y - sz, sz, sz, sz);
+        instance.transform.setToTranslation(oc.x, 1, oc.y);
+        modelBatch.render(instance, environment);
     }
 
     @Override

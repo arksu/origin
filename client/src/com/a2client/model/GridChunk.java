@@ -97,7 +97,12 @@ public class GridChunk
                 _vertex[idx++] = 0;//f;
                 _vertex[idx++] = ty;
 
-                idx += 4;
+                //norm
+                _vertex[idx++] = 0;
+                _vertex[idx++] = 1f;
+                _vertex[idx++] = 0;
+
+                idx += 1; // skip color
 
                 uv = Tile.getTileUV(grid._tiles[y][x]);
                 _vertex[idx++] = uv.x;
@@ -109,7 +114,12 @@ public class GridChunk
                 _vertex[idx++] = 0;//f;
                 _vertex[idx++] = ty;
 
-                idx += 4;
+                //norm
+                _vertex[idx++] = 0;
+                _vertex[idx++] = 1f;
+                _vertex[idx++] = 0;
+
+                idx += 1; // skip color
 
                 _vertex[idx++] = uv.x + TILE_ATLAS_SIZE;
                 _vertex[idx++] = uv.y;
@@ -120,7 +130,12 @@ public class GridChunk
                 _vertex[idx++] = 0;//f;
                 _vertex[idx++] = ty + 1;
 
-                idx += 4;
+                //norm
+                _vertex[idx++] = 0;
+                _vertex[idx++] = 1f;
+                _vertex[idx++] = 0;
+
+                idx += 1; // skip color
 
                 _vertex[idx++] = uv.x;
                 _vertex[idx++] = uv.y + TILE_ATLAS_SIZE;
@@ -131,7 +146,12 @@ public class GridChunk
                 _vertex[idx++] = 0;//f;
                 _vertex[idx++] = ty + 1;
 
-                idx += 4;
+                //norm
+                _vertex[idx++] = 0;
+                _vertex[idx++] = 1f;
+                _vertex[idx++] = 0;
+
+                idx += 1; // skip color
 
                 _vertex[idx++] = uv.x + TILE_ATLAS_SIZE;
                 _vertex[idx++] = uv.y + TILE_ATLAS_SIZE;
