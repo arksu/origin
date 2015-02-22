@@ -72,37 +72,12 @@ public class Game extends BaseScreen
 
     public Game()
     {
+    	ShaderProgram.pedantic = false;
+    	
         _shader = new ShaderProgram(
-                "#version 120\n" +
-                        "attribute vec4 a_position;\n" +
-                        "attribute vec3 a_normal;\n" +
-                        "attribute vec2 a_texCoord;\n" +
-                        "attribute vec4 a_color;\n" +
-                        "\n" +
-                        "uniform mat4 u_MVPMatrix;\n" +
-                        "\n" +
-                        "varying float intensity;\n" +
-                        "varying vec2 texCoords;\n" +
-                        "varying vec4 v_color;\n" +
-                        "\n" +
-                        "void main() {\n" +
-                        "\n" +
-                        "    texCoords = a_texCoord;\n" +
-                        "\n" +
-                        "    gl_Position = u_MVPMatrix * a_position;\n" +
-                        "}",
-
-                "#version 120\n" +
-                        "\n" +
-                        "uniform sampler2D u_texture;\n" +
-                        "\n" +
-                        "varying vec2 texCoords;\n" +
-                        "\n" +
-                        "\n" +
-                        "void main() {\n" +
-                        "    gl_FragColor = texture2D(u_texture, texCoords);\n" +
-                        "}"
-        );
+				Gdx.files.internal("assets/basic_vert.glsl"),
+				Gdx.files.internal("assets/basic_frag.glsl"));
+        
         if (!_shader.isCompiled())
         {
             Gdx.app.log("Shader", _shader.getLog());
@@ -293,9 +268,12 @@ public class Game extends BaseScreen
     {
         _shader.begin();
         _shader.setUniformMatrix("u_MVPMatrix", _camera.combined);
+//        _shader.setUniformMatrix("u_view", _camera.view);
         _shader.setUniformi("u_texture", 0);
 
         Main.getAssetManager().get(Config.RESOURCE_DIR + "tiles_atlas.png", Texture.class).bind();
+        
+        _shader.setUniformf("u_ambient", ((ColorAttribute)environment.get(ColorAttribute.AmbientLight)).color);
         _chunksRendered = 0;
         for (Grid grid : MapCache.grids)
         {

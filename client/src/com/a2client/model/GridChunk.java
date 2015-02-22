@@ -104,9 +104,9 @@ public class GridChunk
                 _vertex[idx++] = ty;
 
                 // normal
-                _vertex[idx++] = 0;
-                _vertex[idx++] = 1f;
-                _vertex[idx++] = 0;
+                _vertex[idx++] = 0.3f;
+                _vertex[idx++] = 0.4f;
+                _vertex[idx++] = 0.3f;
 
                 idx += 1; // skip color
 
