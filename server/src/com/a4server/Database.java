@@ -221,38 +221,9 @@ public class Database
             executeQueryQuite(q);
         }
 
-        try
+        if (needSg)
         {
-            if (needSg)
-            {
-                ZipInputStream zis =
-                        new ZipInputStream(new FileInputStream("./sg0.zip"));
-                //get the zipped file list entry
-                ZipEntry ze = zis.getNextEntry();
-                while (ze != null)
-                {
-                    _log.debug("load zip entry " + ze.getName());
-                    sql = readSQLFile(new BufferedReader(new InputStreamReader(zis)));
-                    _log.debug("execute...");
-                    int counter = 0;
-                    for (String q : sql)
-                    {
-                        counter++;
-                        if (counter % 10 == 0)
-                        {
-                            _log.debug("query: " + counter);
-                        }
-                        executeQueryQuite(q);
-                    }
-                    ze = zis.getNextEntry();
-                }
-                zis.closeEntry();
-                zis.close();
-            }
-        }
-        catch (IOException e)
-        {
-            _log.warn("cant load sg0.zip");
+            fillSG0();
         }
     }
 
@@ -286,5 +257,55 @@ public class Database
             result.add(query);
         }
         return result;
+    }
+
+    /**
+     * сугубо дебаг фича нужная для быстрой отладки
+     */
+    private void fillSG0()
+    {
+        try
+        {
+            ZipInputStream zis =
+                    new ZipInputStream(new FileInputStream("./sg0.zip"));
+            //get the zipped file list entry
+            ZipEntry ze = zis.getNextEntry();
+            while (ze != null)
+            {
+                _log.debug("load zip entry " + ze.getName());
+                BufferedReader reader = new BufferedReader(new InputStreamReader(zis));
+
+                String query = "";
+                String line = reader.readLine();
+                while (line != null)
+                {
+                    if (line.matches("^\\s*--.*"))
+                    {
+                        continue;
+                    }
+                    query += " " + line;
+                    if (query.matches(".*;\\s*-?-?.*"))
+                    {
+                        _log.debug("query: " + query.substring(0, query.length() > 70 ? 70 : query.length()));
+                        executeQueryQuite(query);
+                        query = "";
+                    }
+                    line = reader.readLine();
+                }
+                if (!query.trim().isEmpty())
+                {
+                    executeQueryQuite(query);
+                }
+
+                ze = zis.getNextEntry();
+            }
+            zis.closeEntry();
+            zis.close();
+
+        }
+        catch (IOException e)
+        {
+            _log.warn("cant load sg0.zip");
+        }
     }
 }
