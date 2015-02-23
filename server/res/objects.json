@@ -7,11 +7,7 @@
     "size": 20
   },
   "firTree": {
-    "typeId": 13,
-    "collision": {
-      "all": "false",
-      "exclude": ["player"]
-    }
+    "typeId": 13
   },
   "pineTree": {
     "typeId": 14,

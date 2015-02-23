@@ -5,6 +5,8 @@ import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Tile;
 import com.a4server.gameserver.model.World;
+import com.a4server.gameserver.model.objects.CollisionTemplate;
+import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.util.Rect;
 import javolution.util.FastList;
 import org.slf4j.Logger;
@@ -236,6 +238,15 @@ public class Collision
      */
     private static boolean getCollision(GameObject obj1, GameObject obj2, boolean isTarget)
     {
+        ObjectTemplate template = obj2.getTemplate();
+        if (template != null)
+        {
+            CollisionTemplate collisionTemplate = template.getCollision();
+            if (collisionTemplate != null)
+            {
+                return collisionTemplate.getCollision(obj1);
+            }
+        }
         return true;
     }
 

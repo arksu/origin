@@ -85,6 +85,11 @@ public class GameObject
         return _template.getTypeId();
     }
 
+    public ObjectTemplate getTemplate()
+    {
+        return _template;
+    }
+
     public String getName()
     {
         return _name;
