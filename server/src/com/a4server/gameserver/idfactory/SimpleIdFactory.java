@@ -30,6 +30,8 @@ public class SimpleIdFactory extends IdFactory
         _freeCount = 0;
         // загрузим последний использовавшийся ид
         _lastId = GlobalVariablesManager.getInstance().getVarInt(DB_VALUE);
+        if (_lastId == -1)
+            _lastId = 100;
         Extend();
 
         _initialized = true;

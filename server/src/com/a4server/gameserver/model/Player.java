@@ -7,6 +7,7 @@ import com.a4server.gameserver.idfactory.IdFactory;
 import com.a4server.gameserver.model.event.AbstractObjectEvent;
 import com.a4server.gameserver.model.event.EventChatGeneralMessage;
 import com.a4server.gameserver.model.objects.CollisionTemplate;
+import com.a4server.gameserver.model.objects.InventoryTemplate;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.MoveToPoint;
 import com.a4server.gameserver.model.position.ObjectPosition;
@@ -91,6 +92,12 @@ public class Player extends Human
 
         @Override
         public CollisionTemplate getCollision()
+        {
+            return null;
+        }
+
+        @Override
+        public InventoryTemplate getInventory()
         {
             return null;
         }

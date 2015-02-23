@@ -19,6 +19,7 @@ public class SimpleObject implements ObjectTemplate
     private int _width = 10;
     private int _height = 10;
     private CollisionTemplate _collision = null;
+    private InventoryTemplate _inventory = null;
 
     private static final Logger _log = LoggerFactory.getLogger(SimpleObject.class.getName());
 
@@ -64,6 +65,11 @@ public class SimpleObject implements ObjectTemplate
             Gson gson = new Gson();
             _collision = gson.fromJson(in, CollisionTemplate.class);
         }
+        else if ("inventory".equalsIgnoreCase(paramName))
+        {
+            Gson gson = new Gson();
+            _inventory = gson.fromJson(in, InventoryTemplate.class);
+        }
     }
 
     @Override
@@ -94,5 +100,11 @@ public class SimpleObject implements ObjectTemplate
     public CollisionTemplate getCollision()
     {
         return _collision;
+    }
+
+    @Override
+    public InventoryTemplate getInventory()
+    {
+        return _inventory;
     }
 }

@@ -17,7 +17,17 @@
     "typeId": 14,
     "collision": {
       "all": "true",
-      "exclude": ["player", "rabbit"]
+      "exclude": [
+        "player",
+        "rabbit"
+      ]
+    }
+  },
+  "box": {
+    "typeId": 15,
+    "inventory": {
+      "width": 5,
+      "height": 3
     }
   }
 }

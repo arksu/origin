@@ -33,6 +33,20 @@ CREATE TABLE `characters` (
   PRIMARY KEY (`charId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE `items` (
+  `id` int(10) unsigned NOT NULL,
+  `itemId` int(10) unsigned NOT NULL,
+  `objectId` int(10) unsigned NOT NULL COMMENT 'объект которому принадлежит вещь',
+  `x` tinyint(3) unsigned NOT NULL,
+  `y` tinyint(3) unsigned NOT NULL,
+  `q` mediumint(8) unsigned NOT NULL,
+  `amount` mediumint(8) unsigned NOT NULL COMMENT 'количество',
+  `stage` tinyint(3) unsigned NOT NULL COMMENT 'стадия, доп цифра',
+  `ticks` tinyint(3) unsigned NOT NULL COMMENT 'тиков прошло',
+  `ticksTotal` tinyint(3) unsigned NOT NULL COMMENT 'сколько всего тиков',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE `global_variables` (
   `var` char(50) NOT NULL,
   `value_int` int(11) DEFAULT NULL,

@@ -27,4 +27,6 @@ public interface ObjectTemplate
     public String getName();
 
     public CollisionTemplate getCollision();
+
+    public InventoryTemplate getInventory();
 }
