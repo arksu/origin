@@ -1,5 +1,7 @@
 package com.a4server.gameserver.model;
 
+import com.a4server.gameserver.model.objects.ObjectTemplate;
+import com.a4server.gameserver.model.objects.ObjectsFactory;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import com.a4server.gameserver.network.serverpackets.ObjectAdd;
@@ -20,11 +22,6 @@ public class GameObject
     protected final int _objectId;
 
     /**
-     * тип объекта
-     */
-    protected int _typeId;
-
-    /**
      * позиция объекта в мире
      */
     protected ObjectPosition _pos;
@@ -32,9 +29,12 @@ public class GameObject
     /**
      * размеры объекта
      */
-    private int _width;
-    private int _height;
     private Rect _boundRect;
+
+    /**
+     * шаблон объекта по которому он создан
+     */
+    private ObjectTemplate _template;
 
     /**
      * имя которое отображается над объектом
@@ -47,27 +47,32 @@ public class GameObject
     protected String _title = "";
 
 
-    public GameObject(int objectId)
+    public GameObject(int objectId, ObjectTemplate template)
     {
         if (objectId == 0)
         {
             throw new RuntimeException("objectId can not be zero");
         }
         _objectId = objectId;
-        _width = 10;
-        _height = 10;
-        _boundRect = new Rect(-_width / 2, -_height / 2, _width / 2, _height / 2);
+        _template = template;
+        _boundRect = new Rect(-_template.getWidth() / 2, -_template.getHeight() / 2, _template.getWidth() / 2,
+                              _template.getHeight() / 2);
     }
 
+    /**
+     * загружаем объект из базы в грид
+     * @param grid грид
+     * @param rset строка в базе в таблице супергрида с объектом
+     * @throws SQLException
+     */
     public GameObject(Grid grid, ResultSet rset) throws SQLException
     {
         _objectId = rset.getInt("id");
-        _typeId = rset.getInt("type");
         _pos = new ObjectPosition(rset.getInt("x"), rset.getInt("y"), grid.getLevel());
-        // заполним дефолтными абстрактными данными
-        _width = 10;
-        _height = 10;
-        _boundRect = new Rect(-_width / 2, -_height / 2, _width / 2, _height / 2);
+        int typeId = rset.getInt("type");
+        _template = ObjectsFactory.getInstance().getTemplate(typeId);
+        _boundRect = new Rect(-_template.getWidth() / 2, -_template.getHeight() / 2, _template.getWidth() / 2,
+                              _template.getHeight() / 2);
     }
 
     public int getObjectId()
@@ -77,7 +82,7 @@ public class GameObject
 
     public int getTypeId()
     {
-        return _typeId;
+        return _template.getTypeId();
     }
 
     public String getName()

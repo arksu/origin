@@ -6,6 +6,8 @@ import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.idfactory.IdFactory;
 import com.a4server.gameserver.model.event.AbstractObjectEvent;
 import com.a4server.gameserver.model.event.EventChatGeneralMessage;
+import com.a4server.gameserver.model.objects.CollisionTemplate;
+import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.MoveToPoint;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.*;
@@ -36,11 +38,10 @@ public class Player extends Human
     private String _account;
     private int _accessLevel;
 
-    public Player(int objectId, ResultSet rset)
+    public Player(int objectId, ResultSet rset, PlayerTemplate template)
     {
-        super(objectId);
+        super(objectId, template);
 
-        _typeId = 1;
         _appearance = new PcAppearance(rset, objectId);
         setVisibleDistance(500);
         try
@@ -62,6 +63,39 @@ public class Player extends Human
         }
     }
 
+    private static class PlayerTemplate implements ObjectTemplate
+    {
+        @Override
+        public int getTypeId()
+        {
+            return 1;
+        }
+
+        @Override
+        public int getWidth()
+        {
+            return 10;
+        }
+
+        @Override
+        public int getHeight()
+        {
+            return 10;
+        }
+
+        @Override
+        public String getName()
+        {
+            return "player";
+        }
+
+        @Override
+        public CollisionTemplate getCollision()
+        {
+            return null;
+        }
+    }
+
     static public Player load(int objectId)
     {
         Player player = null;
@@ -75,7 +109,7 @@ public class Player extends Human
                 if (rset.next())
                 {
                     // загрузим игрока из строки базы
-                    player = new Player(objectId, rset);
+                    player = new Player(objectId, rset, new PlayerTemplate());
                 }
             }
 
@@ -186,7 +220,8 @@ public class Player extends Human
                 grid.tryLock(Grid.MAX_WAIT_LOCK);
                 grid.removeObject(this);
             }
-            catch (InterruptedException e) {
+            catch (InterruptedException e)
+            {
                 _log.warn("deleteMe: InterruptedException ");
                 e.printStackTrace();
             }

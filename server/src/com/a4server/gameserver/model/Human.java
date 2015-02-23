@@ -4,6 +4,7 @@ import com.a4server.gameserver.model.event.AbstractObjectEvent;
 import com.a4server.gameserver.model.event.EventChatGeneralMessage;
 import com.a4server.gameserver.model.event.EventMove;
 import com.a4server.gameserver.model.event.EventStopMove;
+import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import javolution.util.FastList;
 import org.slf4j.Logger;
@@ -46,9 +47,9 @@ public abstract class Human extends MoveObject
      */
     protected boolean _isDeleteing = false;
 
-    public Human(int objectId)
+    public Human(int objectId, ObjectTemplate template)
     {
-        super(objectId);
+        super(objectId, template);
     }
 
     public boolean isDeleteing()

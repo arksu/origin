@@ -1,6 +1,5 @@
 package com.a4server.gameserver.model.objects;
 
-import com.a4server.gameserver.model.GameObject;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import org.slf4j.Logger;
@@ -64,24 +63,25 @@ public class ObjectsFactory
         {
             _log.warn("LoadInternalConfig: io error");
         }
-        catch (Exception e) {
-            _log.error("LoadInternalConfig unexpected error: "+e.getMessage());
+        catch (Exception e)
+        {
+            _log.error("LoadInternalConfig unexpected error: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     protected ObjectTemplate readObjectTemplate(String name, JsonReader in) throws IOException
     {
-        ObjectTemplate template = new ObjectTemplate(name);
+        SimpleObject template = new SimpleObject(name);
         in.beginObject();
         template.read(in);
         in.endObject();
         return template;
     }
 
-    public GameObject newObject(int typeId)
+    public ObjectTemplate getTemplate(int typeId)
     {
-        return null;
+        return _templates.get(typeId);
     }
 
     public static ObjectsFactory getInstance()

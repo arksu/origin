@@ -4,6 +4,7 @@ import com.a4server.Config;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.event.EventStopMove;
+import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.MoveController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +35,9 @@ public abstract class MoveObject extends GameObject
      */
     protected List<Grid> _grids = new ArrayList<>();
 
-    public MoveObject(int objectId)
+    public MoveObject(int objectId, ObjectTemplate template)
     {
-        super(objectId);
+        super(objectId, template);
     }
 
     /**
