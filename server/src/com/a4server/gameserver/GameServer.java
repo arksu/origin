@@ -38,6 +38,14 @@ public class GameServer
     public static void main(String[] args) throws Exception
     {
         Server.serverMode = Server.MODE_GAMESERVER;
+        for (String arg : args)
+        {
+            // если запущен с флагом - проведем инициализацию базы
+            if ("-initdb".equals(arg))
+            {
+                Database._needInitialize = true;
+            }
+        }
 
         _instance = new GameServer();
     }

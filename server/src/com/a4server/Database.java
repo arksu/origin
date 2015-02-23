@@ -6,15 +6,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
+ * работа с базой данных
  * Created by arksu on 01.01.2015.
  */
 public class Database
@@ -24,6 +33,11 @@ public class Database
     private static Database _instance;
     private static volatile ScheduledExecutorService _executor;
     private static DataSource _source;
+
+    /**
+     * нужна полная инициализация базы
+     */
+    public static boolean _needInitialize = false;
 
     public static Database getInstance()
     {
@@ -50,8 +64,12 @@ public class Database
     {
         HikariConfig config = new HikariConfig(Config.HIKARI_CONFIG_FILE);
         _source = new HikariDataSource(config);
-
         _source.getConnection().close();
+
+        if (_needInitialize)
+        {
+            initDB();
+        }
     }
 
     public Connection getConnection()
@@ -65,7 +83,8 @@ public class Database
                 if (Server.serverMode == Server.MODE_GAMESERVER)
                 {
                     ThreadPoolManager.getInstance()
-                            .scheduleGeneral(new ConnectionCloser(con, new RuntimeException()), Config.DATABASE_CONNECTION_CLOSE_TIME);
+                                     .scheduleGeneral(new ConnectionCloser(con, new RuntimeException()),
+                                                      Config.DATABASE_CONNECTION_CLOSE_TIME);
                 }
                 else
                 {
@@ -114,9 +133,8 @@ public class Database
 
         /**
          * Instantiates a new connection closer.
-         *
          * @param con the con
-         * @param e   the e
+         * @param e the e
          */
         public ConnectionCloser(Connection con, RuntimeException e)
         {
@@ -159,5 +177,114 @@ public class Database
             _log.error("Error isTableExist: " + tname);
             return false;
         }
+    }
+
+    public boolean executeQueryQuite(String query)
+    {
+        try (Connection con = getConnection();
+             PreparedStatement st = con.prepareStatement(query))
+        {
+            st.executeUpdate();
+            return true;
+        }
+        catch (SQLException e)
+        {
+            _log.error("Error execute query: " + query + " " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * инициализировать базу данных
+     * создать нужные таблицы и заполнить тестовыми данными
+     */
+    private void initDB()
+    {
+        // проверим есть ли таблица с супергридом. если нет - ее надо будет заполнить
+        boolean needSg = !isTableExist("sg_0");
+        List<String> sql = new ArrayList<>();
+        final String[] files = new String[]{"/sql/struct.sql", "/sql/test_data.sql"};
+        try
+        {
+            for (String fileName : files)
+            {
+                sql.addAll(readSQLFile(
+                        new BufferedReader(new InputStreamReader(Database.class.getResourceAsStream(fileName)))));
+            }
+        }
+        catch (IOException e)
+        {
+            _log.error("failed load sql file " + e.getMessage());
+        }
+        for (String q : sql)
+        {
+            executeQueryQuite(q);
+        }
+
+        try
+        {
+            if (needSg)
+            {
+                ZipInputStream zis =
+                        new ZipInputStream(new FileInputStream("./sg0.zip"));
+                //get the zipped file list entry
+                ZipEntry ze = zis.getNextEntry();
+                while (ze != null)
+                {
+                    _log.debug("load zip entry " + ze.getName());
+                    sql = readSQLFile(new BufferedReader(new InputStreamReader(zis)));
+                    _log.debug("execute...");
+                    int counter = 0;
+                    for (String q : sql)
+                    {
+                        counter++;
+                        if (counter % 10 == 0)
+                        {
+                            _log.debug("query: " + counter);
+                        }
+                        executeQueryQuite(q);
+                    }
+                    ze = zis.getNextEntry();
+                }
+                zis.closeEntry();
+                zis.close();
+            }
+        }
+        catch (IOException e)
+        {
+            _log.warn("cant load sg0.zip");
+        }
+    }
+
+    /**
+     * прочитать файл с запросами
+     * @return список полных запросов
+     * @throws IOException
+     */
+    private List<String> readSQLFile(BufferedReader reader) throws IOException
+    {
+        List<String> result = new ArrayList<>();
+        String query = "";
+        String line = reader.readLine();
+        while (line != null)
+        {
+            if (line.matches("^\\s*--.*"))
+            {
+                continue;
+            }
+            query += " " + line;
+            if (query.matches(".*;\\s*-?-?.*"))
+            {
+                _log.debug("query: " + query.substring(0, query.length() > 70 ? 70 : query.length()));
+                result.add(query);
+                query = "";
+            }
+            line = reader.readLine();
+        }
+        if (!query.trim().isEmpty())
+        {
+            result.add(query);
+        }
+        return result;
     }
 }

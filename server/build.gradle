@@ -90,6 +90,12 @@ task "rg" (type:JavaExec, dependsOn:[classes]) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
+task "rgi" (type:JavaExec, dependsOn:[classes]) {
+    main = 'com.a4server.gameserver.GameServer'
+    classpath = sourceSets.main.runtimeClasspath
+    args = ['-initdb']
+}
+
 task "rl" (type:JavaExec, dependsOn:[classes]) {
     main = 'com.a4server.loginserver.LoginServer'
     classpath = sourceSets.main.runtimeClasspath

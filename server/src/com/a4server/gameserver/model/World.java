@@ -12,6 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import static com.a4server.gameserver.model.Grid.*;
 
 /**
+ * игровой мир и его параметры
  * Created by arksu on 04.01.2015.
  */
 public class World
@@ -41,7 +42,8 @@ public class World
     {
         _allPlayers = new OpenIntObjectHashMap();
 
-        _log.info("World size: " + Config.WORLD_SG_WIDTH + "x" + Config.WORLD_SG_HEIGHT + " supergrids, " + Config.WORLD_LEVELS + " levels");
+        _log.info(
+                "World size: " + Config.WORLD_SG_WIDTH + "x" + Config.WORLD_SG_HEIGHT + " supergrids, " + Config.WORLD_LEVELS + " levels");
 
         _log.info("World allocate grids array mem...");
 
@@ -56,7 +58,6 @@ public class World
 
     /**
      * есть ли игрок с указанным ид в мире
-     *
      * @param objectId ид игрока
      * @return объект Player
      */
@@ -67,7 +68,6 @@ public class World
 
     /**
      * добавить игрока с указанным ид в мир
-     *
      * @param player игрок
      * @return если добавить не получилось вернет ложь, всегда проверять!
      */
@@ -99,8 +99,7 @@ public class World
 
     /**
      * проверим что существуют все таблицы с супергридами
-     *
-     * @return
+     * @return истина если все ок
      */
     private boolean checkSgTables()
     {
@@ -119,7 +118,6 @@ public class World
 
     /**
      * получить грид по координатам грида (сетка гридов)
-     *
      * @param gx координаты грида
      * @param gy координаты грида
      * @return загруженный грид
@@ -176,11 +174,10 @@ public class World
 
     /**
      * получить грид зная абсолютные координаты в мире
-     *
-     * @param x
-     * @param y
-     * @param level
-     * @return
+     * @param x координата
+     * @param y координата
+     * @param level уровень земли
+     * @return грид
      */
     public Grid getGridInWorldCoord(int x, int y, int level)
     {
@@ -191,10 +188,9 @@ public class World
 
     /**
      * находятся ли координаты грида в пределах мира?
-     *
-     * @param x
-     * @param y
-     * @return
+     * @param x координата
+     * @param y координата
+     * @return истина если находится
      */
     public static boolean validGrid(int x, int y)
     {

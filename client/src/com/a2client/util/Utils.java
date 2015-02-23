@@ -18,14 +18,11 @@
 package com.a2client.util;
 
 import com.a2client.Config;
-import com.a2client.Main;
 import com.a2client.Log;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.text.SimpleDateFormat;
@@ -284,22 +281,5 @@ public class Utils
             if (!current.renameTo(last))
                 System.err.println("Error renaming:" + current + " to:" + last);
         }
-    }
-
-    // установить иконку приложения
-    public static void SetIcon()
-    {
-        ByteBuffer[] bb = new ByteBuffer[3];
-        try
-        {
-            bb[0] = IconLoader.LoadIconFromPNG(Main.class.getResourceAsStream("/assets/a1_16.png"));
-            bb[1] = IconLoader.LoadIconFromPNG(Main.class.getResourceAsStream("/assets/a1_32.png"));
-            bb[2] = IconLoader.LoadIconFromPNG(Main.class.getResourceAsStream("/assets/a1_128.png"));
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        Display.setIcon(bb);
     }
 }
