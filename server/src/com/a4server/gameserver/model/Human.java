@@ -1,9 +1,6 @@
 package com.a4server.gameserver.model;
 
-import com.a4server.gameserver.model.event.AbstractObjectEvent;
-import com.a4server.gameserver.model.event.EventChatGeneralMessage;
-import com.a4server.gameserver.model.event.EventMove;
-import com.a4server.gameserver.model.event.EventStopMove;
+import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import javolution.util.FastList;
@@ -156,42 +153,43 @@ public abstract class Human extends MoveObject
      * @return истина если событие обработано, значит событие нужно переправить клиенту,
      * значит к нему уйдет прикрепленный пакет
      */
-    public boolean HandleEvent(AbstractObjectEvent event)
+    public boolean HandleEvent(Event event)
     {
         // событие движения
-        if (event instanceof EventMove || event instanceof EventStopMove)
+        switch (event.getType())
         {
-            // знаю ли я этот объект?
-            if (isKnownObject(event.getObject()))
-            {
-                // я больше не вижу объект
-                if (!isObjectVisibleForMe(event.getObject()))
+            case Event.MOVE:
+            case Event.STOP_MOVE:
+                // знаю ли я этот объект?
+                if (isKnownObject(event.getObject()))
                 {
-                    // удалим его из списка видимых
-                    removeKnownObject(event.getObject());
-                    // т.к. объект мы больше не знаем. пакет слать не будем
-                    return false;
-                }
-                // т.к. я его знаю отправим пакет клиенту
-                return true;
-            }
-            else
-            {
-                // объекта я не знаю. проверим может я теперь вижу его?
-                if (isObjectVisibleForMe(event.getObject()))
-                {
-                    // ага. вижу. добавим в список видимых
-                    addKnownObject(event.getObject());
-                    // мы видим объект, отправим пакет клиенту
+                    // я больше не вижу объект
+                    if (!isObjectVisibleForMe(event.getObject()))
+                    {
+                        // удалим его из списка видимых
+                        removeKnownObject(event.getObject());
+                        // т.к. объект мы больше не знаем. пакет слать не будем
+                        return false;
+                    }
+                    // т.к. я его знаю отправим пакет клиенту
                     return true;
                 }
-            }
-        }
-        // ктото сказал в общий чат
-        else if (event instanceof EventChatGeneralMessage)
-        {
-            // если мы знаем такой объект - пошлем пакет клиенту
-            return isKnownObject(event.getObject());
+                else
+                {
+                    // объекта я не знаю. проверим может я теперь вижу его?
+                    if (isObjectVisibleForMe(event.getObject()))
+                    {
+                        // ага. вижу. добавим в список видимых
+                        addKnownObject(event.getObject());
+                        // мы видим объект, отправим пакет клиенту
+                        return true;
+                    }
+                }
+                break;
+
+            case Event.CHAT_GENERAL_MESSAGE:
+                // если мы знаем такой объект - пошлем пакет клиенту
+                return isKnownObject(event.getObject());
         }
         return false;
     }

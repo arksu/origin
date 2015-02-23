@@ -13,7 +13,7 @@ import com.a4server.gameserver.model.collision.Collision;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
 import com.a4server.gameserver.model.collision.VirtualObject;
-import com.a4server.gameserver.model.event.AbstractObjectEvent;
+import com.a4server.gameserver.model.event.Event;
 import com.a4server.util.Rect;
 import com.a4server.util.Rnd;
 import javolution.util.FastList;
@@ -822,7 +822,7 @@ public class Grid
     /**
      * разослать всем игрокам грида событие на которое они должны отреагировать
      */
-    public void broadcastEvent(AbstractObjectEvent event)
+    public void broadcastEvent(Event event)
     {
         for (Player p : _activePlayers)
         {

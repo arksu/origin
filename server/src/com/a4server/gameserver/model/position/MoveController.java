@@ -6,8 +6,7 @@ import com.a4server.gameserver.model.MoveObject;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
 import com.a4server.gameserver.model.collision.VirtualObject;
-import com.a4server.gameserver.model.event.AbstractObjectEvent;
-import com.a4server.gameserver.model.event.EventMove;
+import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,11 +81,11 @@ public abstract class MoveController
      * создать игровое событие о движении объекта
      * @return событие
      */
-    public AbstractObjectEvent getEvent()
+    public Event getEvent()
     {
-        EventMove evt = new EventMove(_activeObject, (int) Math.round(_currentX), (int) Math.round(_currentY));
-        evt.setPacket(makeMovePacket());
-        return evt;
+        Event event = new Event(_activeObject, Event.MOVE);
+        event.setPacket(makeMovePacket());
+        return event;
     }
 
     /**

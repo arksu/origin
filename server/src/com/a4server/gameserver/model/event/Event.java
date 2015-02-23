@@ -8,12 +8,26 @@ import com.a4server.gameserver.network.serverpackets.GameServerPacket;
  * к событию может быть прикреплен пакет. тогда он будет разослан всем клиентам которые обработали событие
  * Created by arksu on 11.02.15.
  */
-public class AbstractObjectEvent
+public class Event
 {
+    public static final int CHAT_GENERAL_MESSAGE = 3;
+    public static final int STOP_MOVE = 2;
+    public static final int MOVE = 1;
+
     /**
-     * объект который сгенерировал событие 
+     * объект который сгенерировал событие
      */
     protected final GameObject _object;
+
+    /**
+     * тип сообщения
+     */
+    protected final int _type;
+
+    /**
+     * дополнительная информация о событии
+     */
+    protected Object _extraInfo = null;
 
     /**
      * пакет прикрепленный к событию. если другой объект обработал это событие
@@ -21,9 +35,10 @@ public class AbstractObjectEvent
      */
     protected GameServerPacket _packet = null;
 
-    public AbstractObjectEvent(GameObject object)
+    public Event(GameObject object, int type)
     {
         _object = object;
+        _type = type;
     }
 
     public GameObject getObject()
@@ -31,9 +46,24 @@ public class AbstractObjectEvent
         return _object;
     }
 
+    public int getType()
+    {
+        return _type;
+    }
+
     public void setPacket(GameServerPacket pkt)
     {
         _packet = pkt;
+    }
+
+    public void setExtraInfo(Object extraInfo)
+    {
+        _extraInfo = extraInfo;
+    }
+
+    public Object getExtraInfo()
+    {
+        return _extraInfo;
     }
 
     public GameServerPacket getPacket()

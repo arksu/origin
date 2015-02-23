@@ -4,8 +4,7 @@ import com.a4server.Database;
 import com.a4server.gameserver.GameClient;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.idfactory.IdFactory;
-import com.a4server.gameserver.model.event.AbstractObjectEvent;
-import com.a4server.gameserver.model.event.EventChatGeneralMessage;
+import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.model.objects.CollisionTemplate;
 import com.a4server.gameserver.model.objects.InventoryTemplate;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
@@ -420,36 +419,38 @@ public class Player extends Human
     }
 
     @Override
-    public boolean HandleEvent(AbstractObjectEvent event)
+    public boolean HandleEvent(Event event)
     {
-        if (event instanceof EventChatGeneralMessage)
+        switch (event.getType())
         {
-            EventChatGeneralMessage em = (EventChatGeneralMessage) event;
-            if (em.getMessage().startsWith("/"))
-            {
-                if (_accessLevel >= 100)
+            case Event.CHAT_GENERAL_MESSAGE:
+                String message = (String) event.getExtraInfo();
+                if (message.startsWith("/"))
                 {
-                    _log.debug("console command: " + em.getMessage());
-                    if ("/randomgrid".equalsIgnoreCase(em.getMessage()))
+                    if (_accessLevel >= 100)
                     {
-                        randomGrid();
+                        _log.debug("console command: " + message);
+                        if ("/randomgrid".equalsIgnoreCase(message))
+                        {
+                            randomGrid();
+                        }
+                        else if ("/nextid".equalsIgnoreCase(message))
+                        {
+                            IdFactory.getInstance().getNextId();
+                            IdFactory.getInstance().getNextId();
+                            IdFactory.getInstance().getNextId();
+                            int nextId = IdFactory.getInstance().getNextId();
+                            getClient().sendPacket(new CreatureSay(getObjectId(), "next id: " + nextId));
+                            _log.debug("nextid: " + nextId);
+                        }
                     }
-                    else if ("/nextid".equalsIgnoreCase(em.getMessage()))
-                    {
-                        IdFactory.getInstance().getNextId();
-                        IdFactory.getInstance().getNextId();
-                        IdFactory.getInstance().getNextId();
-                        int nextId = IdFactory.getInstance().getNextId();
-                        getClient().sendPacket(new CreatureSay(getObjectId(), "next id: " + nextId));
-                        _log.debug("nextid: " + nextId);
-                    }
+
+                    // тут исполняем обычные команды доступные для всех
+
+                    // консольные команды проглотим
+                    return false;
                 }
-
-                // тут исполняем обычные команды доступные для всех
-
-                // консольные команды проглотим
-                return false;
-            }
+                break;
         }
         return super.HandleEvent(event);
     }

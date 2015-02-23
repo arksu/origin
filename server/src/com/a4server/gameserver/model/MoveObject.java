@@ -3,9 +3,10 @@ package com.a4server.gameserver.model;
 import com.a4server.Config;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.collision.CollisionResult;
-import com.a4server.gameserver.model.event.EventStopMove;
+import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.MoveController;
+import com.a4server.gameserver.network.serverpackets.ObjectPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,7 +101,9 @@ public abstract class MoveObject extends GameObject
         getPos().setXY(x, y);
         storeInDb();
         // расскажем всем что мы остановились
-        getPos().getGrid().broadcastEvent(new EventStopMove(this));
+        Event event = new Event(this, Event.STOP_MOVE);
+        event.setPacket(new ObjectPos(getObjectId(), getPos()._x, getPos()._y));
+        getPos().getGrid().broadcastEvent(event);
     }
 
     /**
