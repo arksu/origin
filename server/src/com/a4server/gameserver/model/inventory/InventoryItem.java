@@ -1,6 +1,5 @@
 package com.a4server.gameserver.model.inventory;
 
-import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.objects.ItemTemplate;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
 import org.slf4j.Logger;
@@ -85,6 +84,6 @@ public class InventoryItem
     @Override
     public String toString()
     {
-        return "("+_objectId+" q="+_q+")";
+        return "(" + _objectId + " q=" + _q + ")";
     }
 }

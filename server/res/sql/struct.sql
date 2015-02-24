@@ -39,11 +39,11 @@ CREATE TABLE `items` (
   `objectId` int(10) unsigned NOT NULL COMMENT 'объект которому принадлежит вещь',
   `x` tinyint(3) unsigned NOT NULL,
   `y` tinyint(3) unsigned NOT NULL,
-  `q` mediumint(8) unsigned NOT NULL,
-  `amount` mediumint(8) unsigned NOT NULL COMMENT 'количество',
-  `stage` tinyint(3) unsigned NOT NULL COMMENT 'стадия, доп цифра',
-  `ticks` tinyint(3) unsigned NOT NULL COMMENT 'тиков прошло',
-  `ticksTotal` tinyint(3) unsigned NOT NULL COMMENT 'сколько всего тиков',
+  `q` mediumint(8) unsigned NOT NULL DEFAULT '10',
+  `amount` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'количество',
+  `stage` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'стадия, доп цифра',
+  `ticks` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'тиков прошло',
+  `ticksTotal` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'сколько всего тиков',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

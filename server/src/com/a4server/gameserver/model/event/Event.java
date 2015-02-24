@@ -10,9 +10,9 @@ import com.a4server.gameserver.network.serverpackets.GameServerPacket;
  */
 public class Event
 {
-    public static final int CHAT_GENERAL_MESSAGE = 3;
-    public static final int STOP_MOVE = 2;
     public static final int MOVE = 1;
+    public static final int STOP_MOVE = 2;
+    public static final int CHAT_GENERAL_MESSAGE = 3;
 
     /**
      * объект который сгенерировал событие
@@ -51,14 +51,14 @@ public class Event
         return _type;
     }
 
+    public GameServerPacket getPacket()
+    {
+        return _packet;
+    }
+
     public void setPacket(GameServerPacket pkt)
     {
         _packet = pkt;
-    }
-
-    public void setExtraInfo(Object extraInfo)
-    {
-        _extraInfo = extraInfo;
     }
 
     public Object getExtraInfo()
@@ -66,8 +66,9 @@ public class Event
         return _extraInfo;
     }
 
-    public GameServerPacket getPacket()
+    public void setExtraInfo(Object extraInfo)
     {
-        return _packet;
+        _extraInfo = extraInfo;
     }
+
 }

@@ -13,6 +13,6 @@ distributive will be in ./build/dist
 
 also you can use 
 
-```gradle run```
+```gradle rc```
 
 for build and run the client
