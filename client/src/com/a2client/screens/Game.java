@@ -6,6 +6,7 @@ import com.a2client.model.GameObject;
 import com.a2client.model.Grid;
 import com.a2client.network.game.clientpackets.ChatMessage;
 import com.a2client.network.game.clientpackets.MouseClick;
+import com.a2client.render.Render1;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.loaders.ModelLoader;
@@ -38,6 +39,8 @@ public class Game extends BaseScreen
         IN_GAME
     }
 
+    static final float MOVE_STEP = 0.2f;
+
     private static String _statusText = "";
 
     private GUI_Label _lblStatus;
@@ -47,46 +50,25 @@ public class Game extends BaseScreen
 
     private static Game _instance;
     private GameState _state = GameState.ENTERING;
-    private Camera _camera;
+    public Camera _camera;
 
-    private Vector2 _camera_offset = new Vector2(0, 0);
-    private Vector2 _cameraPos = new Vector2(0, 0);
-    private float _cameraDistance = 20;
+    public Vector2 _camera_offset = new Vector2(0, 0);
+    public Vector2 _cameraPos = new Vector2(0, 0);
+    public float _cameraDistance = 20;
     private final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
 
-    private ShaderProgram _shader;
+
     private Vector2 _world_mouse_pos = new Vector2();
-    private int _chunksRendered = 0;
     private boolean[] mouse_btns = new boolean[3];
 
-    static final float MOVE_STEP = 0.2f;
-
-
-    //
-
-    public Model model;
-    public ModelInstance instance;
-    private ModelBatch modelBatch;
-
-    private Environment environment;
+    private Render1 _render;
 
     public Game()
     {
     	ShaderProgram.pedantic = false;
-    	
-        _shader = new ShaderProgram(
-				Gdx.files.internal("assets/basic_vert.glsl"),
-				Gdx.files.internal("assets/basic_frag.glsl"));
-        
-        if (!_shader.isCompiled())
-        {
-            Gdx.app.log("Shader", _shader.getLog());
-            Gdx.app.log("Shader V", _shader.getVertexShaderSource());
-            Gdx.app.log("Shader F", _shader.getFragmentShaderSource());
-        }
 
         Player.init();
-        ObjectCache.init();
+        ObjectCache.getInstance().clear();
         MapCache.clear();
 
         GUI.reCreate();
@@ -130,22 +112,14 @@ public class Game extends BaseScreen
         _chatEdit.SetPos(5, py + _chatMemo.Height() + 5);
         _chatEdit.SetSize(_chatMemo.Width(), 20);
 
-        environment = new Environment();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-
-        modelBatch = new ModelBatch();
-
-        ModelLoader loader = new ObjLoader();
-        model = loader.loadModel(Gdx.files.internal("assets/ship.obj"));
-        instance = new ModelInstance(model);
+        _render = new Render1(this);
     }
 
     @Override
     public void dispose()
     {
         Player.getInstance().dispose();
-        ObjectCache.getInstance().dispose();
+        ObjectCache.getInstance().clear();
         MapCache.clear();
         _instance = null;
         super.dispose();
@@ -211,8 +185,7 @@ public class Game extends BaseScreen
         _lblStatus.caption =
                 "FPS: " + Gdx.graphics.getFramesPerSecond() +
                         " " + _statusText +
-                        " chunks: " + _chunksRendered;
-
+                        " chunks: " + _render._chunksRendered;
 
         if (ObjectCache.getInstance() != null)
         {
@@ -266,41 +239,7 @@ public class Game extends BaseScreen
     @Override
     public void onRender3D()
     {
-        _shader.begin();
-        _shader.setUniformMatrix("u_MVPMatrix", _camera.combined);
-//        _shader.setUniformMatrix("u_view", _camera.view);
-        _shader.setUniformi("u_texture", 0);
-
-        Main.getAssetManager().get(Config.RESOURCE_DIR + "tiles_atlas.png", Texture.class).bind();
-        
-        _shader.setUniformf("u_ambient", ((ColorAttribute)environment.get(ColorAttribute.AmbientLight)).color);
-        _chunksRendered = 0;
-        for (Grid grid : MapCache.grids)
-        {
-            _chunksRendered += grid.render(_shader, _camera);
-        }
-        _shader.end();
-
-        if (ObjectCache.getInstance() != null)
-        {
-            modelBatch.begin(_camera);
-            for (GameObject o : ObjectCache.getInstance().getObjects())
-            {
-                renderObject(o);
-            }
-            modelBatch.end();
-        }
-    }
-
-    private void renderObject(GameObject object)
-    {
-        Vector2 oc = new Vector2(object.getCoord().x, object.getCoord().y);
-        oc.x = oc.x / MapCache.TILE_SIZE;
-        oc.y = oc.y / MapCache.TILE_SIZE;
-        oc = oc.add(getOffset()).add(_cameraPos).sub(_camera_offset);
-
-        instance.transform.setToTranslation(oc.x, 0.5f, oc.y);
-        modelBatch.render(instance, environment);
+        _render.render();
     }
 
     @Override
@@ -326,19 +265,7 @@ public class Game extends BaseScreen
         return new Vector2(intersection.x, intersection.z);
     }
 
-    public Vector2 getOffset()
-    {
-        Vector2 offset = Vector2.Zero;
-        if (ObjectCache.getInstance().getMe() != null)
-        {
-            Vector2 pp = new Vector2(ObjectCache.getInstance().getMe().getCoord());
-            pp.x = pp.x / MapCache.TILE_SIZE;
-            pp.y = pp.y / MapCache.TILE_SIZE;
-            pp = pp.sub(pp.x * 2, pp.y * 2);
-            offset = pp;
-        }
-        return offset;
-    }
+
 
     public void setState(GameState state)
     {

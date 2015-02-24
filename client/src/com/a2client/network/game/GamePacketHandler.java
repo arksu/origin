@@ -88,6 +88,6 @@ public class GamePacketHandler
     static private void debugOpcode(int opcode)
     {
         _log.info("Unknown game server packet opcode: " + opcode);
-        Login.Error("packet");
+        Login.Error("packet_error");
     }
 }

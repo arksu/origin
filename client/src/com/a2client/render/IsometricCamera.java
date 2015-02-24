@@ -1,4 +1,4 @@
-package com.a2client;
+package com.a2client.render;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Matrix4;

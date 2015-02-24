@@ -85,22 +85,11 @@ public class ObjectCache
         return _me;
     }
 
-    public static void init()
-    {
-        if (_instance != null)
-        {
-            _log.error("Player init: instance is not NULL!");
-        }
-        _instance = new ObjectCache();
-    }
-
-    public void dispose()
-    {
-        _instance = null;
-    }
-
     public static ObjectCache getInstance()
     {
+        if (_instance == null) {
+            _instance = new ObjectCache();
+        }
         return _instance;
     }
 }
