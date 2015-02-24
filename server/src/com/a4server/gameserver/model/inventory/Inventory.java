@@ -12,11 +12,13 @@ import org.slf4j.LoggerFactory;
 public class Inventory
 {
     private static final Logger _log = LoggerFactory.getLogger(Inventory.class.getName());
+    public static final String INVENTORY_LOAD = "SELCT id FROM items WHERE 1";
 
+    GameObject _parent;
     FastList<InventoryItem> _items = new FastList<>();
 
     public Inventory(GameObject parent)
     {
-
+        _parent = parent;
     }
 }

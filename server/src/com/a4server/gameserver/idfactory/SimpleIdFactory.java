@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 public class SimpleIdFactory extends IdFactory
 {
     private static final Logger _log = LoggerFactory.getLogger(SimpleIdFactory.class.getName());
+
     /**
      * сколько свободных ид брать за раз
      */

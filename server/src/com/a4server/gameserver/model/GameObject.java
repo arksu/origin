@@ -1,5 +1,6 @@
 package com.a4server.gameserver.model;
 
+import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
 import com.a4server.gameserver.model.position.ObjectPosition;
@@ -35,6 +36,8 @@ public class GameObject
      * шаблон объекта по которому он создан
      */
     private ObjectTemplate _template;
+
+    private Inventory _inventory;
 
     /**
      * имя которое отображается над объектом
@@ -73,6 +76,11 @@ public class GameObject
         _template = ObjectsFactory.getInstance().getTemplate(typeId);
         _boundRect = new Rect(-_template.getWidth() / 2, -_template.getHeight() / 2, _template.getWidth() / 2,
                               _template.getHeight() / 2);
+        // есть ли у объекта инвентарь?
+        if (_template.getInventory() != null)
+        {
+            _inventory = new Inventory(this);
+        }
     }
 
     public int getObjectId()

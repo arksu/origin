@@ -70,6 +70,7 @@ public class GameServer
         }
 
         ThreadPoolManager.getInstance();
+        logPrintSection("Objects");
         ObjectsFactory.getInstance();
         logPrintSection("World");
         GameTimeController.init();

@@ -1,5 +1,6 @@
 package com.a4server.gameserver.model.objects;
 
+import com.a4server.gameserver.model.craft.Craft;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -20,6 +21,7 @@ public class SimpleObject implements ObjectTemplate
     private int _height = 10;
     private CollisionTemplate _collision = null;
     private InventoryTemplate _inventory = null;
+    private ItemTemplate _item = null;
 
     private static final Logger _log = LoggerFactory.getLogger(SimpleObject.class.getName());
 
@@ -69,6 +71,17 @@ public class SimpleObject implements ObjectTemplate
         {
             Gson gson = new Gson();
             _inventory = gson.fromJson(in, InventoryTemplate.class);
+        }
+        else if ("item".equalsIgnoreCase(paramName))
+        {
+            Gson gson = new Gson();
+            _item = gson.fromJson(in, ItemTemplate.class);
+        }
+        else if ("craft".equalsIgnoreCase(paramName))
+        {
+            Gson gson = new Gson();
+            CraftTemplate craft = gson.fromJson(in, CraftTemplate.class);
+            Craft._crafts.add(craft);
         }
     }
 
