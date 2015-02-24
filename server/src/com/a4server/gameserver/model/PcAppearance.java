@@ -1,8 +1,5 @@
 package com.a4server.gameserver.model;
 
-import com.a4server.gameserver.network.serverpackets.GameServerPacket;
-import com.a4server.gameserver.network.serverpackets.PlayerAppearance;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -22,7 +19,8 @@ public class PcAppearance
     private byte _face = 0;
     private int _objectId;
 
-    public PcAppearance(ResultSet set, int objectId) {
+    public PcAppearance(ResultSet set, int objectId)
+    {
         _objectId = objectId;
         try
         {
@@ -36,24 +34,29 @@ public class PcAppearance
             e.printStackTrace();
         }
     }
-    
-    public int getObjectId() {
+
+    public int getObjectId()
+    {
         return _objectId;
     }
-    
-    public byte getHairColor() {
+
+    public byte getHairColor()
+    {
         return _hairColor;
     }
 
-    public byte getHairStyle() {
+    public byte getHairStyle()
+    {
         return _hairStyle;
     }
 
-    public byte getFace() {
+    public byte getFace()
+    {
         return _face;
     }
-    
-    public boolean isFemale() {
+
+    public boolean isFemale()
+    {
         return _sex;
     }
 }

@@ -1,6 +1,5 @@
 package com.a4server.gameserver.model.craft;
 
-import com.a4server.gameserver.model.objects.CraftTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,0 +1,29 @@
+{
+	"stoneAxe": {
+		"count": 2,
+		"time": 3,
+		"required": [
+			{
+				"name": "branch",
+				"count": 2
+			},
+			{
+				"name": "stone",
+				"count": 5
+			}
+		]
+	},
+	"stoneKnife": {
+		"time": 5,
+		"required": [
+			{
+				"name": "branch",
+				"count": 1
+			},
+			{
+				"name": "stone",
+				"count": 2
+			}
+		]
+	}
+}

@@ -42,19 +42,6 @@
 		"item": {
 			"width": 1,
 			"height": 2
-		},
-		"craft": {
-			"count": 2,
-			"required": [
-				{
-					"name": "branch",
-					"count": 2
-				},
-				{
-					"name": "stone",
-					"count": 5
-				}
-			]
 		}
 	},
 	"stoneKnife": {
@@ -62,18 +49,6 @@
 		"item": {
 			"width": 2,
 			"height": 1
-		},
-		"craft": {
-			"required": [
-				{
-					"name": "branch",
-					"count": 1
-				},
-				{
-					"name": "stone",
-					"count": 2
-				}
-			]
 		}
 	}
 }

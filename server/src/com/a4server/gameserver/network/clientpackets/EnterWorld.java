@@ -3,7 +3,10 @@ package com.a4server.gameserver.network.clientpackets;
 import com.a4server.gameserver.GameClient;
 import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Player;
-import com.a4server.gameserver.network.serverpackets.*;
+import com.a4server.gameserver.network.serverpackets.CharInfo;
+import com.a4server.gameserver.network.serverpackets.MapGrid;
+import com.a4server.gameserver.network.serverpackets.TimeUpdate;
+import com.a4server.gameserver.network.serverpackets.WorldInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,5 +1,6 @@
-package com.a4server.gameserver.model.objects;
+package com.a4server.gameserver.model.craft;
 
+import com.a4server.gameserver.model.objects.ItemTemplate;
 import com.google.gson.annotations.SerializedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
