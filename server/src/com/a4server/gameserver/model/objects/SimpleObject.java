@@ -47,6 +47,13 @@ public class SimpleObject implements ObjectTemplate
                     return;
             }
         }
+
+        // если это вещь и у нее есть инвентарь
+        if (_item != null && _inventory != null)
+        {
+            // обновим шаблон вещи
+            _item.setInventory(_inventory);
+        }
     }
 
     protected void readParam(JsonReader in) throws IOException
@@ -74,8 +81,8 @@ public class SimpleObject implements ObjectTemplate
         }
         else if ("item".equalsIgnoreCase(paramName))
         {
-            Gson gson = new Gson();
-            _item = gson.fromJson(in, ItemTemplate.class);
+            _item = ItemTemplate.load(in, _typeId, _name);
+            ObjectsFactory.getInstance().addItemTemplate(_item.getItemId(), _item);
         }
         else if ("craft".equalsIgnoreCase(paramName))
         {

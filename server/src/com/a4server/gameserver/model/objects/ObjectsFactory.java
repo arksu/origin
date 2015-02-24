@@ -22,15 +22,17 @@ public class ObjectsFactory
 
     private static final String CONFIG_NAME = "/objects.json";
 
-    Map<Integer, ObjectTemplate> _templates = new HashMap<>();
-
-    public ObjectsFactory()
-    {
-        LoadInternalConfig();
-    }
+    private boolean _isLoaded = false;
+    private Map<Integer, ObjectTemplate> _templates = new HashMap<>();
+    private Map<Integer, ItemTemplate> _itemTemplates = new HashMap<>();
 
     public void LoadInternalConfig()
     {
+        if (_isLoaded)
+        {
+            throw new RuntimeException("ObjectsFactory already loaded");
+        }
+        _isLoaded = true;
         InputStream ins = this.getClass().getResourceAsStream(CONFIG_NAME);
         try
         {
@@ -77,6 +79,16 @@ public class ObjectsFactory
         template.read(in);
         in.endObject();
         return template;
+    }
+
+    public void addItemTemplate(int itemId, ItemTemplate template)
+    {
+        _itemTemplates.put(itemId, template);
+    }
+
+    public ItemTemplate getItemTemplate(int itemId)
+    {
+        return _itemTemplates.get(itemId);
     }
 
     public ObjectTemplate getTemplate(int typeId)

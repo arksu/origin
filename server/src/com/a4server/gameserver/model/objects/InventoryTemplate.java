@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * шаблон инвентаря
  * Created by arksu on 24.02.15.
  */
 public class InventoryTemplate
@@ -17,5 +18,19 @@ public class InventoryTemplate
     @SerializedName ("height")
     private int _height = 2;
 
+    public int getWidth()
+    {
+        return _width;
+    }
 
+    public int getHeight()
+    {
+        return _height;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "(inventory " + _width + "x" + _height + ")";
+    }
 }

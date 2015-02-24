@@ -1,57 +1,79 @@
 {
-  "appleTree": {
-    "typeId": 11
-  },
-  "oakTree": {
-    "typeId": 12,
-    "size": 20
-  },
-  "firTree": {
-    "typeId": 13
-  },
-  "pineTree": {
-    "typeId": 14,
-    "collision": {
-      "all": "true",
-      "exclude": [
-        "player",
-        "rabbit"
-      ]
-    }
-  },
-  "box": {
-    "typeId": 15,
-    "inventory": {
-      "width": 5,
-      "height": 3
-    }
-  },
-  "stoneAxe": {
-    "typeId": 16,
-    "item": {
-      "width": 1,
-      "height": 2
-    },
-    "craft": {
-      "count": 2,
-      "from": [
-        {"branch": 1},
-        {"stone": 2}
-      ]
-    }
-  },
-  "stoneKnife": {
-    "typeId": 17,
-    "item": {
-      "width": 2,
-      "height": 1
-    },
-    "craft": {
-      "count": 1,
-      "required": [
-        {"name":"branch", "count": 1},
-        {"name":"stone", "count": 2}
-      ]
-    }
-  }
+	"appleTree": {
+		"typeId": 11
+	},
+	"oakTree": {
+		"typeId": 12,
+		"size": 20
+	},
+	"firTree": {
+		"typeId": 13
+	},
+	"pineTree": {
+		"typeId": 14,
+		"collision": {
+			"all": "true",
+			"exclude": [
+				"player",
+				"rabbit"
+			]
+		}
+	},
+	"box": {
+		"typeId": 15,
+		"inventory": {
+			"width": 5,
+			"height": 3
+		}
+	},
+	"customBag": {
+		"typeId": 18,
+		"inventory": {
+			"width": 5,
+			"height": 3
+		},
+		"item": {
+			"width": 1,
+			"height": 1
+		}
+	},
+	"stoneAxe": {
+		"typeId": 16,
+		"item": {
+			"width": 1,
+			"height": 2
+		},
+		"craft": {
+			"count": 2,
+			"required": [
+				{
+					"name": "branch",
+					"count": 2
+				},
+				{
+					"name": "stone",
+					"count": 5
+				}
+			]
+		}
+	},
+	"stoneKnife": {
+		"typeId": 17,
+		"item": {
+			"width": 2,
+			"height": 1
+		},
+		"craft": {
+			"required": [
+				{
+					"name": "branch",
+					"count": 1
+				},
+				{
+					"name": "stone",
+					"count": 2
+				}
+			]
+		}
+	}
 }
