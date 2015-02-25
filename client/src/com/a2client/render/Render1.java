@@ -48,6 +48,7 @@ public class Render1
     private GameObject _selected;
 
     private float _selectedDist;
+    private int _renderedObjects;
 
 
     public Render1(Game game)
@@ -72,6 +73,7 @@ public class Render1
         _terrain.Render(camera, _environment);
 
         //
+        _renderedObjects = 0;
         if (ObjectCache.getInstance() != null)
         {
             _selected = null;
@@ -87,6 +89,7 @@ public class Render1
                 boundingBox.max.add(add);
                 if (camera.frustum.boundsInFrustum(boundingBox))
                 {
+                    _renderedObjects++;
                     _modelInstance.transform.setToTranslation(oc.x, 0.5f, oc.y);
                     _modelBatch.render(_modelInstance, _environment);
                     Vector3 intersection = new Vector3();
@@ -113,5 +116,10 @@ public class Render1
     public GameObject getSelected()
     {
         return _selected;
+    }
+
+    public int getRenderedObjects()
+    {
+        return _renderedObjects;
     }
 }

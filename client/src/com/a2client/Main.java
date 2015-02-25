@@ -83,8 +83,8 @@ public class Main extends com.badlogic.gdx.Game
         cfg.addIcon("assets/a1_32.png", Files.FileType.Internal);
         cfg.addIcon("assets/a1_128.png", Files.FileType.Internal);
         cfg.useGL30 = false;
-        cfg.vSyncEnabled = false;//Config.vSync;
-        cfg.foregroundFPS = 0;//Config.FrameFate;
+        cfg.vSyncEnabled = Config.vSync;
+        cfg.foregroundFPS = Config.FrameFate;
         if (Config.ReduceInBackground)
         {
             cfg.backgroundFPS = 7;

@@ -135,7 +135,8 @@ public class Game extends BaseScreen
                 "FPS: " + Gdx.graphics.getFramesPerSecond() +
                         " " + _statusText +
                         " chunks: " + _render.getChunksRendered() +
-                        " selected: " + (_render.getSelected() != null ? "" + _render.getSelected() : "null");
+                        " selected: " + (_render.getSelected() != null ? "" + _render.getSelected() : "null")+
+                        " objects: "+_render.getRenderedObjects();
 
 
         if (ObjectCache.getInstance() != null)
