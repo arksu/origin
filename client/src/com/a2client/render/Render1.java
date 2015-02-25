@@ -41,6 +41,7 @@ public class Render1
     public int _chunksRendered = 0;
 
     public Render1(Game game) {
+        ShaderProgram.pedantic = false;
         _game = game;
         _shader = new ShaderProgram(
                 Gdx.files.internal("assets/basic_vert.glsl"),
@@ -66,7 +67,7 @@ public class Render1
 
     public void render() {
         _shader.begin();
-        _shader.setUniformMatrix("u_MVPMatrix", _game._camera.combined);
+        _shader.setUniformMatrix("u_MVPMatrix", _game.getGameCamera()._camera.combined);
 //        _shader.setUniformMatrix("u_view", _camera.view);
         _shader.setUniformi("u_texture", 0);
 
@@ -76,13 +77,13 @@ public class Render1
         _chunksRendered = 0;
         for (Grid grid : MapCache.grids)
         {
-            _chunksRendered += grid.render(_shader, _game._camera);
+            _chunksRendered += grid.render(_shader, _game.getGameCamera()._camera);
         }
         _shader.end();
 
         if (ObjectCache.getInstance() != null)
         {
-            modelBatch.begin(_game._camera);
+            modelBatch.begin(_game.getGameCamera()._camera);
             for (GameObject o : ObjectCache.getInstance().getObjects())
             {
                 renderObject(o);
@@ -96,7 +97,7 @@ public class Render1
         Vector2 oc = new Vector2(object.getCoord().x, object.getCoord().y);
         oc.x = oc.x / MapCache.TILE_SIZE;
         oc.y = oc.y / MapCache.TILE_SIZE;
-        oc = oc.add(getOffset()).add(_game._cameraPos).sub(_game._camera_offset);
+        oc = oc.add(getOffset()).add(_game.getGameCamera()._cameraPos).sub(_game.getGameCamera()._camera_offset);
 
         instance.transform.setToTranslation(oc.x, 0.5f, oc.y);
         modelBatch.render(instance, environment);

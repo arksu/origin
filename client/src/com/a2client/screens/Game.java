@@ -6,6 +6,7 @@ import com.a2client.model.GameObject;
 import com.a2client.model.Grid;
 import com.a2client.network.game.clientpackets.ChatMessage;
 import com.a2client.network.game.clientpackets.MouseClick;
+import com.a2client.render.GameCamera;
 import com.a2client.render.Render1;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -39,8 +40,6 @@ public class Game extends BaseScreen
         IN_GAME
     }
 
-    static final float MOVE_STEP = 0.2f;
-
     private static String _statusText = "";
 
     private GUI_Label _lblStatus;
@@ -50,23 +49,15 @@ public class Game extends BaseScreen
 
     private static Game _instance;
     private GameState _state = GameState.ENTERING;
-    public Camera _camera;
-
-    public Vector2 _camera_offset = new Vector2(0, 0);
-    public Vector2 _cameraPos = new Vector2(0, 0);
-    public float _cameraDistance = 20;
-    private final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
-
 
     private Vector2 _world_mouse_pos = new Vector2();
     private boolean[] mouse_btns = new boolean[3];
 
     private Render1 _render;
+    private GameCamera _gameCamera;
 
     public Game()
     {
-    	ShaderProgram.pedantic = false;
-
         Player.init();
         ObjectCache.getInstance().clear();
         MapCache.clear();
@@ -112,6 +103,7 @@ public class Game extends BaseScreen
         _chatEdit.SetPos(5, py + _chatMemo.Height() + 5);
         _chatEdit.SetSize(_chatMemo.Width(), 20);
 
+        _gameCamera = new GameCamera();
         _render = new Render1(this);
     }
 
@@ -128,30 +120,10 @@ public class Game extends BaseScreen
     @Override
     public void onUpdate()
     {
-
+        _gameCamera.update();
         _world_mouse_pos = screen2world(Gdx.input.getX(), Gdx.input.getY());
 
-        //_camera_offset = new Vector2();
-        if (GUI.getInstance().focused_control == null)
-        {
-            if (com.a2client.Input.KeyDown(Input.Keys.W))
-            {
-                _camera_offset.y -= MOVE_STEP;
-            }
-            if (com.a2client.Input.KeyDown(Input.Keys.S))
-            {
-                _camera_offset.y += MOVE_STEP;
-            }
-            if (com.a2client.Input.KeyDown(Input.Keys.A))
-            {
-                _camera_offset.x += MOVE_STEP;
-            }
-            if (com.a2client.Input.KeyDown(Input.Keys.D))
-            {
-                _camera_offset.x -= MOVE_STEP;
-            }
-        }
-        else if (GUI.getInstance().focused_control == _chatEdit)
+        if (GUI.getInstance().focused_control == _chatEdit)
         {
             String h;
             if (com.a2client.Input.KeyHit(Input.Keys.UP))
@@ -171,11 +143,6 @@ public class Game extends BaseScreen
             }
         }
 
-        if (com.a2client.Input.isWheelUpdated())
-        {
-            _cameraDistance += (_cameraDistance / 15f) * com.a2client.Input.MouseWheel;
-            com.a2client.Input.MouseWheel = 0;
-        }
 
         if (_state == GameState.IN_GAME)
         {
@@ -194,18 +161,6 @@ public class Game extends BaseScreen
                 o.Update();
             }
         }
-
-        if (ObjectCache.getInstance().getMe() != null)
-        {
-            Vector2 pp = new Vector2(ObjectCache.getInstance().getMe().getCoord());
-            pp = pp.scl(1f / MapCache.TILE_SIZE);
-            _cameraPos = pp;
-        }
-        _cameraPos.add(_camera_offset);
-        _camera.position.set(new Vector3(_cameraPos.x + _cameraDistance, _cameraDistance * 1.9f,
-                                         _cameraPos.y + _cameraDistance));
-        _camera.lookAt(new Vector3(_cameraPos.x, 0, _cameraPos.y));
-        _camera.update();
 
         UpdateMouseButtons();
     }
@@ -246,26 +201,13 @@ public class Game extends BaseScreen
     public void resize(int width, int height)
     {
         super.resize(width, height);
-
-        float camWidth = width / 48f;
-        float camHeight = camWidth * ((float) height / (float) width);
-
-
-        _camera = new PerspectiveCamera(30, camWidth, camHeight);
-        _camera.near = 1f;
-        _camera.far = 1000f;
-        _camera.update();
+        _gameCamera.onResize(width, height);
     }
 
     public Vector2 screen2world(int x, int y)
     {
-        Vector3 intersection = new Vector3();
-        Ray ray = _camera.getPickRay(x, y);
-        Intersector.intersectRayPlane(ray, xzPlane, intersection);
-        return new Vector2(intersection.x, intersection.z);
+       return _gameCamera.screen2world(x,y);
     }
-
-
 
     public void setState(GameState state)
     {
@@ -292,5 +234,10 @@ public class Game extends BaseScreen
         Main.freeScreen();
         _instance = new Game();
         Main.getInstance().setScreen(_instance);
+    }
+
+    public GameCamera getGameCamera()
+    {
+        return _gameCamera;
     }
 }
