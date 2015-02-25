@@ -120,7 +120,6 @@ public class Game extends BaseScreen
     @Override
     public void onUpdate()
     {
-        _gameCamera.update();
         _world_mouse_pos = screen2world(Gdx.input.getX(), Gdx.input.getY());
 
         if (GUI.getInstance().focused_control == _chatEdit)
@@ -152,7 +151,7 @@ public class Game extends BaseScreen
         _lblStatus.caption =
                 "FPS: " + Gdx.graphics.getFramesPerSecond() +
                         " " + _statusText +
-                        " chunks: " + _render._chunksRendered;
+                        " chunks: " + _render.getChunksRendered();
 
         if (ObjectCache.getInstance() != null)
         {
@@ -162,6 +161,7 @@ public class Game extends BaseScreen
             }
         }
 
+        _gameCamera.update();
         UpdateMouseButtons();
     }
 
@@ -236,7 +236,7 @@ public class Game extends BaseScreen
         Main.getInstance().setScreen(_instance);
     }
 
-    public GameCamera getGameCamera()
+    public GameCamera getCamera()
     {
         return _gameCamera;
     }

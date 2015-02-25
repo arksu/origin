@@ -15,40 +15,56 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * простая игровая камера
  * Created by arksu on 25.02.15.
  */
 public class GameCamera
 {
     private static final Logger _log = LoggerFactory.getLogger(GameCamera.class.getName());
 
+    /**
+     * на сколько передвигаем камеру за 1 тик клавишами (для дебага)
+     */
     static final float MOVE_STEP = 0.2f;
 
-    public Camera _camera;
+    /**
+     *  gdx камера
+     */
+    private Camera _camera;
 
-    public Vector2 _camera_offset = new Vector2(0, 0);
-    public Vector2 _cameraPos = new Vector2(0, 0);
-    public float _cameraDistance = 20;
+    /**
+     * оступ камеры, двигаем камеру клавишами
+     */
+    private Vector2 _cameraOffset = new Vector2(0, 0);
+
+    /**
+     * дистанция от камеры до точки куда смотрим
+     */
+    private float _cameraDistance = 20;
+
+    /**
+     * плоскость горизонта (тайлов) нужно для поиска позиции мыши на карте
+     */
     private final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
 
     public void update() {
-        //_camera_offset = new Vector2();
         if (GUI.getInstance().focused_control == null)
         {
             if (com.a2client.Input.KeyDown(Input.Keys.W))
             {
-                _camera_offset.y -= MOVE_STEP;
+                _cameraOffset.y -= MOVE_STEP;
             }
             if (com.a2client.Input.KeyDown(Input.Keys.S))
             {
-                _camera_offset.y += MOVE_STEP;
+                _cameraOffset.y += MOVE_STEP;
             }
             if (com.a2client.Input.KeyDown(Input.Keys.A))
             {
-                _camera_offset.x += MOVE_STEP;
+                _cameraOffset.x -= MOVE_STEP;
             }
             if (com.a2client.Input.KeyDown(Input.Keys.D))
             {
-                _camera_offset.x -= MOVE_STEP;
+                _cameraOffset.x += MOVE_STEP;
             }
         }
         if (com.a2client.Input.isWheelUpdated())
@@ -56,16 +72,16 @@ public class GameCamera
             _cameraDistance += (_cameraDistance / 15f) * com.a2client.Input.MouseWheel;
             com.a2client.Input.MouseWheel = 0;
         }
+        Vector2 playerPos = Vector2.Zero;
         if (ObjectCache.getInstance().getMe() != null)
         {
-            Vector2 pp = new Vector2(ObjectCache.getInstance().getMe().getCoord());
-            pp = pp.scl(1f / MapCache.TILE_SIZE);
-            _cameraPos = pp;
+            playerPos = new Vector2(ObjectCache.getInstance().getMe().getCoord());
+            playerPos = playerPos.scl(1f / MapCache.TILE_SIZE);
         }
-        _cameraPos.add(_camera_offset);
-        _camera.position.set(new Vector3(_cameraPos.x + _cameraDistance, _cameraDistance * 1.9f,
-                                         _cameraPos.y + _cameraDistance));
-        _camera.lookAt(new Vector3(_cameraPos.x, 0, _cameraPos.y));
+        playerPos.add(_cameraOffset);
+        _camera.position.set(new Vector3(playerPos.x + _cameraDistance, _cameraDistance * 1.9f,
+                                         playerPos.y + _cameraDistance));
+        _camera.lookAt(new Vector3(playerPos.x, 0, playerPos.y));
         _camera.update();
 
     }
@@ -73,7 +89,6 @@ public class GameCamera
     public void onResize(int width, int height){
         float camWidth = width / 48f;
         float camHeight = camWidth * ((float) height / (float) width);
-
 
         _camera = new PerspectiveCamera(30, camWidth, camHeight);
         _camera.near = 1f;
@@ -87,5 +102,9 @@ public class GameCamera
         Ray ray = _camera.getPickRay(x, y);
         Intersector.intersectRayPlane(ray, xzPlane, intersection);
         return new Vector2(intersection.x, intersection.z);
+    }
+
+    public Camera getGdxCamera() {
+        return _camera;
     }
 }

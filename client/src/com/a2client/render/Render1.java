@@ -31,16 +31,16 @@ public class Render1
     private static final Logger _log = LoggerFactory.getLogger(Render1.class.getName());
 
     private Game _game;
-
     private ShaderProgram _shader;
-    public Model model;
-    public ModelInstance instance;
+    private Model model;
+    private ModelInstance instance;
     private ModelBatch modelBatch;
 
     private Environment environment;
-    public int _chunksRendered = 0;
+    private int _chunksRendered = 0;
 
-    public Render1(Game game) {
+    public Render1(Game game)
+    {
         ShaderProgram.pedantic = false;
         _game = game;
         _shader = new ShaderProgram(
@@ -65,25 +65,26 @@ public class Render1
         instance = new ModelInstance(model);
     }
 
-    public void render() {
+    public void render()
+    {
         _shader.begin();
-        _shader.setUniformMatrix("u_MVPMatrix", _game.getGameCamera()._camera.combined);
+        _shader.setUniformMatrix("u_MVPMatrix", _game.getCamera().getGdxCamera().combined);
 //        _shader.setUniformMatrix("u_view", _camera.view);
         _shader.setUniformi("u_texture", 0);
 
         Main.getAssetManager().get(Config.RESOURCE_DIR + "tiles_atlas.png", Texture.class).bind();
 
-        _shader.setUniformf("u_ambient", ((ColorAttribute)environment.get(ColorAttribute.AmbientLight)).color);
+        _shader.setUniformf("u_ambient", ((ColorAttribute) environment.get(ColorAttribute.AmbientLight)).color);
         _chunksRendered = 0;
         for (Grid grid : MapCache.grids)
         {
-            _chunksRendered += grid.render(_shader, _game.getGameCamera()._camera);
+            _chunksRendered += grid.render(_shader, _game.getCamera().getGdxCamera());
         }
         _shader.end();
 
         if (ObjectCache.getInstance() != null)
         {
-            modelBatch.begin(_game.getGameCamera()._camera);
+            modelBatch.begin(_game.getCamera().getGdxCamera());
             for (GameObject o : ObjectCache.getInstance().getObjects())
             {
                 renderObject(o);
@@ -94,27 +95,14 @@ public class Render1
 
     private void renderObject(GameObject object)
     {
-        Vector2 oc = new Vector2(object.getCoord().x, object.getCoord().y);
-        oc.x = oc.x / MapCache.TILE_SIZE;
-        oc.y = oc.y / MapCache.TILE_SIZE;
-        oc = oc.add(getOffset()).add(_game.getGameCamera()._cameraPos).sub(_game.getGameCamera()._camera_offset);
-
+        Vector2 oc = new Vector2(object.getCoord());
+        oc.scl(1f / MapCache.TILE_SIZE);
         instance.transform.setToTranslation(oc.x, 0.5f, oc.y);
         modelBatch.render(instance, environment);
     }
 
-    public Vector2 getOffset()
+    public int getChunksRendered()
     {
-        Vector2 offset = Vector2.Zero;
-        if (ObjectCache.getInstance().getMe() != null)
-        {
-            Vector2 pp = new Vector2(ObjectCache.getInstance().getMe().getCoord());
-            pp.x = pp.x / MapCache.TILE_SIZE;
-            pp.y = pp.y / MapCache.TILE_SIZE;
-            pp = pp.sub(pp.x * 2, pp.y * 2);
-            offset = pp;
-        }
-        return offset;
+        return _chunksRendered;
     }
-
 }
