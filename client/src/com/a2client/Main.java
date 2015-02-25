@@ -49,7 +49,9 @@ public class Main extends com.badlogic.gdx.Game
         // установим дефолт курсор
         Cursor.getInstance().setCursor("");
 
+        _log.debug("gl ver: " + Gdx.gl.glGetString(GL20.GL_VENDOR));
         _log.debug("gl ver: " + Gdx.gl.glGetString(GL20.GL_VERSION));
+        _log.debug("gl ver: " + Gdx.gl.glGetString(GL20.GL_EXTENSIONS));
 
         // экран загрузки ресурсов
         this.setScreen(new ResourceLoader());

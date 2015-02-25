@@ -53,8 +53,8 @@ public class Input implements InputProcessor
 
         //        MouseX = Mouse.getX();
         //        MouseY = Display.getHeight() - Mouse.getY();
-        MouseX = Gdx.input.getX();
-        MouseY = Gdx.input.getY();
+//        MouseX = Gdx.input.getX();
+//        MouseY = Gdx.input.getY();
 
 
         for (int i = 0; i < 3; i++)
@@ -157,6 +157,8 @@ public class Input implements InputProcessor
     @Override
     public boolean mouseMoved(int screenX, int screenY)
     {
+    	MouseX = screenX;
+    	MouseY = screenY;
         return false;
     }
 

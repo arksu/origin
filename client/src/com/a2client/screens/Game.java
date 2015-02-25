@@ -3,30 +3,13 @@ package com.a2client.screens;
 import com.a2client.*;
 import com.a2client.gui.*;
 import com.a2client.model.GameObject;
-import com.a2client.model.Grid;
 import com.a2client.network.game.clientpackets.ChatMessage;
 import com.a2client.network.game.clientpackets.MouseClick;
 import com.a2client.render.GameCamera;
 import com.a2client.render.Render1;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.assets.loaders.ModelLoader;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.Ray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -151,7 +134,9 @@ public class Game extends BaseScreen
         _lblStatus.caption =
                 "FPS: " + Gdx.graphics.getFramesPerSecond() +
                         " " + _statusText +
-                        " chunks: " + _render.getChunksRendered();
+                        " chunks: " + _render.getChunksRendered() +
+                        " selected: " + (_render.getSelected() != null ? "" + _render.getSelected() : "null");
+
 
         if (ObjectCache.getInstance() != null)
         {
@@ -194,7 +179,7 @@ public class Game extends BaseScreen
     @Override
     public void onRender3D()
     {
-        _render.render();
+        _render.render(_gameCamera.getGdxCamera());
     }
 
     @Override
@@ -206,7 +191,7 @@ public class Game extends BaseScreen
 
     public Vector2 screen2world(int x, int y)
     {
-       return _gameCamera.screen2world(x,y);
+        return _gameCamera.screen2world(x, y);
     }
 
     public void setState(GameState state)

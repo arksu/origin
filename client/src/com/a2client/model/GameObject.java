@@ -3,6 +3,8 @@ package com.a2client.model;
 import com.a2client.network.game.serverpackets.ObjectAdd;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +22,7 @@ public class GameObject
     private String _name;
     private String _title;
     private Mover _mover = null;
+    private BoundingBox _boundingBox;
 
     public GameObject(ObjectAdd pkt)
     {
@@ -28,6 +31,8 @@ public class GameObject
         _coord = new Vector2(pkt._x, pkt._y);
         _objectId = pkt._objectId;
         _typeId = pkt._typeId;
+        _boundingBox = new BoundingBox(new Vector3(-1, 0, -1),
+                                       new Vector3(+1, 1, +1));
     }
 
     public int getObjectId()
@@ -48,6 +53,11 @@ public class GameObject
     public String getName()
     {
         return _name;
+    }
+
+    public BoundingBox getBoundingBox()
+    {
+        return _boundingBox;
     }
 
     public void setCoord(int x, int y)
@@ -87,8 +97,9 @@ public class GameObject
             _mover = new Mover(this, cx, cy, vx, vy, speed);
         }
     }
-    
-    public void StopMove() {
+
+    public void StopMove()
+    {
         _mover = null;
     }
 
@@ -102,9 +113,16 @@ public class GameObject
         if (_mover != null)
         {
             _mover.Update();
-            if (_mover._arrived) {
+            if (_mover._arrived)
+            {
                 _mover = null;
             }
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return "(" + _name + " " + _objectId + " type=" + _typeId + ")";
     }
 }

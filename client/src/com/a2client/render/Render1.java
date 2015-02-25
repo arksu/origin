@@ -1,15 +1,13 @@
 package com.a2client.render;
 
-import com.a2client.Config;
-import com.a2client.Main;
 import com.a2client.MapCache;
 import com.a2client.ObjectCache;
+import com.a2client.Terrain;
 import com.a2client.model.GameObject;
-import com.a2client.model.Grid;
 import com.a2client.screens.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.ModelLoader;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -18,7 +16,11 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.math.collision.Ray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,78 +33,85 @@ public class Render1
     private static final Logger _log = LoggerFactory.getLogger(Render1.class.getName());
 
     private Game _game;
-    private ShaderProgram _shader;
-    private Model model;
-    private ModelInstance instance;
-    private ModelBatch modelBatch;
 
-    private Environment environment;
-    private int _chunksRendered = 0;
+    //
+    private Model _model;
+    private ModelInstance _modelInstance;
+    private ModelBatch _modelBatch;
+
+    //
+    Terrain _terrain;
+
+    //
+    private Environment _environment;
+
+    private GameObject _selected;
+
+    private float _selectedDist;
+
 
     public Render1(Game game)
     {
         ShaderProgram.pedantic = false;
         _game = game;
-        _shader = new ShaderProgram(
-                Gdx.files.internal("assets/basic_vert.glsl"),
-                Gdx.files.internal("assets/basic_frag.glsl"));
 
-        if (!_shader.isCompiled())
-        {
-            Gdx.app.log("Shader", _shader.getLog());
-            Gdx.app.log("Shader V", _shader.getVertexShaderSource());
-            Gdx.app.log("Shader F", _shader.getFragmentShaderSource());
-        }
+        _environment = new Environment();
+        _environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+        _environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
-        environment = new Environment();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-
-        modelBatch = new ModelBatch();
-
+        _modelBatch = new ModelBatch();
         ModelLoader loader = new ObjLoader();
-        model = loader.loadModel(Gdx.files.internal("assets/ship.obj"));
-        instance = new ModelInstance(model);
+        _model = loader.loadModel(Gdx.files.internal("assets/ship.obj"));
+        _modelInstance = new ModelInstance(_model);
+        _terrain = new Terrain();
     }
 
-    public void render()
+    public void render(Camera camera)
     {
-        _shader.begin();
-        _shader.setUniformMatrix("u_MVPMatrix", _game.getCamera().getGdxCamera().combined);
-//        _shader.setUniformMatrix("u_view", _camera.view);
-        _shader.setUniformi("u_texture", 0);
+        //
+        _terrain.Render(camera, _environment);
 
-        Main.getAssetManager().get(Config.RESOURCE_DIR + "tiles_atlas.png", Texture.class).bind();
-
-        _shader.setUniformf("u_ambient", ((ColorAttribute) environment.get(ColorAttribute.AmbientLight)).color);
-        _chunksRendered = 0;
-        for (Grid grid : MapCache.grids)
-        {
-            _chunksRendered += grid.render(_shader, _game.getCamera().getGdxCamera());
-        }
-        _shader.end();
-
+        //
         if (ObjectCache.getInstance() != null)
         {
-            modelBatch.begin(_game.getCamera().getGdxCamera());
+            _selected = null;
+            _selectedDist = 100500;
+            Ray ray = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
+            _modelBatch.begin(camera);
             for (GameObject o : ObjectCache.getInstance().getObjects())
             {
-                renderObject(o);
+                BoundingBox boundingBox = new BoundingBox(o.getBoundingBox());
+                Vector2 oc = new Vector2(o.getCoord()).scl(1f / MapCache.TILE_SIZE);
+                Vector3 add = new Vector3(oc.x, 0, oc.y);
+                boundingBox.min.add(add);
+                boundingBox.max.add(add);
+                if (camera.frustum.boundsInFrustum(boundingBox))
+                {
+                    _modelInstance.transform.setToTranslation(oc.x, 0.5f, oc.y);
+                    _modelBatch.render(_modelInstance, _environment);
+                    Vector3 intersection = new Vector3();
+                    if (Intersector.intersectRayBounds(ray, boundingBox, intersection))
+                    {
+                        float dist = intersection.dst(camera.position);
+                        if (dist < _selectedDist)
+                        {
+                            _selected = o;
+                            _selectedDist = dist;
+                        }
+                    }
+                }
             }
-            modelBatch.end();
+            _modelBatch.end();
         }
-    }
-
-    private void renderObject(GameObject object)
-    {
-        Vector2 oc = new Vector2(object.getCoord());
-        oc.scl(1f / MapCache.TILE_SIZE);
-        instance.transform.setToTranslation(oc.x, 0.5f, oc.y);
-        modelBatch.render(instance, environment);
     }
 
     public int getChunksRendered()
     {
-        return _chunksRendered;
+        return _terrain.getChunksRendered();
+    }
+
+    public GameObject getSelected()
+    {
+        return _selected;
     }
 }
