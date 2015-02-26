@@ -76,6 +76,46 @@ public class InventoryItem
         }
     }
 
+    public int getObjectId()
+    {
+        return _objectId;
+    }
+
+    public int getQ()
+    {
+        return _q;
+    }
+
+    public int getX()
+    {
+        return _x;
+    }
+
+    public int getY()
+    {
+        return _y;
+    }
+
+    public int getAmount()
+    {
+        return _amount;
+    }
+
+    public int getStage()
+    {
+        return _stage;
+    }
+
+    public int getTicks()
+    {
+        return _ticks;
+    }
+
+    public int getTicksTotal()
+    {
+        return _ticksTotal;
+    }
+
     public ItemTemplate getTemplate()
     {
         return _template;

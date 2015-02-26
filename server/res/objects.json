@@ -50,5 +50,19 @@
 			"width": 2,
 			"height": 1
 		}
+	},
+	"apple": {
+		"typeId": 19,
+		"item": {
+			"width": 1,
+			"height": 1
+		}
+	},
+	"board": {
+		"typeId": 20,
+		"item": {
+			"width": 1,
+			"height": 4
+		}
 	}
 }

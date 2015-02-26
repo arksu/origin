@@ -15,11 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.a2client.gui;
+package com.a2client.guigame;
 
 public interface ContextMenu
 {
-
     public void OnContextClick(int idx);
-
 }

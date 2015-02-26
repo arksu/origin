@@ -78,4 +78,14 @@ public class Inventory
             throw new RuntimeException("Cant load inventory " + toString());
         }
     }
+
+    public GameObject getParent()
+    {
+        return _parent;
+    }
+
+    public FastList<InventoryItem> getItems()
+    {
+        return _items;
+    }
 }

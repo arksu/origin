@@ -15,9 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.a2client.gui;
+package com.a2client.guigame;
 
 import com.a2client.Config;
+import com.a2client.gui.*;
 
 import static com.a2client.util.Utils.max;
 

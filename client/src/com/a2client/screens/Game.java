@@ -114,14 +114,14 @@ public class Game extends BaseScreen
                 if (!h.isEmpty())
                 {
                     _chatEdit.SetText(h);
-                    _chatEdit.SetCursor(999);
+                    _chatEdit.SetCursor(_chatEdit.text.length());
                 }
             }
             if (com.a2client.Input.KeyHit(Input.Keys.DOWN))
             {
                 h = ChatHistory.next();
                 _chatEdit.SetText(h);
-                _chatEdit.SetCursor(999);
+                _chatEdit.SetCursor(_chatEdit.text.length());
             }
         }
 

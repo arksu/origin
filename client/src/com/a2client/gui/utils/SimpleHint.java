@@ -47,7 +47,9 @@ public class SimpleHint
             cw = GUIGDX.getTextWidth(hint_font, ss) + 10;
             h += GUIGDX.getTextHeight(hint_font, ss) + 5;
             if (cw > w)
+            {
                 w = cw;
+            }
         }
 
         return new Vec2i(w, h);
