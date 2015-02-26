@@ -5,6 +5,7 @@ import com.a4server.gameserver.GameClient;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.idfactory.IdFactory;
 import com.a4server.gameserver.model.event.Event;
+import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.objects.CollisionTemplate;
 import com.a4server.gameserver.model.objects.InventoryTemplate;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
@@ -33,17 +34,17 @@ public class Player extends Human
     private static final String UPDATE_CHARACTER = "UPDATE characters SET x=?, y=? WHERE charId=?";
 
     private GameClient _client = null;
-    private volatile boolean _isOnline = false;
     private final PcAppearance _appearance;
+    private final Inventory _inventory;
     private String _account;
     private int _accessLevel;
+    private volatile boolean _isOnline = false;
 
     public Player(int objectId, ResultSet rset, PlayerTemplate template)
     {
         super(objectId, template);
 
         _appearance = new PcAppearance(rset, objectId);
-        setVisibleDistance(500);
         try
         {
             _accessLevel = rset.getInt("accessLevel");
@@ -59,8 +60,12 @@ public class Player extends Human
         }
         catch (SQLException e)
         {
+            _log.warn("failed parse db row for player id=" + objectId);
             e.printStackTrace();
         }
+
+        setVisibleDistance(500);
+        _inventory = new Inventory(this);
     }
 
     private static class PlayerTemplate implements ObjectTemplate
@@ -291,6 +296,11 @@ public class Player extends Human
     public GameClient getClient()
     {
         return _client;
+    }
+
+    public Inventory getInventory()
+    {
+        return _inventory;
     }
 
     public void setOnlineStatus(boolean status)

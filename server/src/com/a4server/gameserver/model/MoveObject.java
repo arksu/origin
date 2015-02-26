@@ -19,7 +19,7 @@ import java.util.List;
  */
 public abstract class MoveObject extends GameObject
 {
-    protected static final Logger _log = LoggerFactory.getLogger(MoveObject.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(MoveObject.class.getName());
 
     /**
      * контроллер который управляет передвижением объекта

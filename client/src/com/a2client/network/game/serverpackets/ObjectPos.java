@@ -15,7 +15,7 @@ public class ObjectPos extends GameServerPacket
         GamePacketHandler.AddPacketType(0x15, ObjectPos.class);
     }
     
-    protected static final Logger _log = LoggerFactory.getLogger(ObjectPos.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(ObjectPos.class.getName());
 
     private int _objectId;
     private int _x;

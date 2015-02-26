@@ -16,7 +16,7 @@ import java.sql.ResultSet;
  */
 public class AuthGame extends GameClientPacket
 {
-    protected static final Logger _log = LoggerFactory.getLogger(AuthGame.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(AuthGame.class.getName());
     protected static final String ACCOUNT_CHECK_SESSIONKEY = "SELECT login, lastActive, lastChar FROM accounts WHERE key1 = ? AND key2 = ?";
 
     private int _key1, _key2;

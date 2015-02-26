@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  */
 public class StackTrace
 {
-    protected static final Logger _log = LoggerFactory.getLogger(StackTrace.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(StackTrace.class.getName());
 
     public static boolean displayStackTraceInformation(Throwable ex)
     {

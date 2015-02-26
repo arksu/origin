@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Rect
 {
-    protected static final Logger _log = LoggerFactory.getLogger(Rect.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(Rect.class.getName());
 
     protected volatile int _left, _top, _right, _bottom;
 

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CollisionResult
 {
-    protected static final Logger _log = LoggerFactory.getLogger(CollisionResult.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(CollisionResult.class.getName());
 
     public static final CollisionResult FAIL = new CollisionResult(CollisionType.COLLISION_FAIL);
     public static final CollisionResult NONE = new CollisionResult(CollisionType.COLLISION_NONE);

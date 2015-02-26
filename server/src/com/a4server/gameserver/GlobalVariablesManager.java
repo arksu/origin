@@ -13,7 +13,7 @@ import java.sql.ResultSet;
  */
 public class GlobalVariablesManager
 {
-    protected static final Logger _log = LoggerFactory.getLogger(GlobalVariablesManager.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(GlobalVariablesManager.class.getName());
 
     private static final String LOAD_VARS = "SELECT var,value_str,value_int FROM global_variables";
     private static final String LOAD_VAR_INT = "SELECT value_int FROM global_variables WHERE var=?";

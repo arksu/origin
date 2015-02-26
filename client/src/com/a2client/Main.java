@@ -22,7 +22,7 @@ import java.io.File;
 
 public class Main extends com.badlogic.gdx.Game
 {
-    public static Logger _log = LoggerFactory.getLogger(Main.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(Main.class.getName());
     public static Input _input;
     public static long DT;
     private static long _last_tick;

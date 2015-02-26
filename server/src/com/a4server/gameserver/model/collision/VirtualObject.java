@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  */
 public class VirtualObject
 {
-    protected static final Logger _log = LoggerFactory.getLogger(VirtualObject.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(VirtualObject.class.getName());
 
     private int _x, _y;
     private GameObject _type;

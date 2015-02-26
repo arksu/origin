@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  */
 public class WorldInfo extends GameServerPacket
 {
-    protected static final Logger _log = LoggerFactory.getLogger(WorldInfo.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(WorldInfo.class.getName());
 
     @Override
     protected void write()

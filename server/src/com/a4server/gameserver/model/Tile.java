@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Tile
 {
-    protected static final Logger _log = LoggerFactory.getLogger(Tile.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(Tile.class.getName());
 
     public static enum TileType
     {

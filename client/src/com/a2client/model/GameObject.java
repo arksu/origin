@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GameObject
 {
-    protected static final Logger _log = LoggerFactory.getLogger(GameObject.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(GameObject.class.getName());
 
     private int _objectId;
     private int _typeId;

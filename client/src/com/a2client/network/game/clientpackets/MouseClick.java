@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MouseClick extends GameClientPacket
 {
-    protected static final Logger _log = LoggerFactory.getLogger(MouseClick.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(MouseClick.class.getName());
 
     private final int _button;
     private final int _x;

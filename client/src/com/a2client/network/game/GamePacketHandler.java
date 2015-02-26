@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class GamePacketHandler
 {
-    public static Logger _log = LoggerFactory.getLogger(GamePacketHandler.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(GamePacketHandler.class.getName());
 
     private static Class<?>[] _pktClasses = {
             Init.class,

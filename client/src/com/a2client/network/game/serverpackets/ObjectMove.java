@@ -15,7 +15,7 @@ public class ObjectMove extends GameServerPacket
         GamePacketHandler.AddPacketType(0x14, ObjectMove.class);
     }
 
-    protected static final Logger _log = LoggerFactory.getLogger(ObjectMove.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(ObjectMove.class.getName());
 
     private int _objectId;
     private int _tox;

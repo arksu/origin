@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ObjectPosition
 {
-    protected static final Logger _log = LoggerFactory.getLogger(ObjectPosition.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(ObjectPosition.class.getName());
 
     public volatile int _x;
     public volatile int _y;

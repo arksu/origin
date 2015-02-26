@@ -21,7 +21,7 @@ import java.sql.SQLException;
  */
 public class LoginController
 {
-    protected static final Logger _log = LoggerFactory.getLogger(LoginController.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(LoginController.class.getName());
 
     private static LoginController _instance;
 

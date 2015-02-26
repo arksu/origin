@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GameTimeController extends Thread
 {
-    protected static final Logger _log = LoggerFactory.getLogger(GameTimeController.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(GameTimeController.class.getName());
 
     /**
      * игровой тик на обновление объектов, сколько обычных тиков

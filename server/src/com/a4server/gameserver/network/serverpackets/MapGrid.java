@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MapGrid extends GameServerPacket
 {
-    protected static final Logger _log = LoggerFactory.getLogger(MapGrid.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(MapGrid.class.getName());
 
     Grid _grid;
     int  _px, _py;

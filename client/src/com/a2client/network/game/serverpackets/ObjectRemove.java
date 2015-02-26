@@ -15,7 +15,7 @@ public class ObjectRemove extends GameServerPacket
         GamePacketHandler.AddPacketType(0x12, ObjectRemove.class);
     }
 
-    protected static final Logger _log = LoggerFactory.getLogger(ObjectRemove.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(ObjectRemove.class.getName());
 
     int _objectId;
 
@@ -30,5 +30,6 @@ public class ObjectRemove extends GameServerPacket
     {
         _log.debug("ObjectRemove "+_objectId);
         ObjectCache.getInstance().removeObject(_objectId);
+        // todo : при удалении объекта надо удалить все инвентари этого объекта
     }
 }

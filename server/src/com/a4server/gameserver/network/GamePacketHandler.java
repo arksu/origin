@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GamePacketHandler
 {
-    protected static final Logger _log = LoggerFactory.getLogger(GamePacketHandler.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(GamePacketHandler.class.getName());
 
     static public GameClientPacket HandlePacket(byte[] buf, GameClient client)
     {

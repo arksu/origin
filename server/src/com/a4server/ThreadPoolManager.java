@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ThreadPoolManager
 {
-    protected static final Logger _log = LoggerFactory.getLogger(ThreadPoolManager.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(ThreadPoolManager.class.getName());
 
     /**
      * основной пул потоков для обычных тасков

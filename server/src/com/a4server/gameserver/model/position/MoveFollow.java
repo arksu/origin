@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MoveFollow extends MoveController
 {
-    protected static final Logger _log = LoggerFactory.getLogger(MoveFollow.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(MoveFollow.class.getName());
 
     @Override
     public boolean isMoving()

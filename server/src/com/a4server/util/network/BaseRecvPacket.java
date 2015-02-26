@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BaseRecvPacket
 {
-    protected Logger _log = LoggerFactory.getLogger(getClass().getName());
+    private static final Logger _log = LoggerFactory.getLogger(getClass().getName());
 
     private byte[] _buf;
     private int _off;

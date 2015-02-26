@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ObjectCache
 {
-    protected static final Logger _log = LoggerFactory.getLogger(ObjectCache.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(ObjectCache.class.getName());
     private static ObjectCache _instance;
 
     List<GameObject> _objects = new ArrayList<>();

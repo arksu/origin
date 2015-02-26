@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 
 public class GameServerAuth extends LoginServerPacket
 {
-    public static final Logger _log = LoggerFactory.getLogger(GameServerAuth.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(GameServerAuth.class.getName());
 
     byte[] _host;
 

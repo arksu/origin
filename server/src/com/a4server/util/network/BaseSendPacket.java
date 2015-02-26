@@ -12,7 +12,7 @@ import java.io.IOException;
  */
 public abstract class BaseSendPacket
 {
-    protected Logger _log = LoggerFactory.getLogger(getClass().getName());
+    private static final Logger _log = LoggerFactory.getLogger(getClass().getName());
 
     /**
      * буфер для записи данных пакета

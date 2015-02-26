@@ -3,10 +3,7 @@ package com.a4server.gameserver.network.clientpackets;
 import com.a4server.gameserver.GameClient;
 import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Player;
-import com.a4server.gameserver.network.serverpackets.CharInfo;
-import com.a4server.gameserver.network.serverpackets.MapGrid;
-import com.a4server.gameserver.network.serverpackets.TimeUpdate;
-import com.a4server.gameserver.network.serverpackets.WorldInfo;
+import com.a4server.gameserver.network.serverpackets.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +12,7 @@ import org.slf4j.LoggerFactory;
  */
 public class EnterWorld extends GameClientPacket
 {
-    protected static final Logger _log = LoggerFactory.getLogger(EnterWorld.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(EnterWorld.class.getName());
 
     @Override
     public void readImpl()
@@ -38,6 +35,7 @@ public class EnterWorld extends GameClientPacket
             sendPacket(new WorldInfo());
             sendPacket(new TimeUpdate());
             sendPacket(new CharInfo(cha));
+            sendPacket(new InventoryUpdate(cha.getInventory()));
 
             // сначала гриды
             int px = client.getActiveChar().getPos()._x;

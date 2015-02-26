@@ -17,7 +17,7 @@ import static com.a4server.gameserver.model.Grid.*;
  */
 public class World
 {
-    protected static final Logger _log = LoggerFactory.getLogger(World.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(World.class.getName());
 
     private Grid[][][] _grids; // x, y, level
 

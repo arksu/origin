@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class MoveController
 {
-    protected static final Logger _log = LoggerFactory.getLogger(MoveController.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(MoveController.class.getName());
 
     /**
      * расстояние через которое будет обновлятся позиция в базе данных

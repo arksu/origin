@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Human extends MoveObject
 {
-    protected static final Logger _log = LoggerFactory.getLogger(Human.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(Human.class.getName());
 
     /**
      * объекты которые известны мне, инфа о которых отправляется и синхронизирована с клиентом

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Move
 {
-    protected static final Logger _log = LoggerFactory.getLogger(MoveType.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(MoveType.class.getName());
 
     public enum MoveType {
         // используется только когда объект спавнится в мир, или телепорт в другое место

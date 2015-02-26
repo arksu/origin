@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LoginPacketHandler
 {
-    protected static final Logger _log = LoggerFactory.getLogger(LoginPacketHandler.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(LoginPacketHandler.class.getName());
 
     static public LoginClientPacket HandlePacket(byte[] buf, LoginClient client)
     {

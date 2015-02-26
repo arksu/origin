@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MoveToPoint extends MoveController
 {
-    protected static final Logger _log = LoggerFactory.getLogger(MoveToPoint.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(MoveToPoint.class.getName());
 
     /**
      * куда движемся

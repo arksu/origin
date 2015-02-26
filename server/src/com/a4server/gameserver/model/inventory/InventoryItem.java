@@ -124,6 +124,6 @@ public class InventoryItem
     @Override
     public String toString()
     {
-        return "(" + _objectId + " q=" + _q + ")";
+        return "(" + _template.getName() + " id=" + _objectId + " q=" + _q + ")";
     }
 }

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TimeUpdate extends GameServerPacket
 {
-    protected static final Logger _log = LoggerFactory.getLogger(TimeUpdate.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(TimeUpdate.class.getName());
 
     @Override
     protected void write()

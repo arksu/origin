@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CharInfo extends GameServerPacket
 {
-    protected static final Logger _log = LoggerFactory.getLogger(CharInfo.class.getName());
+    private static final Logger _log = LoggerFactory.getLogger(CharInfo.class.getName());
 
     Player _player;
     
