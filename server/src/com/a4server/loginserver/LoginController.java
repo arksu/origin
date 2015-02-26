@@ -231,8 +231,8 @@ public class LoginController
         try (Connection con = Database.getInstance().getConnection();
              PreparedStatement ps = con.prepareStatement(ACCOUNT_ASSIGN_SESSIONKEY))
         {
-            ps.setInt(1, key.playOkID1);
-            ps.setInt(2, key.playOkID2);
+            ps.setInt(1, key.getId1());
+            ps.setInt(2, key.getId2());
             ps.setString(3, account);
             ps.execute();
         }

@@ -5,28 +5,38 @@ package com.a4server.loginserver;
  */
 public class SessionKey
 {
-    public int playOkID1;
-    public int playOkID2;
+    private final int _id1;
+    private final int _id2;
 
-    public SessionKey(int playOK1, int playOK2)
+    public SessionKey(int id1, int id2)
     {
-        playOkID1 = playOK1;
-        playOkID2 = playOK2;
+        _id1 = id1;
+        _id2 = id2;
+    }
+
+    public int getId1()
+    {
+        return _id1;
+    }
+
+    public int getId2()
+    {
+        return _id2;
     }
 
     @Override
-    public boolean equals(Object o)
+    public boolean equals(Object that)
     {
-        if (this == o)
+        if (this == that)
         {
             return true;
         }
-        if (!(o instanceof SessionKey))
+        if (!(that instanceof SessionKey))
         {
             return false;
         }
-        final SessionKey key = (SessionKey) o;
+        final SessionKey key = (SessionKey) that;
 
-        return ((playOkID1 == key.playOkID1) && (playOkID2 == key.playOkID2));
+        return ((_id1 == key._id1) && (_id2 == key._id2));
     }
 }

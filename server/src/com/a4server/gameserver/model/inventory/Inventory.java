@@ -27,6 +27,11 @@ public class Inventory
     private final GameObject _parent;
 
     /**
+     * ид инвентаря, объект или вещь к которой он относится
+     */
+    private final int _invenroyId;
+
+    /**
      * инвентарь родитель
      */
     private final Inventory _inventory;
@@ -40,12 +45,14 @@ public class Inventory
     {
         _parent = parent;
         _inventory = null;
+        _invenroyId = parent.getObjectId();
         load(_parent.getObjectId());
     }
 
     public Inventory(Inventory parent, int objectId)
     {
         _inventory = parent;
+        _invenroyId = objectId;
         _parent = null;
         load(objectId);
     }
@@ -87,5 +94,10 @@ public class Inventory
     public FastList<InventoryItem> getItems()
     {
         return _items;
+    }
+
+    public int getInvenroyId()
+    {
+        return _invenroyId;
     }
 }

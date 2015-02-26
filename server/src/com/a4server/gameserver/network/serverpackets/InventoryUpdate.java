@@ -30,6 +30,7 @@ public class InventoryUpdate extends GameServerPacket
     {
         writeC(0x18);
         writeD(_inventory.getParent().getObjectId());
+        writeD(_inventory.getInvenroyId());
         FastList<InventoryItem> items = _inventory.getItems();
         writeH(items.size());
         if (items.size() > 0) {

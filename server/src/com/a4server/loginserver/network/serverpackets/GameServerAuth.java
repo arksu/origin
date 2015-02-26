@@ -42,8 +42,8 @@ public class GameServerAuth extends LoginServerPacket
     {
         writeC(0x04);
 
-        writeD(_key.playOkID1);
-        writeD(_key.playOkID2);
+        writeD(_key.getId1());
+        writeD(_key.getId2());
 
         writeC(_ip[0]);
         writeC(_ip[1]);

@@ -95,6 +95,7 @@ public class Game extends BaseScreen
     {
         Player.getInstance().dispose();
         ObjectCache.getInstance().clear();
+        InventoryCache.getInstance().clear();
         MapCache.clear();
         _instance = null;
         super.dispose();
