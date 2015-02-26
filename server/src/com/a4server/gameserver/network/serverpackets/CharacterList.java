@@ -2,6 +2,8 @@ package com.a4server.gameserver.network.serverpackets;
 
 import com.a4server.Database;
 import com.a4server.gameserver.GameClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +17,8 @@ import java.util.Map;
  */
 public class CharacterList extends GameServerPacket
 {
+    private static final Logger _log = LoggerFactory.getLogger(CharacterList.class.getName());
+
     // SQL Queries
     private static final String CHARACTERS_SELECT = "SELECT charId, charName, accessLevel FROM characters WHERE del=0 AND account=?";
 

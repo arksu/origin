@@ -6,12 +6,16 @@ import com.a4server.gameserver.model.World;
 import com.a4server.gameserver.network.serverpackets.CharSelected;
 import com.a4server.gameserver.network.serverpackets.CharacterList;
 import com.a4server.gameserver.network.serverpackets.ServerClose;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by arksu on 04.01.2015.
  */
 public class CharacterSelect extends GameClientPacket
 {
+    private static final Logger _log = LoggerFactory.getLogger(CharacterSelect.class.getName());
+
     private int _charId;
 
     @Override

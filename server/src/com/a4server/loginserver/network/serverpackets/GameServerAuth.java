@@ -3,6 +3,8 @@ package com.a4server.loginserver.network.serverpackets;
 import com.a4server.Config;
 import com.a4server.loginserver.LoginClient;
 import com.a4server.loginserver.SessionKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -12,6 +14,8 @@ import java.net.UnknownHostException;
  */
 public class GameServerAuth extends LoginServerPacket
 {
+    private static final Logger _log = LoggerFactory.getLogger(GameServerAuth.class.getName());
+
     private SessionKey _key;
     private byte[] _ip;
 

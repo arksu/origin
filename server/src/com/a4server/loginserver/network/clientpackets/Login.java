@@ -5,6 +5,8 @@ import com.a4server.loginserver.LoginController;
 import com.a4server.loginserver.LoginController.AuthLoginResult;
 import com.a4server.loginserver.network.serverpackets.GameServerAuth;
 import com.a4server.loginserver.network.serverpackets.LoginFail.LoginFailReason;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
@@ -13,6 +15,8 @@ import java.sql.SQLException;
  */
 public class Login extends LoginClientPacket
 {
+    private static final Logger _log = LoggerFactory.getLogger(Login.class.getName());
+
     private String _login;
     private String _hash;
 

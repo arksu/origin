@@ -2,10 +2,11 @@ package com.a2client.network.login.clientpackets;
 
 import com.a2client.network.login.Crypt;
 import com.a2client.util.scrypt.SCryptUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Login extends LoginClientPacket
 {
-
     private String _login, _pass;
 
     public Login(String login, String pass)
