@@ -260,7 +260,6 @@ public class Player extends Human
             }
             GameTimeController.getInstance().RemoveMovingObject(this);
         }
-
     }
 
     public boolean isOnline()

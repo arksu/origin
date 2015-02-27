@@ -1,6 +1,7 @@
 package com.a2client.network.game.serverpackets;
 
 import com.a2client.InventoryCache;
+import com.a2client.Player;
 import com.a2client.model.Inventory;
 import com.a2client.model.InventoryItem;
 import com.a2client.network.game.GamePacketHandler;
@@ -66,5 +67,6 @@ public class InventoryUpdate extends GameServerPacket
         {
             _inventory.addItem(item);
         }
+        InventoryCache.getInstance().openInventory(_inventoryId);
     }
 }

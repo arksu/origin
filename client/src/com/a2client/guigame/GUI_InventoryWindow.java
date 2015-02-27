@@ -1,8 +1,9 @@
 package com.a2client.guigame;
 
+import com.a2client.InventoryCache;
 import com.a2client.gui.GUI_Control;
 import com.a2client.gui.GUI_Window;
-import com.a2client.model.GameObject;
+import com.a2client.model.Inventory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,20 +15,22 @@ public class GUI_InventoryWindow extends GUI_Window
 {
     private static final Logger _log = LoggerFactory.getLogger(GUI_InventoryWindow.class.getName());
 
-    /**
-     * объект родитель чей это инвентарь и все вложенные открытые
-     */
-    private GameObject _parentObject;
+    private int _inventoryId;
 
     /**
      * контрол инвентарь для отображения содержимого
      */
     private GUI_Inventory _inventory;
 
-    public GUI_InventoryWindow(GUI_Control parent, GameObject parentObject)
+    public GUI_InventoryWindow(GUI_Control parent, int inventoryId)
     {
         super(parent);
-        _parentObject = parentObject;
-        _inventory = new GUI_Inventory(this);
+        _inventoryId = inventoryId;
+        Inventory inv = InventoryCache.getInstance().get(inventoryId);
+        if (inv != null)
+        {
+            _inventory = new GUI_Inventory(this, inv);
+            _inventory.SetPos(5, 5);
+        }
     }
 }

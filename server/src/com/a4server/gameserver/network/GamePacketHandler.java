@@ -62,6 +62,12 @@ public class GamePacketHandler
                     case 0x16:
                         pkt = new ChatMessage();
                         break;
+                    case 0x19:
+                        pkt = new InventoryClick();
+                        break;
+                    case 0x1A:
+                        pkt = new HotkeyAction();
+                        break;
 
                     default:
                         debugOpcode(opcode, state);

@@ -3,7 +3,9 @@ package com.a2client.screens;
 import com.a2client.*;
 import com.a2client.gui.*;
 import com.a2client.model.GameObject;
+import com.a2client.network.Net;
 import com.a2client.network.game.clientpackets.ChatMessage;
+import com.a2client.network.game.clientpackets.HotkeyAction;
 import com.a2client.network.game.clientpackets.MouseClick;
 import com.a2client.render.GameCamera;
 import com.a2client.render.Render1;
@@ -129,6 +131,10 @@ public class Game extends BaseScreen
 
         if (_state == GameState.IN_GAME)
         {
+            if (com.a2client.Input.KeyHit(Input.Keys.TAB))
+            {
+                Net.getConnection().sendPacket(new HotkeyAction(HotkeyAction.HOTKEY_INVENTORY));
+            }
             _statusText = "mouse coord: " + Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE) + ", " +
                     Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE);
         }
@@ -136,8 +142,8 @@ public class Game extends BaseScreen
                 "FPS: " + Gdx.graphics.getFramesPerSecond() +
                         " " + _statusText +
                         " chunks: " + _render.getChunksRendered() +
-                        " selected: " + (_render.getSelected() != null ? "" + _render.getSelected() : "null")+
-                        " objects: "+_render.getRenderedObjects();
+                        " selected: " + (_render.getSelected() != null ? "" + _render.getSelected() : "null") +
+                        " objects: " + _render.getRenderedObjects();
 
 
         if (ObjectCache.getInstance() != null)

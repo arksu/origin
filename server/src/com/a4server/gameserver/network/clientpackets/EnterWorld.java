@@ -35,7 +35,6 @@ public class EnterWorld extends GameClientPacket
             sendPacket(new WorldInfo());
             sendPacket(new TimeUpdate());
             sendPacket(new CharInfo(cha));
-            sendPacket(new InventoryUpdate(cha.getInventory()));
 
             // сначала гриды
             int px = client.getActiveChar().getPos()._x;

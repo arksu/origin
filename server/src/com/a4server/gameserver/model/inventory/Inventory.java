@@ -46,7 +46,7 @@ public class Inventory
         _parent = parent;
         _inventory = null;
         _invenroyId = parent.getObjectId();
-        load(_parent.getObjectId());
+        load();
     }
 
     public Inventory(Inventory parent, int objectId)
@@ -54,22 +54,21 @@ public class Inventory
         _inventory = parent;
         _invenroyId = objectId;
         _parent = null;
-        load(objectId);
+        load();
     }
 
     /**
      * загрузить инвентарь из базы
-     * @param objectId ид объекта или вещи в котором хранится инвентарь
      */
-    private void load(int objectId)
+    private void load()
     {
-        _log.debug("load inventory: " + objectId);
+        _log.debug("load inventory: " + _invenroyId);
         try
         {
             try (Connection con = Database.getInstance().getConnection();
                  PreparedStatement ps = con.prepareStatement(LOAD_INVENTORY))
             {
-                ps.setInt(1, objectId);
+                ps.setInt(1, _invenroyId);
                 try (ResultSet rset = ps.executeQuery())
                 {
                     while (rset.next())
