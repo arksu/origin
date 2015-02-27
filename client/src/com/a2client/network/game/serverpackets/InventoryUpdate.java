@@ -1,7 +1,6 @@
 package com.a2client.network.game.serverpackets;
 
 import com.a2client.InventoryCache;
-import com.a2client.Player;
 import com.a2client.model.Inventory;
 import com.a2client.model.InventoryItem;
 import com.a2client.network.game.GamePacketHandler;
@@ -58,15 +57,21 @@ public class InventoryUpdate extends GameServerPacket
     public void run()
     {
         _inventory = InventoryCache.getInstance().get(_inventoryId);
+        // если такого инвентаря еще нет на клиенте - создадим
         if (_inventory == null)
         {
             _inventory = new Inventory(_parentObjectId, _inventoryId);
+            // и добавим в кэш
+            InventoryCache.getInstance().add(_inventory);
         }
+        // предварительно очистим
         _inventory.clear();
+        // и запишем заново все итемы которые пришли от сервера
         for (InventoryItem item : _items)
         {
             _inventory.addItem(item);
         }
+        // под конец откроем инвентарь если он еще не был открыт
         InventoryCache.getInstance().openInventory(_inventoryId);
     }
 }

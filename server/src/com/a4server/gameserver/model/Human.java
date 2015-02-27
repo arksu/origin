@@ -1,5 +1,6 @@
 package com.a4server.gameserver.model;
 
+import com.a4server.gameserver.model.ai.Mind;
 import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.ObjectPosition;
@@ -14,6 +15,11 @@ import org.slf4j.LoggerFactory;
 public abstract class Human extends MoveObject
 {
     private static final Logger _log = LoggerFactory.getLogger(Human.class.getName());
+
+    /**
+     * мозг объекта который определяет его поведение, реагирует на все события
+     */
+    protected Mind _mind = null;
 
     /**
      * объекты которые известны мне, инфа о которых отправляется и синхронизирована с клиентом
@@ -47,6 +53,11 @@ public abstract class Human extends MoveObject
     public Human(int objectId, ObjectTemplate template)
     {
         super(objectId, template);
+    }
+
+    public Mind getMind()
+    {
+        return _mind;
     }
 
     public boolean isDeleteing()
@@ -192,5 +203,15 @@ public abstract class Human extends MoveObject
                 return isKnownObject(event.getObject());
         }
         return false;
+    }
+
+    @Override
+    public void onArrived()
+    {
+        super.onArrived();
+        if (_mind != null)
+        {
+            _mind.onArrived();
+        }
     }
 }

@@ -27,32 +27,11 @@ import java.net.URL;
 public class Log
 {
 
-    private static final Logger _log = LoggerFactory.getLogger(Main.class);
-
-    public static void init()
-    {
-//        URL u = Main.class.getResource("/client-log4j.xml");
-//        if (u == null)
-//        {
-//            File f = new File("client-log4j.xml");
-//            try
-//            {
-//                u = f.toURI().toURL();
-//            }
-//            catch (MalformedURLException e)
-//            {
-//                e.printStackTrace();
-//            }
-//
-//        }
-//
-//        DOMConfigurator.configure(u);
-    }
+    private static final Logger _log = LoggerFactory.getLogger(Log.class);
 
     public static void info(String msg)
     {
         _log.info(msg);
-        //		org.newdawn.slick.util.Log.info(msg);
     }
 
 
@@ -61,7 +40,6 @@ public class Log
         if (!Config.debug)
             return;
         _log.debug(msg);
-        //		org.newdawn.slick.util.Log.info(msg);
     }
 
 

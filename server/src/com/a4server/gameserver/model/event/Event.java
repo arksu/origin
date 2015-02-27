@@ -5,7 +5,9 @@ import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 
 /**
  * базовое игровое событие
+ * рассылается объектами или гридом всем живым объектам внутри грида
  * к событию может быть прикреплен пакет. тогда он будет разослан всем клиентам которые обработали событие
+ * а также дополнительная информация _extraInfo описывающая событие
  * Created by arksu on 11.02.15.
  */
 public class Event
@@ -16,6 +18,7 @@ public class Event
 
     /**
      * объект который сгенерировал событие
+     * к которому оно относится
      */
     protected final GameObject _object;
 
@@ -39,6 +42,13 @@ public class Event
     {
         _object = object;
         _type = type;
+    }
+
+    public Event(GameObject object, int type, Object extraInfo)
+    {
+        _object = object;
+        _type = type;
+        _extraInfo = extraInfo;
     }
 
     public GameObject getObject()
@@ -65,10 +75,4 @@ public class Event
     {
         return _extraInfo;
     }
-
-    public void setExtraInfo(Object extraInfo)
-    {
-        _extraInfo = extraInfo;
-    }
-
 }

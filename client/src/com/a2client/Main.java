@@ -63,7 +63,6 @@ public class Main extends com.badlogic.gdx.Game
         LwjglApplicationConfiguration.disableAudio = true;
 
         Utils.RotateLog();
-        Log.init();
         _log.info("Build: " + buildVersion());
 
         // прочтем аргументы командной строки

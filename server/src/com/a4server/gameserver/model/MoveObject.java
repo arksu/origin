@@ -108,6 +108,7 @@ public abstract class MoveObject extends GameObject
 
     /**
      * прибыли в место назначения при передвижении
+     * вызывается из потока обработки передвижений 
      */
     public void onArrived()
     {

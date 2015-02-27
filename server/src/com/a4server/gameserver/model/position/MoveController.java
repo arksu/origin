@@ -111,12 +111,15 @@ public abstract class MoveController
         {
             // узнаем сколько времени прошло между апдейтами
             boolean result = MovingImpl((double) (currTime - _lastMoveTime) / 1000);
+            // если я еще управляю объектом
             if (_activeObject.getMoveController() == this)
             {
                 double dx = _currentX - _storedX;
                 double dy = _currentY - _storedY;
+                // если передвинулись достаточно далеко
                 if (Math.pow(UPDATE_DB_DISTANCE, 2) < (Math.pow(dx, 2) + Math.pow(dy, 2)))
                 {
+                    // обновим состояние базе
                     _activeObject.storeInDb();
                     _storedX = _currentX;
                     _storedY = _currentY;

@@ -4,8 +4,6 @@ import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import com.a4server.gameserver.network.serverpackets.ObjectMove;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * движение объекта к заданной точке на карте
@@ -13,8 +11,6 @@ import org.slf4j.LoggerFactory;
  */
 public class MoveToPoint extends MoveController
 {
-    private static final Logger _log = LoggerFactory.getLogger(MoveToPoint.class.getName());
-
     /**
      * куда движемся
      */
