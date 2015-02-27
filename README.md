@@ -3,6 +3,8 @@ Origin is survival MMO game
 
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/origin/localized.png)](https://crowdin.com/project/origin)
 
+[![Build Status](https://travis-ci.org/arksu/origin.svg?branch=master)](https://travis-ci.org/arksu/origin)
+
 redeploy project:
 
 - ```git clone https://github.com/arksu/origin.git```
