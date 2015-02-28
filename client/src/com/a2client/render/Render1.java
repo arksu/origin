@@ -30,96 +30,114 @@ import org.slf4j.LoggerFactory;
  */
 public class Render1
 {
-    private static final Logger _log = LoggerFactory.getLogger(Render1.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(Render1.class.getName());
 
-    private Game _game;
+	private Game _game;
 
-    //
-    private Model _model;
-    private ModelInstance _modelInstance;
-    private ModelBatch _modelBatch;
+	//
+	private Model _model;
+	private Model _model2;
+	private ModelInstance _modelInstance;
+	private ModelInstance _modelInstance2;
+	private ModelBatch _modelBatch;
 
-    //
-    Terrain _terrain;
+	//
+	Terrain _terrain;
 
-    //
-    private Environment _environment;
+	//
+	private Environment _environment;
 
-    private GameObject _selected;
+	private GameObject _selected;
 
-    private float _selectedDist;
-    private int _renderedObjects;
+	private float _selectedDist;
+	private int _renderedObjects;
 
 
-    public Render1(Game game)
-    {
-        ShaderProgram.pedantic = false;
-        _game = game;
+	public Render1(Game game)
+	{
+		ShaderProgram.pedantic = false;
+		_game = game;
 
-        _environment = new Environment();
-        _environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        _environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+		_environment = new Environment();
+		_environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+		_environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
-        _modelBatch = new ModelBatch();
-        ModelLoader loader = new ObjLoader();
-        _model = loader.loadModel(Gdx.files.internal("assets/ship.obj"));
-        _modelInstance = new ModelInstance(_model);
-        _terrain = new Terrain();
-    }
+		_modelBatch = new ModelBatch();
+		ModelLoader loader = new ObjLoader();
+		_model = loader.loadModel(Gdx.files.internal("assets/debug/ship.obj"));
+		_model2 = loader.loadModel(Gdx.files.internal("assets/debug/dog.obj"));
+		_modelInstance = new ModelInstance(_model);
+		_modelInstance2 = new ModelInstance(_model2);
+		_terrain = new Terrain();
+	}
 
-    public void render(Camera camera)
-    {
-        //
-        _terrain.Render(camera, _environment);
+	public void render(Camera camera)
+	{
+		//
+		_terrain.Render(camera, _environment);
 
-        //
-        _renderedObjects = 0;
-        if (ObjectCache.getInstance() != null)
-        {
-            _selected = null;
-            _selectedDist = 100500;
-            Ray ray = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
-            _modelBatch.begin(camera);
-            for (GameObject o : ObjectCache.getInstance().getObjects())
-            {
-                BoundingBox boundingBox = new BoundingBox(o.getBoundingBox());
-                Vector2 oc = new Vector2(o.getCoord()).scl(1f / MapCache.TILE_SIZE);
-                Vector3 add = new Vector3(oc.x, 0, oc.y);
-                boundingBox.min.add(add);
-                boundingBox.max.add(add);
-                if (camera.frustum.boundsInFrustum(boundingBox))
-                {
-                    _renderedObjects++;
-                    _modelInstance.transform.setToTranslation(oc.x, 0.5f, oc.y);
-                    _modelBatch.render(_modelInstance, _environment);
-                    Vector3 intersection = new Vector3();
-                    if (Intersector.intersectRayBounds(ray, boundingBox, intersection))
-                    {
-                        float dist = intersection.dst(camera.position);
-                        if (dist < _selectedDist)
-                        {
-                            _selected = o;
-                            _selectedDist = dist;
-                        }
-                    }
-                }
-            }
-            _modelBatch.end();
-        }
-    }
+		//
+		renderObjects(camera);
+	}
 
-    public int getChunksRendered()
-    {
-        return _terrain.getChunksRendered();
-    }
+	protected void renderObjects(Camera camera)
+	{
+		_renderedObjects = 0;
+		if (ObjectCache.getInstance() != null)
+		{
+			_selected = null;
+			_selectedDist = 100500;
+			Ray ray = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
+			_modelBatch.begin(camera);
+			for (GameObject o : ObjectCache.getInstance().getObjects())
+			{
+				BoundingBox boundingBox = new BoundingBox(o.getBoundingBox());
+				Vector2 oc = new Vector2(o.getCoord()).scl(1f / MapCache.TILE_SIZE);
+				Vector3 add = new Vector3(oc.x, 0, oc.y);
+				boundingBox.min.add(add);
+				boundingBox.max.add(add);
+				if (camera.frustum.boundsInFrustum(boundingBox))
+				{
+					_renderedObjects++;
 
-    public GameObject getSelected()
-    {
-        return _selected;
-    }
+					if (!o.isInteractive())
+					{
+						_modelInstance.transform.setToTranslation(oc.x, 0.5f, oc.y);
+						_modelBatch.render(_modelInstance, _environment);
+					}
+					else
+					{
+						_modelInstance2.transform.setToTranslation(oc.x, 0.5f, oc.y);
+						_modelBatch.render(_modelInstance2, _environment);
+					}
+					Vector3 intersection = new Vector3();
+					if (Intersector.intersectRayBounds(ray, boundingBox, intersection))
+					{
+						float dist = intersection.dst(camera.position);
+						if (dist < _selectedDist)
+						{
+							_selected = o;
+							_selectedDist = dist;
+						}
+					}
+				}
+			}
+			_modelBatch.end();
+		}
+	}
 
-    public int getRenderedObjects()
-    {
-        return _renderedObjects;
-    }
+	public int getChunksRendered()
+	{
+		return _terrain.getChunksRendered();
+	}
+
+	public GameObject getSelected()
+	{
+		return _selected;
+	}
+
+	public int getRenderedObjects()
+	{
+		return _renderedObjects;
+	}
 }

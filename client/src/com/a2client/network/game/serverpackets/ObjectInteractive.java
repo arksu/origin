@@ -1,5 +1,6 @@
 package com.a2client.network.game.serverpackets;
 
+import com.a2client.ObjectCache;
 import com.a2client.network.game.GamePacketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,5 +31,6 @@ public class ObjectInteractive extends GameServerPacket
 	public void run()
 	{
 		_log.debug("ObjectInteractive " + _objectId + " val=" + _value);
+		ObjectCache.getInstance().getObject(_objectId).setInteractive(_value);
 	}
 }

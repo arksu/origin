@@ -149,7 +149,12 @@ public class GameObject
 	 */
 	public GameServerPacket makeAddPacket()
 	{
-		return new ObjectAdd(this);
+		GameServerPacket pkt = new ObjectAdd(this);
+		if (isInteractive())
+		{
+			pkt.addNext(new ObjectInteractive(_objectId, true));
+		}
+		return pkt;
 	}
 
 	/**
@@ -176,6 +181,11 @@ public class GameObject
 			return ((GameObject) obj)._objectId == _objectId;
 		}
 		return super.equals(obj);
+	}
+
+	public boolean isInteractive()
+	{
+		return !_interactWith.isEmpty();
 	}
 
 	/**
