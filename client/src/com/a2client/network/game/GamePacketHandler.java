@@ -29,7 +29,8 @@ public class GamePacketHandler
             ObjectMove.class,
             ObjectPos.class,
             CreatureSay.class,
-            InventoryUpdate.class
+            InventoryUpdate.class,
+            ObjectInteractive.class
     };
 
     static public void InitPackets()

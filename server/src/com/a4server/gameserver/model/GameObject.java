@@ -1,14 +1,18 @@
 package com.a4server.gameserver.model;
 
+import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import com.a4server.gameserver.network.serverpackets.ObjectAdd;
+import com.a4server.gameserver.network.serverpackets.ObjectInteractive;
 import com.a4server.gameserver.network.serverpackets.ObjectRemove;
 import com.a4server.util.Rect;
 import javolution.util.FastSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,6 +22,8 @@ import java.sql.SQLException;
  */
 public class GameObject
 {
+	private static final Logger _log = LoggerFactory.getLogger(GameObject.class.getName());
+
 	/**
 	 * ид объекта, задается лишь единожды
 	 */
@@ -225,7 +231,10 @@ public class GameObject
 
 	protected void setInteractive(boolean value)
 	{
-//		getPos().getGrid().broadcastEvent(null);
+		_log.debug("setInteractive " + value);
+		Event evt = new Event(this, Event.INTERACT, value);
+		evt.setPacket(new ObjectInteractive(_objectId, value));
+		getPos().getGrid().broadcastEvent(evt);
 	}
 
 	/**

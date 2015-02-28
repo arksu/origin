@@ -12,67 +12,74 @@ import com.a4server.gameserver.network.serverpackets.GameServerPacket;
  */
 public class Event
 {
-    public static final int MOVE = 1;
-    public static final int STOP_MOVE = 2;
-    public static final int CHAT_GENERAL_MESSAGE = 3;
+	public static final int MOVE = 1;
+	public static final int STOP_MOVE = 2;
+	public static final int CHAT_GENERAL_MESSAGE = 3;
+	public static final int INTERACT = 4;
 
-    /**
-     * объект который сгенерировал событие
-     * к которому оно относится
-     */
-    protected final GameObject _object;
+	/**
+	 * объект который сгенерировал событие
+	 * к которому оно относится
+	 */
+	protected final GameObject _object;
 
-    /**
-     * тип сообщения
-     */
-    protected final int _type;
+	/**
+	 * тип сообщения
+	 */
+	protected final int _type;
 
-    /**
-     * дополнительная информация о событии
-     */
-    protected Object _extraInfo = null;
+	/**
+	 * дополнительная информация о событии
+	 */
+	protected Object _extraInfo = null;
 
-    /**
-     * пакет прикрепленный к событию. если другой объект обработал это событие
-     * то пакет будет отослан ему
-     */
-    protected GameServerPacket _packet = null;
+	/**
+	 * пакет прикрепленный к событию. если другой объект обработал это событие
+	 * то пакет будет отослан ему
+	 */
+	protected GameServerPacket _packet = null;
 
-    public Event(GameObject object, int type)
-    {
-        _object = object;
-        _type = type;
-    }
+	public Event(GameObject object, int type)
+	{
+		_object = object;
+		_type = type;
+	}
 
-    public Event(GameObject object, int type, Object extraInfo)
-    {
-        _object = object;
-        _type = type;
-        _extraInfo = extraInfo;
-    }
+	public Event(GameObject object, int type, Object extraInfo)
+	{
+		_object = object;
+		_type = type;
+		_extraInfo = extraInfo;
+	}
 
-    public GameObject getObject()
-    {
-        return _object;
-    }
+	public GameObject getObject()
+	{
+		return _object;
+	}
 
-    public int getType()
-    {
-        return _type;
-    }
+	public int getType()
+	{
+		return _type;
+	}
 
-    public GameServerPacket getPacket()
-    {
-        return _packet;
-    }
+	public GameServerPacket getPacket()
+	{
+		return _packet;
+	}
 
-    public void setPacket(GameServerPacket pkt)
-    {
-        _packet = pkt;
-    }
+	public void setPacket(GameServerPacket pkt)
+	{
+		_packet = pkt;
+	}
 
-    public Object getExtraInfo()
-    {
-        return _extraInfo;
-    }
+	public Object getExtraInfo()
+	{
+		return _extraInfo;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "(evet " + _object + " type=" + _type + " extra=" + _extraInfo + ")";
+	}
 }

@@ -44,15 +44,12 @@ public class MouseClick extends GameClientPacket
 				switch (_button)
 				{
 					case BUTTON_LEFT:
-						// если кликнули не в объект
-						if (_objectId == 0 || _objectId == player.getObjectId())
-						{
-							_log.debug("MoveToPoint to (" + _x + ", " + _y + ")");
-							// для простого передвижения не требуется мозг) не надо ни о чем думать
-							player.setMind(null);
-							// запустим движение. создадим контроллер для этого
-							player.StartMove(new MoveToPoint(_x, _y));
-						}
+						_log.debug("MoveToPoint to (" + _x + ", " + _y + ")");
+						// для простого передвижения не требуется мозг) не надо ни о чем думать
+						player.setMind(null);
+						// запустим движение. создадим контроллер для этого
+						player.StartMove(new MoveToPoint(_x, _y));
+
 						break;
 					case BUTTON_RIGHT:
 						if (_objectId != 0 && _objectId != player.getObjectId())

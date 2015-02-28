@@ -65,6 +65,7 @@ public abstract class MoveObject extends GameObject
      */
     public void StartMove(MoveController controller)
     {
+        unlinkFromAll();
         controller.setActiveObject(this);
         // сначала проверим возможно ли вообще движение?
         if (controller.canStartMoving())
