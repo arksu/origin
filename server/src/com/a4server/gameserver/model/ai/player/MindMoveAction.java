@@ -4,7 +4,7 @@ import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.event.Event;
-import com.a4server.gameserver.model.position.MoveToObject;
+import com.a4server.gameserver.model.position.MoveToPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,8 +34,9 @@ public class MindMoveAction extends PlayerMind
 			GameObject object = moveResult.getObject();
 			if (object != null && object.getObjectId() == _targetObjectId && !object.isDeleteing())
 			{
-				// надо провести взаимодействие с этим объектом
 				_log.debug("interact with object " + object.toString());
+				// надо провести взаимодействие с этим объектом
+				_player.beginInteract(object);
 			}
 		}
 	}
@@ -61,6 +62,10 @@ public class MindMoveAction extends PlayerMind
 	@Override
 	public void begin()
 	{
-		_player.StartMove(new MoveToObject(_targetObjectId));
+		GameObject object = _player.isKnownObject(_targetObjectId);
+		if (object.getPos().getDistance(_player.getPos()) < 2000)
+		{
+			_player.StartMove(new MoveToPoint(object.getPos()._x, object.getPos()._y));
+		}
 	}
 }

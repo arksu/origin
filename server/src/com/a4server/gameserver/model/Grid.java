@@ -178,6 +178,7 @@ public class Grid
 
         if (_objects.contains(object))
         {
+            object.unlinkFromAll();
             _objects.remove(object);
 
             // надо проинформировать всех о добавлении объекта

@@ -33,15 +33,26 @@ public class ObjectPosition
     /**
      * объект родитель чьи координаты описываем
      */
-    private GameObject _activeObject;
+    private final GameObject _activeObject;
 
-    public ObjectPosition(int x, int y, int level)
+    public ObjectPosition(int x, int y, int level, Grid grid)
+    {
+        _x = x;
+        _y = y;
+//        _z = 0;
+        _level = level;
+        _grid = grid;
+        _activeObject = null;
+    }
+
+    public ObjectPosition(int x, int y, int level, GameObject activeObject)
     {
         _x = x;
         _y = y;
 //        _z = 0;
         _level = level;
         _grid = null;
+        _activeObject = activeObject;
     }
 
     /**
@@ -109,11 +120,6 @@ public class ObjectPosition
         return false;
     }
 
-    public void setActiveObject(GameObject activeObject)
-    {
-        _activeObject = activeObject;
-    }
-
     public GameObject getActiveObject()
     {
         return _activeObject;
@@ -153,7 +159,7 @@ public class ObjectPosition
      * установить грид в котором находимся
      * @param value грид
      */
-    public void setGrid(Grid value)
+    protected void setGrid(Grid value)
     {
         if ((_grid != null) && (getActiveObject() != null))
         {
@@ -237,7 +243,7 @@ public class ObjectPosition
     @Override
     public ObjectPosition clone()
     {
-        return new ObjectPosition(_x, _y, _level);
+        return new ObjectPosition(_x, _y, _level, _grid);
     }
 
     public boolean equals(ObjectPosition p)

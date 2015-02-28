@@ -15,7 +15,7 @@ public class MouseClick extends GameClientPacket
 
 	private static final int BUTTON_LEFT = 0;
 	private static final int BUTTON_RIGHT = 1;
-	
+
 	private int _button;
 	private int _x;
 	private int _y;
@@ -45,7 +45,7 @@ public class MouseClick extends GameClientPacket
 				{
 					case BUTTON_LEFT:
 						// если кликнули не в объект
-						if (_objectId == 0)
+						if (_objectId == 0 || _objectId == player.getObjectId())
 						{
 							_log.debug("MoveToPoint to (" + _x + ", " + _y + ")");
 							// для простого передвижения не требуется мозг) не надо ни о чем думать
@@ -53,7 +53,9 @@ public class MouseClick extends GameClientPacket
 							// запустим движение. создадим контроллер для этого
 							player.StartMove(new MoveToPoint(_x, _y));
 						}
-						else
+						break;
+					case BUTTON_RIGHT:
+						if (_objectId != 0 && _objectId != player.getObjectId())
 						{
 							// клик по объекту. бежим к нему и делаем действие над ним
 							player.setMind(new MindMoveAction(player, _objectId));

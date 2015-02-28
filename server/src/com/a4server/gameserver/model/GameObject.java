@@ -8,6 +8,7 @@ import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import com.a4server.gameserver.network.serverpackets.ObjectAdd;
 import com.a4server.gameserver.network.serverpackets.ObjectRemove;
 import com.a4server.util.Rect;
+import javolution.util.FastSet;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,9 +36,12 @@ public class GameObject
 	/**
 	 * шаблон объекта по которому он создан
 	 */
-	private ObjectTemplate _template;
+	protected ObjectTemplate _template;
 
-	private Inventory _inventory;
+	/**
+	 * инвентарь объекта
+	 */
+	protected Inventory _inventory;
 
 	/**
 	 * имя которое отображается над объектом
@@ -48,6 +52,12 @@ public class GameObject
 	 * подпись над объектом
 	 */
 	protected String _title = "";
+
+	/**
+	 * с кем взаимодействует объект. список двусторонний.
+	 * если у меня тут есть ктото, то и у оного в списке есть я
+	 */
+	protected FastSet<GameObject> _interactWith = new FastSet<GameObject>().shared();
 
 	/**
 	 * объект в процессе удаления и ни на какие события больше не должен реагировать
@@ -75,7 +85,7 @@ public class GameObject
 	public GameObject(Grid grid, ResultSet rset) throws SQLException
 	{
 		_objectId = rset.getInt("id");
-		_pos = new ObjectPosition(rset.getInt("x"), rset.getInt("y"), grid.getLevel());
+		_pos = new ObjectPosition(rset.getInt("x"), rset.getInt("y"), grid.getLevel(), grid);
 		int typeId = rset.getInt("type");
 		_template = ObjectsFactory.getInstance().getTemplate(typeId);
 		_boundRect = new Rect(-_template.getWidth() / 2, -_template.getHeight() / 2, _template.getWidth() / 2,
@@ -160,5 +170,73 @@ public class GameObject
 			return ((GameObject) obj)._objectId == _objectId;
 		}
 		return super.equals(obj);
+	}
+
+	/**
+	 * начать взаимодействие с другим объектом
+	 * @param other другой объект c которым мы будем взаимодействовать
+	 */
+	public void beginInteract(GameObject other)
+	{
+		if (_interactWith.add(other))
+		{
+			other.interact(this);
+		}
+	}
+
+	/**
+	 * взаимодействие с другим объектом
+	 * @param other другой объект который взаимодействует со мной
+	 */
+	protected void interact(GameObject other)
+	{
+		if (other == null)
+		{
+			return;
+		}
+		boolean wasEmpty = _interactWith.isEmpty();
+		if (_interactWith.add(other))
+		{
+			if (_inventory != null)
+			{
+
+			}
+			if (wasEmpty)
+			{
+				// изменилось состояние
+				setInteractive(true);
+			}
+		}
+	}
+
+	/**
+	 * другой объект хочет разорвать связь со мной
+	 * @param other другой объект
+	 */
+	public void unlink(GameObject other)
+	{
+		_interactWith.remove(other);
+		if (_interactWith.isEmpty())
+		{
+			// список пуст. изменим состояние
+			setInteractive(false);
+		}
+	}
+
+	protected void setInteractive(boolean value)
+	{
+//		getPos().getGrid().broadcastEvent(null);
+	}
+
+	/**
+	 * разорвать связи со всеми объектами из списка
+	 */
+	public void unlinkFromAll()
+	{
+		for (GameObject o : _interactWith)
+		{
+			o.unlink(this);
+		}
+		_interactWith.clear();
 	}
 }

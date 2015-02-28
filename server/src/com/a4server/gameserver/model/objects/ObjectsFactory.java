@@ -74,7 +74,7 @@ public class ObjectsFactory
 
     protected ObjectTemplate readObjectTemplate(String name, JsonReader in) throws IOException
     {
-        SimpleObject template = new SimpleObject(name);
+        SimpleObjectTemplate template = new SimpleObjectTemplate(name);
         in.beginObject();
         template.read(in);
         in.endObject();

@@ -26,7 +26,7 @@ public abstract class Human extends MoveObject
 	 * любое добалвение в этот список, а равно как и удаление из него должно быть
 	 * синхронизировано с клиентом
 	 */
-	protected FastList<GameObject> _knownKist = new FastList<>();
+	protected FastList<GameObject> _knownKist = new FastList<GameObject>().shared();
 
 	/**
 	 * дистанция на которой мы видим объекты
@@ -131,9 +131,21 @@ public abstract class Human extends MoveObject
 	 * @param object объект
 	 * @return истина если знаю
 	 */
-	protected boolean isKnownObject(GameObject object)
+	public boolean isKnownObject(GameObject object)
 	{
 		return _knownKist.contains(object);
+	}
+
+	public GameObject isKnownObject(int objectId)
+	{
+		for (GameObject object : _knownKist)
+		{
+			if (object.getObjectId() == objectId)
+			{
+				return object;
+			}
+		}
+		return null;
 	}
 
 	/**
