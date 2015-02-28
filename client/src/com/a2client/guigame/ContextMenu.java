@@ -19,5 +19,5 @@ package com.a2client.guigame;
 
 public interface ContextMenu
 {
-    public void OnContextClick(int idx);
+	public void OnContextClick(int idx);
 }

@@ -13,24 +13,24 @@ import org.slf4j.LoggerFactory;
  */
 public class GUI_InventoryWindow extends GUI_Window
 {
-    private static final Logger _log = LoggerFactory.getLogger(GUI_InventoryWindow.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(GUI_InventoryWindow.class.getName());
 
-    private int _inventoryId;
+	private int _inventoryId;
 
-    /**
-     * контрол инвентарь для отображения содержимого
-     */
-    private GUI_Inventory _inventory;
+	/**
+	 * контрол инвентарь для отображения содержимого
+	 */
+	private GUI_Inventory _inventory;
 
-    public GUI_InventoryWindow(GUI_Control parent, int inventoryId)
-    {
-        super(parent);
-        _inventoryId = inventoryId;
-        Inventory inv = InventoryCache.getInstance().get(inventoryId);
-        if (inv != null)
-        {
-            _inventory = new GUI_Inventory(this, inv);
-            _inventory.SetPos(5, 5);
-        }
-    }
+	public GUI_InventoryWindow(GUI_Control parent, int inventoryId)
+	{
+		super(parent);
+		_inventoryId = inventoryId;
+		Inventory inv = InventoryCache.getInstance().get(inventoryId);
+		if (inv != null)
+		{
+			_inventory = new GUI_Inventory(this, inv);
+			_inventory.SetPos(5, 5);
+		}
+	}
 }

@@ -37,8 +37,10 @@ public class Render1
 	//
 	private Model _model;
 	private Model _model2;
+	private Model _model3;
 	private ModelInstance _modelInstance;
 	private ModelInstance _modelInstance2;
+	private ModelInstance _modelInstance3;
 	private ModelBatch _modelBatch;
 
 	//
@@ -64,10 +66,12 @@ public class Render1
 
 		_modelBatch = new ModelBatch();
 		ModelLoader loader = new ObjLoader();
-		_model = loader.loadModel(Gdx.files.internal("assets/debug/ship.obj"));
-		_model2 = loader.loadModel(Gdx.files.internal("assets/debug/dog.obj"));
+		_model = loader.loadModel(Gdx.files.internal("assets/debug/invader.obj"));
+		_model2 = loader.loadModel(Gdx.files.internal("assets/debug/block.obj"));
+		_model3 = loader.loadModel(Gdx.files.internal("assets/debug/ship.obj"));
 		_modelInstance = new ModelInstance(_model);
 		_modelInstance2 = new ModelInstance(_model2);
+		_modelInstance3 = new ModelInstance(_model3);
 		_terrain = new Terrain();
 	}
 
@@ -102,8 +106,16 @@ public class Render1
 
 					if (!o.isInteractive())
 					{
-						_modelInstance.transform.setToTranslation(oc.x, 0.5f, oc.y);
-						_modelBatch.render(_modelInstance, _environment);
+						if (o.getTypeId() == 1)
+						{
+							_modelInstance3.transform.setToTranslation(oc.x, 0.5f, oc.y);
+							_modelBatch.render(_modelInstance3, _environment);
+						}
+						else
+						{
+							_modelInstance.transform.setToTranslation(oc.x, 0.5f, oc.y);
+							_modelBatch.render(_modelInstance, _environment);
+						}
 					}
 					else
 					{

@@ -11,13 +11,13 @@ import org.slf4j.LoggerFactory;
  */
 public class GUI_Inventory extends GUI_Control
 {
-    private static final Logger _log = LoggerFactory.getLogger(GUI_Inventory.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(GUI_Inventory.class.getName());
 
-    private Inventory _inventory;
+	private Inventory _inventory;
 
-    public GUI_Inventory(GUI_Control parent, Inventory inventory)
-    {
-        super(parent);
-        _inventory = inventory;
-    }
+	public GUI_Inventory(GUI_Control parent, Inventory inventory)
+	{
+		super(parent);
+		_inventory = inventory;
+	}
 }
