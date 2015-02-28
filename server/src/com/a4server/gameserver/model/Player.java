@@ -376,20 +376,6 @@ public class Player extends Human
         return 15f;
     }
 
-    /**
-     * двигаться к заданной точке на карте
-     * @param x точка на карте
-     * @param y точка на карте
-     */
-    public void MoveToPoint(int x, int y)
-    {
-        _log.debug("MoveToPoint to (" + x + ", " + y + ")");
-        // запустим движение. создадим контроллер для этого
-        StartMove(new MoveToPoint(x, y));
-
-        //randomGrid();
-    }
-
     public void randomGrid()
     {
         int ido = 100;

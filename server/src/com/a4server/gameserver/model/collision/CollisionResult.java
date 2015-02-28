@@ -10,103 +10,113 @@ import org.slf4j.LoggerFactory;
  */
 public class CollisionResult
 {
-    private static final Logger _log = LoggerFactory.getLogger(CollisionResult.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(CollisionResult.class.getName());
 
-    public static final CollisionResult FAIL = new CollisionResult(CollisionType.COLLISION_FAIL);
-    public static final CollisionResult NONE = new CollisionResult(CollisionType.COLLISION_NONE);
+	public static final CollisionResult FAIL = new CollisionResult(CollisionType.COLLISION_FAIL);
+	public static final CollisionResult NONE = new CollisionResult(CollisionType.COLLISION_NONE);
 
-    public enum CollisionType
-    {
-        // обсчет коллизии не успешен
-        COLLISION_FAIL,
+	public enum CollisionType
+	{
+		// обсчет коллизии не успешен
+		COLLISION_FAIL,
 
-        // нет коллизий
-        COLLISION_NONE,
+		// нет коллизий
+		COLLISION_NONE,
 
-        // коллизия с тайлом
-        COLLISION_TILE,
+		// коллизия с тайлом
+		COLLISION_TILE,
 
-        // виртуальная коллизия
-        COLLISION_VIRTUAL,
+		// виртуальная коллизия
+		COLLISION_VIRTUAL,
 
-        // коллизия с объектом
-        COLLISION_OBJECT,
+		// коллизия с объектом
+		COLLISION_OBJECT,
 
-        // с концом мира
-        COLLISION_WORLD
-    }
+		// с концом мира
+		COLLISION_WORLD
+	}
 
-    private CollisionType _resultType;
-    private Tile _tile = null;
-    private GameObject _object = null;
-    private VirtualObject _virtualObject = null;
-    private int _x = -1;
-    private int _y = -1;
+	private CollisionType _resultType;
+	private Tile _tile = null;
+	private GameObject _object = null;
+	private VirtualObject _virtualObject = null;
+	private int _x = -1;
+	private int _y = -1;
 
-    public CollisionResult(CollisionType resultType)
-    {
-        _resultType = resultType;
-    }
+	public CollisionResult(CollisionType resultType)
+	{
+		_resultType = resultType;
+	}
 
-    public CollisionResult(CollisionType resultType, int x, int y)
-    {
-        _resultType = resultType;
-        _x = x;
-        _y = y;
-    }
+	public CollisionResult(CollisionType resultType, int x, int y)
+	{
+		_resultType = resultType;
+		_x = x;
+		_y = y;
+	}
 
-    public CollisionResult(GameObject obj, int x, int y)
-    {
-        _resultType = CollisionType.COLLISION_OBJECT;
-        _object = obj;
-        _x = x;
-        _y = y;
-    }
+	public CollisionResult(GameObject obj, int x, int y)
+	{
+		_resultType = CollisionType.COLLISION_OBJECT;
+		_object = obj;
+		_x = x;
+		_y = y;
+	}
 
-    public CollisionResult(Tile tile, int x, int y)
-    {
-        _resultType = CollisionType.COLLISION_TILE;
-        _tile = tile;
-        _x = x;
-        _y = y;
-    }
+	public CollisionResult(Tile tile, int x, int y)
+	{
+		_resultType = CollisionType.COLLISION_TILE;
+		_tile = tile;
+		_x = x;
+		_y = y;
+	}
 
-    public CollisionResult(VirtualObject virtualObject)
-    {
-        _virtualObject = virtualObject;
-    }
+	public CollisionResult(VirtualObject virtualObject)
+	{
+		_virtualObject = virtualObject;
+	}
 
-    public CollisionType getResultType()
-    {
-        return _resultType;
-    }
+	public CollisionType getResultType()
+	{
+		return _resultType;
+	}
 
-    public int getX()
-    {
-        return _x;
-    }
+	public int getX()
+	{
+		return _x;
+	}
 
-    public int getY()
-    {
-        return _y;
-    }
+	public int getY()
+	{
+		return _y;
+	}
 
-    @Override
-    public String toString()
-    {
-        String result = _resultType.name();
-        switch (_resultType)
-        {
-            case COLLISION_OBJECT:
-                result += ": " + _object.toString();
-                break;
-            case COLLISION_TILE:
-                result += ": " + _tile.toString();
-                break;
-            case COLLISION_VIRTUAL:
-                result += ": " + _virtualObject.toString();
-                break;
-        }
-        return result;
-    }
+	public GameObject getObject()
+	{
+		return _object;
+	}
+
+	public VirtualObject getVirtualObject()
+	{
+		return _virtualObject;
+	}
+
+	@Override
+	public String toString()
+	{
+		String result = _resultType.name();
+		switch (_resultType)
+		{
+			case COLLISION_OBJECT:
+				result += ": " + _object.toString();
+				break;
+			case COLLISION_TILE:
+				result += ": " + _tile.toString();
+				break;
+			case COLLISION_VIRTUAL:
+				result += ": " + _virtualObject.toString();
+				break;
+		}
+		return result;
+	}
 }

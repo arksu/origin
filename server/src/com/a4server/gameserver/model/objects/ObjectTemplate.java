@@ -6,27 +6,27 @@ package com.a4server.gameserver.model.objects;
  */
 public interface ObjectTemplate
 {
-    /**
-     * уникальный идентификатор типа объекта
-     */
-    public int getTypeId();
+	/**
+	 * уникальный идентификатор типа объекта
+	 */
+	int getTypeId();
 
-    /**
-     * ширина объекта
-     */
-    public int getWidth();
+	/**
+	 * ширина объекта
+	 */
+	int getWidth();
 
-    /**
-     * высота объекта
-     */
-    public int getHeight();
+	/**
+	 * высота объекта
+	 */
+	int getHeight();
 
-    /**
-     * имя шаблона
-     */
-    public String getName();
+	/**
+	 * имя шаблона
+	 */
+	String getName();
 
-    public CollisionTemplate getCollision();
+	CollisionTemplate getCollision();
 
-    public InventoryTemplate getInventory();
+	InventoryTemplate getInventory();
 }

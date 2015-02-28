@@ -1,5 +1,6 @@
 package com.a4server.gameserver.model.ai;
 
+import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.event.Event;
 
 /**
@@ -10,9 +11,29 @@ import com.a4server.gameserver.model.event.Event;
  */
 public interface Mind
 {
-    void onArrived();
+    /**
+     * объект закончил движение
+     */
+    void onArrived(CollisionResult moveResult);
 
+    /**
+     * обработать игровой тик. периодически что-то делать
+     */
     void onTick();
-    
+
+    /**
+     * обработать событие, внешний раздражитель
+     * @param event событие
+     */
     void handleEvent(Event event);
+
+    /**
+     * отключить этот мозг, надо сделать все чтобы корректно перевести объект в нейтральное состояние 
+     */
+    void free();
+
+    /**
+     * мозг подключен к объекту. начало работы
+     */
+    void begin();
 }

@@ -10,12 +10,17 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class PlayerMind implements Mind
 {
-    private static final Logger _log = LoggerFactory.getLogger(PlayerMind.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(PlayerMind.class.getName());
 
-    protected Player _player;
+	protected Player _player;
 
-    public PlayerMind(Player player)
-    {
-        _player = player;
-    }
+	public PlayerMind(Player player)
+	{
+		_player = player;
+	}
+
+	protected void end()
+	{
+		_player.setMind(null);
+	}
 }
