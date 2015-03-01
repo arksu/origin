@@ -194,9 +194,15 @@ public class GameObject
 	 */
 	public void beginInteract(GameObject other)
 	{
+		boolean wasEmpty = _interactWith.isEmpty();
 		if (_interactWith.add(other))
 		{
 			other.interact(this);
+			if (wasEmpty)
+			{
+				// изменилось состояние
+				setInteractive(true);
+			}
 		}
 	}
 
@@ -213,10 +219,7 @@ public class GameObject
 		boolean wasEmpty = _interactWith.isEmpty();
 		if (_interactWith.add(other))
 		{
-			if (_inventory != null)
-			{
-
-			}
+			interactImpl(other);
 			if (wasEmpty)
 			{
 				// изменилось состояние
@@ -225,6 +228,19 @@ public class GameObject
 		}
 	}
 
+	/**
+	 * реакция на взаимодействие с другим объектом
+	 * что я должен сделать если другой (игрок) начал взаимодействие со мной
+	 * @param other другой объект который взаимодействует со мной
+	 */
+	protected void interactImpl(GameObject other)
+	{
+		if (_inventory != null)
+		{
+			// открыть инвентарь объекта
+
+		}
+	}
 	/**
 	 * другой объект хочет разорвать связь со мной
 	 * @param other другой объект

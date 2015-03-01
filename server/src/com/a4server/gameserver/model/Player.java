@@ -446,4 +446,11 @@ public class Player extends Human
 		}
 		return super.HandleEvent(event);
 	}
+
+	@Override
+	protected void setInteractive(boolean value)
+	{
+		// у игрока тут ничего не делаем
+		// хотя может потом будем показывать ему вытянутые руки. мол тянет их к объекту который открыл
+	}
 }

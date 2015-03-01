@@ -39,7 +39,7 @@ task afterBuild(dependsOn: build) {
     distDir.mkdirs()
 }
 
-task makeDist(type: Sync, ) {
+task makeDist(type: Copy) {
     dependsOn afterBuild
 
     from 'lib/'
