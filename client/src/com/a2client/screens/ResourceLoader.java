@@ -23,7 +23,6 @@ import static com.a2client.Config.RESOURCE_DIR;
 
 public class ResourceLoader implements Screen
 {
-	Texture tex;
 	static private BitmapFont _system_font;
 	private State _state;
 	private int _state_timer;
@@ -41,13 +40,6 @@ public class ResourceLoader implements Screen
 		LoadAll();
 		_state = State.FADEIN;
 		_state_timer = 0;
-
-		// debug
-		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.WHITE);
-		pixmap.fill();
-
-		tex = new Texture(pixmap);
 	}
 
 	protected Class<?> getResourceType(String s)
@@ -110,8 +102,6 @@ public class ResourceLoader implements Screen
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		GUIGDX.getSpriteBatch().begin();
-		//        spr.setColor(Color.RED);
-		//        spr.draw(tex, 100, 100, 10, 10);
 
 		float progress = Main.getAssetManager().getProgress();
 		int percent = (int) (progress * 100f);
@@ -121,9 +111,6 @@ public class ResourceLoader implements Screen
 					new Color(t * 2.5f, t * 2.5f, t * 2.5f, 1f));
 		//        }
 		GUIGDX.getSpriteBatch().end();
-
-		//draw progress
-
 	}
 
 	protected void LoadAll()
@@ -145,12 +132,11 @@ public class ResourceLoader implements Screen
 
 				Main.getAssetManager().load(RESOURCE_DIR + s, getResourceType(s));
 			}
-
-
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			System.exit(-1);
 		}
 	}
 

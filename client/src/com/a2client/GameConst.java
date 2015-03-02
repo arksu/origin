@@ -22,7 +22,4 @@ public final class GameConst
 {
     public static final String svn_revision = "__REVISION_NUMBER__";
     public static final String build_date = "__BUILD_DATE__";
-
-    public static final int TILE_TEXTURE_SIZE_W = 32;
-    public static final int TILE_TEXTURE_SIZE_H = 32;
 }

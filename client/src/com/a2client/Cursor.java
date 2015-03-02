@@ -34,17 +34,9 @@ public class Cursor
     // handle network
     public void setCursor(String name)
     {
-        if (name.equals(""))
+//        if (name.equals(""))
             name = "arrow";
         // TODO : установить курсор
-        //        ResCursor c = ResourceManager.getInstance().(name);
-        //        if (c != null)
-        //        {
-        //            ByteArrayInputStream in = new ByteArrayInputStream(c.png_data);
-        //            CursorLoader.SetCursor(in, c.offx, c.offy);
-        //        }
-
-
         Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor1.png"));
         Gdx.input.setCursorImage(pm, 0, 0);
 
