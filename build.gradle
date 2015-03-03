@@ -14,10 +14,10 @@ subprojects {
     sourceSets {
         main {
             java {
-                srcDir 'src'
+                srcDirs = ['src']
             }
             resources {
-                srcDir 'res'
+                srcDirs = ['res']
             }
         }
     }
