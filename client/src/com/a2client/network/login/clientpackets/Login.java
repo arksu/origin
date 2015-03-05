@@ -2,17 +2,15 @@ package com.a2client.network.login.clientpackets;
 
 import com.a2client.network.login.Crypt;
 import com.a2client.util.scrypt.SCryptUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Login extends LoginClientPacket
 {
-    private String _login, _pass;
+    private String _login, _password;
 
-    public Login(String login, String pass)
+    public Login(String login, String password)
     {
         _login = login;
-        _pass = pass;
+        _password = password;
     }
 
     @Override
@@ -22,6 +20,6 @@ public class Login extends LoginClientPacket
         writeC(0x02);
 
         writeS(_login);
-        writeS(SCryptUtil.scrypt(_pass, Crypt.SCRYPT_N, Crypt.SCRYPT_R, Crypt.SCRYPT_P));
+        writeS(Crypt.isPassowrdHash(_password) ? _password : SCryptUtil.scrypt(_password, Crypt.SCRYPT_N, Crypt.SCRYPT_R, Crypt.SCRYPT_P));
     }
 }

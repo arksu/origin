@@ -6,7 +6,9 @@ import com.a2client.Lang;
 import com.a2client.Main;
 import com.a2client.gui.*;
 import com.a2client.network.Net;
+import com.a2client.network.login.Crypt;
 import com.a2client.network.netty.NettyConnection;
+import com.a2client.util.scrypt.SCryptUtil;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Texture;
@@ -74,7 +76,7 @@ public class Login extends BaseScreen
 		edit_password.CenterX();
 		edit_password.secret_symbol = "*";
 		edit_password.allow_copy = false;
-		edit_password.text = "123"; //Config.password;
+		edit_password.text = Config.password;
 
 
 		btn_login = new GUI_Button(GUI.rootNormal())
@@ -140,9 +142,8 @@ public class Login extends BaseScreen
 
 		_account = edit_login.text;
 		_password = edit_password.text;
-		Config.account = edit_login.text;
-		Config.password = edit_password.text;
-		Config.SaveOptions();
+		Config.account = _account;
+		Config.password = _password;
 		_status = "login";
 
 		btn_login.enabled = false;
