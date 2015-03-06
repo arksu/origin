@@ -201,6 +201,7 @@ public class GameObject
 			if (wasEmpty)
 			{
 				// изменилось состояние
+				// создадим для этого событие чтобы уведомить остальных
 				setInteractive(true);
 			}
 		}
@@ -223,6 +224,7 @@ public class GameObject
 			if (wasEmpty)
 			{
 				// изменилось состояние
+				// создадим для этого событие чтобы уведомить остальных
 				setInteractive(true);
 			}
 		}
@@ -235,12 +237,14 @@ public class GameObject
 	 */
 	protected void interactImpl(GameObject other)
 	{
+		// если у нас есть инвентарь
 		if (_inventory != null)
 		{
 			// открыть инвентарь объекта
-
+			
 		}
 	}
+
 	/**
 	 * другой объект хочет разорвать связь со мной
 	 * @param other другой объект
@@ -255,6 +259,11 @@ public class GameObject
 		}
 	}
 
+	/**
+	 * установить режим интерактивности с другим объектом
+	 * например ящык - показать с открытой крышкой
+	 * @param value
+	 */
 	protected void setInteractive(boolean value)
 	{
 		_log.debug("setInteractive " + value);
