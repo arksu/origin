@@ -51,10 +51,12 @@ public class Lang
         try
         {
             Properties p = new Properties();
-            p.load(Main.class.getResourceAsStream("/translate/login.en_US.properties"));
+			p.load(Main.class.getResourceAsStream("/translate/ru/login.ru_RU.properties"));
+//            p.load(Main.class.getResourceAsStream("/translate/login.en_US.properties"));
             _props.add(p);
             p = new Properties();
-            p.load(Main.class.getResourceAsStream("/translate/game.en_US.properties"));
+            p.load(Main.class.getResourceAsStream("/translate/ru/game.ru_RU.properties"));
+//			p.load(Main.class.getResourceAsStream("/translate/game.en_US.properties"));
             _props.add(p);
         }
         catch (IOException e)

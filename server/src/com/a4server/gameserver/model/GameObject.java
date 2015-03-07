@@ -241,7 +241,7 @@ public class GameObject
 		if (_inventory != null)
 		{
 			// открыть инвентарь объекта
-			
+
 		}
 	}
 
@@ -262,7 +262,7 @@ public class GameObject
 	/**
 	 * установить режим интерактивности с другим объектом
 	 * например ящык - показать с открытой крышкой
-	 * @param value
+	 * @param value в режиме взаимодействия?
 	 */
 	protected void setInteractive(boolean value)
 	{
