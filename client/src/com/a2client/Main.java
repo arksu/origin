@@ -51,7 +51,6 @@ public class Main extends com.badlogic.gdx.Game
 
 		_log.debug("gl ver: " + Gdx.gl.glGetString(GL20.GL_VENDOR));
 		_log.debug("gl ver: " + Gdx.gl.glGetString(GL20.GL_VERSION));
-//		_log.debug("gl ver: " + Gdx.gl.glGetString(GL20.GL_EXTENSIONS));
 
 		// экран загрузки ресурсов
 		this.setScreen(new ResourceLoader());
@@ -105,7 +104,7 @@ public class Main extends com.badlogic.gdx.Game
 
 	public static String buildVersion()
 	{
-		return "ver 0." + Config.CLIENT_VERSION + "   revision: " + GameConst.svn_revision + "   date: " + GameConst.build_date;
+		return "ver 0." + Config.CLIENT_VERSION;
 	}
 
 	@Override
