@@ -37,25 +37,15 @@ public class Input implements InputProcessor
     public static final int MB_MIDDLE = 2;
     public static final int MB_DOUBLE = 3;
 
-    public static String debug_str = "";
-
     public void Update()
     {
         boolean old;
-        //        Keyboard.poll();
         for (int i = 0; i < 256; i++)
         {
             old = Keys[i];
-            //            Keys[i] = Keyboard.isKeyDown(i);
             Keys[i] = Gdx.input.isKeyPressed(i);
             HitKeys[i] = (!old && Keys[i]);
         }
-
-        //        MouseX = Mouse.getX();
-        //        MouseY = Display.getHeight() - Mouse.getY();
-//        MouseX = Gdx.input.getX();
-//        MouseY = Gdx.input.getY();
-
 
         for (int i = 0; i < 3; i++)
         {
