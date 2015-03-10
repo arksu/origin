@@ -21,48 +21,54 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Set;
 
 public class Lang
 {
-    private static final Logger _log = LoggerFactory.getLogger(Lang.class.getName());
-    static private Set<Properties> _props = new HashSet<>();
+	private static final Logger _log = LoggerFactory.getLogger(Lang.class.getName());
+	static private Set<Properties> _props = new HashSet<>();
+	static private String _locale = "ru_RU";
 
-    static public String getTranslate(String key)
-    {
-        String msg = "";
-        for (Properties p : _props)
-        {
-            msg = p.getProperty(key);
-            if (msg != null && !msg.isEmpty())
-            {
-                return msg;
-            }
-        }
-        if (msg == null || msg.isEmpty())
-        {
-            msg = key;
-        }
-        return msg;
-    }
+	static public void setLocale(String locale)
+	{
+		_locale = locale;
+	}
 
-    static public void LoadTranslate()
-    {
-        try
-        {
-            Properties p = new Properties();
-			p.load(Main.class.getResourceAsStream("/translate/ru/login.ru_RU.properties"));
-//            p.load(Main.class.getResourceAsStream("/translate/login.en_US.properties"));
-            _props.add(p);
-            p = new Properties();
-            p.load(Main.class.getResourceAsStream("/translate/ru/game.ru_RU.properties"));
-//			p.load(Main.class.getResourceAsStream("/translate/game.en_US.properties"));
-            _props.add(p);
-        }
-        catch (IOException e)
-        {
-            _log.warn("LoadTranslate error "+e.getMessage());
-            e.printStackTrace();
-        }
-    }
+	static public String getTranslate(String key)
+	{
+		String msg = "";
+		for (Properties p : _props)
+		{
+			msg = p.getProperty(key);
+			if (msg != null && !msg.isEmpty())
+			{
+				return msg;
+			}
+		}
+		if (msg == null || msg.isEmpty())
+		{
+			msg = key;
+		}
+		return msg;
+	}
+
+	static public void LoadTranslate()
+	{
+		try
+		{
+			Properties p = new Properties();
+			p.load(Main.class.getResourceAsStream("/translate/ru/login." + _locale + ".properties"));
+			_props.add(p);
+			p = new Properties();
+			p.load(Main.class.getResourceAsStream("/translate/ru/game." + _locale + ".properties"));
+			_props.add(p);
+		}
+		catch (IOException e)
+		{
+			_log.warn("LoadTranslate error " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
 }
