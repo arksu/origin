@@ -2,6 +2,7 @@ package com.a2client.guigame;
 
 import com.a2client.gui.GUI_Control;
 import com.a2client.model.Inventory;
+import com.a2client.model.InventoryItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,5 +20,13 @@ public class GUI_Inventory extends GUI_Control
 	{
 		super(parent);
 		_inventory = inventory;
+	}
+
+	@Override
+	public void DoRender()
+	{
+		for (InventoryItem item : _inventory.getItems().values()) {
+
+		}
 	}
 }

@@ -21,6 +21,9 @@ public class InventoryCache
 
     private Map<Integer, Inventory> _inventories = new HashMap<>();
 
+    /**
+     * открытые инвентари
+     */
     private Map<Integer, GUI_InventoryWindow> _openInventories = new HashMap<>();
 
     /**

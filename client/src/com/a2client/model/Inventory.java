@@ -25,7 +25,7 @@ public class Inventory
     private int _inventoryId;
 
     /**
-     * содержимое
+     * содержимое <id, item>
      */
     private Map<Integer, InventoryItem> _items = new HashMap<>();
 
