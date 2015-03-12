@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import static com.a4server.gameserver.model.collision.CollisionResult.CollisionType.COLLISION_OBJECT;
 
 /**
+ * поведение для движения к объекту и взаимодействия с ним
  * Created by arksu on 28.02.15.
  */
 public class MindMoveAction extends PlayerMind

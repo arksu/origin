@@ -241,7 +241,7 @@ public class GameObject
 		if (_inventory != null)
 		{
 			// открыть инвентарь объекта
-
+			
 		}
 	}
 

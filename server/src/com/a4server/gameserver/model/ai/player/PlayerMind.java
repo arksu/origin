@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * абстракция мозга для игрока
  * Created by arksu on 28.02.15.
  */
 public abstract class PlayerMind implements Mind
@@ -19,7 +20,7 @@ public abstract class PlayerMind implements Mind
 		_player = player;
 	}
 
-	protected void end()
+	public void free()
 	{
 		_player.setMind(null);
 	}
