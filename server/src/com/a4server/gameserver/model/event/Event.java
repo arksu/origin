@@ -12,10 +12,12 @@ import com.a4server.gameserver.network.serverpackets.GameServerPacket;
  */
 public class Event
 {
-	public static final int MOVE = 1;
-	public static final int STOP_MOVE = 2;
-	public static final int CHAT_GENERAL_MESSAGE = 3;
-	public static final int INTERACT = 4;
+	public enum EventType {
+		MOVE,
+		STOP_MOVE,
+		CHAT_GENERAL_MESSAGE,
+		INTERACT
+	}
 
 	/**
 	 * объект который сгенерировал событие
@@ -26,7 +28,7 @@ public class Event
 	/**
 	 * тип сообщения
 	 */
-	protected final int _type;
+	protected final EventType _type;
 
 	/**
 	 * дополнительная информация о событии
@@ -39,13 +41,13 @@ public class Event
 	 */
 	protected GameServerPacket _packet = null;
 
-	public Event(GameObject object, int type)
+	public Event(GameObject object, EventType type)
 	{
 		_object = object;
 		_type = type;
 	}
 
-	public Event(GameObject object, int type, Object extraInfo)
+	public Event(GameObject object, EventType type, Object extraInfo)
 	{
 		_object = object;
 		_type = type;
@@ -57,7 +59,7 @@ public class Event
 		return _object;
 	}
 
-	public int getType()
+	public EventType getType()
 	{
 		return _type;
 	}
@@ -80,6 +82,6 @@ public class Event
 	@Override
 	public String toString()
 	{
-		return "(evet " + _object + " type=" + _type + " extra=" + _extraInfo + ")";
+		return "(event " + _object + " type=" + _type + " extra=" + _extraInfo + ")";
 	}
 }

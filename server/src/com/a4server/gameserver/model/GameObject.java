@@ -266,7 +266,7 @@ public class GameObject
 	protected void setInteractive(boolean value)
 	{
 		_log.debug("setInteractive " + value);
-		Event evt = new Event(this, Event.INTERACT, value);
+		Event evt = new Event(this, Event.EventType.INTERACT, value);
 		evt.setPacket(new ObjectInteractive(_objectId, value));
 		getPos().getGrid().broadcastEvent(evt);
 	}

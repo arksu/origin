@@ -19,6 +19,9 @@ public class ObjectPosition
 {
     private static final Logger _log = LoggerFactory.getLogger(ObjectPosition.class.getName());
 
+    /**
+     * абсолютные мировые координаты
+     */
     public volatile int _x;
     public volatile int _y;
 //    private volatile int _z;

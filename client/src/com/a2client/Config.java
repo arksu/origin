@@ -43,7 +43,7 @@ public class Config
 	// адрес логин сервера
 	public static String login_server = "origin-world.com";
 	// порт логин сервера
-	public static int login_server_port = 2048;
+	public static int login_server_port = 2040;
 	// раземры экрана
 	public static int ScreenWidth;
 	public static int ScreenHeight;

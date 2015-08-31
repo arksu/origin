@@ -83,7 +83,7 @@ public abstract class MoveController
      */
     public Event getEvent()
     {
-        Event event = new Event(_activeObject, Event.MOVE);
+        Event event = new Event(_activeObject, Event.EventType.MOVE);
         event.setPacket(makeMovePacket());
         return event;
     }

@@ -171,8 +171,8 @@ public abstract class Human extends MoveObject
 		// событие движения
 		switch (event.getType())
 		{
-			case Event.MOVE:
-			case Event.STOP_MOVE:
+			case MOVE:
+			case STOP_MOVE:
 				// знаю ли я этот объект?
 				if (isKnownObject(event.getObject()))
 				{
@@ -200,9 +200,9 @@ public abstract class Human extends MoveObject
 				}
 				break;
 
-			case Event.CHAT_GENERAL_MESSAGE:
+			case CHAT_GENERAL_MESSAGE:
 				return onChatMessage(event);
-			case Event.INTERACT:
+			case INTERACT:
 				// если мы знаем такой объект - пошлем пакет клиенту
 				return isKnownObject(event.getObject());
 		}

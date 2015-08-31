@@ -372,11 +372,12 @@ public class Player extends Human
 		return 15f;
 	}
 
+	// нагенерить объектов в гриде
 	public void randomGrid()
 	{
 		int ido = 100;
-		int gx = 44;
-		int gy = 27;
+		int gx = getPos().getGridX();
+		int gy = getPos().getGridY();
 		int grid;
 		for (int i = 0; i < 2000; i++)
 		{
@@ -384,7 +385,7 @@ public class Player extends Human
 			int ry = Rnd.get(0, Grid.GRID_FULL_SIZE) + (gy * 1200);
 			grid = rx / Grid.GRID_FULL_SIZE + ry / Grid.GRID_FULL_SIZE * Grid.SUPERGRID_SIZE;
 			ido++;
-			_log.debug("create obj " + ido);
+			_log.debug("create obj " + ido + " x=" + rx + " y=" + ry);
 
 			String q = "INSERT INTO sg_0_obj (id, grid, x, y, type, hp, create_tick) VALUES (?,?,?,?,?,?,?);";
 			try
