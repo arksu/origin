@@ -55,12 +55,6 @@ public class MindMoveAction extends PlayerMind
 	}
 
 	@Override
-	public void free()
-	{
-
-	}
-
-	@Override
 	public void begin()
 	{
 		GameObject object = _player.isKnownObject(_targetObjectId);

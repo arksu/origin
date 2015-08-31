@@ -231,7 +231,9 @@ public abstract class Human extends MoveObject
 	{
 		if (_mind != null)
 		{
-			_mind.free();
+			Mind old = _mind;
+			_mind = null;
+			old.free();
 		}
 
 		_mind = mind;
