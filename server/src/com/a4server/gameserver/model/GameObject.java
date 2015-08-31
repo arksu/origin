@@ -147,7 +147,7 @@ public class GameObject
 	 * создать пакет о добавлении меня в мир
 	 * @return пакет
 	 */
-	public GameServerPacket makeAddPacket()
+	public GameServerPacket makeAddToWorldPacket()
 	{
 		GameServerPacket pkt = new ObjectAdd(this);
 		if (isInteractive())
@@ -161,7 +161,7 @@ public class GameObject
 	 * создать пакет об удалении объекта из мира
 	 * @return пакет
 	 */
-	public GameServerPacket makeRemovePacket()
+	public GameServerPacket makeRemoveFromWorldPacket()
 	{
 		return new ObjectRemove(this._objectId);
 	}
@@ -240,8 +240,7 @@ public class GameObject
 		// если у нас есть инвентарь
 		if (_inventory != null)
 		{
-			// открыть инвентарь объекта
-			
+			// todo открыть инвентарь объекта
 		}
 	}
 
@@ -260,7 +259,7 @@ public class GameObject
 	}
 
 	/**
-	 * установить режим интерактивности с другим объектом
+	 * установить режим взаимодействия с другим объектом
 	 * например ящык - показать с открытой крышкой
 	 * @param value в режиме взаимодействия?
 	 */

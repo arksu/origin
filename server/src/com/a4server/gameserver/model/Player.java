@@ -177,7 +177,7 @@ public class Player extends Human
 		if (!_knownKist.contains(object))
 		{
 			super.addKnownObject(object);
-			getClient().sendPacket(object.makeAddPacket());
+			getClient().sendPacket(object.makeAddToWorldPacket());
 		}
 	}
 
@@ -191,7 +191,7 @@ public class Player extends Human
 		if (_knownKist.contains(object))
 		{
 			super.removeKnownObject(object);
-			getClient().sendPacket(object.makeRemovePacket());
+			getClient().sendPacket(object.makeRemoveFromWorldPacket());
 		}
 	}
 
@@ -199,7 +199,7 @@ public class Player extends Human
 	 * создать пакет для отсылки другим игрокам
 	 * @return пакет
 	 */
-	public GameServerPacket makeAddPacket()
+	public GameServerPacket makeAddToWorldPacket()
 	{
 		GameServerPacket pkt = new ObjectAdd(this);
 		// раз это персонаж, отправим его представление, то как он должен выглядеть
@@ -230,7 +230,7 @@ public class Player extends Human
 			}
 			catch (InterruptedException e)
 			{
-				_log.warn("deleteMe: InterruptedException ");
+				_log.warn("deleteMe: InterruptedException");
 				e.printStackTrace();
 			}
 			finally
@@ -303,7 +303,6 @@ public class Player extends Human
 	{
 		_isOnline = status;
 	}
-
 
 	/**
 	 * активировать окружающие гриды
@@ -411,40 +410,37 @@ public class Player extends Human
 	}
 
 	@Override
-	public boolean HandleEvent(Event event)
+	protected boolean onChatMessage(Event event)
 	{
-		switch (event.getType())
+		String message = (String) event.getExtraInfo();
+		if (message.startsWith("/"))
 		{
-			case Event.CHAT_GENERAL_MESSAGE:
-				String message = (String) event.getExtraInfo();
-				if (message.startsWith("/"))
+			if (_accessLevel >= 100)
+			{
+				_log.debug("console command: " + message);
+				if ("/randomgrid".equalsIgnoreCase(message))
 				{
-					if (_accessLevel >= 100)
-					{
-						_log.debug("console command: " + message);
-						if ("/randomgrid".equalsIgnoreCase(message))
-						{
-							randomGrid();
-						}
-						else if ("/nextid".equalsIgnoreCase(message))
-						{
-							IdFactory.getInstance().getNextId();
-							IdFactory.getInstance().getNextId();
-							IdFactory.getInstance().getNextId();
-							int nextId = IdFactory.getInstance().getNextId();
-							getClient().sendPacket(new CreatureSay(getObjectId(), "next id: " + nextId));
-							_log.debug("nextid: " + nextId);
-						}
-					}
-
-					// тут исполняем обычные команды доступные для всех
-
-					// консольные команды проглотим
-					return false;
+					randomGrid();
 				}
-				break;
+				else if ("/nextid".equalsIgnoreCase(message))
+				{
+					IdFactory.getInstance().getNextId();
+					IdFactory.getInstance().getNextId();
+					IdFactory.getInstance().getNextId();
+					int nextId = IdFactory.getInstance().getNextId();
+					getClient().sendPacket(new CreatureSay(getObjectId(), "next id: " + nextId));
+					_log.debug("nextid: " + nextId);
+				}
+			}
+			else
+			{
+				// тут исполняем обычные команды доступные для всех
+			}
+
+			// консольные команды проглотим
+			return false;
 		}
-		return super.HandleEvent(event);
+		return true;
 	}
 
 	@Override

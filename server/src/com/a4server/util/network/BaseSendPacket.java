@@ -21,6 +21,7 @@ public abstract class BaseSendPacket
 
     /**
      * следующий пакет, можно объединять в цепочку
+     * односвязный список
      */
     protected BaseSendPacket _next;
 
@@ -64,10 +65,17 @@ public abstract class BaseSendPacket
         }
     }
 
+    /**
+     * добавить следующий пакет который будет отправлен вслед за этим
+     * позволяет указать очередность отправки пакетов. и одним пакетом отправить сразу группу пакетов
+     * например при добавлении в мир
+     * @param pkt пакет
+     * @return следующий пакет
+     */
     public BaseSendPacket addNext(BaseSendPacket pkt)
     {
         _next = pkt;
-        return this;
+        return pkt;
     }
 
     protected void writeC(int value)
