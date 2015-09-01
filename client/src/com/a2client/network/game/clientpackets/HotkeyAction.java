@@ -6,13 +6,10 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by arksu on 26.02.15.
  */
+// todo : delete?
 public class HotkeyAction extends GameClientPacket
 {
     private static final Logger _log = LoggerFactory.getLogger(HotkeyAction.class.getName());
-
-    public static final int HOTKEY_INVENTORY = 1;
-    public static final int HOTKEY_PAPERDOLL = 2;
-    public static final int HOTKEY_SKILLS = 3;
 
     int _hotkey;
 

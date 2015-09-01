@@ -12,7 +12,8 @@ import com.a4server.gameserver.network.serverpackets.GameServerPacket;
  */
 public class Event
 {
-	public enum EventType {
+	public enum EventType
+	{
 		MOVE,
 		STOP_MOVE,
 		CHAT_GENERAL_MESSAGE,

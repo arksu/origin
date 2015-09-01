@@ -3,14 +3,12 @@ package com.a2client.screens;
 import com.a2client.*;
 import com.a2client.gui.*;
 import com.a2client.model.GameObject;
-import com.a2client.network.Net;
 import com.a2client.network.game.clientpackets.ChatMessage;
-import com.a2client.network.game.clientpackets.HotkeyAction;
 import com.a2client.network.game.clientpackets.MouseClick;
 import com.a2client.render.GameCamera;
 import com.a2client.render.Render1;
+import com.a2client.util.Keys;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,7 +109,7 @@ public class Game extends BaseScreen
 		if (GUI.getInstance().focused_control == _chatEdit)
 		{
 			String h;
-			if (com.a2client.Input.KeyHit(Input.Keys.UP))
+			if (Input.KeyHit(Keys.UP))
 			{
 				h = ChatHistory.prev();
 				if (!h.isEmpty())
@@ -120,7 +118,7 @@ public class Game extends BaseScreen
 					_chatEdit.SetCursor(_chatEdit.text.length());
 				}
 			}
-			if (com.a2client.Input.KeyHit(Input.Keys.DOWN))
+			if (Input.KeyHit(Keys.DOWN))
 			{
 				h = ChatHistory.next();
 				_chatEdit.SetText(h);
@@ -128,12 +126,12 @@ public class Game extends BaseScreen
 			}
 		}
 
-
 		if (_state == GameState.IN_GAME)
 		{
-			if (com.a2client.Input.KeyHit(Input.Keys.TAB))
+			if (Input.KeyHit(Hotkey.INVENTORY))
 			{
-				Net.getConnection().sendPacket(new HotkeyAction(HotkeyAction.HOTKEY_INVENTORY));
+				// по нажатию на таб - откроем инвентарь
+				InventoryCache.getInstance().toggleInventory(Player.getInstance().getObjectId());
 			}
 			_statusText = "mouse coord: " + Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE) + ", " +
 					Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE);
@@ -144,7 +142,6 @@ public class Game extends BaseScreen
 						" chunks: " + _render.getChunksRendered() +
 						" selected: " + (_render.getSelected() != null ? "" + _render.getSelected() : "null") +
 						" objects: " + _render.getRenderedObjects();
-
 
 		if (ObjectCache.getInstance() != null)
 		{
@@ -166,7 +163,7 @@ public class Game extends BaseScreen
 		old_btns[2] = mouse_btns[2];
 		for (int i = 0; i < 3; i++)
 		{
-			mouse_btns[i] = com.a2client.Input.MouseBtns[i];
+			mouse_btns[i] = Input.MouseBtns[i];
 			// узнаем на какую кнопку нажали
 			if (mouse_btns[i] != old_btns[i])
 			{

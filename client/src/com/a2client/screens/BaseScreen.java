@@ -19,17 +19,14 @@ public class BaseScreen implements Screen
 
 	public void onUpdate()
 	{
-
 	}
 
 	public void onRender()
 	{
-
 	}
 
 	public void onRender3D()
 	{
-
 	}
 
 	@Override
@@ -67,30 +64,25 @@ public class BaseScreen implements Screen
 	@Override
 	public void show()
 	{
-
 	}
 
 	@Override
 	public void hide()
 	{
-
 	}
 
 	@Override
 	public void pause()
 	{
-
 	}
 
 	@Override
 	public void resume()
 	{
-
 	}
 
 	@Override
 	public void dispose()
 	{
-
 	}
 }

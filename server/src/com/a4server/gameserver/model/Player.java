@@ -203,7 +203,9 @@ public class Player extends Human
 	{
 		GameServerPacket pkt = new ObjectAdd(this);
 		// раз это персонаж, отправим его представление, то как он должен выглядеть
-		pkt.addNext(new PlayerAppearance(_appearance));
+		pkt
+				.addNext(new PlayerAppearance(_appearance))
+				.addNext(new InventoryUpdate(_inventory));
 		return pkt;
 	}
 

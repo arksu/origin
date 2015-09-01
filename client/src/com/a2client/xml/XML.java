@@ -31,7 +31,7 @@ public class XML extends ResObject
     private int data_len;
     public XMLParams params;
     private int count;
-    private List<XML> Node = new ArrayList<XML>();
+    private List<XML> Node = new ArrayList<>();
 
     public void ProcessNodes(String node_tag, XMLIterator it)
     {

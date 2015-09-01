@@ -409,7 +409,7 @@ public class Skin
 
         public void Draw(int x, int y, SkinSprite spr, int state, Color col)
         {
-            //			if (mCoord == null) return;
+            if (mCoord == null) return;
             // если хотя бы один из размеров нулевой - выходим
             if ((mCoord.w == 0) || (mCoord.h == 0))
                 return;
