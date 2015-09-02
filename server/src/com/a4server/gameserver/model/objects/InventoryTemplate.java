@@ -18,6 +18,12 @@ public class InventoryTemplate
     @SerializedName ("height")
     private int _height = 2;
 
+    public InventoryTemplate(int width, int height)
+    {
+        _width = width;
+        _height = height;
+    }
+
     public int getWidth()
     {
         return _width;

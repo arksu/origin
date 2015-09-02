@@ -12,39 +12,43 @@ import org.slf4j.LoggerFactory;
  */
 public class InventoryUpdate extends GameServerPacket
 {
-    private static final Logger _log = LoggerFactory.getLogger(InventoryUpdate.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(InventoryUpdate.class.getName());
 
-    Inventory _inventory;
+	Inventory _inventory;
 
-    public InventoryUpdate(Inventory inventory)
-    {
-        if (inventory == null)
-        {
-            throw new RuntimeException("null inventory");
-        }
-        _inventory = inventory;
-    }
+	public InventoryUpdate(Inventory inventory)
+	{
+		if (inventory == null)
+		{
+			throw new RuntimeException("null inventory");
+		}
+		_inventory = inventory;
+	}
 
-    @Override
-    protected void write()
-    {
-        writeC(0x18);
-        writeD(_inventory.getParent().getObjectId());
-        writeD(_inventory.getInvenroyId());
-        FastList<InventoryItem> items = _inventory.getItems();
-        writeH(items.size());
-        if (items.size() > 0) {
-            for (InventoryItem item : items) {
-                writeD(item.getObjectId());
-                writeD(item.getTemplate().getItemId());
-                writeD(item.getQ());
-                writeC(item.getX());
-                writeC(item.getY());
-                writeH(item.getAmount());
-                writeC(item.getStage());
-                writeH(item.getTicks());
-                writeH(item.getTicksTotal());
-            }
-        }
-    }
+	@Override
+	protected void write()
+	{
+		writeC(0x18);
+		writeD(_inventory.getParent().getObjectId());
+		writeD(_inventory.getInvenroyId());
+		writeH(_inventory.getWidth());
+		writeH(_inventory.getHeight());
+		FastList<InventoryItem> items = _inventory.getItems();
+		writeH(items.size());
+		if (items.size() > 0)
+		{
+			for (InventoryItem item : items)
+			{
+				writeD(item.getObjectId());
+				writeD(item.getTemplate().getItemId());
+				writeD(item.getQ());
+				writeC(item.getX());
+				writeC(item.getY());
+				writeH(item.getAmount());
+				writeC(item.getStage());
+				writeH(item.getTicks());
+				writeH(item.getTicksTotal());
+			}
+		}
+	}
 }

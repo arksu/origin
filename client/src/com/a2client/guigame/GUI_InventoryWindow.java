@@ -4,6 +4,7 @@ import com.a2client.InventoryCache;
 import com.a2client.gui.GUI_Control;
 import com.a2client.gui.GUI_Window;
 import com.a2client.model.Inventory;
+import com.a2client.model.InventoryItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,11 @@ public class GUI_InventoryWindow extends GUI_Window
 		{
 			_inventory = new GUI_Inventory(this, inv);
 			_inventory.SetPos(5, 5);
+			SetSize(InventoryItem.WIDTH * inv.getWidth(), InventoryItem.HEIGHT * inv.getHeight());
+		}
+		else
+		{
+			_log.warn("no inventory for: " + inventoryId);
 		}
 	}
 }

@@ -12,67 +12,66 @@ import org.slf4j.LoggerFactory;
  */
 public class ItemTemplate
 {
-    private static final Logger _log = LoggerFactory.getLogger(ItemTemplate.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(ItemTemplate.class.getName());
 
-    @SerializedName ("width")
-    private int _width = 1;
+	@SerializedName("width")
+	private int _width = 1;
 
-    @SerializedName ("height")
-    private int _height = 1;
+	@SerializedName("height")
+	private int _height = 1;
 
-    private int _itemId;
-    private String _name;
+	private int _itemId;
+	private String _name;
 
-    /**
-     * у вещи может быть вложенный инвентарь (какая-нибудь сумочка)
-     */
-    private InventoryTemplate _inventory = null;
+	/**
+	 * у вещи может быть вложенный инвентарь (какая-нибудь сумочка)
+	 */
+	private InventoryTemplate _inventory = null;
 
-    public static ItemTemplate load(JsonReader in, int itemId, String name)
-    {
-        Gson gson = new Gson();
-        ItemTemplate template = gson.fromJson(in, ItemTemplate.class);
-        template._itemId = itemId;
-        template._name = name;
-        return template;
-    }
+	public static ItemTemplate load(JsonReader in, int itemId, String name)
+	{
+		Gson gson = new Gson();
+		ItemTemplate template = gson.fromJson(in, ItemTemplate.class);
+		template._itemId = itemId;
+		template._name = name;
+		return template;
+	}
 
-    public int getItemId()
-    {
-        return _itemId;
-    }
+	public int getItemId()
+	{
+		return _itemId;
+	}
 
+	public String getName()
+	{
+		return _name;
+	}
 
-    public String getName()
-    {
-        return _name;
-    }
+	public int getWidth()
+	{
+		return _width;
+	}
 
-    public int getWidth()
-    {
-        return _width;
-    }
+	public int getHeight()
+	{
+		return _height;
+	}
 
-    public int getHeight()
-    {
-        return _height;
-    }
+	public InventoryTemplate getInventory()
+	{
+		return _inventory;
+	}
 
-    public InventoryTemplate getInventory()
-    {
-        return _inventory;
-    }
+	public void setInventory(InventoryTemplate inventory)
+	{
+		_inventory = inventory;
+	}
 
-    public void setInventory(InventoryTemplate inventory)
-    {
-        _inventory = inventory;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "(" + _name + " [" + _itemId + "] " + _width + "x" + _height +
-                (_inventory != null ? " " + _inventory.toString() : "") +
-                ")";
-    }
+	@Override
+	public String toString()
+	{
+		return "(" + _name + " [" + _itemId + "] " + _width + "x" + _height +
+				(_inventory != null ? " " + _inventory.toString() : "") +
+				")";
+	}
 }

@@ -9,73 +9,77 @@ import org.slf4j.LoggerFactory;
  */
 public class InventoryItem
 {
-    private static final Logger _log = LoggerFactory.getLogger(InventoryItem.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(InventoryItem.class.getName());
 
-    private final int _objectId;
-    private final int _typeId;
-    private final int _q;
-    private final int _x;
-    private final int _y;
-    private final int _stage;
-    private final int _amount;
-    private final int _ticks;
-    private final int _ticksTotal;
+	public static final int WIDTH = 32;
+	public static final int HEIGHT = 32;
 
-    public InventoryItem(int objectId, int typeId, int q, int x, int y, int stage, int amount,
-                         int ticks, int ticksTotal) {
-        _objectId = objectId;
-        _typeId = typeId;
-        _q = q;
-        _x = x;
-        _y= y;
-        _stage = stage;
-        _amount = amount;
-        _ticks = ticks;
-        _ticksTotal = ticksTotal;
-    }
+	private final int _objectId;
+	private final int _typeId;
+	private final int _q;
+	private final int _x;
+	private final int _y;
+	private final int _stage;
+	private final int _amount;
+	private final int _ticks;
+	private final int _ticksTotal;
 
-    public int getObjectId()
-    {
-        return _objectId;
-    }
+	public InventoryItem(int objectId, int typeId, int q, int x, int y, int stage, int amount,
+						 int ticks, int ticksTotal)
+	{
+		_objectId = objectId;
+		_typeId = typeId;
+		_q = q;
+		_x = x;
+		_y = y;
+		_stage = stage;
+		_amount = amount;
+		_ticks = ticks;
+		_ticksTotal = ticksTotal;
+	}
 
-    public int getTypeId()
-    {
-        return _typeId;
-    }
+	public int getObjectId()
+	{
+		return _objectId;
+	}
 
-    public int getQ()
-    {
-        return _q;
-    }
+	public int getTypeId()
+	{
+		return _typeId;
+	}
 
-    public int getX()
-    {
-        return _x;
-    }
+	public int getQ()
+	{
+		return _q;
+	}
 
-    public int getY()
-    {
-        return _y;
-    }
+	public int getX()
+	{
+		return _x;
+	}
 
-    public int getStage()
-    {
-        return _stage;
-    }
+	public int getY()
+	{
+		return _y;
+	}
 
-    public int getAmount()
-    {
-        return _amount;
-    }
+	public int getStage()
+	{
+		return _stage;
+	}
 
-    public int getTicks()
-    {
-        return _ticks;
-    }
+	public int getAmount()
+	{
+		return _amount;
+	}
 
-    public int getTicksTotal()
-    {
-        return _ticksTotal;
-    }
+	public int getTicks()
+	{
+		return _ticks;
+	}
+
+	public int getTicksTotal()
+	{
+		return _ticksTotal;
+	}
 }

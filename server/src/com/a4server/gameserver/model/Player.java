@@ -62,7 +62,10 @@ public class Player extends Human
 		}
 
 		setVisibleDistance(500);
-		_inventory = new Inventory(this);
+
+		// todo: сначала грузим паердоллл! от него может зависеть размер инвентаря
+
+		_inventory = new Inventory(this, getInventoryWidth(), getInventoryHeight());
 	}
 
 	private static class PlayerTemplate implements ObjectTemplate
@@ -324,6 +327,7 @@ public class Player extends Human
 	/**
 	 * сохранить состояние персонажа в базу
 	 */
+	@SuppressWarnings("SuspiciousNameCombination")
 	@Override
 	public void storeInDb()
 	{
@@ -438,6 +442,12 @@ public class Player extends Human
 			else
 			{
 				// тут исполняем обычные команды доступные для всех
+				if ("/online".equalsIgnoreCase(message))
+				{
+					_log.debug("server online: " + World.getInstance().getPlayersCount());
+					// todo: онлайн сервера написать в чат игроку
+//					getClient().sendPacket(new CreatureSay());
+				}
 			}
 
 			// консольные команды проглотим
@@ -451,5 +461,24 @@ public class Player extends Human
 	{
 		// у игрока тут ничего не делаем
 		// хотя может потом будем показывать ему вытянутые руки. мол тянет их к объекту который открыл
+	}
+
+	/**
+	 * получить размеры инвентаря
+	 * @return ширина
+	 */
+	public int getInventoryWidth()
+	{
+		// todo: если не загружен папердолл - кинем исключение
+		return 6;
+	}
+
+	/**
+	 * получить размеры инвентаря
+	 * @return высота
+	 */
+	public int getInventoryHeight()
+	{
+		return 4;
 	}
 }

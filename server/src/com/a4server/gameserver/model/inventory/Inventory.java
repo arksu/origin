@@ -17,86 +17,106 @@ import java.sql.SQLException;
  */
 public class Inventory
 {
-    private static final Logger _log = LoggerFactory.getLogger(Inventory.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(Inventory.class.getName());
 
-    public static final String LOAD_INVENTORY = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal FROM items WHERE objectId=?";
+	public static final String LOAD_INVENTORY = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal FROM items WHERE objectId=?";
 
-    /**
-     * объект родитель
-     */
-    private final GameObject _parent;
+	/**
+	 * объект родитель
+	 */
+	private final GameObject _parent;
 
-    /**
-     * ид инвентаря, объект или вещь к которой он относится
-     */
-    private final int _invenroyId;
+	/**
+	 * ид инвентаря, объект или вещь к которой он относится
+	 */
+	private final int _invenroyId;
 
-    /**
-     * инвентарь родитель
-     */
-    private final Inventory _inventory;
+	/**
+	 * инвентарь родитель
+	 */
+	private final Inventory _inventory;
 
-    /**
-     * список вещей которые находятся внутри
-     */
-    FastList<InventoryItem> _items = new FastList<>();
+	/**
+	 * размеры
+	 */
+	private int _width;
+	private int _height;
 
-    public Inventory(GameObject parent)
-    {
-        _parent = parent;
-        _inventory = null;
-        _invenroyId = parent.getObjectId();
-        load();
-    }
+	/**
+	 * список вещей которые находятся внутри
+	 */
+	FastList<InventoryItem> _items = new FastList<>();
 
-    public Inventory(Inventory parent, int objectId)
-    {
-        _inventory = parent;
-        _invenroyId = objectId;
-        _parent = null;
-        load();
-    }
+	public Inventory(GameObject parent, int width, int height)
+	{
+		_parent = parent;
+		_inventory = null;
+		_invenroyId = parent.getObjectId();
+		_width = width;
+		_height = height;
+		load();
+	}
 
-    /**
-     * загрузить инвентарь из базы
-     */
-    private void load()
-    {
-        _log.debug("load inventory: " + _invenroyId);
-        try
-        {
-            try (Connection con = Database.getInstance().getConnection();
-                 PreparedStatement ps = con.prepareStatement(LOAD_INVENTORY))
-            {
-                ps.setInt(1, _invenroyId);
-                try (ResultSet rset = ps.executeQuery())
-                {
-                    while (rset.next())
-                    {
-                        _items.add(new InventoryItem(this, rset));
-                    }
-                }
-            }
-        }
-        catch (SQLException e)
-        {
-            _log.warn("Cant load inventory " + toString());
-            throw new RuntimeException("Cant load inventory " + toString());
-        }
-    }
+	public Inventory(Inventory parent, int objectId, int width, int height)
+	{
+		_inventory = parent;
+		_invenroyId = objectId;
+		_parent = null;
+		_width = width;
+		_height = height;
+		load();
+	}
 
-    public GameObject getParent()
-    {
-        return _parent;
-    }
+	/**
+	 * загрузить инвентарь из базы
+	 */
+	private void load()
+	{
+		_log.debug("load inventory: " + _invenroyId);
+		try
+		{
+			try (Connection con = Database.getInstance().getConnection();
+				 PreparedStatement ps = con.prepareStatement(LOAD_INVENTORY))
+			{
+				ps.setInt(1, _invenroyId);
+				try (ResultSet rset = ps.executeQuery())
+				{
+					while (rset.next())
+					{
+						_items.add(new InventoryItem(this, rset));
+					}
+				}
+			}
+		}
+		catch (SQLException e)
+		{
+			_log.warn("Cant load inventory " + toString());
+			throw new RuntimeException("Cant load inventory " + toString());
+		}
+	}
 
-    public FastList<InventoryItem> getItems()
-    {
-        return _items;
-    }
+	public GameObject getParent()
+	{
+		return _parent;
+	}
 
-    public int getInvenroyId()
-    {
-        return _invenroyId;
-    }
+	public FastList<InventoryItem> getItems()
+	{
+		return _items;
+	}
+
+	public int getInvenroyId()
+	{
+		return _invenroyId;
+	}
+
+	public int getWidth()
+	{
+		return _width;
+	}
+
+	public int getHeight()
+	{
+		return _height;
+	}
 }

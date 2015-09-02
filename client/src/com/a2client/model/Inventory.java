@@ -12,54 +12,73 @@ import java.util.Map;
  */
 public class Inventory
 {
-    private static final Logger _log = LoggerFactory.getLogger(Inventory.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(Inventory.class.getName());
 
-    /**
-     * объект родитель (внутри объекта может быть несколько вложенных инвентарей, вещи внутри вещей, типа сумок)
-     */
-    private int _parentObjectId;
+	/**
+	 * объект родитель (внутри объекта может быть несколько вложенных инвентарей, вещи внутри вещей, типа сумок)
+	 */
+	private int _parentObjectId;
 
-    /**
-     * ид объекта или вещи чей это инвентарь
-     */
-    private int _inventoryId;
+	/**
+	 * ид объекта или вещи чей это инвентарь
+	 */
+	private int _inventoryId;
 
-    /**
-     * содержимое <id, item>
-     */
-    private Map<Integer, InventoryItem> _items = new HashMap<>();
+	/**
+	 * размеры
+	 */
+	private int _width;
+	private int _height;
 
-    public Inventory(int parentObjectId, int inventoryId)
-    {
-        _parentObjectId = parentObjectId;
-        _inventoryId = inventoryId;
-    }
+	/**
+	 * содержимое <id, item>
+	 */
+	private Map<Integer, InventoryItem> _items = new HashMap<>();
 
-    public Map<Integer, InventoryItem> getItems()
-    {
-        return _items;
-    }
+	public Inventory(int parentObjectId, int inventoryId, int width, int height)
+	{
+		_parentObjectId = parentObjectId;
+		_inventoryId = inventoryId;
+		_width = width;
+		_height = height;
+	}
 
-    /**
-     * добавить вещь в инвентарь или заменит если уже есть с таким же ид
-     * @param item
-     */
-    public void addItem(InventoryItem item)
-    {
-        _items.put(item.getObjectId(), item);
-    }
+	public Map<Integer, InventoryItem> getItems()
+	{
+		return _items;
+	}
 
-    public void clear() {
-        _items.clear();
-    }
+	/**
+	 * добавить вещь в инвентарь или заменит если уже есть с таким же ид
+	 * @param item
+	 */
+	public void addItem(InventoryItem item)
+	{
+		_items.put(item.getObjectId(), item);
+	}
 
-    public int getParentObjectId()
-    {
-        return _parentObjectId;
-    }
+	public void clear()
+	{
+		_items.clear();
+	}
 
-    public int getInventoryId()
-    {
-        return _inventoryId;
-    }
+	public int getParentObjectId()
+	{
+		return _parentObjectId;
+	}
+
+	public int getInventoryId()
+	{
+		return _inventoryId;
+	}
+
+	public int getWidth()
+	{
+		return _width;
+	}
+
+	public int getHeight()
+	{
+		return _height;
+	}
 }

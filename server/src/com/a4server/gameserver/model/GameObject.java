@@ -2,6 +2,7 @@ package com.a4server.gameserver.model;
 
 import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.model.inventory.Inventory;
+import com.a4server.gameserver.model.objects.InventoryTemplate;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
 import com.a4server.gameserver.model.position.ObjectPosition;
@@ -78,8 +79,10 @@ public class GameObject
 		}
 		_objectId = objectId;
 		_template = template;
-		_boundRect = new Rect(-_template.getWidth() / 2, -_template.getHeight() / 2, _template.getWidth() / 2,
-							  _template.getHeight() / 2);
+		_boundRect = new Rect(-_template.getWidth() / 2,
+				-_template.getHeight() / 2,
+				_template.getWidth() / 2,
+				_template.getHeight() / 2);
 	}
 
 	/**
@@ -94,12 +97,15 @@ public class GameObject
 		_pos = new ObjectPosition(rset.getInt("x"), rset.getInt("y"), grid.getLevel(), grid);
 		int typeId = rset.getInt("type");
 		_template = ObjectsFactory.getInstance().getTemplate(typeId);
-		_boundRect = new Rect(-_template.getWidth() / 2, -_template.getHeight() / 2, _template.getWidth() / 2,
-							  _template.getHeight() / 2);
+		_boundRect = new Rect(-_template.getWidth() / 2,
+				-_template.getHeight() / 2,
+				_template.getWidth() / 2,
+				_template.getHeight() / 2);
 		// есть ли у объекта инвентарь?
-		if (_template.getInventory() != null)
+		InventoryTemplate inventory = _template.getInventory();
+		if (inventory != null)
 		{
-			_inventory = new Inventory(this);
+			_inventory = new Inventory(this, inventory.getWidth(), inventory.getHeight());
 		}
 	}
 
