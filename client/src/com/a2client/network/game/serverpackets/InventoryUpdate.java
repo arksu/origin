@@ -49,12 +49,14 @@ public class InventoryUpdate extends GameServerPacket
 			int q = readD();
 			int x = readC();
 			int y = readC();
+			int w = readC();
+			int h = readC();
 			int amount = readH();
 			int stage = readC();
 			int ticks = readH();
 			int ticksTotal = readH();
 
-			_items.add(new InventoryItem(objectId, typeId, q, x, y, stage, amount, ticks, ticksTotal));
+			_items.add(new InventoryItem(objectId, typeId, q, x, y, w, h, stage, amount, ticks, ticksTotal));
 		}
 	}
 

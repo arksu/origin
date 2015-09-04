@@ -8,22 +8,22 @@ import org.slf4j.LoggerFactory;
  */
 public class CreatureSay extends GameServerPacket
 {
-    private static final Logger _log = LoggerFactory.getLogger(CreatureSay.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(CreatureSay.class.getName());
 
-    private int _objectId;
-    private String _message;
+	private int _objectId;
+	private String _message;
 
-    public CreatureSay(int objectId, String message)
-    {
-        _objectId = objectId;
-        _message = message;
-    }
+	public CreatureSay(int objectId, String message)
+	{
+		_objectId = objectId;
+		_message = message;
+	}
 
-    @Override
-    protected void write()
-    {
-        writeC(0x17);
-        writeD(_objectId);
-        writeS(_message);
-    }
+	@Override
+	protected void write()
+	{
+		writeC(0x17);
+		writeD(_objectId);
+		writeS(_message);
+	}
 }

@@ -19,12 +19,14 @@ public class InventoryItem
 	private final int _q;
 	private final int _x;
 	private final int _y;
+	private final int _w;
+	private final int _h;
 	private final int _stage;
 	private final int _amount;
 	private final int _ticks;
 	private final int _ticksTotal;
 
-	public InventoryItem(int objectId, int typeId, int q, int x, int y, int stage, int amount,
+	public InventoryItem(int objectId, int typeId, int q, int x, int y, int w, int h, int stage, int amount,
 						 int ticks, int ticksTotal)
 	{
 		_objectId = objectId;
@@ -32,6 +34,8 @@ public class InventoryItem
 		_q = q;
 		_x = x;
 		_y = y;
+		_w = w;
+		_h = h;
 		_stage = stage;
 		_amount = amount;
 		_ticks = ticks;
@@ -61,6 +65,16 @@ public class InventoryItem
 	public int getY()
 	{
 		return _y;
+	}
+
+	public int getWidth()
+	{
+		return _w;
+	}
+
+	public int getHeight()
+	{
+		return _h;
 	}
 
 	public int getStage()

@@ -100,6 +100,16 @@ public class InventoryItem
 		return _y;
 	}
 
+	public int getWidth()
+	{
+		return _template.getWidth();
+	}
+
+	public int getHeight()
+	{
+		return _template.getHeight();
+	}
+
 	public int getAmount()
 	{
 		return _amount;

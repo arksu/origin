@@ -44,6 +44,8 @@ public class InventoryUpdate extends GameServerPacket
 				writeD(item.getQ());
 				writeC(item.getX());
 				writeC(item.getY());
+				writeC(item.getWidth());
+				writeC(item.getHeight());
 				writeH(item.getAmount());
 				writeC(item.getStage());
 				writeH(item.getTicks());
