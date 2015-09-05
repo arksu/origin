@@ -22,7 +22,6 @@ public class GlobalVariablesManager
 
     public final void saveVarInt(String var, int val)
     {
-
         try (Connection con = Database.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(SAVE_VAR_INT))
         {

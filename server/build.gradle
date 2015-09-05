@@ -22,8 +22,13 @@ dependencies {
 task jarGame(type: Jar) {
     baseName = "gameserver"
     from(sourceSets.main.output) {
+        include 'com/a4server/gameserver/**'
+        include 'com/a4server/util/**'
+        include 'com/a4server/*'
+    }
+
+    from('res') {
         include '**'
-        exclude 'com/a4server/loginserver/**'
     }
 
     manifest {
@@ -35,8 +40,9 @@ task jarGame(type: Jar) {
 task jarLogin(type: Jar) {
     baseName = "loginserver"
     from(sourceSets.main.output) {
-        include '**'
-        exclude 'com/a4server/gameserver/**'
+        include 'com/a4server/loginserver/**'
+        include 'com/a4server/util/**'
+        include 'com/a4server/*'
     }
 
     manifest {
@@ -45,10 +51,23 @@ task jarLogin(type: Jar) {
     }
 }
 
+task jarMapImport(type: Jar) {
+    baseName = "mapimport"
+    from(sourceSets.main.output) {
+        include 'com/a4server/map/**'
+    }
+
+    manifest {
+        attributes 'Implementation-Title': 'map import',
+                'Main-Class': 'com.a4server.map.Importer'
+    }
+}
+
 build.doLast {
     tasks.afterBuild.execute()
     tasks.jarGame.execute()
     tasks.jarLogin.execute()
+    tasks.jarMapImport.execute()
     tasks.makeDist.execute()
 }
 
@@ -63,40 +82,39 @@ task makeDist(type: Sync) {
     from 'dist/'
     into 'build/dist'
 
-    into ('game') {
-        from ('build/libs/') {
+    into('game') {
+        from('build/libs/') {
             include 'gameserver.jar'
-            
+            include 'mapimport.jar'
         }
     }
-    into ('login') {
-        from ('build/libs/') {
+
+    into('login') {
+        from('build/libs/') {
             include 'loginserver.jar'
-
         }
     }
 
-    into ('game/config') {
+    into('game/config') {
         from 'config'
     }
-    into ('login/config') {
+    into('login/config') {
         from 'config'
     }
 }
 
-
-task "rg" (type:JavaExec, dependsOn:[classes]) {
+task "rg"(type: JavaExec, dependsOn: [classes]) {
     main = 'com.a4server.gameserver.GameServer'
     classpath = sourceSets.main.runtimeClasspath
 }
 
-task "rgi" (type:JavaExec, dependsOn:[classes]) {
+task "rgi"(type: JavaExec, dependsOn: [classes]) {
     main = 'com.a4server.gameserver.GameServer'
     classpath = sourceSets.main.runtimeClasspath
     args = ['-initdb']
 }
 
-task "rl" (type:JavaExec, dependsOn:[classes]) {
+task "rl"(type: JavaExec, dependsOn: [classes]) {
     main = 'com.a4server.loginserver.LoginServer'
     classpath = sourceSets.main.runtimeClasspath
 }
