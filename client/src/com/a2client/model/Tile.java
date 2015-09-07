@@ -52,9 +52,13 @@ public class Tile
 			case TILE_FOREST_LEAF:
 				return 0;
 			case TILE_FOREST_FIR:
-				return 0;
-			case TILE_GRASS:
 				return 1;
+			case TILE_GRASS:
+				return 6;
+			case TILE_SAND:
+				return 5;
+			case TILE_DIRT:
+				return 7;
 
 			default:
 				return 4;
