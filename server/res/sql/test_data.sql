@@ -7,3 +7,7 @@ DELETE FROM `characters`;
 INSERT INTO `characters` (`charId`, `account`, `charName`, `accessLevel`, `x`, `y`, `lvl`, `face`, `hairColor`, `hairStyle`, `sex`, `title`, `lastAccess`, `createDate`, `onlineTime`, `del`) VALUES
   (1, 'ark', '=arksu=', 100, 53267, 32448, 0, 0, 0, 0, 0, '0', 0, 0, 0, 0),
   (2, 'test', 'test', 10, 120, 140, 0, 0, 0, 0, 0, '0', 0, 0, 0, 0);
+
+INSERT INTO `items` (`id`, `itemId`, `objectId`, `x`, `y`, `q`, `amount`, `stage`, `ticks`, `ticksTotal`) VALUES
+  (50, 19, 1, 0, 0, 10, 0, 0, 0, 0),
+  (51, 17, 1, 1, 1, 10, 0, 0, 0, 0);

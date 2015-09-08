@@ -76,16 +76,14 @@ public class GUI_InventoryItem extends GUI_Control
 
 	protected void onClick(int btn)
 	{
-		if (_item == null) return;
-		
 		int mx = gui.mouse_pos.x - abs_pos.x;
 		int my = gui.mouse_pos.y - abs_pos.y;
 
 		if (parent instanceof GUI_Inventory)
 		{
 			new InventoryClick(
-					_item.getInventoryId(),
-					_item.getObjectId(),
+					_item != null ? _item.getInventoryId() : 0,
+					_item != null ? _item.getObjectId() : 0,
 					btn,
 					Input.GetKeyState(),
 					mx,

@@ -34,12 +34,12 @@ CREATE TABLE `characters` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `items` (
-  `id` int(10) unsigned NOT NULL,
-  `itemId` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL COMMENT 'ид вещи (объекта)',
+  `itemId` int(10) unsigned NOT NULL COMMENT 'тип вещи',
   `objectId` int(10) unsigned NOT NULL COMMENT 'объект которому принадлежит вещь',
-  `x` tinyint(3) unsigned NOT NULL,
+  `x` tinyint(3) unsigned NOT NULL COMMENT 'координаты в инвентаре',
   `y` tinyint(3) unsigned NOT NULL,
-  `q` mediumint(8) unsigned NOT NULL DEFAULT '10',
+  `q` mediumint(8) unsigned NOT NULL DEFAULT '10' COMMENT 'качество',
   `amount` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'количество',
   `stage` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'стадия, доп цифра',
   `ticks` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'тиков прошло',

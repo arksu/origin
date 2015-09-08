@@ -23,6 +23,11 @@ public class InventoryItem
 	private Inventory _parent;
 
 	/**
+	 * вещь также может содержать инвентарь (вложенный)
+	 */
+	private Inventory _inventory;
+
+	/**
 	 * уникальный ид объекта (вещи)
 	 */
 	private int _objectId;
@@ -47,11 +52,6 @@ public class InventoryItem
 	private int _stage;
 	private int _ticks;
 	private int _ticksTotal;
-
-	/**
-	 * вещь также может содержать инвентарь (вложенный)
-	 */
-	private Inventory _inventory;
 
 	public InventoryItem(Inventory parent, ResultSet rset)
 	{
@@ -83,6 +83,11 @@ public class InventoryItem
 	public int getObjectId()
 	{
 		return _objectId;
+	}
+
+	public Inventory getParent()
+	{
+		return _parent;
 	}
 
 	public int getQ()

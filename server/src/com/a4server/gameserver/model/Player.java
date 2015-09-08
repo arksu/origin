@@ -33,10 +33,31 @@ public class Player extends Human
 	private static final String UPDATE_CHARACTER = "UPDATE characters SET x=?, y=? WHERE charId=?";
 
 	private GameClient _client = null;
+
+	/**
+	 * представление игрока (цвет волос, пол и тд)
+	 */
 	private final PcAppearance _appearance;
+
+	/**
+	 * аккаунт под которым вошел игрок
+	 */
 	private String _account;
+
+	/**
+	 * уровень доступа. 0 - обычный игрок
+	 */
 	private int _accessLevel;
+
+	/**
+	 * игрок онлайн?
+	 */
 	private volatile boolean _isOnline = false;
+
+	/**
+	 * вещь которую держим в руках. null если ничего нет
+	 */
+	private Hand _hand;
 
 	public Player(int objectId, ResultSet rset, PlayerTemplate template)
 	{
@@ -480,5 +501,10 @@ public class Player extends Human
 	public int getInventoryHeight()
 	{
 		return 4;
+	}
+
+	public Hand getHand()
+	{
+		return _hand;
 	}
 }

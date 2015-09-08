@@ -189,6 +189,9 @@ public class GameObject
 		return super.equals(obj);
 	}
 
+	/**
+	 * объект взаимодействует с другим объектом?
+	 */
 	public boolean isInteractive()
 	{
 		return !_interactWith.isEmpty();
@@ -287,5 +290,13 @@ public class GameObject
 			o.unlink(this);
 		}
 		_interactWith.clear();
+	}
+
+	/**
+	 * получить грид в котором находится объект
+	 */
+	public Grid getGrid()
+	{
+		return _pos.getGrid();
 	}
 }

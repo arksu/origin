@@ -119,4 +119,15 @@ public class Inventory
 	{
 		return _height;
 	}
+
+	/**
+	 * взять вещь из инвентаря
+	 * @param objectId
+	 * @return
+	 */
+	public InventoryItem takeItem(int objectId)
+	{
+		// todo : takeItem
+		return null;
+	}
 }

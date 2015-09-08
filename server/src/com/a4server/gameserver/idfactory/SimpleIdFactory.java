@@ -14,62 +14,63 @@ import org.slf4j.LoggerFactory;
  */
 public class SimpleIdFactory extends IdFactory
 {
-    private static final Logger _log = LoggerFactory.getLogger(SimpleIdFactory.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(SimpleIdFactory.class.getName());
 
-    /**
-     * сколько свободных ид брать за раз
-     */
-    private static final int CAPACITY = 10;
+	/**
+	 * сколько свободных ид брать за раз
+	 */
+	private static final int CAPACITY = 10;
 
-    private static final String DB_VALUE = "next_free_id";
+	private static final String DB_VALUE = "next_free_id";
 
-    private int _lastId;
-    private int _freeCount;
+	private int _lastId;
+	private int _freeCount;
 
-    public SimpleIdFactory()
-    {
-        _freeCount = 0;
-        // загрузим последний использовавшийся ид
-        _lastId = GlobalVariablesManager.getInstance().getVarInt(DB_VALUE);
-        if (_lastId == -1)
-            _lastId = 100;
-        Extend();
+	public SimpleIdFactory()
+	{
+		_freeCount = 0;
+		// загрузим последний использовавшийся ид
+		_lastId = GlobalVariablesManager.getInstance().getVarInt(DB_VALUE);
+		if (_lastId == -1)
+		{
+			_lastId = 100;
+		}
+		Extend();
 
-        _initialized = true;
-    }
+		_initialized = true;
+	}
 
-    @Override
-    synchronized public int getNextId()
-    {
-        _freeCount--;
-        _lastId++;
-        if (_freeCount <= 0)
-        {
-            Extend();
-        }
-        return _lastId;
-    }
+	@Override
+	synchronized public int getNextId()
+	{
+		_freeCount--;
+		_lastId++;
+		if (_freeCount <= 0)
+		{
+			Extend();
+		}
+		return _lastId;
+	}
 
-    @Override
-    public void releaseId(int id)
-    {
+	@Override
+	public void releaseId(int id)
+	{
 
-    }
+	}
 
-    @Override
-    public int size()
-    {
-        return 0;
-    }
+	@Override
+	public int size()
+	{
+		return 0;
+	}
 
-
-    /**
-     * взять следующий диапазон свободных ид и обновить запись в базе
-     */
-    protected void Extend()
-    {
-        _log.debug("take id's from " + (_lastId+1) + " to " + (_lastId + CAPACITY));
-        _freeCount += CAPACITY;
-        GlobalVariablesManager.getInstance().saveVarInt(DB_VALUE, _lastId + CAPACITY);
-    }
+	/**
+	 * взять следующий диапазон свободных ид и обновить запись в базе
+	 */
+	protected void Extend()
+	{
+		_log.debug("take id's from " + (_lastId + 1) + " to " + (_lastId + CAPACITY));
+		_freeCount += CAPACITY;
+		GlobalVariablesManager.getInstance().saveVarInt(DB_VALUE, _lastId + CAPACITY);
+	}
 }

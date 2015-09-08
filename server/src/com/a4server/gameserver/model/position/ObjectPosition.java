@@ -25,19 +25,25 @@ public class ObjectPosition
     public volatile int _x;
     public volatile int _y;
 //    private volatile int _z;
+
     /**
      * уровень земли
      */
     public volatile int _level;
+
     /**
      * грид в котором находимся
      */
     private Grid _grid;
+
     /**
      * объект родитель чьи координаты описываем
      */
     private final GameObject _activeObject;
 
+    /**
+     * мы точно знаем где находится объект (загрузка объектов грида из базы)
+     */
     public ObjectPosition(int x, int y, int level, Grid grid)
     {
         _x = x;
@@ -48,6 +54,9 @@ public class ObjectPosition
         _activeObject = null;
     }
 
+    /**
+     * позиция для объекта который спавнится (игрок может и не заспавнится на свою прошлую позицию)
+     */
     public ObjectPosition(int x, int y, int level, GameObject activeObject)
     {
         _x = x;
