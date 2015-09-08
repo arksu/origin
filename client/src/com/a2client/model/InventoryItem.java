@@ -14,6 +14,7 @@ public class InventoryItem
 	public static final int WIDTH = 32;
 	public static final int HEIGHT = 32;
 
+	private final int _inventoryId;
 	private final int _objectId;
 	private final int _typeId;
 	private final int _q;
@@ -26,9 +27,10 @@ public class InventoryItem
 	private final int _ticks;
 	private final int _ticksTotal;
 
-	public InventoryItem(int objectId, int typeId, int q, int x, int y, int w, int h, int stage, int amount,
+	public InventoryItem(int inventoryId, int objectId, int typeId, int q, int x, int y, int w, int h, int stage, int amount,
 						 int ticks, int ticksTotal)
 	{
+		_inventoryId = inventoryId;
 		_objectId = objectId;
 		_typeId = typeId;
 		_q = q;
@@ -40,6 +42,11 @@ public class InventoryItem
 		_amount = amount;
 		_ticks = ticks;
 		_ticksTotal = ticksTotal;
+	}
+
+	public int getInventoryId()
+	{
+		return _inventoryId;
 	}
 
 	public int getObjectId()

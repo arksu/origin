@@ -46,6 +46,27 @@ public class GUI_Inventory extends GUI_Control
 		{
 			_items.add(new GUI_InventoryItem(this, item));
 		}
+
+		// по сетке создаем недостающие пустые ячейки
+		for (int x = 0; x < _inventory.getWidth(); x++)
+		{
+			for (int y = 0; y < _inventory.getHeight(); y++)
+			{
+				boolean found = false;
+				for (GUI_InventoryItem item : _items)
+				{
+					if (item.contains(x, y))
+					{
+						found = true;
+						break;
+					}
+				}
+				if (!found)
+				{
+					_items.add(new GUI_InventoryItem(this, x, y));
+				}
+			}
+		}
 	}
 
 	@Override

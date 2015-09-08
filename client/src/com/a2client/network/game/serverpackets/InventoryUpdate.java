@@ -56,7 +56,7 @@ public class InventoryUpdate extends GameServerPacket
 			int ticks = readH();
 			int ticksTotal = readH();
 
-			_items.add(new InventoryItem(objectId, typeId, q, x, y, w, h, stage, amount, ticks, ticksTotal));
+			_items.add(new InventoryItem(_inventoryId, objectId, typeId, q, x, y, w, h, stage, amount, ticks, ticksTotal));
 		}
 	}
 

@@ -8,22 +8,34 @@ import org.slf4j.LoggerFactory;
  */
 public class InventoryClick extends GameClientPacket
 {
-    private static final Logger _log = LoggerFactory.getLogger(InventoryClick.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(InventoryClick.class.getName());
 
-    int _inventoryId;
-    int _objectId;
+	private final int _inventoryId;
+	private final int _objectId;
+	private final int _btn;
+	private final int _mod;
+	private final int _offsetX;
+	private final int _offsetY;
 
-    public InventoryClick(int inventoryId, int objectId)
-    {
-        _inventoryId = inventoryId;
-        _objectId = objectId;
-    }
+	public InventoryClick(int inventoryId, int objectId, int btn, int mod, int offsetX, int offsetY)
+	{
+		_inventoryId = inventoryId;
+		_objectId = objectId;
+		_btn = btn;
+		_mod = mod;
+		_offsetX = offsetX;
+		_offsetY = offsetY;
+	}
 
-    @Override
-    protected void write()
-    {
-        writeC(0x19);
-        writeD(_inventoryId);
-        writeD(_objectId);
-    }
+	@Override
+	protected void write()
+	{
+		writeC(0x19);
+		writeD(_inventoryId);
+		writeD(_objectId);
+		writeC(_btn);
+		writeC(_mod);
+		writeC(_offsetX);
+		writeC(_offsetY);
+	}
 }

@@ -26,6 +26,11 @@ public class GUI_InventoryWindow extends GUI_Window
 	public GUI_InventoryWindow(GUI_Control parent, int inventoryId)
 	{
 		super(parent);
+		assign(inventoryId);
+	}
+
+	public void assign(int inventoryId)
+	{
 		_inventoryId = inventoryId;
 		Inventory inv = InventoryCache.getInstance().get(inventoryId);
 		if (inv != null)

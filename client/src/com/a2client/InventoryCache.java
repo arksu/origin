@@ -48,6 +48,7 @@ public class InventoryCache
 	public void clear()
 	{
 		_inventories.clear();
+		_openInventories.clear();
 	}
 
 	/**
