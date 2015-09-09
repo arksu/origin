@@ -507,4 +507,13 @@ public class Player extends Human
 	{
 		return _hand;
 	}
+
+	public void setHand(Hand hand)
+	{
+		_hand = hand;
+		if (hand == null)
+		{
+			// todo: записать в базу что в руке ничего нет
+		}
+	}
 }

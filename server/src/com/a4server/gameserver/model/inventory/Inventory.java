@@ -121,13 +121,64 @@ public class Inventory
 	}
 
 	/**
-	 * взять вещь из инвентаря
-	 * @param objectId
-	 * @return
+	 * найти вещь в инвентаре и во всех его дочерних
 	 */
-	public InventoryItem takeItem(int objectId)
+	public InventoryItem findItem(int objectId)
 	{
-		// todo : takeItem
+		for (InventoryItem item : _items)
+		{
+			if (item.getObjectId() == objectId)
+			{
+				return item;
+			}
+			if (item.getInventory() != null)
+			{
+				InventoryItem i = item.getInventory().findItem(objectId);
+				if (i != null)
+				{
+					return i;
+				}
+			}
+		}
 		return null;
+	}
+
+	/**
+	 * найти инвентарь внутри с указанны ид
+	 */
+	public Inventory findInventory(int invenroyId)
+	{
+		if (_invenroyId == invenroyId) return this;
+		for (InventoryItem item : _items)
+		{
+			if (item.getInventory() != null)
+			{
+				Inventory i = item.getInventory().findInventory(invenroyId);
+				if (i != null)
+				{
+					return i;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * взять вещь из инвентаря
+	 * @return взятую вещь, null если такой вещи нет в инвентаре
+	 */
+	public InventoryItem takeItem(InventoryItem item)
+	{
+		// todo : takeItem, locks?
+		return null;
+	}
+
+	/**
+	 * положить вещь в инвентарь
+	 * @param item
+	 */
+	public void putItem(InventoryItem item)
+	{
+
 	}
 }

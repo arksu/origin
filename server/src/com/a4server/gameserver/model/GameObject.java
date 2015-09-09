@@ -64,7 +64,7 @@ public class GameObject
 	 * с кем взаимодействует объект. список двусторонний.
 	 * если у меня тут есть ктото, то и у оного в списке есть я
 	 */
-	protected FastSet<GameObject> _interactWith = new FastSet<GameObject>().shared();
+	protected final FastSet<GameObject> _interactWith = new FastSet<GameObject>().shared();
 
 	/**
 	 * объект в процессе удаления и ни на какие события больше не должен реагировать
@@ -197,6 +197,11 @@ public class GameObject
 		return !_interactWith.isEmpty();
 	}
 
+	public FastSet<GameObject> getInteractWith()
+	{
+		return _interactWith;
+	}
+
 	/**
 	 * начать взаимодействие с другим объектом
 	 * @param other другой объект c которым мы будем взаимодействовать
@@ -244,6 +249,7 @@ public class GameObject
 	 * что я должен сделать если другой (игрок) начал взаимодействие со мной
 	 * @param other другой объект который взаимодействует со мной
 	 */
+	@SuppressWarnings({"UnusedParameters", "StatementWithEmptyBody"})
 	protected void interactImpl(GameObject other)
 	{
 		// если у нас есть инвентарь
@@ -290,6 +296,11 @@ public class GameObject
 			o.unlink(this);
 		}
 		_interactWith.clear();
+	}
+
+	public Inventory getInventory()
+	{
+		return _inventory;
 	}
 
 	/**

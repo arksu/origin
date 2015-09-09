@@ -140,6 +140,11 @@ public class InventoryItem
 		return _template;
 	}
 
+	public Inventory getInventory()
+	{
+		return _inventory;
+	}
+
 	@Override
 	public String toString()
 	{
