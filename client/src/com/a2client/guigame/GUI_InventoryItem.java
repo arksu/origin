@@ -82,7 +82,7 @@ public class GUI_InventoryItem extends GUI_Control
 		if (parent instanceof GUI_Inventory)
 		{
 			new InventoryClick(
-					_item != null ? _item.getInventoryId() : 0,
+					((GUI_Inventory) parent).getInventoryId(),
 					_item != null ? _item.getObjectId() : 0,
 					btn,
 					Input.GetKeyState(),

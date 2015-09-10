@@ -74,4 +74,14 @@ public class GUI_Inventory extends GUI_Control
 	{
 		// возможно в будущем отрисуем какой нибудь общий фон
 	}
+
+	public Inventory getInventory()
+	{
+		return _inventory;
+	}
+
+	public int getInventoryId()
+	{
+		return _inventory.getInventoryId();
+	}
 }

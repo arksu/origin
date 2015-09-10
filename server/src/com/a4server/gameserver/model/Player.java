@@ -238,7 +238,6 @@ public class Player extends Human
 	 */
 	public void deleteMe()
 	{
-		_log.debug("deleteMe");
 		_isDeleteing = true;
 
 		// деактивировать занятые гриды
