@@ -9,6 +9,7 @@ package com.a4server.gameserver.model;
 import com.a4server.Config;
 import com.a4server.Database;
 import com.a4server.ThreadPoolManager;
+import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.collision.Collision;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
@@ -34,6 +35,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * участок карты 1 грид (100 на 100 тайлов)
  * хранит в себе объекты этого грида
  */
+@SuppressWarnings("unused")
 public class Grid
 {
 	private static final Logger _log = LoggerFactory.getLogger(Grid.class.getName());
@@ -73,6 +75,7 @@ public class Grid
 	 */
 	private Tile[] _tiles;
 	private byte[] _blob;
+
 	/**
 	 * последний игровой тик когда обновлялся грид
 	 */
@@ -82,24 +85,38 @@ public class Grid
 	 * координаты грида в мире (грид сетка)
 	 */
 	private int _x, _y, _level;
+
+	/**
+	 * номер супергрида, грида
+	 */
 	private int _sg, _grid;
+
 	/**
 	 * координаты начальной точки грида в мировых координатах
 	 */
 	private int _wx, _wy;
 
+	/**
+	 * грид загружен?
+	 */
 	private boolean _loaded;
+
+	/**
+	 * в состоянии загрузки?
+	 */
 	private boolean _loading;
+
 	private Future<?> _loadFuture;
+
 	/**
 	 * лок на загрузку грида. загружать можно только одним потоком. и только 1 раз
 	 */
-	private ReentrantLock _loadLock = new ReentrantLock();
+	private final ReentrantLock _loadLock = new ReentrantLock();
 
 	/**
 	 * лок на все операции по гриду
 	 */
-	private ReentrantLock _mainLock = new ReentrantLock();
+	private final ReentrantLock _mainLock = new ReentrantLock();
 	/**
 	 * список игроков которые поддерживают этот грид активным
 	 */
@@ -137,8 +154,7 @@ public class Grid
 
 	/**
 	 * добавить объект в грид
-	 * перед вызовомгрид обязательно должен быть залочен!!!
-	 * @param object
+	 * перед вызовом грид обязательно должен быть залочен!!!
 	 */
 	public void addObject(GameObject object) throws RuntimeException
 	{
@@ -204,7 +220,7 @@ public class Grid
 
 	/**
 	 * получить сырые данные массива тайлов
-	 * @return
+	 * @return бинарные данные массива тайлов
 	 */
 	public byte[] getTilesBlob()
 	{
@@ -231,9 +247,17 @@ public class Grid
 	 */
 	public void scheduleLoad()
 	{
-		_loadFuture = ThreadPoolManager.getInstance().scheduleGeneral(new LoadGridTask(this), 0);
+		if (_loaded)
+		{
+			throw new IllegalStateException("grid " + _x + ", " + _y + " already loaded");
+		}
+		else
+		{
+			_loadFuture = ThreadPoolManager.getInstance().scheduleGeneral(new LoadGridTask(this), 0);
+		}
 	}
 
+	@SuppressWarnings("unused")
 	public Future<?> getLoadFuture()
 	{
 		return _loadFuture;
@@ -461,7 +485,6 @@ public class Grid
 			return null;
 		}
 
-
 		int toX = x;
 		int toY = y;
 		// если длина для сдвига есть, ищем случайную точку рядом
@@ -550,9 +573,9 @@ public class Grid
 
 	/**
 	 * точка в мировых координатах находится внутри грида
-	 * @param x
-	 * @param y
-	 * @return
+	 * @param x абсолютные мировые координаты
+	 * @param y абсолютные мировые координаты
+	 * @return истина если точка внутри грида
 	 */
 	public boolean pointInsideMe(int x, int y)
 	{
@@ -565,6 +588,7 @@ public class Grid
 	public void updateGrid()
 	{
 		// TODO updateGrid
+		_last_tick = GameTimeController.getInstance().getGameTicks();
 	}
 
 	/**
@@ -611,7 +635,7 @@ public class Grid
 				if (grid != this)
 				{
 					// пробуем залочить для обсчета коллизий
-					if (!tryLockForCollision(grid))
+					if (!grid.tryLockForCollision())
 					{
 						return CollisionResult.FAIL;
 					}
@@ -630,7 +654,7 @@ public class Grid
 				grid.waitLoad();
 				if (grid != this)
 				{
-					if (!tryLockForCollision(grid))
+					if (!grid.tryLockForCollision())
 					{
 						return CollisionResult.FAIL;
 					}
@@ -649,7 +673,7 @@ public class Grid
 				grid.waitLoad();
 				if (grid != this)
 				{
-					if (!tryLockForCollision(grid))
+					if (!grid.tryLockForCollision())
 					{
 						return CollisionResult.FAIL;
 					}
@@ -668,7 +692,7 @@ public class Grid
 				grid.waitLoad();
 				if (grid != this)
 				{
-					if (!tryLockForCollision(grid))
+					if (!grid.tryLockForCollision())
 					{
 						return CollisionResult.FAIL;
 					}
@@ -737,18 +761,16 @@ public class Grid
 
 	/**
 	 * попробовать залочить для обсчета коллизий
-	 * @param grid
-	 * @return
 	 */
-	private boolean tryLockForCollision(Grid grid)
+	private boolean tryLockForCollision()
 	{
 		try
 		{
-			return grid.tryLock(MAX_WAIT_LOCK);
+			return tryLock(MAX_WAIT_LOCK);
 		}
 		catch (InterruptedException e)
 		{
-			_log.warn("Timeout wait tryLockForCollision " + grid);
+			_log.warn("Timeout wait tryLockForCollision " + this);
 			return false;
 		}
 	}

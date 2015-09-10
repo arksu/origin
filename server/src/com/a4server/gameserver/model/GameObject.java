@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * игровой объект
@@ -70,6 +72,11 @@ public class GameObject
 	 * объект в процессе удаления и ни на какие события больше не должен реагировать
 	 */
 	protected boolean _isDeleteing = false;
+
+	/**
+	 * блокировка на все операции с объектом
+	 */
+	protected final ReentrantLock _lock = new ReentrantLock();
 
 	public GameObject(int objectId, ObjectTemplate template)
 	{
@@ -147,6 +154,16 @@ public class GameObject
 	public boolean isDeleteing()
 	{
 		return _isDeleteing;
+	}
+
+	public boolean tryLock(int time) throws InterruptedException
+	{
+		return _lock.tryLock(time, TimeUnit.MILLISECONDS);
+	}
+
+	public void unlock()
+	{
+		_lock.unlock();
 	}
 
 	/**
