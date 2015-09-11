@@ -29,7 +29,7 @@ public class InventoryUpdate extends GameServerPacket
 	protected void write()
 	{
 		writeC(0x18);
-		writeD(_inventory.getParent().getObjectId());
+		writeD(_inventory.getObject().getObjectId());
 		writeD(_inventory.getInvenroyId());
 		writeH(_inventory.getWidth());
 		writeH(_inventory.getHeight());

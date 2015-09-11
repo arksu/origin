@@ -156,11 +156,26 @@ public class GameObject
 		return _isDeleteing;
 	}
 
-	public boolean tryLock(int time) throws InterruptedException
+	/**
+	 * попытаться захватить блокировку на этот объект
+	 * @param time время в мс сколько будем ждать
+	 * @return истина если блокировку получили
+	 */
+	public boolean tryLock(int time)
 	{
-		return _lock.tryLock(time, TimeUnit.MILLISECONDS);
+		try
+		{
+			return !_isDeleteing && _lock.tryLock(time, TimeUnit.MILLISECONDS);
+		}
+		catch (InterruptedException e)
+		{
+			return false;
+		}
 	}
 
+	/**
+	 * освободить блокировку
+	 */
 	public void unlock()
 	{
 		_lock.unlock();

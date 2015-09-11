@@ -17,12 +17,16 @@ public class InventoryClick extends GameClientPacket
 {
 	private static final Logger _log = LoggerFactory.getLogger(InventoryClick.class.getName());
 
+	public static final int WAIT_LOCK = 300;
+
 	private int _inventoryId;
 	private int _objectId;
 	private int _btn;
 	private int _mod;
 	private int _offsetX;
 	private int _offsetY;
+	private int _x;
+	private int _y;
 
 	@Override
 	public void readImpl()
@@ -33,6 +37,7 @@ public class InventoryClick extends GameClientPacket
 		_mod = readC();
 		_offsetX = readC();
 		_offsetY = readC();
+
 	}
 
 	@Override
@@ -69,34 +74,46 @@ public class InventoryClick extends GameClientPacket
 				// пробуем взять вещь из инвентаря
 				if (item != null)
 				{
-					item = item.getParent().takeItem(item);
-				}
-
-				// взяли вещь из инвентаря
-				if (item != null)
-				{
-					// какая кнопка была зажата
-					switch (_mod)
+					if (item.getParentInventory().getObject().tryLock(WAIT_LOCK))
 					{
-						case 0:
-							// ничего не нажато. пихаем в руку
-							player.setHand(new Hand(player, item));
-							break;
+						try
+						{
+							InventoryItem taked = item.getParentInventory().takeItem(item) ? item : null;
 
-						case Utils.MOD_CONTROL:
-							// сразу перекинем вещь в инвентарь
-							// если не получилось закинуть вещь - засунем ее в руку
-							putItem(player, item);
-							break;
+							// взяли вещь из инвентаря
+							if (taked != null)
+							{
+								// какая кнопка была зажата
+								switch (_mod)
+								{
+									case 0:
+										// ничего не нажато. пихаем в руку
+										player.setHand(new Hand(player, taked));
+										break;
+
+									case Utils.MOD_CONTROL:
+										// сразу перекинем вещь в инвентарь
+										putItem(player, taked, -1, -1);
+										break;
+								}
+							}
+						}
+						finally
+						{
+							item.getParentInventory().getObject().unlock();
+						}
 					}
 				}
-				// возможно какой то баг или ошибка. привлечем внимание
-				_log.warn("InventoryClick: item=null");
+				else
+				{
+					// возможно какой то баг или ошибка. привлечем внимание
+					_log.error("InventoryClick: item=null");
+				}
 			}
 			else
 			{
 				// положим в инвентарь то что держим в руке
-				putItem(player, player.getHand().getItem());
+				putItem(player, player.getHand().getItem(), _x, _y);
 			}
 		}
 	}
@@ -105,7 +122,7 @@ public class InventoryClick extends GameClientPacket
 	 * положить вещь в инвентарь
 	 * @param item вещь которую кладем
 	 */
-	public void putItem(Player player, InventoryItem item)
+	public void putItem(Player player, InventoryItem item, int x, int y)
 	{
 		Inventory to = null;
 		if (player.getInventory() != null)
@@ -127,7 +144,7 @@ public class InventoryClick extends GameClientPacket
 		// положим в инвентарь
 		if (to != null)
 		{
-			to.putItem(item);
+			to.putItem(item, x, y);
 		}
 	}
 }

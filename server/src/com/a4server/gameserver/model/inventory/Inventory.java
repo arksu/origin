@@ -24,7 +24,7 @@ public class Inventory
 	/**
 	 * объект родитель
 	 */
-	private final GameObject _parent;
+	private final GameObject _object;
 
 	/**
 	 * ид инвентаря, объект или вещь к которой он относится
@@ -47,11 +47,11 @@ public class Inventory
 	 */
 	FastList<InventoryItem> _items = new FastList<>();
 
-	public Inventory(GameObject parent, int width, int height)
+	public Inventory(GameObject object, int width, int height)
 	{
-		_parent = parent;
+		_object = object;
 		_inventory = null;
-		_invenroyId = parent.getObjectId();
+		_invenroyId = object.getObjectId();
 		_width = width;
 		_height = height;
 		load();
@@ -59,9 +59,9 @@ public class Inventory
 
 	public Inventory(Inventory parent, int objectId, int width, int height)
 	{
+		_object = parent.getObject();
 		_inventory = parent;
 		_invenroyId = objectId;
-		_parent = null;
 		_width = width;
 		_height = height;
 		load();
@@ -95,9 +95,9 @@ public class Inventory
 		}
 	}
 
-	public GameObject getParent()
+	public GameObject getObject()
 	{
-		return _parent;
+		return _object;
 	}
 
 	public FastList<InventoryItem> getItems()
@@ -165,19 +165,19 @@ public class Inventory
 
 	/**
 	 * взять вещь из инвентаря
-	 * @return взятую вещь, null если такой вещи нет в инвентаре
 	 */
-	public InventoryItem takeItem(InventoryItem item)
+	public boolean takeItem(InventoryItem item)
 	{
-		// todo : takeItem, locks?
-		return null;
+		return _items.remove(item);
 	}
 
 	/**
 	 * положить вещь в инвентарь
-	 * @param item
+	 * @param item вещь
+	 * @param x координаты куда положить вещь в инвентаре
+	 * @param y координаты куда положить вещь в инвентаре
 	 */
-	public void putItem(InventoryItem item)
+	public void putItem(InventoryItem item, int x, int y)
 	{
 
 	}

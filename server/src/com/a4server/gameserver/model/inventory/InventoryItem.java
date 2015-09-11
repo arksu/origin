@@ -20,7 +20,7 @@ public class InventoryItem
 	/**
 	 * инвентарь в котором хранится данная вещь
 	 */
-	private Inventory _parent;
+	private Inventory _parentInventory;
 
 	/**
 	 * вещь также может содержать инвентарь (вложенный)
@@ -53,9 +53,9 @@ public class InventoryItem
 	private int _ticks;
 	private int _ticksTotal;
 
-	public InventoryItem(Inventory parent, ResultSet rset)
+	public InventoryItem(Inventory parentInventory, ResultSet rset)
 	{
-		_parent = parent;
+		_parentInventory = parentInventory;
 		try
 		{
 			_objectId = rset.getInt("id");
@@ -68,10 +68,11 @@ public class InventoryItem
 			_ticks = rset.getInt("ticks");
 			_ticksTotal = rset.getInt("ticksTotal");
 
-			InventoryTemplate inventory = _template.getInventory();
-			if (inventory != null)
+			// вещь тоже может содержать внутри себя инвентарь
+			InventoryTemplate template = _template.getInventory();
+			if (template != null)
 			{
-				_inventory = new Inventory(_parent, _objectId, inventory.getWidth(), inventory.getHeight());
+				_inventory = new Inventory(_parentInventory, _objectId, template.getWidth(), template.getHeight());
 			}
 		}
 		catch (SQLException e)
@@ -85,9 +86,9 @@ public class InventoryItem
 		return _objectId;
 	}
 
-	public Inventory getParent()
+	public Inventory getParentInventory()
 	{
-		return _parent;
+		return _parentInventory;
 	}
 
 	public int getQ()
