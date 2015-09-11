@@ -38,84 +38,96 @@ public class InventoryClick extends GameClientPacket
 		_mod = readC();
 		_offsetX = readC();
 		_offsetY = readC();
-
+		_x = readC();
+		_y = readC();
 	}
 
 	@Override
 	public void run()
 	{
+		_log.debug("InventoryClick: obj=" + _objectId + " inv=" + _inventoryId + " offset=" + _offsetX + ", " + _offsetY + " mod=" + _mod);
 		Player player = client.getActiveChar();
-		if (player != null && _btn == 0)
+		if (player != null && _btn == 0 && player.tryLock(WAIT_LOCK))
 		{
-			_log.debug("InventoryClick: obj=" + _objectId + " inv=" + _inventoryId + " offset=" + _offsetX + ", " + _offsetY);
-
-			// держим в руке что-то?
-			if (player.getHand() == null)
+			try
 			{
-				// в руке ничего нет. возьмем из инвентаря
-				InventoryItem item = null;
-				if (player.getInventory() != null)
+				// держим в руке что-то?
+				if (player.getHand() == null)
 				{
-					item = player.getInventory().findItem(_objectId);
-				}
-				// не нашли эту вещь у себя в инвентаре
-				// попробуем найти в объекте с которым взаимодействуем
-				if (item == null && player.isInteractive())
-				{
-					for (GameObject object : player.getInteractWith())
+					// в руке ничего нет. возьмем из инвентаря
+					InventoryItem item = null;
+					if (player.getInventory() != null)
 					{
-						item = object.getInventory() != null ? object.getInventory().findItem(_objectId) : null;
-						if (item != null)
-						{
-							break;
-						}
+						item = player.getInventory().findItem(_objectId);
 					}
-				}
-
-				// пробуем взять вещь из инвентаря
-				if (item != null)
-				{
-					if (item.getParentInventory().getObject().tryLock(WAIT_LOCK))
+					// не нашли эту вещь у себя в инвентаре
+					// попробуем найти в объекте с которым взаимодействуем
+					if (item == null && player.isInteractive())
 					{
-						try
+						for (GameObject object : player.getInteractWith())
 						{
-							InventoryItem taked = item.getParentInventory().takeItem(item) ? item : null;
-
-							// взяли вещь из инвентаря
-							if (taked != null)
+							item = object.getInventory() != null ? object.getInventory().findItem(_objectId) : null;
+							if (item != null)
 							{
-								item.getParentInventory().getObject().sendInteractPacket(new InventoryUpdate(taked.getInventory()));
-								// какая кнопка была зажата
-								switch (_mod)
-								{
-									case 0:
-										// ничего не нажато. пихаем в руку
-										player.setHand(new Hand(player, taked));
-										break;
-
-									case Utils.MOD_CONTROL:
-										// сразу перекинем вещь в инвентарь
-										putItem(player, taked, -1, -1);
-										break;
-								}
+								break;
 							}
 						}
-						finally
+					}
+
+					// пробуем взять вещь из инвентаря
+					if (item != null)
+					{
+						if (item.getParentInventory().getObject().tryLock(WAIT_LOCK))
 						{
-							item.getParentInventory().getObject().unlock();
+							try
+							{
+								InventoryItem taked = item.getParentInventory().takeItem(item) ? item : null;
+
+								// взяли вещь из инвентаря
+								if (taked != null)
+								{
+									item.getParentInventory().getObject().sendInteractPacket(new InventoryUpdate(item.getParentInventory()));
+									// какая кнопка была зажата
+									switch (_mod)
+									{
+										case Utils.MOD_ALT:
+											// сразу перекинем вещь в инвентарь
+											if (!putItem(player, taked, -1, -1))
+											{
+												player.setHand(new Hand(player, taked));
+											}
+											break;
+										default:
+											// ничего не нажато. пихаем в руку
+											player.setHand(new Hand(player, taked));
+											break;
+									}
+								}
+							}
+							finally
+							{
+								item.getParentInventory().getObject().unlock();
+							}
 						}
+					}
+					else
+					{
+						// возможно какой то баг или ошибка. привлечем внимание
+						_log.error("InventoryClick: item=null");
 					}
 				}
 				else
 				{
-					// возможно какой то баг или ошибка. привлечем внимание
-					_log.error("InventoryClick: item=null");
+					// положим в инвентарь то что держим в руке
+					if (putItem(player, player.getHand().getItem(), _x, _y))
+					{
+						player.setHand(null);
+					}
 				}
 			}
-			else
+			finally
 			{
-				// положим в инвентарь то что держим в руке
-				putItem(player, player.getHand().getItem(), _x, _y);
+				player.unlock();
 			}
 		}
 	}
@@ -127,10 +139,12 @@ public class InventoryClick extends GameClientPacket
 	public boolean putItem(Player player, InventoryItem item, int x, int y)
 	{
 		Inventory to = null;
+		// ищем нужный инвентарь у себя
 		if (player.getInventory() != null)
 		{
 			to = player.getInventory().findInventory(_inventoryId);
 		}
+		// а потом в объектах с которыми взаимодействую
 		if (to == null && player.isInteractive())
 		{
 			for (GameObject object : player.getInteractWith())
@@ -153,20 +167,15 @@ public class InventoryClick extends GameClientPacket
 					if (to.putItem(item, x, y))
 					{
 						to.getObject().sendInteractPacket(new InventoryUpdate(to));
+						return true;
 					}
-					return true;
 				}
 				finally
 				{
 					to.getObject().unlock();
 				}
 			}
-			else
-			{
-				return false;
-			}
 		}
-
 		return false;
 	}
 }

@@ -349,6 +349,10 @@ public class GameObject
 				((Player) object).getClient().sendPacket(pkt);
 			}
 		}
+		if (this instanceof Player)
+		{
+			((Player) this).getClient().sendPacket(pkt);
+		}
 	}
 
 	/**

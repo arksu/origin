@@ -19,6 +19,9 @@ public class GUI_InventoryItem extends GUI_Control
 
 	InventoryItem _item;
 
+	final int _x;
+	final int _y;
+
 	public GUI_InventoryItem(GUI_Control parent, InventoryItem item)
 	{
 		super(parent);
@@ -26,6 +29,8 @@ public class GUI_InventoryItem extends GUI_Control
 		SetPos(item.getX() * InventoryItem.WIDTH, item.getY() * InventoryItem.HEIGHT);
 		SetSize(InventoryItem.WIDTH * item.getWidth(), InventoryItem.HEIGHT * item.getHeight());
 		_item = item;
+		_x = _item.getX();
+		_y = _item.getY();
 	}
 
 	public GUI_InventoryItem(GUI_Control parent, int x, int y)
@@ -33,6 +38,8 @@ public class GUI_InventoryItem extends GUI_Control
 		super(parent);
 		SetPos(x * InventoryItem.WIDTH, y * InventoryItem.HEIGHT);
 		SetSize(InventoryItem.WIDTH, InventoryItem.HEIGHT);
+		_x = x;
+		_y = y;
 	}
 
 	@Override
@@ -87,7 +94,9 @@ public class GUI_InventoryItem extends GUI_Control
 					btn,
 					Input.GetKeyState(),
 					mx,
-					my
+					my,
+					_x,
+					_y
 			).Send();
 //			int xx = (x * 33 + mx - (Player.hand.isExist() ? Player.hand.offset_x : 0) + 16) / 33;
 //			int yy = (y * 33 + my - (Player.hand.isExist() ? Player.hand.offset_y : 0) + 16) / 33;

@@ -93,7 +93,11 @@ public class InventoryCache
 		{
 			openInventory(inventoryId);
 		}
+	}
 
+	public GUI_InventoryWindow getInventoryWindow(int inventoryId)
+	{
+		return _openInventories.get(inventoryId);
 	}
 
 	public static InventoryCache getInstance()

@@ -181,18 +181,28 @@ public class Inventory
 	{
 		if (x >= 0 && y >= 0)
 		{
-			for (InventoryItem i : _items)
+			// если вещь влезает в инвентарь
+			if (x + item.getWidth() <= getWidth() && y + item.getHeight() <= getHeight())
 			{
-				if (!i.contains(x, y, item.getWidth(), item.getHeight()))
+				boolean conflict = false;
+				for (InventoryItem i : _items)
+				{
+					if (i.contains(x, y, item.getWidth(), item.getHeight()))
+					{
+						conflict = true;
+					}
+				}
+				if (!conflict)
 				{
 					_items.add(item);
+					item.setXY(x, y);
 					return true;
 				}
 			}
 		}
 		else
 		{
-			// мы не знаем куда положить. ищем свободное место. иначе вернем ложь
+			// todo мы не знаем куда положить. ищем свободное место. иначе вернем ложь
 
 		}
 		return false;

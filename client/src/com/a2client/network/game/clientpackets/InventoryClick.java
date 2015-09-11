@@ -16,8 +16,10 @@ public class InventoryClick extends GameClientPacket
 	private final int _mod;
 	private final int _offsetX;
 	private final int _offsetY;
+	private final int _x;
+	private final int _y;
 
-	public InventoryClick(int inventoryId, int objectId, int btn, int mod, int offsetX, int offsetY)
+	public InventoryClick(int inventoryId, int objectId, int btn, int mod, int offsetX, int offsetY, int x, int y)
 	{
 		_inventoryId = inventoryId;
 		_objectId = objectId;
@@ -25,6 +27,8 @@ public class InventoryClick extends GameClientPacket
 		_mod = mod;
 		_offsetX = offsetX;
 		_offsetY = offsetY;
+		_x = x;
+		_y = y;
 	}
 
 	@Override
@@ -37,5 +41,7 @@ public class InventoryClick extends GameClientPacket
 		writeC(_mod);
 		writeC(_offsetX);
 		writeC(_offsetY);
+		writeC(_x);
+		writeC(_y);
 	}
 }

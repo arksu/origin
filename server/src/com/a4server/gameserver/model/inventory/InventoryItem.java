@@ -106,6 +106,12 @@ public class InventoryItem
 		return _y;
 	}
 
+	public void setXY(int x, int y)
+	{
+		_x = x;
+		_y = y;
+	}
+
 	public int getWidth()
 	{
 		return _template.getWidth();
@@ -148,10 +154,10 @@ public class InventoryItem
 
 	public boolean contains(int x, int y, int w, int h)
 	{
-		final int tr = _x + _template.getWidth();
-		final int tb = _y + _template.getHeight();
-		final int r = x + w;
-		final int b = y + h;
+		final int tr = _x + _template.getWidth() - 1;
+		final int tb = _y + _template.getHeight() - 1;
+		final int r = x + w - 1;
+		final int b = y + h - 1;
 		return (
 				((_x >= x) && (_x <= r)) || ((tr >= x) && (tr <= r)) ||
 						((x >= _x) && (x <= tr)) || ((r >= _x) && (r <= tr))

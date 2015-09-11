@@ -507,6 +507,11 @@ public class Player extends Human
 		return _hand;
 	}
 
+	/**
+	 * non blocking
+	 * @param hand
+	 * @return
+	 */
 	public boolean setHand(Hand hand)
 	{
 		_hand = hand;
