@@ -95,8 +95,9 @@ public class GridChunk
 
                 tx = ox + x;
                 ty = oy + y;
-                int h = tx+ty*3+x*5+y;
-                f = (h % 10) / 40f;
+//                int h = tx+ty*3+x*5+y;
+//                f = (h % 10) / 40f;
+                f = 0;
 
                 // 0 =====
                 _vertex[idx++] = tx;
@@ -104,9 +105,9 @@ public class GridChunk
                 _vertex[idx++] = ty;
 
                 // normal
-                _vertex[idx++] = 0.3f;
-                _vertex[idx++] = 0.4f;
-                _vertex[idx++] = 0.3f;
+                _vertex[idx++] = 0f;
+                _vertex[idx++] = 1f;
+                _vertex[idx++] = 0f;
 
                 idx += 1; // skip color
 
