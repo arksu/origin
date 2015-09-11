@@ -146,6 +146,21 @@ public class InventoryItem
 		return _inventory;
 	}
 
+	public boolean contains(int x, int y, int w, int h)
+	{
+		final int tr = _x + _template.getWidth();
+		final int tb = _y + _template.getHeight();
+		final int r = x + w;
+		final int b = y + h;
+		return (
+				((_x >= x) && (_x <= r)) || ((tr >= x) && (tr <= r)) ||
+						((x >= _x) && (x <= tr)) || ((r >= _x) && (r <= tr))
+		) && (
+				((_y >= y) && (_y <= b)) || ((tb >= y) && (tb <= b)) ||
+						((y >= _y) && (y <= tb)) || ((b >= _y) && (b <= tb))
+		);
+	}
+
 	@Override
 	public String toString()
 	{

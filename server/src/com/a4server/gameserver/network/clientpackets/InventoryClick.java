@@ -5,6 +5,7 @@ import com.a4server.gameserver.model.Hand;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.inventory.InventoryItem;
+import com.a4server.gameserver.network.serverpackets.InventoryUpdate;
 import com.a4server.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,6 +84,7 @@ public class InventoryClick extends GameClientPacket
 							// взяли вещь из инвентаря
 							if (taked != null)
 							{
+								item.getParentInventory().getObject().sendInteractPacket(new InventoryUpdate(taked.getInventory()));
 								// какая кнопка была зажата
 								switch (_mod)
 								{
@@ -122,7 +124,7 @@ public class InventoryClick extends GameClientPacket
 	 * положить вещь в инвентарь
 	 * @param item вещь которую кладем
 	 */
-	public void putItem(Player player, InventoryItem item, int x, int y)
+	public boolean putItem(Player player, InventoryItem item, int x, int y)
 	{
 		Inventory to = null;
 		if (player.getInventory() != null)
@@ -144,7 +146,27 @@ public class InventoryClick extends GameClientPacket
 		// положим в инвентарь
 		if (to != null)
 		{
-			to.putItem(item, x, y);
+			if (to.getObject().tryLock(WAIT_LOCK))
+			{
+				try
+				{
+					if (to.putItem(item, x, y))
+					{
+						to.getObject().sendInteractPacket(new InventoryUpdate(to));
+					}
+					return true;
+				}
+				finally
+				{
+					to.getObject().unlock();
+				}
+			}
+			else
+			{
+				return false;
+			}
 		}
+
+		return false;
 	}
 }

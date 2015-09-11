@@ -11,6 +11,7 @@ import com.a4server.gameserver.network.serverpackets.ObjectAdd;
 import com.a4server.gameserver.network.serverpackets.ObjectInteractive;
 import com.a4server.gameserver.network.serverpackets.ObjectRemove;
 import com.a4server.util.Rect;
+import com.a4server.util.network.BaseSendPacket;
 import javolution.util.FastSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -333,6 +334,21 @@ public class GameObject
 	public Inventory getInventory()
 	{
 		return _inventory;
+	}
+
+	/**
+	 * отправить пакет всем объектам с кем я взаимодействую
+	 * @param pkt пакет
+	 */
+	public void sendInteractPacket(BaseSendPacket pkt)
+	{
+		for (GameObject object : _interactWith)
+		{
+			if (object instanceof Player)
+			{
+				((Player) object).getClient().sendPacket(pkt);
+			}
+		}
 	}
 
 	/**

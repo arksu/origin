@@ -177,8 +177,24 @@ public class Inventory
 	 * @param x координаты куда положить вещь в инвентаре
 	 * @param y координаты куда положить вещь в инвентаре
 	 */
-	public void putItem(InventoryItem item, int x, int y)
+	public boolean putItem(InventoryItem item, int x, int y)
 	{
+		if (x >= 0 && y >= 0)
+		{
+			for (InventoryItem i : _items)
+			{
+				if (!i.contains(x, y, item.getWidth(), item.getHeight()))
+				{
+					_items.add(item);
+					return true;
+				}
+			}
+		}
+		else
+		{
+			// мы не знаем куда положить. ищем свободное место. иначе вернем ложь
 
+		}
+		return false;
 	}
 }
