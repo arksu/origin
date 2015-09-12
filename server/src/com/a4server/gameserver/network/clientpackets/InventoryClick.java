@@ -94,12 +94,13 @@ public class InventoryClick extends GameClientPacket
 											// сразу перекинем вещь в инвентарь
 											if (!putItem(player, taked, -1, -1))
 											{
-												player.setHand(new Hand(player, taked));
+												setHand(player, taked);
 											}
 											break;
+
 										default:
 											// ничего не нажато. пихаем в руку
-											player.setHand(new Hand(player, taked));
+											setHand(player, taked);
 											break;
 									}
 								}
@@ -119,7 +120,8 @@ public class InventoryClick extends GameClientPacket
 				else
 				{
 					// положим в инвентарь то что держим в руке
-					if (putItem(player, player.getHand().getItem(), _x, _y))
+					Hand hand = player.getHand();
+					if (putItem(player, hand.getItem(), _x - hand.getOffsetX(), _y - hand.getOffsetY()))
 					{
 						player.setHand(null);
 					}
@@ -177,5 +179,14 @@ public class InventoryClick extends GameClientPacket
 			}
 		}
 		return false;
+	}
+
+	private void setHand(Player player, InventoryItem taked)
+	{
+		player.setHand(new Hand(player, taked,
+				_x - taked.getX(),
+				_y - taked.getY(),
+				_offsetX, _offsetY
+		));
 	}
 }

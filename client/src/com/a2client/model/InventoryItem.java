@@ -11,8 +11,17 @@ public class InventoryItem
 {
 	private static final Logger _log = LoggerFactory.getLogger(InventoryItem.class.getName());
 
+	/**
+	 * размеры слота в пикселах
+	 */
 	public static final int WIDTH = 32;
 	public static final int HEIGHT = 32;
+
+	/**
+	 * отступ между слотами
+	 */
+	public static final int MARGIN = 1;
+
 
 	private final int _inventoryId;
 	private final int _objectId;

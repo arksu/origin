@@ -4,8 +4,8 @@ import com.a2client.Input;
 import com.a2client.gui.GUI_Control;
 import com.a2client.model.InventoryItem;
 import com.a2client.network.game.clientpackets.InventoryClick;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import static com.a2client.model.InventoryItem.*;
 
 /**
  * вещь в инвентаре, отрисовывает 1 слот инвентаря
@@ -15,19 +15,23 @@ import org.slf4j.LoggerFactory;
  */
 public class GUI_InventoryItem extends GUI_Control
 {
-	private static final Logger _log = LoggerFactory.getLogger(GUI_InventoryItem.class.getName());
+	/**
+	 * вещь
+	 */
+	protected InventoryItem _item;
 
-	InventoryItem _item;
-
-	final int _x;
-	final int _y;
+	/**
+	 * координаты слота
+	 */
+	protected final int _x;
+	protected final int _y;
 
 	public GUI_InventoryItem(GUI_Control parent, InventoryItem item)
 	{
 		super(parent);
 
-		SetPos(item.getX() * InventoryItem.WIDTH, item.getY() * InventoryItem.HEIGHT);
-		SetSize(InventoryItem.WIDTH * item.getWidth(), InventoryItem.HEIGHT * item.getHeight());
+		SetPos(item.getX() * WIDTH, item.getY() * InventoryItem.HEIGHT);
+		SetSize(WIDTH * item.getWidth(), InventoryItem.HEIGHT * item.getHeight());
 		_item = item;
 		_x = _item.getX();
 		_y = _item.getY();
@@ -36,8 +40,8 @@ public class GUI_InventoryItem extends GUI_Control
 	public GUI_InventoryItem(GUI_Control parent, int x, int y)
 	{
 		super(parent);
-		SetPos(x * InventoryItem.WIDTH, y * InventoryItem.HEIGHT);
-		SetSize(InventoryItem.WIDTH, InventoryItem.HEIGHT);
+		SetPos(x * WIDTH, y * InventoryItem.HEIGHT);
+		SetSize(WIDTH, InventoryItem.HEIGHT);
 		_x = x;
 		_y = y;
 	}
@@ -86,6 +90,10 @@ public class GUI_InventoryItem extends GUI_Control
 		int mx = gui.mouse_pos.x - abs_pos.x;
 		int my = gui.mouse_pos.y - abs_pos.y;
 
+		// в какой слот тыкнули (если вещь большая и может занимать несколько слотов)
+		int ox = _x + mx / (WIDTH + MARGIN);
+		int oy = _y + my / (HEIGHT + MARGIN);
+
 		if (parent instanceof GUI_Inventory)
 		{
 			new InventoryClick(
@@ -95,8 +103,8 @@ public class GUI_InventoryItem extends GUI_Control
 					Input.GetKeyState(),
 					mx,
 					my,
-					_x,
-					_y
+					ox,
+					oy
 			).Send();
 //			int xx = (x * 33 + mx - (Player.hand.isExist() ? Player.hand.offset_x : 0) + 16) / 33;
 //			int yy = (y * 33 + my - (Player.hand.isExist() ? Player.hand.offset_y : 0) + 16) / 33;
