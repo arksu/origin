@@ -1,5 +1,6 @@
 package com.a2client;
 
+import com.a2client.model.Hand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,8 @@ public class Player
 
     private int _objectId;
     private String _name;
+
+    private Hand _hand;
 
     public void setObjectId(int myObjectId)
     {
@@ -49,4 +52,16 @@ public class Player
     public static Player getInstance() {
         return _instance;
     }
+
+    public Hand getHand()
+    {
+        return _hand;
+    }
+
+    public void setHand(Hand hand)
+    {
+        _hand = hand;
+    }
+
+
 }

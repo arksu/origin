@@ -30,7 +30,8 @@ public class GamePacketHandler
             ObjectPos.class,
             CreatureSay.class,
             InventoryUpdate.class,
-            ObjectInteractive.class
+            ObjectInteractive.class,
+            PlayerHand.class
     };
 
     static public void InitPackets()

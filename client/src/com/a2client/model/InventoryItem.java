@@ -22,17 +22,44 @@ public class InventoryItem
 	 */
 	public static final int MARGIN = 1;
 
-
+	/**
+	 * инвентарь в котором лежит
+	 */
 	private final int _inventoryId;
+
+	/**
+	 * ид объекта вещи
+	 */
 	private final int _objectId;
+
+	/**
+	 * тип
+	 */
 	private final int _typeId;
+
+	/**
+	 * качество
+	 */
 	private final int _q;
+
+	/**
+	 * координаты, размер
+	 */
 	private final int _x;
 	private final int _y;
 	private final int _w;
 	private final int _h;
+
+	/**
+	 * стадия
+	 */
 	private final int _stage;
+
+	/**
+	 * количество
+	 */
 	private final int _amount;
+
 	private final int _ticks;
 	private final int _ticksTotal;
 

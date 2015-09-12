@@ -23,38 +23,38 @@ import com.badlogic.gdx.graphics.Color;
 // класс для вывода картинки из скина
 public class GUI_Image extends GUI_Control
 {
-    // прилеплена к мыши
-    public boolean drag = false;
-    public Vec2i drag_offset = Vec2i.z;
+	// прилеплена к мыши
+	public boolean drag = false;
+	public Vec2i drag_offset = Vec2i.z;
 
-    public GUI_Image(GUI_Control parent)
-    {
-        super(parent);
-    }
+	public GUI_Image(GUI_Control parent)
+	{
+		super(parent);
+	}
 
-    public boolean DoMouseBtn(int btn, boolean down)
-    {
-        return !drag && MouseInMe() && down;
-    }
+	public boolean DoMouseBtn(int btn, boolean down)
+	{
+		return !drag && MouseInMe() && down;
+	}
 
-    public boolean CheckMouseInControl()
-    {
-        return !drag && visible;
-    }
+	public boolean CheckMouseInControl()
+	{
+		return !drag && visible;
+	}
 
-    public void DoUpdate()
-    {
-        if (drag)
-        {
-            SetSize(getSkin().GetElementSize(skin_element));
-            SetPos(gui.mouse_pos.sub(drag_offset));
-            BringToFront();
-        }
-    }
+	public void DoUpdate()
+	{
+		if (drag)
+		{
+			SetSize(getSkin().GetElementSize(skin_element));
+			SetPos(gui.mouse_pos.sub(drag_offset));
+			BringToFront();
+		}
+	}
 
-    public void DoRender()
-    {
-        Color c = drag ? (new Color(255, 255, 255, 200)) : Color.WHITE;
-        getSkin().Draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y, Skin.StateNormal, c);
-    }
+	public void DoRender()
+	{
+		Color c = drag ? (new Color(255, 255, 255, 200)) : Color.WHITE;
+		getSkin().Draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y, Skin.StateNormal, c);
+	}
 }

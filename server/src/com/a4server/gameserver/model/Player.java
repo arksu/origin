@@ -508,9 +508,7 @@ public class Player extends Human
 	}
 
 	/**
-	 * non blocking
-	 * @param hand
-	 * @return
+	 * non blocking, check object is blocked
 	 */
 	public boolean setHand(Hand hand)
 	{
@@ -519,6 +517,7 @@ public class Player extends Human
 		{
 			// todo: записать в базу что в руке ничего нет
 		}
+		getClient().sendPacket(new PlayerHand(_hand));
 		return true;
 	}
 }

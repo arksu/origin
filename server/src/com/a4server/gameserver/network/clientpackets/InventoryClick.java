@@ -113,7 +113,7 @@ public class InventoryClick extends GameClientPacket
 					}
 					else
 					{
-						// возможно какой то баг или ошибка. привлечем внимание
+						// возможно какой-то баг или ошибка. привлечем внимание
 						_log.error("InventoryClick: item=null");
 					}
 				}
