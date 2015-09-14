@@ -12,12 +12,22 @@ public class Hand
 {
 	private static final Logger _log = LoggerFactory.getLogger(Hand.class.getName());
 
+	/**
+	 * вещь которую держим в руке
+	 */
 	private final InventoryItem _item;
 
 	private final Player _player;
 
+	/**
+	 * отступ в координатах инвентаря (чтобы положить обратно корректно)
+	 */
 	private final int _offsetX;
 	private final int _offsetY;
+
+	/**
+	 * отступ в координатах мыши (внутри вещи куда тыкнули мышью)
+	 */
 	private final int _mx;
 	private final int _my;
 
@@ -44,5 +54,15 @@ public class Hand
 	public int getOffsetY()
 	{
 		return _offsetY;
+	}
+
+	public int getMx()
+	{
+		return _mx;
+	}
+
+	public int getMy()
+	{
+		return _my;
 	}
 }

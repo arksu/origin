@@ -56,7 +56,7 @@ public class GUI_InventoryItem extends GUI_Control
 		if (_item != null)
 		{
 			// это не пустая ячейка, надо вывести иконку предмета
-			getSkin().Draw("hotbar_bg", abs_pos.x, abs_pos.y, Width(), Height());
+			getSkin().Draw("icon_" + _item.getIcon(), abs_pos.x, abs_pos.y, Width(), Height());
 
 		}
 

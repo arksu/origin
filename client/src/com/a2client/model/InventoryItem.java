@@ -38,6 +38,11 @@ public class InventoryItem
 	private final int _typeId;
 
 	/**
+	 * иконку которую используем для отображения вещи
+	 */
+	private final String _icon;
+
+	/**
 	 * качество
 	 */
 	private final int _q;
@@ -63,12 +68,14 @@ public class InventoryItem
 	private final int _ticks;
 	private final int _ticksTotal;
 
-	public InventoryItem(int inventoryId, int objectId, int typeId, int q, int x, int y, int w, int h, int stage, int amount,
+	public InventoryItem(int inventoryId, int objectId, int typeId, String icon,
+						 int q, int x, int y, int w, int h, int stage, int amount,
 						 int ticks, int ticksTotal)
 	{
 		_inventoryId = inventoryId;
 		_objectId = objectId;
 		_typeId = typeId;
+		_icon = icon;
 		_q = q;
 		_x = x;
 		_y = y;
@@ -93,6 +100,11 @@ public class InventoryItem
 	public int getTypeId()
 	{
 		return _typeId;
+	}
+
+	public String getIcon()
+	{
+		return _icon;
 	}
 
 	public int getQ()

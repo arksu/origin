@@ -21,9 +21,11 @@ public class PlayerHand extends GameServerPacket
 		if (_hand != null)
 		{
 			writeD(_hand.getItem().getObjectId());
-			writeD(_hand.getItem().getTemplate().getItemId());
-			writeC(_hand.getOffsetX());
-			writeC(_hand.getOffsetY());
+			writeS(_hand.getItem().getTemplate().getIconName());
+			writeC(_hand.getItem().getWidth());
+			writeC(_hand.getItem().getHeight());
+			writeC(_hand.getMx());
+			writeC(_hand.getMy());
 		}
 		else
 		{

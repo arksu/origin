@@ -47,6 +47,7 @@ public class InventoryUpdate extends GameServerPacket
 
 			int objectId = readD();
 			int typeId = readD();
+			String icon = readS();
 			int q = readD();
 			int x = readC();
 			int y = readC();
@@ -57,7 +58,7 @@ public class InventoryUpdate extends GameServerPacket
 			int ticks = readH();
 			int ticksTotal = readH();
 
-			_items.add(new InventoryItem(_inventoryId, objectId, typeId, q, x, y, w, h, stage, amount, ticks, ticksTotal));
+			_items.add(new InventoryItem(_inventoryId, objectId, typeId, icon, q, x, y, w, h, stage, amount, ticks, ticksTotal));
 		}
 	}
 

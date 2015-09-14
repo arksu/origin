@@ -41,6 +41,7 @@ public class InventoryUpdate extends GameServerPacket
 			{
 				writeD(item.getObjectId());
 				writeD(item.getTemplate().getItemId());
+				writeS(item.getTemplate().getIconName());
 				writeD(item.getQ());
 				writeC(item.getX());
 				writeC(item.getY());

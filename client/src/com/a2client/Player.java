@@ -10,58 +10,72 @@ import org.slf4j.LoggerFactory;
  */
 public class Player
 {
-    private static final Logger _log = LoggerFactory.getLogger(Player.class.getName());
-    private static Player _instance;
+	private static final Logger _log = LoggerFactory.getLogger(Player.class.getName());
+	private static Player _instance;
 
-    private int _objectId;
-    private String _name;
+	private int _objectId;
+	private String _name;
 
-    private Hand _hand;
+	private Hand _hand;
 
-    public void setObjectId(int myObjectId)
-    {
-        _objectId = myObjectId;
-    }
+	public void setObjectId(int myObjectId)
+	{
+		_objectId = myObjectId;
+	}
 
-    public int getObjectId()
-    {
-        return _objectId;
-    }
+	public int getObjectId()
+	{
+		return _objectId;
+	}
 
-    public void setName(String myName)
-    {
-        _name = myName;
-    }
+	public void setName(String myName)
+	{
+		_name = myName;
+	}
 
-    public String getName()
-    {
-        return _name;
-    }
+	public String getName()
+	{
+		return _name;
+	}
 
-    public static void init() {
-        if (_instance != null) {
-            _log.error("Player init: instance is not NULL!");
-        }
-        _instance = new Player();
-    }
+	public static void init()
+	{
+		if (_instance != null)
+		{
+			_log.error("Player init: instance is not NULL!");
+		}
+		_instance = new Player();
+	}
 
-    public void dispose() {
-        _instance = null;
-    }
+	public void dispose()
+	{
+		_instance = null;
+	}
 
-    public static Player getInstance() {
-        return _instance;
-    }
+	public static Player getInstance()
+	{
+		return _instance;
+	}
 
-    public Hand getHand()
-    {
-        return _hand;
-    }
+	public Hand getHand()
+	{
+		return _hand;
+	}
 
-    public void setHand(Hand hand)
-    {
-        _hand = hand;
-    }
-
+	public void setHand(Hand hand)
+	{
+		if (_hand != hand)
+		{
+			if (hand != null)
+			{
+				hand.makeControl();
+			}
+			if (_hand != null)
+			{
+				_hand.dispose();
+			}
+			_hand = hand;
+		}
+	}
 
 }

@@ -47,6 +47,14 @@ public class ItemTemplate
 		return _name;
 	}
 
+	/**
+	 * получить имя иконки которую будем отображать на клиенте
+	 */
+	public String getIconName()
+	{
+		return _name;
+	}
+
 	public int getWidth()
 	{
 		return _width;
