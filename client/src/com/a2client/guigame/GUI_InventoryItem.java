@@ -50,13 +50,13 @@ public class GUI_InventoryItem extends GUI_Control
 	public void DoRender()
 	{
 		// выводим нужного размера рамку вокруг итема
-		getSkin().Draw("listbox", abs_pos.x, abs_pos.y, Width(), Height());
+		getSkin().draw("listbox", abs_pos.x, abs_pos.y, Width(), Height());
 
 		// выводим иконку
 		if (_item != null)
 		{
 			// это не пустая ячейка, надо вывести иконку предмета
-			getSkin().Draw("icon_" + _item.getIcon(), abs_pos.x, abs_pos.y, Width(), Height());
+			getSkin().draw("icon_" + _item.getIcon(), abs_pos.x, abs_pos.y, Width(), Height());
 
 		}
 

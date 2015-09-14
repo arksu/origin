@@ -70,7 +70,7 @@ public class GUI_Panel extends GUI_Control
                 GUIGDX.FillRect(abs_pos, size, bg_color);
                 break;
             case rmSkin:
-                getSkin().Draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
+                getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
                 break;
             case rmNone:
                 break;

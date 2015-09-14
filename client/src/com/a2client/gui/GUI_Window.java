@@ -185,17 +185,17 @@ public class GUI_Window extends GUI_Control
             else
                 state = StateNormal;
         }
-        getSkin().Draw(e_name, abs_pos.x, abs_pos.y, size.x, size.y, state);
+        getSkin().draw(e_name, abs_pos.x, abs_pos.y, size.x, size.y, state);
 
-        getSkin().Draw("window", abs_pos.x, abs_pos.y + CAPTION_HEIGHT, size.x, size.y - CAPTION_HEIGHT, StateNormal);
+        getSkin().draw("window", abs_pos.x, abs_pos.y + CAPTION_HEIGHT, size.x, size.y - CAPTION_HEIGHT, StateNormal);
 
         if (resizeable)
         {
-            Vec2i sz = getSkin().GetElementSize("window_resize_right");
-            getSkin().Draw("window_resize_right", abs_pos.x + size.x - sz.x, abs_pos.y + size.y - sz.y, sz.x, sz.y,
-                           ((mouse_in_right_resize() || right_resize) ? StateHighlight : StateNormal));
-            getSkin().Draw("window_resize_left", abs_pos.x, abs_pos.y + size.y - sz.y, sz.x, sz.y,
-                           ((mouse_in_left_resize() || left_resize) ? StateHighlight : StateNormal));
+            Vec2i sz = getSkin().getElementSize("window_resize_right");
+            getSkin().draw("window_resize_right", abs_pos.x + size.x - sz.x, abs_pos.y + size.y - sz.y, sz.x, sz.y,
+                    ((mouse_in_right_resize() || right_resize) ? StateHighlight : StateNormal));
+            getSkin().draw("window_resize_left", abs_pos.x, abs_pos.y + size.y - sz.y, sz.x, sz.y,
+                    ((mouse_in_left_resize() || left_resize) ? StateHighlight : StateNormal));
         }
 
         if (have_close_button)
@@ -236,14 +236,14 @@ public class GUI_Window extends GUI_Control
 
     protected boolean mouse_in_right_resize()
     {
-        Vec2i sz = getSkin().GetElementSize("window_resize_right");
+        Vec2i sz = getSkin().getElementSize("window_resize_right");
         Rect rect = new Rect(abs_pos.x + size.x - sz.x, abs_pos.y + size.y - sz.y, sz);
         return (rect.PointInRect(gui.mouse_pos) && MouseInMe());
     }
 
     protected boolean mouse_in_left_resize()
     {
-        Vec2i sz = getSkin().GetElementSize("window_resize_left");
+        Vec2i sz = getSkin().getElementSize("window_resize_left");
         Rect rect = new Rect(abs_pos.x, abs_pos.y + size.y - sz.y, sz);
         return (rect.PointInRect(gui.mouse_pos) && MouseInMe());
     }

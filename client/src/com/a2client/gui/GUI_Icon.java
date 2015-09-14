@@ -34,9 +34,9 @@ public class GUI_Icon extends GUI_DragControl
     public void DoRender()
     {
         if (getSkin().hasElement("icon_" + iname))
-            getSkin().Draw("icon_" + iname, abs_pos.x, abs_pos.y, size.x, size.y, StateNormal);
+            getSkin().draw("icon_" + iname, abs_pos.x, abs_pos.y, size.x, size.y, StateNormal);
         else
-            getSkin().Draw("icon_unknown", abs_pos.x, abs_pos.y, size.x, size.y, StateNormal);
+            getSkin().draw("icon_unknown", abs_pos.x, abs_pos.y, size.x, size.y, StateNormal);
     }
 
     public void DoEndDrag(DragInfo info)

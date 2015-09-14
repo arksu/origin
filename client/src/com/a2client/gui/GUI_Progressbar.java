@@ -46,7 +46,7 @@ public class GUI_Progressbar extends GUI_Control
     {
         float s = ((float) (value - min) / (float) (max - min)) * size.x;
         int w = Math.round(s);
-        getSkin().Draw(bg_element_skin_name, abs_pos.sub(2, 2), size.add(4, 4));
+        getSkin().draw(bg_element_skin_name, abs_pos.sub(2, 2), size.add(4, 4));
         if (bg_color != null)
         {
             GUIGDX.FillRect(abs_pos, size, bg_color);

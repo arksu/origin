@@ -53,7 +53,7 @@ public class GUI_ComboBox extends GUI_Control
             ;
         };
         drop_button.skin_element = "button_down";
-        Vec2i s = getSkin().GetElementSize("button_down");
+        Vec2i s = getSkin().getElementSize("button_down");
         drop_button.SetSize(s);
         skin_element = "listbox";
     }
@@ -170,7 +170,7 @@ public class GUI_ComboBox extends GUI_Control
 
     public void DoRender()
     {
-        getSkin().Draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
+        getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
 
         // ставим скиссор до кнопки
         GUIGDX.PushScissor(

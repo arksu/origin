@@ -166,7 +166,7 @@ public class GUI
 
         // выводим хинт
         if (mouse_in_control.need_hint_bg)
-            Skin.getInstance().Draw("hint", x, y, w, h);
+            Skin.getInstance().draw("hint", x, y, w, h);
         if (mouse_in_control.is_simple_hint)
         {
             SimpleHint.Render(x, y, w, h, text);

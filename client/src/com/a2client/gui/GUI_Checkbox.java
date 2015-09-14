@@ -96,11 +96,11 @@ public class GUI_Checkbox extends GUI_Control
             else
                 state = StateNormal;
         }
-        getSkin().Draw(skin_element, abs_pos.x, abs_pos.y, getSkin().GetElementSize(skin_element).x,
-                       getSkin().GetElementSize(skin_element).y, state);
+        getSkin().draw(skin_element, abs_pos.x, abs_pos.y, getSkin().getElementSize(skin_element).x,
+                getSkin().getElementSize(skin_element).y, state);
         if (caption.length() > 0)
-            GUIGDX.Text(font, abs_pos.x + getSkin().GetElementSize(skin_element).x + 3, abs_pos.y,
-                        size.x - getSkin().GetElementSize(skin_element).x, size.y,
+            GUIGDX.Text(font, abs_pos.x + getSkin().getElementSize(skin_element).x + 3, abs_pos.y,
+                        size.x - getSkin().getElementSize(skin_element).x, size.y,
                         Align.Align_Left + Align.Align_VStretch, caption, caption_color);
     }
 }

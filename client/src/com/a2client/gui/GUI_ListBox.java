@@ -31,7 +31,7 @@ public class GUI_ListBox extends GUI_ScrollPage
     {
         super(parent);
         skin_element = "listbox";
-        min_size = new Vec2i(getSkin().GetElementSize(skin_element));
+        min_size = new Vec2i(getSkin().getElementSize(skin_element));
         SetStyle(true, false);
         ResetSelected();
     }
@@ -40,7 +40,7 @@ public class GUI_ListBox extends GUI_ScrollPage
     {
         if (RenderBG)
         {
-            getSkin().Draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
+            getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
         }
 
         Rect wr = WorkRect();
@@ -189,7 +189,7 @@ public class GUI_ListBox extends GUI_ScrollPage
                 state = Skin.StateNormal;
         }
 
-        getSkin().Draw(skin_element + "_item", x, y, w, h, state);
+        getSkin().draw(skin_element + "_item", x, y, w, h, state);
     }
 
     protected void DoDrawItem(int index, int x, int y, int w, int h) {}

@@ -51,6 +51,6 @@ public class GUI_IconButton extends GUI_Button
         else
             col = new Color(1, 1, 1, 0.9f);
 
-        getSkin().Draw(icon_name, abs_pos.x, abs_pos.y, size.x, size.y, StateNormal, col);
+        getSkin().draw(icon_name, abs_pos.x, abs_pos.y, size.x, size.y, StateNormal, col);
     }
 }

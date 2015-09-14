@@ -411,7 +411,7 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
                     state = StateNormal;
             }
         }
-        getSkin().Draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y, state);
+        getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y, state);
 
         GUIGDX.PushScissor(new Rect(abs_pos.x + OFFSET, abs_pos.y + OFFSET, size.x - OFFSET, size.y - OFFSET));
         int left = GUIGDX.getTextWidth(font_name, getVisualText().substring(0, getSelectionStart()));

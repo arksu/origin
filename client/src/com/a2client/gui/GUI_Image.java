@@ -46,7 +46,7 @@ public class GUI_Image extends GUI_Control
 	{
 		if (drag)
 		{
-			SetSize(getSkin().GetElementSize(skin_element));
+			SetSize(getSkin().getElementSize(skin_element));
 			SetPos(gui.mouse_pos.sub(drag_offset));
 			BringToFront();
 		}
@@ -55,6 +55,6 @@ public class GUI_Image extends GUI_Control
 	public void DoRender()
 	{
 		Color c = drag ? (new Color(255, 255, 255, 200)) : Color.WHITE;
-		getSkin().Draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y, Skin.StateNormal, c);
+		getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y, Skin.StateNormal, c);
 	}
 }

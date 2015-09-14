@@ -47,7 +47,7 @@ public class Hand
 			_image.skin_element = UNKNOWN_ICON;
 		}
 
-		_image.SetSize(_image.getSkin().GetElementSize(_image.skin_element));
+		_image.SetSize(_image.getSkin().getElementSize(_image.skin_element));
 	}
 
 	public void dispose()

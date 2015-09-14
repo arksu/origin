@@ -101,7 +101,7 @@ public class GUI_Memo extends GUI_ScrollPage
 
     protected void DrawBackground()
     {
-        getSkin().Draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
+        getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
     }
 
     protected void UpdateFullSize()

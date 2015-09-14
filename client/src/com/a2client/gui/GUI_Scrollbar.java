@@ -49,17 +49,17 @@ public class GUI_Scrollbar extends GUI_Control
         Step = 10;
         SetVertical(true, true);
 
-        Vec2i s = getSkin().GetElementSize(skin_element + "_track");
+        Vec2i s = getSkin().getElementSize(skin_element + "_track");
         if (Vertical)
         {
             MinPageSize = s.y;
-            s = getSkin().GetElementSize(skin_element);
+            s = getSkin().getElementSize(skin_element);
             SetWidth(s.x);
         }
         else
         {
             MinPageSize = s.x;
-            s = getSkin().GetElementSize(skin_element);
+            s = getSkin().getElementSize(skin_element);
             SetHeight(s.y);
         }
         UpdateButtonsPos();
@@ -207,7 +207,7 @@ public class GUI_Scrollbar extends GUI_Control
                     }
                 };
                 BtnDec.skin_element = "button_up";
-                BtnDec.SetSize(getSkin().GetElementSize("button_up"));
+                BtnDec.SetSize(getSkin().getElementSize("button_up"));
 
                 BtnInc = new GUI_Button(this)
                 {
@@ -217,7 +217,7 @@ public class GUI_Scrollbar extends GUI_Control
                     }
                 };
                 BtnInc.skin_element = "button_down";
-                BtnInc.SetSize(getSkin().GetElementSize("button_down"));
+                BtnInc.SetSize(getSkin().getElementSize("button_down"));
                 skin_element = "vscroll";
             }
             else
@@ -238,7 +238,7 @@ public class GUI_Scrollbar extends GUI_Control
                     }
                 };
                 BtnDec.skin_element = "button_left";
-                BtnDec.SetSize(getSkin().GetElementSize("button_left"));
+                BtnDec.SetSize(getSkin().getElementSize("button_left"));
 
                 BtnInc = new GUI_Button(this)
                 {
@@ -249,9 +249,9 @@ public class GUI_Scrollbar extends GUI_Control
                 };
                 BtnInc.skin_element = "button_right";
                 skin_element = "hscroll";
-                BtnInc.SetSize(getSkin().GetElementSize("button_right"));
+                BtnInc.SetSize(getSkin().getElementSize("button_right"));
             }
-            SetSize(getSkin().GetElementSize(skin_element));
+            SetSize(getSkin().getElementSize(skin_element));
             UpdateButtonsPos();
         }
     }
@@ -322,7 +322,7 @@ public class GUI_Scrollbar extends GUI_Control
     {
         if (BtnDec == null)
             return;
-        getSkin().Draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
+        getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
 
         if (HaveTrack())
         {
@@ -352,23 +352,23 @@ public class GUI_Scrollbar extends GUI_Control
             // рисуем слайдер
             if (Vertical)
                 if (PagePressed)
-                    getSkin().Draw(skin_element + "_track", abs_pos.x, abs_pos.y + BtnDec.size.y + pos_pix, size.x,
-                                   page_size_pix, StatePressed);
+                    getSkin().draw(skin_element + "_track", abs_pos.x, abs_pos.y + BtnDec.size.y + pos_pix, size.x,
+                            page_size_pix, StatePressed);
                 else if (MouseInPage())
-                    getSkin().Draw(skin_element + "_track", abs_pos.x, abs_pos.y + BtnDec.size.y + pos_pix, size.x,
-                                   page_size_pix, StateHighlight);
+                    getSkin().draw(skin_element + "_track", abs_pos.x, abs_pos.y + BtnDec.size.y + pos_pix, size.x,
+                            page_size_pix, StateHighlight);
                 else
-                    getSkin().Draw(skin_element + "_track", abs_pos.x, abs_pos.y + BtnDec.size.y + pos_pix, size.x,
-                                   page_size_pix);
+                    getSkin().draw(skin_element + "_track", abs_pos.x, abs_pos.y + BtnDec.size.y + pos_pix, size.x,
+                            page_size_pix);
             else if (PagePressed)
-                getSkin().Draw(skin_element + "_track", abs_pos.x + BtnDec.size.x + pos_pix, abs_pos.y, page_size_pix,
-                               size.y, StatePressed);
+                getSkin().draw(skin_element + "_track", abs_pos.x + BtnDec.size.x + pos_pix, abs_pos.y, page_size_pix,
+                        size.y, StatePressed);
             else if (MouseInPage())
-                getSkin().Draw(skin_element + "_track", abs_pos.x + BtnDec.size.x + pos_pix, abs_pos.y, page_size_pix,
-                               size.y, StateHighlight);
+                getSkin().draw(skin_element + "_track", abs_pos.x + BtnDec.size.x + pos_pix, abs_pos.y, page_size_pix,
+                        size.y, StateHighlight);
             else
-                getSkin().Draw(skin_element + "_track", abs_pos.x + BtnDec.size.x + pos_pix, abs_pos.y, page_size_pix,
-                               size.y);
+                getSkin().draw(skin_element + "_track", abs_pos.x + BtnDec.size.x + pos_pix, abs_pos.y, page_size_pix,
+                        size.y);
         }
     }
 

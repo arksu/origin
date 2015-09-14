@@ -68,9 +68,9 @@ public class GUI_SpinEdit extends GUI_Control
             }
         };
         btn_dec.skin_element = "button_left";
-        btn_dec.SetSize(getSkin().GetElementSize("button_left"));
+        btn_dec.SetSize(getSkin().getElementSize("button_left"));
         btn_inc.skin_element = "button_right";
-        btn_inc.SetSize(getSkin().GetElementSize("button_right"));
+        btn_inc.SetSize(getSkin().getElementSize("button_right"));
         skin_element = "edit";
         focusable = true;
 
@@ -153,7 +153,7 @@ public class GUI_SpinEdit extends GUI_Control
                     state = StateNormal;
             }
         }
-        getSkin().Draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y, state);
+        getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y, state);
         GUIGDX.Text(font, abs_pos.x, abs_pos.y, size.x, size.y, Align.Align_Center, String.valueOf(value), text_color);
     }
 

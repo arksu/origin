@@ -50,6 +50,6 @@ public class GUI_Texture extends GUI_Control
                   .draw(_texture, (float) abs_pos.x,
                         (float) (Gdx.graphics.getHeight() - abs_pos.y - _texture.getHeight()));
         if (mode.equals("skin_element"))
-            getSkin().Draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
+            getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
     }
 }

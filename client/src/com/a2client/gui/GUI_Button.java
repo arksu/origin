@@ -91,9 +91,9 @@ public class GUI_Button extends GUI_Control
         else
             state = StateNormal;
         if (render_bg)
-            getSkin().Draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y, state);
+            getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y, state);
         if (!icon_name.isEmpty())
-            getSkin().Draw(icon_name, abs_pos.x, abs_pos.y, size.x, size.y, state);
+            getSkin().draw(icon_name, abs_pos.x, abs_pos.y, size.x, size.y, state);
         if (!caption.isEmpty())
             GUIGDX.Text(font, abs_pos.x, abs_pos.y, size.x, size.y, caption_align, caption, caption_color);
     }
