@@ -19,7 +19,10 @@ public class World
 {
 	private static final Logger _log = LoggerFactory.getLogger(World.class.getName());
 
-	private Grid[][][] _grids; // x, y, level
+	/**
+	 * x, y, level
+ 	 */
+	private Grid[][][] _grids;
 
 	private FastList<Grid> _activeGrids = new FastList<Grid>(9).shared();
 

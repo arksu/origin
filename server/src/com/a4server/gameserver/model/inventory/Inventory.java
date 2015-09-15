@@ -94,6 +94,7 @@ public class Inventory
 					{
 						_items.add(new InventoryItem(this, rset));
 					}
+					_log.debug("loaded " + _items.size() + " items");
 				}
 			}
 		}

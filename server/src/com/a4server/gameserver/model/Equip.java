@@ -1,7 +1,6 @@
 package com.a4server.gameserver.model;
 
 import com.a4server.Database;
-import javolution.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * эквип / папердолл
@@ -31,7 +32,7 @@ public class Equip
 	 */
 	final int _objectId;
 
-	final FastList<EquipSlot> _items = new FastList<>();
+	final Map<EquipSlot.Slot, EquipSlot> _items = new HashMap<>();
 
 	public Equip(Player player)
 	{
@@ -53,8 +54,10 @@ public class Equip
 				{
 					while (rset.next())
 					{
-						_items.add(new EquipSlot(_player, rset));
+						EquipSlot slot = new EquipSlot(_player, rset);
+						_items.put(slot.getSlot(), slot);
 					}
+					_log.debug("loaded " + _items.size() + " items");
 				}
 			}
 		}

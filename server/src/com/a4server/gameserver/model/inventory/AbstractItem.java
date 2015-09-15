@@ -4,49 +4,46 @@ import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.objects.InventoryTemplate;
 import com.a4server.gameserver.model.objects.ItemTemplate;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * абстрактная игровая вещь, используется в инвентарях и эквипе
  * Created by arksu on 15.09.15.
  */
 public class AbstractItem
 {
-	private static final Logger _log = LoggerFactory.getLogger(AbstractItem.class.getName());
-
 	/**
 	 * уникальный ид объекта (вещи)
 	 */
-	private final int _objectId;
+	protected final int _objectId;
 
 	/**
 	 * шаблон вещи
 	 */
-	private final ItemTemplate _template;
+	protected final ItemTemplate _template;
 
 	/**
 	 * вещь также может содержать инвентарь (вложенный)
 	 */
-	private Inventory _inventory;
+	protected Inventory _inventory;
 
 	/**
 	 * качество
 	 */
-	private int _q;
+	protected int _q;
 
 	/**
 	 * место расположения
 	 */
-	private int _x;
-	private int _y;
+	protected int _x;
+	protected int _y;
 
-	private int _amount;
-	private int _stage;
-	private int _ticks;
-	private int _ticksTotal;
+	protected int _amount;
+	protected int _stage;
+	protected int _ticks;
+	protected int _ticksTotal;
 
 	/**
 	 * грузим из базы вещь

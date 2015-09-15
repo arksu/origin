@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * слот эквипа
  * Created by arksu on 14.09.15.
  */
 public class EquipSlot extends AbstractItem
@@ -15,16 +16,8 @@ public class EquipSlot extends AbstractItem
 	private static final Logger _log = LoggerFactory.getLogger(EquipSlot.class.getName());
 
 	/**
-	 * грузим из базы вещь
-	 * @param object объект к которому относится вещь
-	 * @param rset строка из таблицы items
-	 * @throws SQLException
+	 * слот эквипа
 	 */
-	public EquipSlot(GameObject object, ResultSet rset) throws SQLException
-	{
-		super(object, rset);
-	}
-
 	public enum Slot
 	{
 		LHAND(0), RHAND(1), HEAD(2);
@@ -42,4 +35,41 @@ public class EquipSlot extends AbstractItem
 		}
 	}
 
+	/**
+	 * слот в котором находится вещь
+	 */
+	private final Slot _slot;
+
+	/**
+	 * грузим из базы вещь
+	 * @param object объект к которому относится вещь
+	 * @param rset строка из таблицы items
+	 * @throws SQLException
+	 */
+	public EquipSlot(GameObject object, ResultSet rset) throws SQLException
+	{
+		super(object, rset);
+		// код слота храним в y
+		_slot = getSlotType(_y);
+	}
+
+	/**
+	 * получить слот по его коду
+	 */
+	public Slot getSlotType(int code)
+	{
+		for (Slot slot : Slot.values())
+		{
+			if (slot.getCode() == code)
+			{
+				return slot;
+			}
+		}
+		return null;
+	}
+
+	public Slot getSlot()
+	{
+		return _slot;
+	}
 }
