@@ -25,7 +25,7 @@ public class Inventory
 	public static final String LOAD_INVENTORY = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal FROM items WHERE objectId=? AND x < 200";
 
 	/**
-	 * объект родитель
+	 * объект родитель, к которому относится инвентарь и все его вложенные
 	 */
 	private final GameObject _object;
 
@@ -33,11 +33,6 @@ public class Inventory
 	 * ид инвентаря, объект или вещь к которой он относится
 	 */
 	private final int _invenroyId;
-
-	/**
-	 * инвентарь родитель
-	 */
-	private final Inventory _inventory;
 
 	/**
 	 * размеры
@@ -50,20 +45,31 @@ public class Inventory
 	 */
 	FastList<InventoryItem> _items = new FastList<>();
 
+	/**
+	 * это инвентарь непосредственно объекта
+	 * @param object
+	 * @param width
+	 * @param height
+	 */
 	public Inventory(GameObject object, int width, int height)
 	{
 		_object = object;
-		_inventory = null;
 		_invenroyId = object.getObjectId();
 		_width = width;
 		_height = height;
 		load();
 	}
 
-	public Inventory(Inventory parent, int objectId, int width, int height)
+	/**
+	 * это вложенный инвентарь
+	 * @param object
+	 * @param objectId
+	 * @param width
+	 * @param height
+	 */
+	public Inventory(GameObject object, int objectId, int width, int height)
 	{
-		_object = parent.getObject();
-		_inventory = parent;
+		_object = object;
 		_invenroyId = objectId;
 		_width = width;
 		_height = height;

@@ -53,7 +53,7 @@ public class Equip
 				{
 					while (rset.next())
 					{
-						_items.add(new EquipSlot(this, rset));
+						_items.add(new EquipSlot(_player, rset));
 					}
 				}
 			}
