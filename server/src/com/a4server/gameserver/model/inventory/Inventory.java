@@ -19,7 +19,10 @@ public class Inventory
 {
 	private static final Logger _log = LoggerFactory.getLogger(Inventory.class.getName());
 
-	public static final String LOAD_INVENTORY = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal FROM items WHERE objectId=?";
+	/**
+	 * грузим список вещей из базы где строго x < 200, начиная с x>=200 храним особые
+	 */
+	public static final String LOAD_INVENTORY = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal FROM items WHERE objectId=? AND x < 200";
 
 	/**
 	 * объект родитель
@@ -179,6 +182,7 @@ public class Inventory
 	 */
 	public boolean putItem(InventoryItem item, int x, int y)
 	{
+		// todo проверить можем ли мы вообще положить такую вещь в этот инвентарь?
 		if (x >= 0 && y >= 0)
 		{
 			// если вещь влезает в инвентарь

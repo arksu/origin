@@ -59,6 +59,8 @@ public class Player extends Human
 	 */
 	private Hand _hand;
 
+	private final Equip _equip;
+
 	public Player(int objectId, ResultSet rset, PlayerTemplate template)
 	{
 		super(objectId, template);
@@ -84,7 +86,8 @@ public class Player extends Human
 
 		setVisibleDistance(500);
 
-		// todo: сначала грузим паердоллл! от него может зависеть размер инвентаря
+		// сначала грузим папердоллл! от него может зависеть размер инвентаря
+		_equip = new Equip(this);
 
 		_inventory = new Inventory(this, getInventoryWidth(), getInventoryHeight());
 	}
