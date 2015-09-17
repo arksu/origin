@@ -1,9 +1,8 @@
 package com.a2client.network.game.serverpackets;
 
+import com.a2client.Player;
 import com.a2client.model.EquipSlot;
 import com.a2client.network.game.GamePacketHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +16,6 @@ public class EquipUpdate extends GameServerPacket
 	{
 		GamePacketHandler.AddPacketType(0x1D, EquipUpdate.class);
 	}
-
-	private static final Logger _log = LoggerFactory.getLogger(EquipUpdate.class.getName());
 
 	List<EquipSlot> _items = new ArrayList<>();
 
@@ -47,6 +44,10 @@ public class EquipUpdate extends GameServerPacket
 	@Override
 	public void run()
 	{
-
+		List<EquipSlot> equipItems = Player.getInstance().getEquip().getItems();
+		equipItems.clear();
+		equipItems.addAll(_items);
+		// если есть открытый инвентарь - обновить содержимое
+		Player.getInstance().getEquip().onChange();
 	}
 }
