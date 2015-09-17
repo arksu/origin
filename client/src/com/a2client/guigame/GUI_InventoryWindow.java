@@ -20,8 +20,6 @@ public class GUI_InventoryWindow extends GUI_Window
 	 */
 	private GUI_Inventory _inventoryControl;
 
-	private Inventory _inventory;
-
 	public GUI_InventoryWindow(GUI_Control parent)
 	{
 		super(parent);
@@ -29,10 +27,15 @@ public class GUI_InventoryWindow extends GUI_Window
 
 	public void assign(Inventory inventory)
 	{
-		_inventory = inventory;
-		if (_inventoryControl != null) _inventoryControl.Unlink();
-		_inventoryControl = new GUI_Inventory(this, _inventory);
-		_inventoryControl.SetPos(5, 35);
-		SetSize(InventoryItem.WIDTH * _inventory.getWidth(), InventoryItem.HEIGHT * _inventory.getHeight());
+		if (_inventoryControl != null)
+		{
+			_inventoryControl.assign(inventory);
+		}
+		else
+		{
+			_inventoryControl = new GUI_Inventory(this, inventory);
+			_inventoryControl.SetPos(5, 35);
+			SetSize(InventoryItem.WIDTH * inventory.getWidth(), InventoryItem.HEIGHT * inventory.getHeight());
+		}
 	}
 }

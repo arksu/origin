@@ -12,4 +12,5 @@ public class Hotkey
 	private static final Logger _log = LoggerFactory.getLogger(Hotkey.class.getName());
 
 	public static int INVENTORY = Keys.TAB;
+	public static int EQUIP = Keys.E;
 }

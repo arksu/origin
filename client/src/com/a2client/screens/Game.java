@@ -133,6 +133,10 @@ public class Game extends BaseScreen
 				// по нажатию на таб - откроем инвентарь
 				InventoryCache.getInstance().get(Player.getInstance().getObjectId()).toggle();
 			}
+			else if (Input.KeyHit(Hotkey.EQUIP))
+			{
+				Player.getInstance().getEquip().toggle();
+			}
 			_statusText = "mouse coord: " + Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE) + ", " +
 					Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE);
 		}

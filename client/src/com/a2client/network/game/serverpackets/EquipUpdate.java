@@ -1,7 +1,7 @@
 package com.a2client.network.game.serverpackets;
 
 import com.a2client.Player;
-import com.a2client.model.EquipSlot;
+import com.a2client.model.InventoryItem;
 import com.a2client.network.game.GamePacketHandler;
 
 import java.util.ArrayList;
@@ -17,13 +17,14 @@ public class EquipUpdate extends GameServerPacket
 		GamePacketHandler.AddPacketType(0x1D, EquipUpdate.class);
 	}
 
-	List<EquipSlot> _items = new ArrayList<>();
+	List<InventoryItem> _items = new ArrayList<>();
 
 	@Override
 	public void readImpl()
 	{
 		int count = readC();
-		while (count > 0) {
+		while (count > 0)
+		{
 			count--;
 
 			int slotCode = readC();
@@ -37,14 +38,15 @@ public class EquipUpdate extends GameServerPacket
 			int stage = readC();
 			int ticks = readH();
 			int ticksTotal = readH();
-			_items.add(new EquipSlot(slotCode, objectId, typeId, icon, q, w, h, stage, amount, ticks, ticksTotal));
+			_items.add(new InventoryItem(Player.getInstance().getObjectId(),
+					objectId, typeId, icon, q, 200, slotCode, w, h, stage, amount, ticks, ticksTotal));
 		}
 	}
 
 	@Override
 	public void run()
 	{
-		List<EquipSlot> equipItems = Player.getInstance().getEquip().getItems();
+		List<InventoryItem> equipItems = Player.getInstance().getEquip().getItems();
 		equipItems.clear();
 		equipItems.addAll(_items);
 		// если есть открытый инвентарь - обновить содержимое
