@@ -1,16 +1,13 @@
 package com.a4server.gameserver.network.serverpackets;
 
 import com.a4server.gameserver.model.Equip;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.a4server.gameserver.model.EquipSlot;
 
 /**
  * Created by arksu on 16.09.15.
  */
 public class EquipUpdate extends GameServerPacket
 {
-	private static final Logger _log = LoggerFactory.getLogger(EquipUpdate.class.getName());
-
 	final Equip _equip;
 
 	public EquipUpdate(Equip equip)
@@ -22,6 +19,21 @@ public class EquipUpdate extends GameServerPacket
 	protected void write()
 	{
 		writeC(0x1D);
+		writeC(_equip.getItems().size());
+		for (EquipSlot slot : _equip.getItems().values())
+		{
+			writeC(slot.getCode());
 
+			writeD(slot.getObjectId());
+			writeD(slot.getTemplate().getItemId());
+			writeS(slot.getTemplate().getIconName());
+			writeD(slot.getQ());
+			writeC(slot.getWidth());
+			writeC(slot.getHeight());
+			writeH(slot.getAmount());
+			writeC(slot.getStage());
+			writeH(slot.getTicks());
+			writeH(slot.getTicksTotal());
+		}
 	}
 }

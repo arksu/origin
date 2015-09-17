@@ -31,7 +31,8 @@ public class GamePacketHandler
             CreatureSay.class,
             InventoryUpdate.class,
             ObjectInteractive.class,
-            PlayerHand.class
+            PlayerHand.class,
+            EquipUpdate.class
     };
 
     static public void InitPackets()

@@ -56,7 +56,7 @@ public class EquipSlot extends AbstractItem
 	/**
 	 * получить слот по его коду
 	 */
-	public Slot getSlotType(int code)
+	public static Slot getSlotType(int code)
 	{
 		for (Slot slot : Slot.values())
 		{
@@ -71,5 +71,10 @@ public class EquipSlot extends AbstractItem
 	public Slot getSlot()
 	{
 		return _slot;
+	}
+
+	public int getCode()
+	{
+		return _slot.getCode();
 	}
 }

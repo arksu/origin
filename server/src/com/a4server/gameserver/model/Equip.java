@@ -67,4 +67,9 @@ public class Equip
 			throw new RuntimeException("Cant load equip " + toString());
 		}
 	}
+
+	public Map<EquipSlot.Slot, EquipSlot> getItems()
+	{
+		return _items;
+	}
 }
