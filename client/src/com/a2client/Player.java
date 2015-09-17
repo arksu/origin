@@ -18,7 +18,7 @@ public class Player
 	private String _name;
 
 	private Hand _hand;
-	private Equip _equip;
+	private final Equip _equip = new Equip();
 
 	public void setObjectId(int myObjectId)
 	{
@@ -83,10 +83,5 @@ public class Player
 	public Equip getEquip()
 	{
 		return _equip;
-	}
-
-	public void setEquip(Equip equip)
-	{
-		_equip = equip;
 	}
 }

@@ -1,6 +1,5 @@
 package com.a2client.guigame;
 
-import com.a2client.InventoryCache;
 import com.a2client.gui.GUI_Control;
 import com.a2client.gui.GUI_Window;
 import com.a2client.model.Inventory;
@@ -16,33 +15,24 @@ public class GUI_InventoryWindow extends GUI_Window
 {
 	private static final Logger _log = LoggerFactory.getLogger(GUI_InventoryWindow.class.getName());
 
-	private int _inventoryId;
-
 	/**
 	 * контрол инвентарь для отображения содержимого
 	 */
-	private GUI_Inventory _inventory;
+	private GUI_Inventory _inventoryControl;
 
-	public GUI_InventoryWindow(GUI_Control parent, int inventoryId)
+	private Inventory _inventory;
+
+	public GUI_InventoryWindow(GUI_Control parent)
 	{
 		super(parent);
-		assign(inventoryId);
 	}
 
-	public void assign(int inventoryId)
+	public void assign(Inventory inventory)
 	{
-		_inventoryId = inventoryId;
-		Inventory inv = InventoryCache.getInstance().get(inventoryId);
-		if (inv != null)
-		{
-			if (_inventory != null) _inventory.Unlink();
-			_inventory = new GUI_Inventory(this, inv);
-			_inventory.SetPos(5, 35);
-			SetSize(InventoryItem.WIDTH * inv.getWidth(), InventoryItem.HEIGHT * inv.getHeight());
-		}
-		else
-		{
-			_log.warn("no inventory for: " + inventoryId);
-		}
+		_inventory = inventory;
+		if (_inventoryControl != null) _inventoryControl.Unlink();
+		_inventoryControl = new GUI_Inventory(this, _inventory);
+		_inventoryControl.SetPos(5, 35);
+		SetSize(InventoryItem.WIDTH * _inventory.getWidth(), InventoryItem.HEIGHT * _inventory.getHeight());
 	}
 }
