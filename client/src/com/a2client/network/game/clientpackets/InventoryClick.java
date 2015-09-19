@@ -14,8 +14,12 @@ public class InventoryClick extends GameClientPacket
 	private final int _objectId;
 	private final int _btn;
 	private final int _mod;
+	/**
+	 * отступ в пикселах внутри вещи где произошел клик
+	 */
 	private final int _offsetX;
 	private final int _offsetY;
+
 	private final int _x;
 	private final int _y;
 

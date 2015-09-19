@@ -3,6 +3,7 @@ package com.a2client.guigame;
 import com.a2client.Input;
 import com.a2client.gui.GUI_Control;
 import com.a2client.model.InventoryItem;
+import com.a2client.network.game.clientpackets.EquipClick;
 import com.a2client.network.game.clientpackets.InventoryClick;
 
 import static com.a2client.model.InventoryItem.*;
@@ -106,10 +107,17 @@ public class GUI_InventoryItem extends GUI_Control
 					ox,
 					oy
 			).Send();
-//			int xx = (x * 33 + mx - (Player.hand.isExist() ? Player.hand.offset_x : 0) + 16) / 33;
-//			int yy = (y * 33 + my - (Player.hand.isExist() ? Player.hand.offset_y : 0) + 16) / 33;
-//			click.x = xx;
-//			click.y = yy;
+		}
+		else if (parent instanceof GUI_InventoryWindow)
+		{
+			new EquipClick(
+					_item != null ? _item.getObjectId() : 0,
+					btn,
+					Input.GetKeyState(),
+					mx,
+					my,
+					_y
+			).Send();
 		}
 	}
 

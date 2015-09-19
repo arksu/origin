@@ -27,6 +27,7 @@ public class GUI_EquipWindow extends GUI_Window
 
 	static
 	{
+		// позиции слотов
 		_slotPos.add(new Vec2i(10, 25));
 		_slotPos.add(new Vec2i(10, 65));
 		_slotPos.add(new Vec2i(10, 105));

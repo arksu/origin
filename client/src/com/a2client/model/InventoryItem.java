@@ -18,7 +18,7 @@ public class InventoryItem
 	public static final int HEIGHT = 32;
 
 	/**
-	 * отступ между слотами
+	 * отступ между слотами, в пикселах
 	 */
 	public static final int MARGIN = 1;
 
