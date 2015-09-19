@@ -30,8 +30,8 @@ public class GUI_InventoryItem extends GUI_Control
 	{
 		super(parent);
 
-		SetPos(item.getX() * WIDTH, item.getY() * InventoryItem.HEIGHT);
-		SetSize(WIDTH * item.getWidth(), InventoryItem.HEIGHT * item.getHeight());
+		SetPos(item.getX() * WIDTH, item.getY() * HEIGHT);
+		SetSize(WIDTH * item.getWidth(), HEIGHT * item.getHeight());
 		_item = item;
 		_x = _item.getX();
 		_y = _item.getY();
@@ -40,8 +40,8 @@ public class GUI_InventoryItem extends GUI_Control
 	public GUI_InventoryItem(GUI_Control parent, int x, int y)
 	{
 		super(parent);
-		SetPos(x * WIDTH, y * InventoryItem.HEIGHT);
-		SetSize(WIDTH, InventoryItem.HEIGHT);
+		SetPos(x * WIDTH, y * HEIGHT);
+		SetSize(WIDTH, HEIGHT);
 		_x = x;
 		_y = y;
 	}
