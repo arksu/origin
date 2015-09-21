@@ -33,12 +33,14 @@ public class GUI_EquipWindow extends GUI_Window
 		_slotPos.add(new Vec2i(10, 105));
 		_slotPos.add(new Vec2i(10, 145));
 		_slotPos.add(new Vec2i(10, 185));
+		_slotPos.add(new Vec2i(10, 225));
+		_slotPos.add(new Vec2i(10, 265));
 	}
 
 	public GUI_EquipWindow(GUI_Control parent)
 	{
 		super(parent);
-		SetSize(190, 190);
+		SetSize(190, 290);
 	}
 
 	public void assign(Equip equip)

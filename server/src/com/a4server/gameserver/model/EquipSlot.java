@@ -20,7 +20,10 @@ public class EquipSlot extends AbstractItem
 	 */
 	public enum Slot
 	{
-		LHAND(0), RHAND(1), HEAD(2);
+		LHAND(0), RHAND(1),
+		HEAD(2), BODY(3),
+		PANTS(6),
+		LFOOT(4), RFOOT(5);
 
 		private final int _code;
 

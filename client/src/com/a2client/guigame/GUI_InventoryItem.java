@@ -58,7 +58,6 @@ public class GUI_InventoryItem extends GUI_Control
 		{
 			// это не пустая ячейка, надо вывести иконку предмета
 			getSkin().draw("icon_" + _item.getIcon(), abs_pos.x, abs_pos.y, Width(), Height());
-
 		}
 
 		// различная информация (ку, прогресс и тд)

@@ -44,7 +44,7 @@ public class EquipClick extends GameClientPacket
 	public void run()
 	{
 		EquipSlot.Slot slot = EquipSlot.getSlotType(_slotCode);
-		_log.debug("InventoryClick: obj=" + _objectId + " slot=" + slot + " offset=" + _offsetX + ", " + _offsetY + " mod=" + _mod);
+		_log.debug("obj=" + _objectId + " slot=" + slot + " offset=" + _offsetX + ", " + _offsetY + " mod=" + _mod);
 		Player player = client.getActiveChar();
 		if (player != null && _btn == 0 && player.tryLock(WAIT_LOCK))
 		{

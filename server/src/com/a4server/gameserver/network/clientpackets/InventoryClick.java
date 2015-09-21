@@ -54,7 +54,7 @@ public class InventoryClick extends GameClientPacket
 	@Override
 	public void run()
 	{
-		_log.debug("InventoryClick: obj=" + _objectId + " inv=" + _inventoryId + " (" + _x + ", " + _y + ")" + " offset=" + _offsetX + ", " + _offsetY + " mod=" + _mod);
+		_log.debug("obj=" + _objectId + " inv=" + _inventoryId + " (" + _x + ", " + _y + ")" + " offset=" + _offsetX + ", " + _offsetY + " mod=" + _mod);
 		Player player = client.getActiveChar();
 		if (player != null && _btn == 0 && player.tryLock(WAIT_LOCK))
 		{
