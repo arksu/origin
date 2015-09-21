@@ -95,7 +95,7 @@ public class GUI_InventoryItem extends GUI_Control
 		int ox = _x + mx / (WIDTH + MARGIN);
 		int oy = _y + my / (HEIGHT + MARGIN);
 
-		if (parent instanceof GUI_Inventory)
+		if (tagi == 1)
 		{
 			new InventoryClick(
 					((GUI_Inventory) parent).getInventoryId(),
@@ -108,7 +108,7 @@ public class GUI_InventoryItem extends GUI_Control
 					oy
 			).Send();
 		}
-		else if (parent instanceof GUI_InventoryWindow)
+		else if (tagi == 2)
 		{
 			new EquipClick(
 					_item != null ? _item.getObjectId() : 0,

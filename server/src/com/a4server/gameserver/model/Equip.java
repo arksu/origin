@@ -1,6 +1,7 @@
 package com.a4server.gameserver.model;
 
 import com.a4server.Database;
+import com.a4server.gameserver.model.inventory.AbstractItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,5 +72,20 @@ public class Equip
 	public Map<EquipSlot.Slot, EquipSlot> getItems()
 	{
 		return _items;
+	}
+
+	/**
+	 * положить вещь в указанный слот
+	 */
+	public boolean putItem(AbstractItem item, EquipSlot.Slot slot)
+	{
+		if (!_items.containsKey(slot))
+		{
+			EquipSlot slotItem = item instanceof EquipSlot ? (EquipSlot) item : new EquipSlot(item);
+			slotItem.setSlot(slot);
+			_items.put(slot, slotItem);
+			return true;
+		}
+		return false;
 	}
 }

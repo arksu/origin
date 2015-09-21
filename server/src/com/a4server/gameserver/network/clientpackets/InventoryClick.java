@@ -3,12 +3,15 @@ package com.a4server.gameserver.network.clientpackets;
 import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Hand;
 import com.a4server.gameserver.model.Player;
+import com.a4server.gameserver.model.inventory.AbstractItem;
 import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.inventory.InventoryItem;
 import com.a4server.gameserver.network.serverpackets.InventoryUpdate;
 import com.a4server.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.a4server.gameserver.model.GameObject.WAIT_LOCK;
 
 /**
  * клик по объекту в инвентаре
@@ -18,13 +21,11 @@ public class InventoryClick extends GameClientPacket
 {
 	private static final Logger _log = LoggerFactory.getLogger(InventoryClick.class.getName());
 
-	public static final int WAIT_LOCK = 300;
-
 	private int _inventoryId;
 	private int _objectId;
 	private int _btn;
 	private int _mod;
-	
+
 	/**
 	 * отступ в пикселах внутри вещи где произошел клик
 	 */
@@ -53,7 +54,7 @@ public class InventoryClick extends GameClientPacket
 	@Override
 	public void run()
 	{
-		_log.debug("InventoryClick: obj=" + _objectId + " inv=" + _inventoryId + " offset=" + _offsetX + ", " + _offsetY + " mod=" + _mod);
+		_log.debug("InventoryClick: obj=" + _objectId + " inv=" + _inventoryId + " (" + _x + ", " + _y + ")" + " offset=" + _offsetX + ", " + _offsetY + " mod=" + _mod);
 		Player player = client.getActiveChar();
 		if (player != null && _btn == 0 && player.tryLock(WAIT_LOCK))
 		{
@@ -146,7 +147,7 @@ public class InventoryClick extends GameClientPacket
 	 * положить вещь в инвентарь
 	 * @param item вещь которую кладем
 	 */
-	public boolean putItem(Player player, InventoryItem item, int x, int y)
+	public boolean putItem(Player player, AbstractItem item, int x, int y)
 	{
 		Inventory to = null;
 		// ищем нужный инвентарь у себя

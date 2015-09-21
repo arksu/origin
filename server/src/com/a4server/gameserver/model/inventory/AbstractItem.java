@@ -71,6 +71,23 @@ public class AbstractItem
 		}
 	}
 
+	/**
+	 * создать вещь на основании другой (сделать копию, привести к другому типу)
+	 */
+	public AbstractItem(AbstractItem other)
+	{
+		_objectId = other.getObjectId();
+		_template = other.getTemplate();
+		_q = other.getQ();
+		_x = other.getX();
+		_y = other.getY();
+		_amount = other.getAmount();
+		_stage = other.getStage();
+		_ticks = other.getTicks();
+		_ticksTotal = other.getTicksTotal();
+		_inventory = other.getInventory();
+	}
+
 	public int getObjectId()
 	{
 		return _objectId;

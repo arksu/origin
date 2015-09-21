@@ -38,7 +38,7 @@ public class EquipSlot extends AbstractItem
 	/**
 	 * слот в котором находится вещь
 	 */
-	private final Slot _slot;
+	private Slot _slot;
 
 	/**
 	 * грузим из базы вещь
@@ -51,6 +51,14 @@ public class EquipSlot extends AbstractItem
 		super(object, rset);
 		// код слота храним в y
 		_slot = getSlotType(_y);
+	}
+
+	/**
+	 * создать копию на базе другой вещи (привести к типу)
+	 */
+	public EquipSlot(AbstractItem other)
+	{
+		super(other);
 	}
 
 	/**
@@ -71,6 +79,11 @@ public class EquipSlot extends AbstractItem
 	public Slot getSlot()
 	{
 		return _slot;
+	}
+
+	public void setSlot(Slot slot)
+	{
+		_slot = slot;
 	}
 
 	public int getCode()

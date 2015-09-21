@@ -44,7 +44,9 @@ public class GUI_Inventory extends GUI_Control
 		// тупо создаем итемы - контролы, они сами будут себя отрисовывать как надо
 		for (InventoryItem item : _inventory.getItems().values())
 		{
-			_items.add(new GUI_InventoryItem(this, item));
+			GUI_InventoryItem ctrl = new GUI_InventoryItem(this, item);
+			ctrl.tagi = 1;
+			_items.add(ctrl);
 		}
 
 		// по сетке создаем недостающие пустые ячейки
@@ -63,7 +65,9 @@ public class GUI_Inventory extends GUI_Control
 				}
 				if (!found)
 				{
-					_items.add(new GUI_InventoryItem(this, x, y));
+					GUI_InventoryItem ctrl = new GUI_InventoryItem(this, x, y);
+					ctrl.tagi = 1;
+					_items.add(ctrl);
 				}
 			}
 		}

@@ -47,9 +47,6 @@ public class Inventory
 
 	/**
 	 * это инвентарь непосредственно объекта
-	 * @param object
-	 * @param width
-	 * @param height
 	 */
 	public Inventory(GameObject object, int width, int height)
 	{
@@ -62,10 +59,6 @@ public class Inventory
 
 	/**
 	 * это вложенный инвентарь
-	 * @param object
-	 * @param objectId
-	 * @param width
-	 * @param height
 	 */
 	public Inventory(GameObject object, int objectId, int width, int height)
 	{
@@ -183,12 +176,12 @@ public class Inventory
 
 	/**
 	 * положить вещь в инвентарь
-	 * @param item вещь
 	 * @param x координаты куда положить вещь в инвентаре
 	 * @param y координаты куда положить вещь в инвентаре
 	 */
-	public boolean putItem(InventoryItem item, int x, int y)
+	public boolean putItem(AbstractItem itemPut, int x, int y)
 	{
+		InventoryItem item = itemPut instanceof InventoryItem ? ((InventoryItem) itemPut) : new InventoryItem(itemPut);
 		// todo проверить можем ли мы вообще положить такую вещь в этот инвентарь?
 		if (x >= 0 && y >= 0)
 		{
@@ -206,6 +199,7 @@ public class Inventory
 				if (!conflict)
 				{
 					_items.add(item);
+					item.setParentInventory(this);
 					item.setXY(x, y);
 					return true;
 				}

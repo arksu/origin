@@ -79,6 +79,8 @@ public class GameObject
 	 */
 	protected final ReentrantLock _lock = new ReentrantLock();
 
+	public static final int WAIT_LOCK = 300;
+
 	public GameObject(int objectId, ObjectTemplate template)
 	{
 		if (objectId == 0)

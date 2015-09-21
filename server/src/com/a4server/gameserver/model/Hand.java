@@ -1,6 +1,6 @@
 package com.a4server.gameserver.model;
 
-import com.a4server.gameserver.model.inventory.InventoryItem;
+import com.a4server.gameserver.model.inventory.AbstractItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ public class Hand
 	/**
 	 * вещь которую держим в руке
 	 */
-	private final InventoryItem _item;
+	private final AbstractItem _item;
 
 	private final Player _player;
 
@@ -31,7 +31,7 @@ public class Hand
 	private final int _mx;
 	private final int _my;
 
-	public Hand(Player player, InventoryItem item, int offsetX, int offsetY, int mx, int my)
+	public Hand(Player player, AbstractItem item, int offsetX, int offsetY, int mx, int my)
 	{
 		_player = player;
 		_item = item;
@@ -41,7 +41,7 @@ public class Hand
 		_my = my;
 	}
 
-	public InventoryItem getItem()
+	public AbstractItem getItem()
 	{
 		return _item;
 	}

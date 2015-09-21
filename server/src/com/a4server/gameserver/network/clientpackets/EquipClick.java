@@ -1,7 +1,13 @@
 package com.a4server.gameserver.network.clientpackets;
 
+import com.a4server.gameserver.model.EquipSlot;
+import com.a4server.gameserver.model.Hand;
+import com.a4server.gameserver.model.Player;
+import com.a4server.gameserver.network.serverpackets.EquipUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.a4server.gameserver.model.GameObject.WAIT_LOCK;
 
 /**
  * клик в инвентаре по слоту
@@ -37,6 +43,37 @@ public class EquipClick extends GameClientPacket
 	@Override
 	public void run()
 	{
-
+		EquipSlot.Slot slot = EquipSlot.getSlotType(_slotCode);
+		_log.debug("InventoryClick: obj=" + _objectId + " slot=" + slot + " offset=" + _offsetX + ", " + _offsetY + " mod=" + _mod);
+		Player player = client.getActiveChar();
+		if (player != null && _btn == 0 && player.tryLock(WAIT_LOCK))
+		{
+			try
+			{
+				// держим в руке что-то?
+				if (player.getHand() == null)
+				{
+					EquipSlot item = player.getEquip().getItems().remove(slot);
+					if (item != null)
+					{
+						player.setHand(new Hand(player, item, 0, 0, _offsetX, _offsetY));
+						player.getClient().sendPacket(new EquipUpdate(player.getEquip()));
+					}
+				}
+				else
+				{
+					// положим вещь в слот
+					if (player.getEquip().putItem(player.getHand().getItem(), slot))
+					{
+						player.setHand(null);
+						player.getClient().sendPacket(new EquipUpdate(player.getEquip()));
+					}
+				}
+			}
+			finally
+			{
+				player.unlock();
+			}
+		}
 	}
 }

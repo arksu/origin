@@ -328,6 +328,11 @@ public class Player extends Human
 		return _inventory;
 	}
 
+	public Equip getEquip()
+	{
+		return _equip;
+	}
+
 	public void setOnlineStatus(boolean status)
 	{
 		_isOnline = status;

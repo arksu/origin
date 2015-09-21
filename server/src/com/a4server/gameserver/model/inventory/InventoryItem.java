@@ -25,8 +25,18 @@ public class InventoryItem extends AbstractItem
 		_parentInventory = parentInventory;
 	}
 
+	public InventoryItem(AbstractItem other)
+	{
+		super(other);
+	}
+
 	public Inventory getParentInventory()
 	{
 		return _parentInventory;
+	}
+
+	public void setParentInventory(Inventory parentInventory)
+	{
+		_parentInventory = parentInventory;
 	}
 }

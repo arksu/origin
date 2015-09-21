@@ -52,6 +52,7 @@ public class GUI_EquipWindow extends GUI_Window
 		for (InventoryItem item : equip.getItems())
 		{
 			GUI_InventoryItem ctrl = new GUI_InventoryItem(this, item);
+			ctrl.tagi = 2;
 			// поставим слоту правильную позицию
 			if (item.getY() >= 0 && item.getY() < _slotPos.size())
 			{
@@ -71,6 +72,7 @@ public class GUI_EquipWindow extends GUI_Window
 			if (!_items.containsKey(i))
 			{
 				GUI_InventoryItem ctrl = new GUI_InventoryItem(this, 200, i);
+				ctrl.tagi = 2;
 				ctrl.SetPos(_slotPos.get(i));
 			}
 		}
