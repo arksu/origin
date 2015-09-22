@@ -64,6 +64,7 @@ public class Player extends Human
 	public Player(int objectId, ResultSet rset, PlayerTemplate template)
 	{
 		super(objectId, template);
+		template.setPlayer(this);
 
 		_appearance = new PcAppearance(rset, objectId);
 		try
@@ -94,6 +95,13 @@ public class Player extends Human
 
 	private static class PlayerTemplate implements ObjectTemplate
 	{
+		private Player _player;
+
+		public void setPlayer(Player player)
+		{
+			_player = player;
+		}
+
 		@Override
 		public int getTypeId()
 		{
@@ -127,7 +135,7 @@ public class Player extends Human
 		@Override
 		public InventoryTemplate getInventory()
 		{
-			return null;
+			return new InventoryTemplate(_player.getInventoryWidth(), _player.getInventoryHeight());
 		}
 	}
 

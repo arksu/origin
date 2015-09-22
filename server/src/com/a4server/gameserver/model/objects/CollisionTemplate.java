@@ -19,7 +19,7 @@ public class CollisionTemplate
     @SerializedName ("all")
     private boolean _allYes = true;
 
-    @SerializedName ("exclude")
+    @SerializedName("exclude")
     private List<String> _exclude = new ArrayList<>();
 
     public boolean getCollision(GameObject other)

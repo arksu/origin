@@ -2,6 +2,7 @@ package com.a4server.gameserver.model.inventory;
 
 import com.a4server.Database;
 import com.a4server.gameserver.model.GameObject;
+import com.a4server.gameserver.model.objects.InventoryTemplate;
 import javolution.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,11 @@ public class Inventory
 	private int _height;
 
 	/**
+	 * шаблон инвентаря
+	 */
+	protected InventoryTemplate _template;
+
+	/**
 	 * список вещей которые находятся внутри
 	 */
 	FastList<InventoryItem> _items = new FastList<>();
@@ -54,18 +60,24 @@ public class Inventory
 		_invenroyId = object.getObjectId();
 		_width = width;
 		_height = height;
+		_template = object.getTemplate().getInventory();
+		if (_template == null)
+		{
+			_log.error("inventory does not have template!");
+		}
 		load();
 	}
 
 	/**
 	 * это вложенный инвентарь
 	 */
-	public Inventory(GameObject object, int objectId, int width, int height)
+	public Inventory(GameObject object, int objectId, InventoryTemplate template)
 	{
 		_object = object;
 		_invenroyId = objectId;
-		_width = width;
-		_height = height;
+		_template = template;
+		_width = _template.getWidth();
+		_height = _template.getHeight();
 		load();
 	}
 
@@ -181,34 +193,57 @@ public class Inventory
 	 */
 	public boolean putItem(AbstractItem itemPut, int x, int y)
 	{
+		// проверить можем ли мы вообще положить такую вещь в этот инвентарь?
+		if (!_template.isAccept(itemPut)) return false;
+
+		// приведем к типу
 		InventoryItem item = itemPut instanceof InventoryItem ? ((InventoryItem) itemPut) : new InventoryItem(itemPut);
-		// todo проверить можем ли мы вообще положить такую вещь в этот инвентарь?
+
+		// знаем куда положить?
 		if (x >= 0 && y >= 0)
 		{
-			// если вещь влезает в инвентарь
-			if (x + item.getWidth() <= getWidth() && y + item.getHeight() <= getHeight())
-			{
-				boolean conflict = false;
-				for (InventoryItem i : _items)
-				{
-					if (i.contains(x, y, item.getWidth(), item.getHeight()))
-					{
-						conflict = true;
-					}
-				}
-				if (!conflict)
-				{
-					_items.add(item);
-					item.setParentInventory(this);
-					item.setXY(x, y);
-					return true;
-				}
-			}
+			return tryPut(item, x, y);
 		}
 		else
 		{
-			// todo мы не знаем куда положить. ищем свободное место. иначе вернем ложь
+			// мы не знаем куда положить. ищем свободное место
+			for (int ix = 0; ix < _width; ix++)
+			{
+				for (int iy = 0; iy < _height; iy++)
+				{
+					if (tryPut(item, ix, iy)) return true;
+				}
+			}
+		}
+		return false;
+	}
 
+	/**
+	 * попробовать положить вещь в указанное место
+	 * @return истину если положить удалось, сразу же обновляем инвентарь и вещь
+	 */
+	protected boolean tryPut(InventoryItem item, int x, int y)
+	{
+		// если вещь влезает в инвентарь
+		if (x + item.getWidth() <= getWidth() && y + item.getHeight() <= getHeight())
+		{
+			boolean conflict = false;
+			for (InventoryItem i : _items)
+			{
+				if (i.contains(x, y, item.getWidth(), item.getHeight()))
+				{
+					conflict = true;
+					break;
+				}
+			}
+			if (!conflict)
+			{
+				_items.add(item);
+				item.setParentInventory(this);
+				item.setXY(x, y);
+				item.save();
+				return true;
+			}
 		}
 		return false;
 	}

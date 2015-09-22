@@ -40,10 +40,31 @@ public class AbstractItem
 	protected int _x;
 	protected int _y;
 
+	/**
+	 * количество
+	 */
 	protected int _amount;
+
 	protected int _stage;
 	protected int _ticks;
 	protected int _ticksTotal;
+
+	/**
+	 * создать вещь на основании другой (сделать копию, привести к другому типу)
+	 */
+	public AbstractItem(AbstractItem other)
+	{
+		_objectId = other.getObjectId();
+		_template = other.getTemplate();
+		_q = other.getQ();
+		_x = other.getX();
+		_y = other.getY();
+		_amount = other.getAmount();
+		_stage = other.getStage();
+		_ticks = other.getTicks();
+		_ticksTotal = other.getTicksTotal();
+		_inventory = other.getInventory();
+	}
 
 	/**
 	 * грузим из базы вещь
@@ -67,25 +88,16 @@ public class AbstractItem
 		InventoryTemplate template = _template.getInventory();
 		if (template != null)
 		{
-			_inventory = new Inventory(object, _objectId, template.getWidth(), template.getHeight());
+			_inventory = new Inventory(object, _objectId, template);
 		}
 	}
 
 	/**
-	 * создать вещь на основании другой (сделать копию, привести к другому типу)
+	 * сохранить вещь в бд (обновить ее состояние)
 	 */
-	public AbstractItem(AbstractItem other)
+	public void save()
 	{
-		_objectId = other.getObjectId();
-		_template = other.getTemplate();
-		_q = other.getQ();
-		_x = other.getX();
-		_y = other.getY();
-		_amount = other.getAmount();
-		_stage = other.getStage();
-		_ticks = other.getTicks();
-		_ticksTotal = other.getTicksTotal();
-		_inventory = other.getInventory();
+
 	}
 
 	public int getObjectId()
