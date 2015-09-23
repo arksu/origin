@@ -54,6 +54,8 @@ public class Player extends Human
 	 */
 	private volatile boolean _isOnline = false;
 
+	private volatile boolean _isLoaded = false;
+
 	/**
 	 * вещь которую держим в руках. null если ничего нет
 	 */
@@ -91,6 +93,7 @@ public class Player extends Human
 		_equip = new Equip(this);
 
 		_inventory = new Inventory(this, getInventoryWidth(), getInventoryHeight());
+		_isLoaded = true;
 	}
 
 	private static class PlayerTemplate implements ObjectTemplate
@@ -242,6 +245,10 @@ public class Player extends Human
 				.addNext(new PlayerAppearance(_appearance))
 				.addNext(new InventoryUpdate(_inventory))
 				.addNext(new EquipUpdate(_equip));
+		if (_hand != null)
+		{
+			pkt.addNext(new PlayerHand(_hand));
+		}
 		return pkt;
 	}
 
@@ -530,11 +537,16 @@ public class Player extends Human
 	public boolean setHand(Hand hand)
 	{
 		_hand = hand;
-		if (hand == null)
+		if (hand != null)
 		{
-			// todo: записать в базу что в руке ничего нет
+			_log.debug("set hand: " + hand);
+			// записать в базу
+			hand.getItem().setXY(200, 200);
 		}
-		getClient().sendPacket(new PlayerHand(_hand));
+		if (_isLoaded)
+		{
+			getClient().sendPacket(new PlayerHand(_hand));
+		}
 		return true;
 	}
 }

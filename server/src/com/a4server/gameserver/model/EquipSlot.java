@@ -76,6 +76,7 @@ public class EquipSlot extends AbstractItem
 				return slot;
 			}
 		}
+		_log.warn("unknown slot for code: " + code);
 		return null;
 	}
 
@@ -87,6 +88,7 @@ public class EquipSlot extends AbstractItem
 	public void setSlot(Slot slot)
 	{
 		_slot = slot;
+		setXY(200, slot.getCode());
 	}
 
 	public int getCode()

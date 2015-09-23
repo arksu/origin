@@ -241,7 +241,6 @@ public class Inventory
 				_items.add(item);
 				item.setParentInventory(this);
 				item.setXY(x, y);
-				item.save();
 				return true;
 			}
 		}

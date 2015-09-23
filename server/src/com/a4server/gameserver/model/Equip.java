@@ -55,8 +55,18 @@ public class Equip
 				{
 					while (rset.next())
 					{
-						EquipSlot slot = new EquipSlot(_player, rset);
-						_items.put(slot.getSlot(), slot);
+						int y = rset.getInt("y");
+						// это слот рука?
+						if (y == 200)
+						{
+							AbstractItem handItem = new AbstractItem(_player, rset);
+							_player.setHand(new Hand(_player, handItem, 0, 0, 10, 10));
+						}
+						else
+						{
+							EquipSlot slot = new EquipSlot(_player, rset);
+							_items.put(slot.getSlot(), slot);
+						}
 					}
 					_log.debug("loaded " + _items.size() + " items");
 				}

@@ -135,22 +135,25 @@ public class AbstractItem
 	@SuppressWarnings("SuspiciousNameCombination")
 	public void setXY(int x, int y)
 	{
-		// query queue
-		try (Connection con = Database.getInstance().getConnection();
-			 PreparedStatement statement = con.prepareStatement(UPDATE_ITEM_XY))
+		if (_x != x || _y != y)
 		{
-			statement.setInt(1, x);
-			statement.setInt(2, y);
-			statement.setInt(3, _objectId);
-			statement.executeUpdate();
-			con.close();
+			// query queue
+			try (Connection con = Database.getInstance().getConnection();
+				 PreparedStatement statement = con.prepareStatement(UPDATE_ITEM_XY))
+			{
+				statement.setInt(1, x);
+				statement.setInt(2, y);
+				statement.setInt(3, _objectId);
+				statement.executeUpdate();
+				con.close();
+			}
+			catch (Exception e)
+			{
+				_log.warn("failed update xy item pos " + toString());
+			}
+			_x = x;
+			_y = y;
 		}
-		catch (Exception e)
-		{
-			_log.warn("failed update xy item pos " + toString());
-		}
-		_x = x;
-		_y = y;
 	}
 
 	public int getWidth()
