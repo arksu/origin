@@ -1,10 +1,15 @@
 package com.a4server.gameserver.model.inventory;
 
+import com.a4server.Database;
 import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.objects.InventoryTemplate;
 import com.a4server.gameserver.model.objects.ItemTemplate;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -14,6 +19,13 @@ import java.sql.SQLException;
  */
 public class AbstractItem
 {
+	private static final Logger _log = LoggerFactory.getLogger(AbstractItem.class.getName());
+
+	/**
+	 * обновить позицию вещи в инвентаре
+	 */
+	public static final String UPDATE_ITEM_XY = "UPDATE items SET x=?, y=? WHERE id=?";
+
 	/**
 	 * уникальный ид объекта (вещи)
 	 */
@@ -120,8 +132,23 @@ public class AbstractItem
 		return _y;
 	}
 
+	@SuppressWarnings("SuspiciousNameCombination")
 	public void setXY(int x, int y)
 	{
+		// query queue
+		try (Connection con = Database.getInstance().getConnection();
+			 PreparedStatement statement = con.prepareStatement(UPDATE_ITEM_XY))
+		{
+			statement.setInt(1, x);
+			statement.setInt(2, y);
+			statement.setInt(3, _objectId);
+			statement.executeUpdate();
+			con.close();
+		}
+		catch (Exception e)
+		{
+			_log.warn("failed update xy item pos " + toString());
+		}
 		_x = x;
 		_y = y;
 	}
