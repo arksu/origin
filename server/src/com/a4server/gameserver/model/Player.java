@@ -12,6 +12,7 @@ import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.*;
 import com.a4server.util.Rnd;
+import com.a4server.util.network.BaseSendPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -240,14 +241,14 @@ public class Player extends Human
 	public GameServerPacket makeAddToWorldPacket()
 	{
 		GameServerPacket pkt = new ObjectAdd(this);
-		pkt
+		BaseSendPacket next = pkt
 				// раз это персонаж, отправим его представление, то как он должен выглядеть
 				.addNext(new PlayerAppearance(_appearance))
 				.addNext(new InventoryUpdate(_inventory))
 				.addNext(new EquipUpdate(_equip));
 		if (_hand != null)
 		{
-			pkt.addNext(new PlayerHand(_hand));
+			next.addNext(new PlayerHand(_hand));
 		}
 		return pkt;
 	}

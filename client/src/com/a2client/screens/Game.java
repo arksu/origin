@@ -3,6 +3,7 @@ package com.a2client.screens;
 import com.a2client.*;
 import com.a2client.gui.*;
 import com.a2client.model.GameObject;
+import com.a2client.model.Inventory;
 import com.a2client.network.game.clientpackets.ChatMessage;
 import com.a2client.network.game.clientpackets.MouseClick;
 import com.a2client.render.GameCamera;
@@ -131,7 +132,11 @@ public class Game extends BaseScreen
 			if (Input.KeyHit(Hotkey.INVENTORY))
 			{
 				// по нажатию на таб - откроем инвентарь
-				InventoryCache.getInstance().get(Player.getInstance().getObjectId()).toggle();
+				Inventory inventory = InventoryCache.getInstance().get(Player.getInstance().getObjectId());
+				if (inventory != null)
+				{
+					inventory.toggle();
+				}
 			}
 			else if (Input.KeyHit(Hotkey.EQUIP))
 			{
