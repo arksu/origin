@@ -69,7 +69,7 @@ public class GUIGDX
         BitmapFont f = getFont(font);
         Color c = f.getColor();
         f.setColor(color);
-        f.draw(_spriteBatch, text, (float) x, (float) (Gdx.graphics.getHeight() - y));
+//        f.draw(_spriteBatch, text, (float) x, (float) (Gdx.graphics.getHeight() - y));
         f.setColor(c);
     }
 
@@ -80,18 +80,21 @@ public class GUIGDX
 
     static public int getTextWidth(String font, String text)
     {
-        return (int) getFont(font).getBounds(text).width;
+//        return (int) getFont(font).getBounds(text).width;
+        return 0;
     }
 
     static public int getTextHeight(String font, String text)
     {
-        return (int) getFont(font).getBounds(text).height;
+//        return (int) getFont(font).getBounds(text).height;
+        return 0;
     }
 
 
     public static Vec2i getfontMetrics(String font, String text)
     {
-        return new Vec2i((int) getFont(font).getBounds(text).width, (int) getFont(font).getBounds(text).height);
+//        return new Vec2i((int) getFont(font).getBounds(text).width, (int) getFont(font).getBounds(text).height);
+        return Vec2i.z;
     }
 
     static public void FillRect(Vec2i pos, Vec2i size, Color color)

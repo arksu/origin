@@ -3,18 +3,17 @@ package com.a2client.render;
 import com.a2client.MapCache;
 import com.a2client.ObjectCache;
 import com.a2client.Terrain;
+import com.a2client.gui.GUIGDX;
 import com.a2client.model.GameObject;
 import com.a2client.screens.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.ModelLoader;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
@@ -53,7 +52,7 @@ public class Render1
 
 	private float _selectedDist;
 	private int _renderedObjects;
-
+	private final Shader _shader;
 
 	public Render1(Game game)
 	{
@@ -73,15 +72,49 @@ public class Render1
 		_modelInstance2 = new ModelInstance(_model2);
 		_modelInstance3 = new ModelInstance(_model3);
 		_terrain = new Terrain();
+
+		_shader = new ShaderTest();
+		_shader.init();
 	}
 
 	public void render(Camera camera)
 	{
+		FrameBuffer frameBuffer = new FrameBuffer(Pixmap.Format.RGB888,
+				Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		frameBuffer.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT
+				| GL20.GL_DEPTH_BUFFER_BIT);
+
+		Gdx.gl.glCullFace(GL20.GL_BACK);
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		Gdx.gl.glDepthFunc(GL20.GL_LEQUAL);
+		Gdx.gl.glDepthMask(true);
+
 		//
 		_terrain.Render(camera, _environment);
 
 		//
 		renderObjects(camera);
+
+		frameBuffer.end();
+
+		GUIGDX.getSpriteBatch().begin();
+		Mesh fullScreenQuad = createFullScreenQuad();
+		frameBuffer.getColorBufferTexture().bind();
+
+//			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT
+//					| GL20.GL_DEPTH_BUFFER_BIT);
+		_terrain._shader2.begin();
+		fullScreenQuad.render(_terrain._shader2, GL20.GL_TRIANGLE_STRIP);
+		_terrain._shader2.end();
+
+//			GUIGDX.getSpriteBatch().setShader(_terrain._shader);
+//			_terrain._shader.begin();
+//			Gdx.gl.glBindTexture(GL20.GL_TEXTURE_2D, frameBuffer.getDepthBufferHandle());
+//			_terrain._shader.setUniformi("u_texture", 0);
+//			_terrain._shader.end();
+
+		GUIGDX.getSpriteBatch().end();
 	}
 
 	protected void renderObjects(Camera camera)
@@ -136,6 +169,32 @@ public class Render1
 			}
 			_modelBatch.end();
 		}
+	}
+
+	public Mesh createFullScreenQuad(){
+		float[] verts = new float[16];
+		int i = 0;
+		verts[i++] = -1.f; // x1
+		verts[i++] = -1.f; // y1
+		verts[i++] =  0.f; // u1
+		verts[i++] =  0.f; // v1
+		verts[i++] =  1.f; // x2
+		verts[i++] = -1.f; // y2
+		verts[i++] =  1.f; // u2
+		verts[i++] =  0.f; // v2
+		verts[i++] =  1.f; // x3
+		verts[i++] =  1.f; // y2
+		verts[i++] =  1.f; // u3
+		verts[i++] =  1.f; // v3
+		verts[i++] = -1.f; // x4
+		verts[i++] =  1.f; // y4
+		verts[i++] =  0.f; // u4
+		verts[i] =  1.f; // v4
+		Mesh tmpMesh = new Mesh(true, 4, 0
+				, new VertexAttribute(VertexAttributes.Usage.Position, 2, "a_position")
+				, new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "a_texCoord0"));
+		tmpMesh.setVertices(verts);
+		return tmpMesh;
 	}
 
 	public int getChunksRendered()
