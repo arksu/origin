@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
@@ -69,7 +70,7 @@ public class GUIGDX
         BitmapFont f = getFont(font);
         Color c = f.getColor();
         f.setColor(color);
-//        f.draw(_spriteBatch, text, (float) x, (float) (Gdx.graphics.getHeight() - y));
+        f.draw(_spriteBatch, text, (float) x, (float) (Gdx.graphics.getHeight() - y));
         f.setColor(c);
     }
 
@@ -80,21 +81,19 @@ public class GUIGDX
 
     static public int getTextWidth(String font, String text)
     {
-//        return (int) getFont(font).getBounds(text).width;
-        return 0;
+    	return (int) (new GlyphLayout(getFont(font), text).width);
     }
 
     static public int getTextHeight(String font, String text)
     {
-//        return (int) getFont(font).getBounds(text).height;
-        return 0;
+    	return (int) (new GlyphLayout(getFont(font), text).height);
     }
 
 
     public static Vec2i getfontMetrics(String font, String text)
     {
-//        return new Vec2i((int) getFont(font).getBounds(text).width, (int) getFont(font).getBounds(text).height);
-        return Vec2i.z;
+    	GlyphLayout tmp = new GlyphLayout(getFont(font), text);
+        return new Vec2i((int) tmp.width, (int) tmp.height);
     }
 
     static public void FillRect(Vec2i pos, Vec2i size, Color color)

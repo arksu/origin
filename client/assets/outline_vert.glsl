@@ -11,6 +11,7 @@ precision mediump float;
 #define HIGH
 #endif
 
+uniform vec2 size;
 
 attribute vec4 a_position;
 attribute vec2 a_texCoord0;
@@ -32,7 +33,7 @@ varying MED vec2 v_texCoords7;
 varying MED vec2 v_texCoords8;
 
 void main(){
-    vec2 size = vec2(1024,650);
+//    vec2 size = vec2(1024,650);
 
     v_texCoords0 = a_texCoord0 + vec2(0.0 / size.x, -1.0 / size.y);
     v_texCoords1 = a_texCoord0 + vec2(-1.0 / size.x, 0.0 / size.y);

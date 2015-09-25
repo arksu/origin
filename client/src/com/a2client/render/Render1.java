@@ -19,6 +19,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +59,8 @@ public class Render1
 	ModelBatch depthModelBatch;
 	ModelBatch simpleModelBatch;
 
+	private Mesh fullScreenQuad;
+
 	public Render1(Game game)
 	{
 		ShaderProgram.pedantic = false;
@@ -85,8 +88,10 @@ public class Render1
 		_shader = new ShaderTest();
 		_shader.init();
 		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888,
-				Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+				Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 
+		fullScreenQuad = createFullScreenQuad();
+		
 	}
 
 	public void render(Camera camera)
@@ -98,17 +103,17 @@ public class Render1
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT
 				| GL20.GL_DEPTH_BUFFER_BIT);
 
-		Gdx.gl.glCullFace(GL20.GL_BACK);
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		Gdx.gl.glDepthFunc(GL20.GL_LEQUAL);
-		Gdx.gl.glDepthMask(true);
+//		Gdx.gl.glCullFace(GL20.GL_BACK);
+//		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+//		Gdx.gl.glDepthFunc(GL20.GL_LEQUAL);
+//		Gdx.gl.glDepthMask(true);
 
 		_terrain.Render(camera, _environment);
 		renderObjects(camera);
 		frameBuffer.end();
 
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT
-				| GL20.GL_DEPTH_BUFFER_BIT);
+//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT
+//				| GL20.GL_DEPTH_BUFFER_BIT);
 
 		_modelBatch = simpleModelBatch;
 		_terrain._shader = _terrain._shaderBasic;
@@ -116,13 +121,16 @@ public class Render1
 		renderObjects(camera);
 
 //		GUIGDX.getSpriteBatch().begin();
-		Mesh fullScreenQuad = createFullScreenQuad();
+
 		frameBuffer.getColorBufferTexture().bind();
 
 		ShaderProgram program = _terrain._shaderOutline;
 //		ShaderProgram program = _terrain._shaderCel;
 
 		program.begin();
+		
+		program.setUniformf("size", new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		
 		fullScreenQuad.render(program, GL20.GL_TRIANGLE_STRIP);
 		program.end();
 
