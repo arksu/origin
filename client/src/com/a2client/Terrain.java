@@ -10,8 +10,12 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class Terrain
 {
+	public ShaderProgram _shaderBasic;
+	public ShaderProgram _shaderCel;
+	public ShaderProgram _shaderOutline;
+	public ShaderProgram _shaderDepth;
+
 	public ShaderProgram _shader;
-	public ShaderProgram _shader2;
 
 	private int _chunksRendered = 0;
 
@@ -20,35 +24,35 @@ public class Terrain
 	public Terrain()
 	{
 
-		_shader = new ShaderProgram(
-				Gdx.files.internal("assets/basic_vert.glsl"),
-				Gdx.files.internal("assets/basic_frag.glsl"));
-
-		if (!_shader.isCompiled())
-		{
-			Gdx.app.log("Shader", _shader.getLog());
-			Gdx.app.log("Shader V", _shader.getVertexShaderSource());
-			Gdx.app.log("Shader F", _shader.getFragmentShaderSource());
-		}
-		_shader2 = new ShaderProgram(
-				Gdx.files.internal("assets/cel_vert.glsl"),
-				Gdx.files.internal("assets/cel_frag.glsl"));
-
-		if (!_shader2.isCompiled())
-		{
-			Gdx.app.log("Shader", _shader2.getLog());
-			Gdx.app.log("Shader V", _shader2.getVertexShaderSource());
-			Gdx.app.log("Shader F", _shader2.getFragmentShaderSource());
-		}
+		_shaderBasic = makeShader("assets/basic_vert.glsl", "assets/basic_frag.glsl");
+		_shaderCel = makeShader("assets/cel_vert.glsl", "assets/cel_frag.glsl");
+		_shaderOutline = makeShader("assets/outline_vert.glsl", "assets/outline_frag.glsl");
+		_shaderDepth = makeShader("assets/depth_vertex.glsl", "assets/depth_frag.glsl");
 
 		_tileAtlas = Main.getAssetManager().get(Config.RESOURCE_DIR + "tiles_atlas.png", Texture.class);
 
+	}
+
+	public ShaderProgram makeShader(String vert, String frag)
+	{
+		ShaderProgram program = new ShaderProgram(
+				Gdx.files.internal(vert),
+				Gdx.files.internal(frag));
+
+		if (!program.isCompiled())
+		{
+			Gdx.app.log("Shader", program.getLog());
+			Gdx.app.log("Shader V", program.getVertexShaderSource());
+			Gdx.app.log("Shader F", program.getFragmentShaderSource());
+		}
+		return program;
 	}
 
 	public void Render(Camera _camera, Environment _environment)
 	{
 		_shader.begin();
 		_shader.setUniformMatrix("u_MVPMatrix", _camera.combined);
+		_shader.setUniformMatrix("u_projViewWorldTrans", _camera.combined);
 //        _shader.setUniformMatrix("u_view", _camera.view);
 		_shader.setUniformi("u_texture", 0);
 

@@ -3,7 +3,6 @@ package com.a2client.render;
 import com.a2client.MapCache;
 import com.a2client.ObjectCache;
 import com.a2client.Terrain;
-import com.a2client.gui.GUIGDX;
 import com.a2client.model.GameObject;
 import com.a2client.screens.Game;
 import com.badlogic.gdx.Gdx;
@@ -54,6 +53,11 @@ public class Render1
 	private int _renderedObjects;
 	private final Shader _shader;
 
+	FrameBuffer frameBuffer;
+	FrontFaceDepthShaderProvider depthshaderprovider;
+	ModelBatch depthModelBatch;
+	ModelBatch simpleModelBatch;
+
 	public Render1(Game game)
 	{
 		ShaderProgram.pedantic = false;
@@ -63,7 +67,12 @@ public class Render1
 		_environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 		_environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
-		_modelBatch = new ModelBatch();
+		depthshaderprovider = new FrontFaceDepthShaderProvider();
+		depthModelBatch = new ModelBatch(depthshaderprovider);
+
+		simpleModelBatch = new ModelBatch();
+		_modelBatch = depthModelBatch;
+
 		ModelLoader loader = new ObjLoader();
 		_model = loader.loadModel(Gdx.files.internal("assets/debug/invader.obj"));
 		_model2 = loader.loadModel(Gdx.files.internal("assets/debug/block.obj"));
@@ -75,12 +84,16 @@ public class Render1
 
 		_shader = new ShaderTest();
 		_shader.init();
+		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888,
+				Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+
 	}
 
 	public void render(Camera camera)
 	{
-		FrameBuffer frameBuffer = new FrameBuffer(Pixmap.Format.RGB888,
-				Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		_modelBatch = depthModelBatch;
+		_terrain._shader = _terrain._shaderDepth;
+
 		frameBuffer.begin();
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT
 				| GL20.GL_DEPTH_BUFFER_BIT);
@@ -90,23 +103,28 @@ public class Render1
 		Gdx.gl.glDepthFunc(GL20.GL_LEQUAL);
 		Gdx.gl.glDepthMask(true);
 
-		//
 		_terrain.Render(camera, _environment);
-
-		//
 		renderObjects(camera);
-
 		frameBuffer.end();
 
-		GUIGDX.getSpriteBatch().begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT
+				| GL20.GL_DEPTH_BUFFER_BIT);
+
+		_modelBatch = simpleModelBatch;
+		_terrain._shader = _terrain._shaderBasic;
+		_terrain.Render(camera, _environment);
+		renderObjects(camera);
+
+//		GUIGDX.getSpriteBatch().begin();
 		Mesh fullScreenQuad = createFullScreenQuad();
 		frameBuffer.getColorBufferTexture().bind();
 
-//			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT
-//					| GL20.GL_DEPTH_BUFFER_BIT);
-		_terrain._shader2.begin();
-		fullScreenQuad.render(_terrain._shader2, GL20.GL_TRIANGLE_STRIP);
-		_terrain._shader2.end();
+		ShaderProgram program = _terrain._shaderOutline;
+//		ShaderProgram program = _terrain._shaderCel;
+
+		program.begin();
+		fullScreenQuad.render(program, GL20.GL_TRIANGLE_STRIP);
+		program.end();
 
 //			GUIGDX.getSpriteBatch().setShader(_terrain._shader);
 //			_terrain._shader.begin();
@@ -114,7 +132,7 @@ public class Render1
 //			_terrain._shader.setUniformi("u_texture", 0);
 //			_terrain._shader.end();
 
-		GUIGDX.getSpriteBatch().end();
+//		GUIGDX.getSpriteBatch().end();
 	}
 
 	protected void renderObjects(Camera camera)
@@ -174,22 +192,43 @@ public class Render1
 	public Mesh createFullScreenQuad(){
 		float[] verts = new float[16];
 		int i = 0;
+//		verts[i++] = -1.f; // x1
+//		verts[i++] = -1.f; // y1
+//		verts[i++] =  0.f; // u1
+//		verts[i++] =  0.f; // v1
+//		verts[i++] =  1.f; // x2
+//		verts[i++] = -1.f; // y2
+//		verts[i++] =  1.f; // u2
+//		verts[i++] =  0.f; // v2
+//		verts[i++] =  1.f; // x3
+//		verts[i++] =  1.f; // y2
+//		verts[i++] =  1.f; // u3
+//		verts[i++] =  1.f; // v3
+//		verts[i++] = -1.f; // x4
+//		verts[i++] =  1.f; // y4
+//		verts[i++] =  0.f; // u4
+//		verts[i] =  1.f; // v4
+
 		verts[i++] = -1.f; // x1
 		verts[i++] = -1.f; // y1
 		verts[i++] =  0.f; // u1
 		verts[i++] =  0.f; // v1
+
 		verts[i++] =  1.f; // x2
 		verts[i++] = -1.f; // y2
 		verts[i++] =  1.f; // u2
 		verts[i++] =  0.f; // v2
-		verts[i++] =  1.f; // x3
+
+		verts[i++] =  -1.f; // x3
 		verts[i++] =  1.f; // y2
-		verts[i++] =  1.f; // u3
+		verts[i++] =  0.f; // u3
 		verts[i++] =  1.f; // v3
-		verts[i++] = -1.f; // x4
+
+		verts[i++] =  1.f; // x4
 		verts[i++] =  1.f; // y4
-		verts[i++] =  0.f; // u4
+		verts[i++] =  1.f; // u4
 		verts[i] =  1.f; // v4
+
 		Mesh tmpMesh = new Mesh(true, 4, 0
 				, new VertexAttribute(VertexAttributes.Usage.Position, 2, "a_position")
 				, new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "a_texCoord0"));

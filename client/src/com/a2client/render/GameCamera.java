@@ -42,6 +42,9 @@ public class GameCamera
 	 */
 	private float _cameraDistance = 20;
 
+	float rotationSpeed = 0.5f;
+	boolean rotating = false;
+
 	/**
 	 * плоскость горизонта (тайлов) нужно для поиска позиции мыши на карте
 	 */
@@ -67,6 +70,10 @@ public class GameCamera
 			{
 				_cameraOffset.x += MOVE_STEP;
 			}
+			if (com.a2client.Input.KeyDown(Input.Keys.Q))
+			{
+				rotating = !rotating;
+			}
 		}
 		if (com.a2client.Input.isWheelUpdated())
 		{
@@ -80,9 +87,14 @@ public class GameCamera
 			playerPos = playerPos.scl(1f / MapCache.TILE_SIZE);
 		}
 		playerPos.add(_cameraOffset);
-		_camera.position.set(new Vector3(playerPos.x + _cameraDistance, _cameraDistance * 1.9f,
-										 playerPos.y + _cameraDistance));
+		if (rotating) rotationSpeed += 0.1f;
+		_camera.position.set(new Vector3(
+						playerPos.x + _cameraDistance + rotationSpeed,
+						_cameraDistance * 1.9f,
+						playerPos.y + _cameraDistance)
+		);
 		_camera.lookAt(new Vector3(playerPos.x, 0, playerPos.y));
+		_camera.invProjectionView.rotate(0, 0.1f, 0, 90);
 		_camera.update();
 
 	}

@@ -35,30 +35,6 @@ float toonify(in float intensity) {
 void main() {
     vec4 color = texture2D(u_texture, v_texCoord0);
     float factor = toonify(max(color.r, max(color.g, color.b)));
-    gl_FragColor = vec4(factor*color.rgb, color.a);
-//    gl_FragColor = color;
-
-//    gl_FragColor = u_ambient * v_diffuse * texture2D(u_texture, texCoords);
-//    gl_FragColor = texture2D(u_texture, texCoords);
-//            gl_FragColor = vec4(1.0,1.0,1.0,0.0);
-
-    /*float alpha = (texture2D(u_texture, v_texCoords0).a
-            + texture2D(u_texture, v_texCoords1).a
-            + texture2D(u_texture, v_texCoords2).a
-        + texture2D(u_texture, v_texCoords3).a
-        + texture2D(u_texture, v_texCoords4).a
-        + texture2D(u_texture, v_texCoords5).a
-        + texture2D(u_texture, v_texCoords6).a
-        + texture2D(u_texture, v_texCoords7).a
-        + texture2D(u_texture, v_texCoords8).a) / 9.0;
-
-
-        if(alpha < 0.7){
-            discard;
-//            gl_FragColor = vec4(0.3,0.3,0.3, 1.0);
-        }
-        else{
-            gl_FragColor = vec4(1.0,1.0,1.0,0.0);
-        }*/
-
+//    gl_FragColor = vec4(factor*color.rgb, color.a);
+    gl_FragColor = color;
 }
