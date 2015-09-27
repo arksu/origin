@@ -1,10 +1,14 @@
 package com.a2client.model;
 
+import com.a2client.MapCache;
+import com.a2client.ModelManager;
 import com.a2client.network.game.serverpackets.ObjectAdd;
 import com.a2client.util.Vec2i;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,18 +27,27 @@ public class GameObject
 	private String _title;
 	private boolean _interactive;
 	private Mover _mover = null;
+	private BoundingBox _modelBoundingBox;
 	private BoundingBox _boundingBox;
+	
+	private ModelInstance _model = null;
+
+	private boolean _needUpdate = true;
+
+	private Vector3 _worldCoord;
 
 	public GameObject(ObjectAdd pkt)
 	{
 		_name = pkt._name;
 		_title = pkt._title;
 		_coord = new Vector2(pkt._x, pkt._y);
+		_worldCoord = new Vector3(_coord.x / MapCache.TILE_SIZE, 0.5f, _coord.y / MapCache.TILE_SIZE); 
 		_objectId = pkt._objectId;
 		_typeId = pkt._typeId;
 		_interactive = false;
-		_boundingBox = new BoundingBox(new Vector3(-1, 0, -1),
+		_modelBoundingBox = new BoundingBox(new Vector3(-1, 0, -1),
 									   new Vector3(+1, 1, +1));
+		_boundingBox= new BoundingBox();
 	}
 
 	public int getObjectId()
@@ -51,6 +64,11 @@ public class GameObject
 	{
 		return _coord;
 	}
+	
+	public Vector3 getWorldCoord()
+	{
+		return _worldCoord;
+	}
 
 	public String getName()
 	{
@@ -60,6 +78,10 @@ public class GameObject
 	public BoundingBox getBoundingBox()
 	{
 		return _boundingBox;
+	}
+	
+	public ModelInstance getModel() {
+		return _model;
 	}
 
 	public void setCoord(int x, int y)
@@ -121,6 +143,13 @@ public class GameObject
 
 	public void Update()
 	{
+		if (_needUpdate) {
+			_needUpdate = false;
+			InitModel();
+			
+		}
+		
+		
 		if (_mover != null)
 		{
 			_mover.Update();
@@ -129,6 +158,21 @@ public class GameObject
 				_mover = null;
 			}
 		}
+	}
+
+	private void InitModel() {
+		_model = ModelManager.getInstance().getByType(_typeId);
+		if (_model == null) 
+			return;
+				
+		UpdateCoordandBB();
+	}
+
+	public void UpdateCoordandBB() {
+		_worldCoord = new Vector3(_coord.x / MapCache.TILE_SIZE, 0.5f, _coord.y / MapCache.TILE_SIZE); 
+		_model.transform.setToTranslation(_worldCoord);
+		_boundingBox.min.set(_worldCoord).add(_modelBoundingBox.min);
+		_boundingBox.max.set(_worldCoord).add(_modelBoundingBox.max);
 	}
 
 	@Override

@@ -107,6 +107,10 @@ public class Game extends BaseScreen
 	public void onUpdate()
 	{
 		_world_mouse_pos = screen2world(Gdx.input.getX(), Gdx.input.getY());
+		
+		//XXX:tmp
+		if (ObjectCache.getInstance().getMe() != null)
+			_gameCamera.setChaseObject(ObjectCache.getInstance().getMe());
 
 		if (GUI.getInstance().focused_control == _chatEdit)
 		{
@@ -218,7 +222,7 @@ public class Game extends BaseScreen
 	@Override
 	public void onRender3D()
 	{
-		_render.render(_gameCamera.getGdxCamera());
+		_render.render(_gameCamera);
 	}
 
 	@Override

@@ -7,3 +7,4 @@ gradlew.bat
 *build
 client*.log
 server/tmp
+/client/bin
