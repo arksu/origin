@@ -19,38 +19,48 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
  */
 public class FrontFaceDepthShader extends DefaultShader
 {
-	public static class Config extends DefaultShader.Config {
+	public static class Config extends DefaultShader.Config
+	{
 		public boolean depthBufferOnly = false;
 		public float defaultAlphaTest = 0.5f;
 
-		public Config () {
+		public Config()
+		{
 			super();
 //			defaultCullFace = GL20.GL_FRONT;
 			defaultCullFace = GL20.GL_BACK;
 		}
 
-		public Config (String vertexShader, String fragmentShader) {
+		public Config(String vertexShader, String fragmentShader)
+		{
 			super(vertexShader, fragmentShader);
 		}
 	}
 
 	private static String defaultVertexShader = null;
 
-	public final static String getDefaultVertexShader () {
+	public final static String getDefaultVertexShader()
+	{
 		if (defaultVertexShader == null)
+		{
 			defaultVertexShader = Gdx.files.internal("assets/depth_vertex.glsl").readString();
+		}
 		return defaultVertexShader;
 	}
 
 	private static String defaultFragmentShader = null;
 
-	public final static String getDefaultFragmentShader () {
+	public final static String getDefaultFragmentShader()
+	{
 		if (defaultFragmentShader == null)
+		{
 			defaultFragmentShader = Gdx.files.internal("assets/depth_frag.glsl").readString();
+		}
 		return defaultFragmentShader;
 	}
 
-	public static String createPrefix (final Renderable renderable, final Config config) {
+	public static String createPrefix(final Renderable renderable, final Config config)
+	{
 		String prefix = DefaultShader.createPrefix(renderable, config);
 		if (!config.depthBufferOnly) prefix += "#define PackedDepthFlag\n";
 		return prefix;
@@ -60,31 +70,37 @@ public class FrontFaceDepthShader extends DefaultShader
 	public final int weights;
 	private final FloatAttribute alphaTestAttribute;
 
-	public FrontFaceDepthShader (final Renderable renderable) {
+	public FrontFaceDepthShader(final Renderable renderable)
+	{
 		this(renderable, new Config());
 	}
 
-	public FrontFaceDepthShader (final Renderable renderable, final Config config) {
+	public FrontFaceDepthShader(final Renderable renderable, final Config config)
+	{
 		this(renderable, config, createPrefix(renderable, config));
 	}
 
-	public FrontFaceDepthShader (final Renderable renderable, final Config config, final String prefix) {
+	public FrontFaceDepthShader(final Renderable renderable, final Config config, final String prefix)
+	{
 		this(renderable, config, prefix, config.vertexShader != null ? config.vertexShader : getDefaultVertexShader(),
 				config.fragmentShader != null ? config.fragmentShader : getDefaultFragmentShader());
 	}
 
-	public FrontFaceDepthShader (final Renderable renderable, final Config config, final String prefix, final String vertexShader,
-						final String fragmentShader) {
+	public FrontFaceDepthShader(final Renderable renderable, final Config config, final String prefix, final String vertexShader,
+								final String fragmentShader)
+	{
 		this(renderable, config, new ShaderProgram(prefix + vertexShader, prefix + fragmentShader));
 	}
 
-	public FrontFaceDepthShader (final Renderable renderable, final Config config, final ShaderProgram shaderProgram) {
+	public FrontFaceDepthShader(final Renderable renderable, final Config config, final ShaderProgram shaderProgram)
+	{
 		super(renderable, config, shaderProgram);
 		final Attributes attributes = combineAttributes(renderable);
 		this.numBones = renderable.bones == null ? 0 : config.numBones;
 		int w = 0;
 		final int n = renderable.mesh.getVertexAttributes().size();
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < n; i++)
+		{
 			final VertexAttribute attr = renderable.mesh.getVertexAttributes().get(i);
 			if (attr.usage == VertexAttributes.Usage.BoneWeight) w |= (1 << attr.unit);
 		}
@@ -93,33 +109,42 @@ public class FrontFaceDepthShader extends DefaultShader
 	}
 
 	@Override
-	public void begin (Camera camera, RenderContext context) {
+	public void begin(Camera camera, RenderContext context)
+	{
 		super.begin(camera, context);
 		// Gdx.gl20.glEnable(GL20.GL_POLYGON_OFFSET_FILL);
 		// Gdx.gl20.glPolygonOffset(2.f, 100.f);
 	}
 
 	@Override
-	public void end () {
+	public void end()
+	{
 		super.end();
 		// Gdx.gl20.glDisable(GL20.GL_POLYGON_OFFSET_FILL);
 	}
 
 	@Override
-	public boolean canRender (Renderable renderable) {
+	public boolean canRender(Renderable renderable)
+	{
 		final Attributes attributes = combineAttributes(renderable);
-		if (attributes.has(BlendingAttribute.Type)) {
+		if (attributes.has(BlendingAttribute.Type))
+		{
 			if ((attributesMask & BlendingAttribute.Type) != BlendingAttribute.Type)
+			{
 				return false;
+			}
 			if (attributes.has(TextureAttribute.Diffuse) != ((attributesMask & TextureAttribute.Diffuse) == TextureAttribute.Diffuse))
+			{
 				return false;
+			}
 		}
 		final boolean skinned = ((renderable.mesh.getVertexAttributes().getMask() & VertexAttributes.Usage.BoneWeight) == VertexAttributes.Usage.BoneWeight);
 		if (skinned != (numBones > 0)) return false;
 		if (!skinned) return true;
 		int w = 0;
 		final int n = renderable.mesh.getVertexAttributes().size();
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < n; i++)
+		{
 			final VertexAttribute attr = renderable.mesh.getVertexAttributes().get(i);
 			if (attr.usage == VertexAttributes.Usage.BoneWeight) w |= (1 << attr.unit);
 		}
@@ -127,25 +152,38 @@ public class FrontFaceDepthShader extends DefaultShader
 	}
 
 	@Override
-	public void render (Renderable renderable, Attributes combinedAttributes) {
-		if (combinedAttributes.has(BlendingAttribute.Type)) {
-			final BlendingAttribute blending = (BlendingAttribute)combinedAttributes.get(BlendingAttribute.Type);
+	public void render(Renderable renderable, Attributes combinedAttributes)
+	{
+		if (combinedAttributes.has(BlendingAttribute.Type))
+		{
+			final BlendingAttribute blending = (BlendingAttribute) combinedAttributes.get(BlendingAttribute.Type);
 			combinedAttributes.remove(BlendingAttribute.Type);
 			final boolean hasAlphaTest = combinedAttributes.has(FloatAttribute.AlphaTest);
 			if (!hasAlphaTest)
+			{
 				combinedAttributes.set(alphaTestAttribute);
-			if (blending.opacity >= ((FloatAttribute)combinedAttributes.get(FloatAttribute.AlphaTest)).value)
+			}
+			if (blending.opacity >= ((FloatAttribute) combinedAttributes.get(FloatAttribute.AlphaTest)).value)
+			{
 				super.render(renderable, combinedAttributes);
+			}
 			if (!hasAlphaTest)
+			{
 				combinedAttributes.remove(FloatAttribute.AlphaTest);
+			}
 			combinedAttributes.set(blending);
-		} else
+		}
+		else
+		{
 			super.render(renderable, combinedAttributes);
+		}
 	}
 
 	private final static Attributes tmpAttributes = new Attributes();
+
 	// TODO: Move responsibility for combining attributes to RenderableProvider
-	private static final Attributes combineAttributes(final Renderable renderable) {
+	private static final Attributes combineAttributes(final Renderable renderable)
+	{
 		tmpAttributes.clear();
 		if (renderable.environment != null) tmpAttributes.set(renderable.environment);
 		if (renderable.material != null) tmpAttributes.set(renderable.material);

@@ -12,24 +12,29 @@ public class FrontFaceDepthShaderProvider extends BaseShaderProvider
 {
 	public final FrontFaceDepthShader.Config config;
 
-	public FrontFaceDepthShaderProvider (final FrontFaceDepthShader.Config config) {
+	public FrontFaceDepthShaderProvider(final FrontFaceDepthShader.Config config)
+	{
 		this.config = (config == null) ? new FrontFaceDepthShader.Config() : config;
 	}
 
-	public FrontFaceDepthShaderProvider (final String vertexShader, final String fragmentShader) {
+	public FrontFaceDepthShaderProvider(final String vertexShader, final String fragmentShader)
+	{
 		this(new FrontFaceDepthShader.Config(vertexShader, fragmentShader));
 	}
 
-	public FrontFaceDepthShaderProvider (final FileHandle vertexShader, final FileHandle fragmentShader) {
+	public FrontFaceDepthShaderProvider(final FileHandle vertexShader, final FileHandle fragmentShader)
+	{
 		this(vertexShader.readString(), fragmentShader.readString());
 	}
 
-	public FrontFaceDepthShaderProvider () {
+	public FrontFaceDepthShaderProvider()
+	{
 		this(null);
 	}
 
 	@Override
-	protected Shader createShader (final Renderable renderable) {
+	protected Shader createShader(final Renderable renderable)
+	{
 		return new FrontFaceDepthShader(renderable, config);
 	}
 }

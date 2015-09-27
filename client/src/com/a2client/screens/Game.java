@@ -9,6 +9,7 @@ import com.a2client.network.game.clientpackets.MouseClick;
 import com.a2client.render.GameCamera;
 import com.a2client.render.Render1;
 import com.a2client.util.Keys;
+import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import org.slf4j.Logger;
@@ -160,8 +161,8 @@ public class Game extends BaseScreen
 			}
 		}
 
-		_gameCamera.update();
 		UpdateMouseButtons();
+		_gameCamera.update();
 	}
 
 	protected void UpdateMouseButtons()
@@ -173,8 +174,32 @@ public class Game extends BaseScreen
 		for (int i = 0; i < 3; i++)
 		{
 			mouse_btns[i] = Input.MouseBtns[i];
+			boolean click = mouse_btns[i] != old_btns[i];
+			// вращаем камеру
+			if (i == Hotkey.CAMERA_BUTTON)
+			{
+				// если кнопка нажата
+				if (mouse_btns[i])
+				{
+					// это был клик?
+					if (click)
+					{
+						_gameCamera.setStartDrag(new Vec2i(Gdx.input.getX(), Gdx.input.getY()));
+					}
+					else
+					{
+						_gameCamera.updateDrag(new Vec2i(Gdx.input.getX(), Gdx.input.getY()));
+					}
+				}
+				// кнопку отжали
+				else if (click)
+				{
+					// закончим вращение перетаскивание камеры
+					_gameCamera.setStartDrag(null);
+				}
+			}
 			// узнаем на какую кнопку нажали
-			if (mouse_btns[i] != old_btns[i])
+			else if (click)
 			{
 				if ((mouse_btns[i] && GUI.getInstance().mouse_in_control == null) || (!mouse_btns[i]))
 				{

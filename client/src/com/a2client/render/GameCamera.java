@@ -3,6 +3,7 @@ package com.a2client.render;
 import com.a2client.MapCache;
 import com.a2client.ObjectCache;
 import com.a2client.gui.GUI;
+import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -44,6 +45,20 @@ public class GameCamera
 
 	float rotationSpeed = 0.5f;
 	boolean rotating = false;
+
+	/**
+	 * углы поворота камеры
+	 */
+	private float _angleY = 1;
+	private float _angleX = 0.2f;
+
+	/**
+	 * координаты мыши в которых начали вращение камеры
+	 */
+	private Vec2i _startDrag;
+
+	private float _startAngleY;
+	private float _startAngleX;
 
 	/**
 	 * плоскость горизонта (тайлов) нужно для поиска позиции мыши на карте
@@ -89,12 +104,13 @@ public class GameCamera
 		playerPos.add(_cameraOffset);
 		if (rotating) rotationSpeed += 0.1f;
 		_camera.position.set(new Vector3(
-						playerPos.x + _cameraDistance + rotationSpeed,
-						_cameraDistance * 1.9f,
-						playerPos.y + _cameraDistance)
+						playerPos.x + _cameraDistance * ((float) Math.sin(_angleY)),
+						_cameraDistance * 1f,
+						playerPos.y + _cameraDistance * ((float) Math.cos(_angleY))
+				)
 		);
 		_camera.lookAt(new Vector3(playerPos.x, 0, playerPos.y));
-		_camera.invProjectionView.rotate(0, 0.1f, 0, 90);
+//		_camera.invProjectionView.rotate(0, 0.1f, 0, 90);
 		_camera.update();
 
 	}
@@ -121,5 +137,20 @@ public class GameCamera
 	public Camera getGdxCamera()
 	{
 		return _camera;
+	}
+
+	public void setStartDrag(Vec2i startDrag)
+	{
+		_startDrag = startDrag;
+		_startAngleX = _angleX;
+		_startAngleY = _angleY;
+	}
+
+	public void updateDrag(Vec2i c)
+	{
+		if (_startDrag != null)
+		{
+			_angleY = _startAngleY + (c.sub(_startDrag).x * 0.05f);
+		}
 	}
 }
