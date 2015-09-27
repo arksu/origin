@@ -270,7 +270,7 @@ public class Player extends Human
 		{
 			try
 			{
-				grid.tryLock(Grid.MAX_WAIT_LOCK);
+				grid.tryLockSafe(Grid.MAX_WAIT_LOCK);
 				grid.removeObject(this);
 			}
 			catch (InterruptedException e)

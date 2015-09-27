@@ -81,6 +81,11 @@ public class CollisionResult
 		return _resultType;
 	}
 
+	public boolean isNoneCollision()
+	{
+		return _resultType == CollisionType.COLLISION_NONE;
+	}
+
 	public int getX()
 	{
 		return _x;

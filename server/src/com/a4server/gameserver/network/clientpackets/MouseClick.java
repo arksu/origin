@@ -1,7 +1,11 @@
 package com.a4server.gameserver.network.clientpackets;
 
+import com.a4server.gameserver.model.GameObject;
+import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.ai.player.MindMoveAction;
+import com.a4server.gameserver.model.collision.CollisionResult;
+import com.a4server.gameserver.model.inventory.AbstractItem;
 import com.a4server.gameserver.model.position.MoveToPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,22 +45,55 @@ public class MouseClick extends GameClientPacket
 		{
 			if (isDown)
 			{
-				switch (_button)
+				if (player.tryLock(Player.WAIT_LOCK))
 				{
-					case BUTTON_LEFT:
-						_log.debug("MoveToPoint to (" + _x + ", " + _y + ")");
-						// для простого передвижения не требуется мозг) не надо ни о чем думать
-						player.setMind(null);
-						// запустим движение. создадим контроллер для этого
-						player.StartMove(new MoveToPoint(_x, _y));
-
-						break;
-					case BUTTON_RIGHT:
-						if (_objectId != 0 && _objectId != player.getObjectId())
+					try
+					{
+						switch (_button)
 						{
-							// клик по объекту. бежим к нему и делаем действие над ним
-							player.setMind(new MindMoveAction(player, _objectId));
+							case BUTTON_LEFT:
+								// в руке что-то держим?
+								if (player.getHand() != null)
+								{
+									// todo бросим это на землю
+									// chpok
+									AbstractItem item = player.getHand().getItem();
+									Grid grid = player.getPos().getGrid();
+									GameObject object = new GameObject(item.getObjectId(), null);
+									try
+									{
+										CollisionResult result = grid.trySpawnNear(object, Grid.TILE_SIZE / 2, true);
+										if (result != null && result.isNoneCollision())
+										{
+											player.setHand(null);
+										}
+									}
+									catch (Exception e)
+									{
+										_log.warn("failed spawn hand item " + player.getHand().getItem());
+									}
+								}
+								else
+								{
+									_log.debug("MoveToPoint to (" + _x + ", " + _y + ")");
+									// для простого передвижения не требуется мозг) не надо ни о чем думать
+									player.setMind(null);
+									// запустим движение. создадим контроллер для этого
+									player.StartMove(new MoveToPoint(_x, _y));
+								}
+								break;
+							case BUTTON_RIGHT:
+								if (_objectId != 0 && _objectId != player.getObjectId())
+								{
+									// клик по объекту. бежим к нему и делаем действие над ним
+									player.setMind(new MindMoveAction(player, _objectId));
+								}
 						}
+					}
+					finally
+					{
+						player.unlock();
+					}
 				}
 			}
 		}

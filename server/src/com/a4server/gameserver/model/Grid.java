@@ -455,9 +455,9 @@ public class Grid
 		_log.debug("grid " + toString() + " tiles loaded");
 	}
 
-	public CollisionResult trySpawn(GameObject player) throws Exception
+	public CollisionResult trySpawn(GameObject object) throws Exception
 	{
-		return trySpawnNear(player, 0, false);
+		return trySpawnNear(object, 0, false);
 	}
 
 	/**
@@ -635,7 +635,7 @@ public class Grid
 				if (grid != this)
 				{
 					// пробуем залочить для обсчета коллизий
-					if (!grid.tryLockForCollision())
+					if (!grid.tryLock())
 					{
 						return CollisionResult.FAIL;
 					}
@@ -654,7 +654,7 @@ public class Grid
 				grid.waitLoad();
 				if (grid != this)
 				{
-					if (!grid.tryLockForCollision())
+					if (!grid.tryLock())
 					{
 						return CollisionResult.FAIL;
 					}
@@ -673,7 +673,7 @@ public class Grid
 				grid.waitLoad();
 				if (grid != this)
 				{
-					if (!grid.tryLockForCollision())
+					if (!grid.tryLock())
 					{
 						return CollisionResult.FAIL;
 					}
@@ -692,7 +692,7 @@ public class Grid
 				grid.waitLoad();
 				if (grid != this)
 				{
-					if (!grid.tryLockForCollision())
+					if (!grid.tryLock())
 					{
 						return CollisionResult.FAIL;
 					}
@@ -746,7 +746,7 @@ public class Grid
 		}
 	}
 
-	public boolean tryLock(int time) throws InterruptedException
+	public boolean tryLockSafe(int time) throws InterruptedException
 	{
 		return _loaded && _mainLock.tryLock(time, TimeUnit.MILLISECONDS);
 	}
@@ -762,15 +762,15 @@ public class Grid
 	/**
 	 * попробовать залочить для обсчета коллизий
 	 */
-	private boolean tryLockForCollision()
+	public boolean tryLock()
 	{
 		try
 		{
-			return tryLock(MAX_WAIT_LOCK);
+			return tryLockSafe(MAX_WAIT_LOCK);
 		}
 		catch (InterruptedException e)
 		{
-			_log.warn("Timeout wait tryLockForCollision " + this);
+			_log.warn("Timeout wait tryLock " + this);
 			return false;
 		}
 	}

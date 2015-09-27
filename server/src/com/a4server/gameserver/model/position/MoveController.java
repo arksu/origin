@@ -198,7 +198,7 @@ public abstract class MoveController
                 try
                 {
                     // пробуем залочить грид, ждем всего 10 мс
-                    locked = grid.tryLock(10);
+                    locked = grid.tryLockSafe(10);
                     // обсчитаем коллизию на это передвижение
                     return grid.checkCollision(_activeObject,
                                                (int) Math.round(_currentX),
