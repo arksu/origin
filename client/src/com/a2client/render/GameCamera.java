@@ -74,6 +74,7 @@ public class GameCamera extends PerspectiveCamera
 		if (chase_obj != null) 
 		{
 			position.set(chase_obj.getWorldCoord());
+			current.rotate(_angleX, 1f, 0f, -1f);
 			current.rotate(_angleY, 0f, 1f, 0f);
 			current.nor().scl(_cameraDistance);
 			position.add(current).add(0, _cameraDistance, 0);
@@ -122,7 +123,7 @@ public class GameCamera extends PerspectiveCamera
 		return new Vector2(intersection.x, intersection.z);
 	}
 
-	public void setStartDrag(Vec2i startDrag)
+	public void startDrag(Vec2i startDrag)
 	{
 		_startDrag = startDrag;
 		_startAngleX = _angleX;
@@ -133,7 +134,8 @@ public class GameCamera extends PerspectiveCamera
 	{
 		if (_startDrag != null)
 		{
-			_angleY = _startAngleY + (c.sub(_startDrag).x * 0.05f);
+			_angleY = _startAngleY - (c.sub(_startDrag).x * 0.3f);
+			_angleX = _startAngleX - (c.sub(_startDrag).y * 0.3f);
 		}
 	}
 }

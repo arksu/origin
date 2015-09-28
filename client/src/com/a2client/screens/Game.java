@@ -188,7 +188,7 @@ public class Game extends BaseScreen
 					// это был клик?
 					if (click)
 					{
-						_gameCamera.setStartDrag(new Vec2i(Gdx.input.getX(), Gdx.input.getY()));
+						_gameCamera.startDrag(new Vec2i(Gdx.input.getX(), Gdx.input.getY()));
 					}
 					else
 					{
@@ -199,7 +199,7 @@ public class Game extends BaseScreen
 				else if (click)
 				{
 					// закончим вращение перетаскивание камеры
-					_gameCamera.setStartDrag(null);
+					_gameCamera.startDrag(null);
 				}
 			}
 			// узнаем на какую кнопку нажали
