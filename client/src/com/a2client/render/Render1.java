@@ -166,9 +166,6 @@ public class Render1 {
 			_modelBatch.begin(camera);
 			for (GameObject o : ObjectCache.getInstance().getObjects()) {
 
-				// XXX: tmp
-				o.Update();
-
 				ModelInstance model = o.getModel();
 				if (model != null && camera.frustum.boundsInFrustum(o.getBoundingBox())) {
 					

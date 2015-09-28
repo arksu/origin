@@ -3,11 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="lib/gdx-backend-lwjgl.jar" sourcepath="lib/gdx-backend-lwjgl-sources.jar"/>
-	<classpathentry kind="lib" path="lib/gdx.jar" sourcepath="lib/gdx-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/D:/workspace/Origin_v2/lib/libgdx-1.5.2/docs/api/"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="lib/gdx.jar" sourcepath="lib/gdx-sources.jar"/>
 	<classpathentry kind="lib" path="lib/netty.jar" sourcepath="lib/netty-sources.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.7.6.jar" sourcepath="lib/slf4j-api-1.7.6-sources.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-simple-1.7.6.jar" sourcepath="lib/slf4j-simple-1.7.6-sources.jar"/>
