@@ -3,8 +3,6 @@ package com.a4server.gameserver.model.objects;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * шаблон для описания предмета инвентаря
@@ -12,28 +10,29 @@ import org.slf4j.LoggerFactory;
  */
 public class ItemTemplate
 {
-	private static final Logger _log = LoggerFactory.getLogger(ItemTemplate.class.getName());
-
 	@SerializedName("width")
 	private int _width = 1;
 
 	@SerializedName("height")
 	private int _height = 1;
 
-	private int _itemId;
-	private String _name;
+	private transient int _itemId;
+	private transient String _name;
+
+	private transient ObjectTemplate _objectTemplate;
 
 	/**
 	 * у вещи может быть вложенный инвентарь (какая-нибудь сумочка)
 	 */
 	private InventoryTemplate _inventory = null;
 
-	public static ItemTemplate load(JsonReader in, int itemId, String name)
+	public static ItemTemplate load(JsonReader in, int itemId, String name, ObjectTemplate objectTemplate)
 	{
 		Gson gson = new Gson();
 		ItemTemplate template = gson.fromJson(in, ItemTemplate.class);
 		template._itemId = itemId;
 		template._name = name;
+		template._objectTemplate = objectTemplate;
 		return template;
 	}
 
@@ -73,6 +72,11 @@ public class ItemTemplate
 	public void setInventory(InventoryTemplate inventory)
 	{
 		_inventory = inventory;
+	}
+
+	public ObjectTemplate getObjectTemplate()
+	{
+		return _objectTemplate;
 	}
 
 	@Override

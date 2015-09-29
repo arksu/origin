@@ -4,9 +4,9 @@ import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.ai.player.MindMoveAction;
-import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.inventory.AbstractItem;
 import com.a4server.gameserver.model.position.MoveToPoint;
+import com.a4server.gameserver.model.position.ObjectPosition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,11 +59,15 @@ public class MouseClick extends GameClientPacket
 									// chpok
 									AbstractItem item = player.getHand().getItem();
 									Grid grid = player.getPos().getGrid();
-									GameObject object = new GameObject(item.getObjectId(), null);
+									GameObject object = new GameObject(item.getObjectId(), item.getTemplate().getObjectTemplate());
+									object.setPos(new ObjectPosition(player.getPos(), object));
 									try
 									{
-										CollisionResult result = grid.trySpawnNear(object, Grid.TILE_SIZE / 2, true);
-										if (result != null && result.isNoneCollision())
+										// todo: решить по спавну, удалить итем из таблицы вещей и добавить в таблицу объектов
+										if (object.getPos().trySpawn())
+
+//										CollisionResult result = grid.trySpawnNear(object, Grid.TILE_SIZE / 2, true);
+//										if (result != null && result.isNoneCollision())
 										{
 											player.setHand(null);
 										}

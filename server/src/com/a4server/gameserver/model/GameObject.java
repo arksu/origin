@@ -149,6 +149,22 @@ public class GameObject
 		return _pos;
 	}
 
+	/**
+	 * установить позицию объекту. можем сделать это только 1 раз когда объект еще не инициализирован (при создании)
+	 * @param pos позиция
+	 */
+	public void setPos(ObjectPosition pos)
+	{
+		if (_pos == null)
+		{
+			_pos = pos;
+		}
+		else
+		{
+			throw new RuntimeException("try set pos, when != null");
+		}
+	}
+
 	public Rect getBoundRect()
 	{
 		return _boundRect;

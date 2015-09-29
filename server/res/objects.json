@@ -45,6 +45,9 @@
 		"item": {
 			"width": 1,
 			"height": 1
+		},
+		"collision": {
+			"all": false
 		}
 	},
 	"stoneAxe": {
@@ -52,6 +55,9 @@
 		"item": {
 			"width": 1,
 			"height": 2
+		},
+		"collision": {
+			"all": false
 		}
 	},
 	"stoneKnife": {
@@ -59,6 +65,9 @@
 		"item": {
 			"width": 2,
 			"height": 1
+		},
+		"collision": {
+			"all": false
 		}
 	},
 	"apple": {
@@ -66,6 +75,9 @@
 		"item": {
 			"width": 1,
 			"height": 1
+		},
+		"collision": {
+			"all": false
 		}
 	},
 	"board": {
@@ -73,6 +85,9 @@
 		"item": {
 			"width": 1,
 			"height": 4
+		},
+		"collision": {
+			"all": false
 		}
 	}
 }
