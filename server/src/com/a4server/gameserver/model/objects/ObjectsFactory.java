@@ -88,7 +88,9 @@ public class ObjectsFactory
 
 	public ItemTemplate getItemTemplate(int itemId)
 	{
-		return _itemTemplates.get(itemId);
+		ItemTemplate template = _itemTemplates.get(itemId);
+		if (template == null) _log.warn("item template not found: " + itemId);
+		return template;
 	}
 
 	public ObjectTemplate getTemplate(int typeId)
