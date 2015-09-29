@@ -8,6 +8,7 @@ import com.a2client.network.game.GamePacketHandler;
 import com.a2client.screens.Login;
 import com.a2client.screens.ResourceLoader;
 import com.a2client.util.Utils;
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +45,7 @@ public class Main extends com.badlogic.gdx.Game
 		_assetManager = new AssetManager();
 		_last_tick = System.currentTimeMillis();
 		_input = new Input();
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		Gdx.input.setInputProcessor(_input);
 		GUIGDX.Init();
 

@@ -149,6 +149,7 @@ public class GameObject
 			
 		}
 		
+		ModelManager.getInstance().updateModelTime(_typeId);
 		
 		if (_mover != null)
 		{
@@ -161,7 +162,7 @@ public class GameObject
 	}
 
 	private void InitModel() {
-		_model = ModelManager.getInstance().getByType(_typeId);
+		_model = ModelManager.getInstance().getModelByType(_typeId);
 		if (_model == null) 
 			return;
 				

@@ -1,0 +1,10 @@
+[
+{
+"typeId" : 1,
+"res" : "assets/debug/invader.obj"
+},
+{
+"typeId" : 2,
+"res" : "assets/debug/ship.obj"
+}
+]

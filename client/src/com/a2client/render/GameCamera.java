@@ -5,8 +5,10 @@ import org.slf4j.LoggerFactory;
 
 import com.a2client.model.GameObject;
 import com.a2client.util.Vec2i;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -57,7 +59,7 @@ public class GameCamera extends PerspectiveCamera
 
 	private GameObject chase_obj = null;
 
-	private Vector3 current = new Vector3();
+	private Vector3 current = new Vector3(0, 0, 1f);
 	
 	public GameCamera() {
 		fieldOfView = 30f;
@@ -73,10 +75,12 @@ public class GameCamera extends PerspectiveCamera
 	{
 		if (chase_obj != null) 
 		{
+			current.set(position).sub(direction).nor();
 			position.set(chase_obj.getWorldCoord());
+			current.rotate(_angleX, 1f, 0f, 0f).nor();
 			current.rotate(_angleY, 0f, 1f, 0f);
 			current.nor().scl(_cameraDistance);
-			position.add(current).add(0, _cameraDistance, 0);
+			position.add(current);
 			direction.set(chase_obj.getWorldCoord()).sub(position).nor();
 		}
 		
@@ -99,7 +103,7 @@ public class GameCamera extends PerspectiveCamera
 		this.position.set(chase_obj.getWorldCoord()).add(_cameraOffset);
 		this.direction.set(0, 0, -1);
 		
-		current.set(position).sub(direction).nor();
+//		current.set(position).sub(direction).nor();
 		
 	}
 
@@ -122,7 +126,7 @@ public class GameCamera extends PerspectiveCamera
 		return new Vector2(intersection.x, intersection.z);
 	}
 
-	public void setStartDrag(Vec2i startDrag)
+	public void startDrag(Vec2i startDrag)
 	{
 		_startDrag = startDrag;
 		_startAngleX = _angleX;
@@ -133,7 +137,9 @@ public class GameCamera extends PerspectiveCamera
 	{
 		if (_startDrag != null)
 		{
-			_angleY = _startAngleY + (c.sub(_startDrag).x * 0.05f);
+			_angleY = _startAngleY - (c.sub(_startDrag).x * 0.3f);
+			_angleX = _startAngleX - (c.sub(_startDrag).y * 0.3f);
+//			System.out.println("AY = "+_angleY+" AX = "+_angleX);
 		}
 	}
 }
