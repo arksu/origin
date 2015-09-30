@@ -9,9 +9,9 @@ import io.netty.handler.codec.MessageToByteEncoder;
  */
 public class PacketEncoder extends MessageToByteEncoder<BaseSendPacket>
 {
-    @Override
-    protected void encode(ChannelHandlerContext ctx, BaseSendPacket msg, ByteBuf out) throws Exception
-    {
-        msg.EncodePacket(out);
-    }
+	@Override
+	protected void encode(ChannelHandlerContext ctx, BaseSendPacket msg, ByteBuf out) throws Exception
+	{
+		msg.EncodePacket(out);
+	}
 }

@@ -18,220 +18,220 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class MoveController
 {
-    private static final Logger _log = LoggerFactory.getLogger(MoveController.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(MoveController.class.getName());
 
-    /**
-     * расстояние через которое будет обновлятся позиция в базе данных
-     */
-    protected static final int UPDATE_DB_DISTANCE = Grid.TILE_SIZE * 5;
+	/**
+	 * расстояние через которое будет обновлятся позиция в базе данных
+	 */
+	protected static final int UPDATE_DB_DISTANCE = Grid.TILE_SIZE * 5;
 
-    /**
-     * объект который двигаем
-     */
-    protected MoveObject _activeObject;
+	/**
+	 * объект который двигаем
+	 */
+	protected MoveObject _activeObject;
 
-    /**
-     * текущие координаты объекта. double для сглаживания.
-     */
-    protected double _currentX;
-    protected double _currentY;
+	/**
+	 * текущие координаты объекта. double для сглаживания.
+	 */
+	protected double _currentX;
+	protected double _currentY;
 
-    /**
-     * когда было последнее сохранение в базу
-     */
-    protected double _storedX;
-    protected double _storedY;
+	/**
+	 * когда было последнее сохранение в базу
+	 */
+	protected double _storedX;
+	protected double _storedY;
 
-    /**
-     * время последнего апдейта движения
-     */
-    private long _lastMoveTime;
+	/**
+	 * время последнего апдейта движения
+	 */
+	private long _lastMoveTime;
 
-    public MoveController()
-    {
-        _lastMoveTime = System.currentTimeMillis();
-    }
+	public MoveController()
+	{
+		_lastMoveTime = System.currentTimeMillis();
+	}
 
-    public void setActiveObject(MoveObject object)
-    {
-        _activeObject = object;
-        if (object != null)
-        {
-            // получим текущие координаты
-            _currentX = object.getPos()._x;
-            _currentY = object.getPos()._y;
-            _storedX = _currentX;
-            _storedY = _currentY;
-        }
-    }
+	public void setActiveObject(MoveObject object)
+	{
+		_activeObject = object;
+		if (object != null)
+		{
+			// получим текущие координаты
+			_currentX = object.getPos()._x;
+			_currentY = object.getPos()._y;
+			_storedX = _currentX;
+			_storedY = _currentY;
+		}
+	}
 
-    /**
-     * находится ли объект в реально движении или стоит на месте
-     * @return движется ли?
-     */
-    public abstract boolean isMoving();
+	/**
+	 * находится ли объект в реально движении или стоит на месте
+	 * @return движется ли?
+	 */
+	public abstract boolean isMoving();
 
-    /**
-     * возможно ли начать движение
-     * @return да или нет
-     */
-    public abstract boolean canStartMoving();
+	/**
+	 * возможно ли начать движение
+	 * @return да или нет
+	 */
+	public abstract boolean canStartMoving();
 
-    /**
-     * создать игровое событие о движении объекта
-     * @return событие
-     */
-    public Event getEvent()
-    {
-        Event event = new Event(_activeObject, Event.EventType.MOVE);
-        event.setPacket(makeMovePacket());
-        return event;
-    }
+	/**
+	 * создать игровое событие о движении объекта
+	 * @return событие
+	 */
+	public Event getEvent()
+	{
+		Event event = new Event(_activeObject, Event.EventType.MOVE);
+		event.setPacket(makeMovePacket());
+		return event;
+	}
 
-    /**
-     * создать пакет о том как движется объект
-     * @return пакет
-     */
-    public abstract GameServerPacket makeMovePacket();
+	/**
+	 * создать пакет о том как движется объект
+	 * @return пакет
+	 */
+	public abstract GameServerPacket makeMovePacket();
 
-    /**
-     * внутренняя реализация движения. надо определить куда должны передвинутся за тик
-     * @return движение завершено? (истина ежели уперлись во чтото или прибыли в пункт назначения)
-     */
-    public abstract boolean MovingImpl(double dt);
+	/**
+	 * внутренняя реализация движения. надо определить куда должны передвинутся за тик
+	 * @return движение завершено? (истина ежели уперлись во чтото или прибыли в пункт назначения)
+	 */
+	public abstract boolean MovingImpl(double dt);
 
-    /**
-     * обработать тик передвижения
-     * @return движение завершено? (истина ежели уперлись во чтото или прибыли в пункт назначения)
-     */
-    public final boolean updateMove()
-    {
-        long currTime = System.currentTimeMillis();
-        if (_lastMoveTime < currTime)
-        {
-            // узнаем сколько времени прошло между апдейтами
-            boolean result = MovingImpl((double) (currTime - _lastMoveTime) / 1000);
-            // если я еще управляю объектом
-            if (_activeObject.getMoveController() == this)
-            {
-                double dx = _currentX - _storedX;
-                double dy = _currentY - _storedY;
-                // если передвинулись достаточно далеко
-                if (Math.pow(UPDATE_DB_DISTANCE, 2) < (Math.pow(dx, 2) + Math.pow(dy, 2)))
-                {
-                    // обновим состояние базе
-                    _activeObject.storeInDb();
-                    _storedX = _currentX;
-                    _storedY = _currentY;
-                }
-            }
-            _lastMoveTime = currTime;
-            return result;
-        }
-        return false;
-    }
+	/**
+	 * обработать тик передвижения
+	 * @return движение завершено? (истина ежели уперлись во чтото или прибыли в пункт назначения)
+	 */
+	public final boolean updateMove()
+	{
+		long currTime = System.currentTimeMillis();
+		if (_lastMoveTime < currTime)
+		{
+			// узнаем сколько времени прошло между апдейтами
+			boolean result = MovingImpl((double) (currTime - _lastMoveTime) / 1000);
+			// если я еще управляю объектом
+			if (_activeObject.getMoveController() == this)
+			{
+				double dx = _currentX - _storedX;
+				double dy = _currentY - _storedY;
+				// если передвинулись достаточно далеко
+				if (Math.pow(UPDATE_DB_DISTANCE, 2) < (Math.pow(dx, 2) + Math.pow(dy, 2)))
+				{
+					// обновим состояние базе
+					_activeObject.storeInDb();
+					_storedX = _currentX;
+					_storedY = _currentY;
+				}
+			}
+			_lastMoveTime = currTime;
+			return result;
+		}
+		return false;
+	}
 
-    /**
-     * обсчитать одну итерацию движения объекта
-     * @param toX куда пробуем передвинутся
-     * @param toY куда пробуем передвинутся
-     * @param moveType тип передвижения. идем, плывем и тд
-     * @param virtualObject виртуальный объект который может дать коллизию
-     * @return истина если все ок. ложь если не успешно
-     */
-    protected boolean Process(double toX,
-                              double toY,
-                              Move.MoveType moveType,
-                              VirtualObject virtualObject)
-    {
-        CollisionResult collision = checkColiision(toX, toY, moveType, virtualObject);
-        switch (collision.getResultType())
-        {
-            // коллизий нет
-            case COLLISION_NONE:
-                // можно ставить новую позицию объекту
-                _activeObject.getPos().setXY(toX, toY);
-                _currentX = toX;
-                _currentY = toY;
-                // расскажем всем о том что мы передвинулись
-                _activeObject.getPos().getGrid().broadcastEvent(getEvent());
+	/**
+	 * обсчитать одну итерацию движения объекта
+	 * @param toX куда пробуем передвинутся
+	 * @param toY куда пробуем передвинутся
+	 * @param moveType тип передвижения. идем, плывем и тд
+	 * @param virtualObject виртуальный объект который может дать коллизию
+	 * @return истина если все ок. ложь если не успешно
+	 */
+	protected boolean Process(double toX,
+							  double toY,
+							  Move.MoveType moveType,
+							  VirtualObject virtualObject)
+	{
+		CollisionResult collision = checkColiision(toX, toY, moveType, virtualObject);
+		switch (collision.getResultType())
+		{
+			// коллизий нет
+			case COLLISION_NONE:
+				// можно ставить новую позицию объекту
+				_activeObject.getPos().setXY(toX, toY);
+				_currentX = toX;
+				_currentY = toY;
+				// расскажем всем о том что мы передвинулись
+				_activeObject.getPos().getGrid().broadcastEvent(getEvent());
 
-                // обновим видимые объекты
-                if (_activeObject instanceof Human)
-                {
-                    ((Human) _activeObject).UpdateVisibleObjects(false);
-                }
-                return true;
+				// обновим видимые объекты
+				if (_activeObject instanceof Human)
+				{
+					((Human) _activeObject).UpdateVisibleObjects(false);
+				}
+				return true;
 
-            case COLLISION_FAIL:
-                _activeObject.StopMove(collision, (int) Math.round(_currentX),
-                                       (int) Math.round(_currentY));
-                return false;
+			case COLLISION_FAIL:
+				_activeObject.StopMove(collision, (int) Math.round(_currentX),
+									   (int) Math.round(_currentY));
+				return false;
 
-            default:
-                _activeObject.StopMove(collision, collision.getX(), collision.getY());
-                return false;
-        }
+			default:
+				_activeObject.StopMove(collision, collision.getX(), collision.getY());
+				return false;
+		}
 
-    }
+	}
 
-    /**
-     * проверить коллизию при движении к указанной точке
-     * @param toX куда пытаемся передвинуть объект
-     * @param toY куда пытаемся передвинуть объект
-     * @param moveType тип движения
-     * @param virtualObject виртуальный объект если он есть
-     * @return вернет коллизию или null если была ошибка
-     */
-    protected CollisionResult checkColiision(double toX,
-                                             double toY,
-                                             Move.MoveType moveType,
-                                             VirtualObject virtualObject)
-    {
-        Grid grid = _activeObject.getPos().getGrid();
-        // а теперь пошла самая магия!)))
-        if (grid != null)
-        {
-            try
-            {
-                boolean locked = false;
-                try
-                {
-                    // пробуем залочить грид, ждем всего 10 мс
-                    locked = grid.tryLockSafe(10);
-                    // обсчитаем коллизию на это передвижение
-                    return grid.checkCollision(_activeObject,
-                                               (int) Math.round(_currentX),
-                                               (int) Math.round(_currentY),
-                                               (int) Math.round(toX),
-                                               (int) Math.round(toY),
-                                               moveType, virtualObject, true);
-                }
-                finally
-                {
-                    // полюбому надо разблокировать грид
-                    if (locked)
-                    {
-                        grid.unlock();
-                    }
-                }
-            }
-            catch (Grid.GridLoadException e)
-            {
-                _log.warn("checkColiision: GridLoadException " + e.getMessage() + " " + _activeObject
-                        .toString() + "; " + toString());
-                return CollisionResult.FAIL;
-            }
-            catch (InterruptedException e)
-            {
-                _log.warn("checkColiision: cant lock grid " + _activeObject.toString() + "; " + toString());
-                return CollisionResult.FAIL;
-            }
-        }
-        else
-        {
-            _log.warn("checkColiision: grid is null! " + _activeObject.toString() + "; " + toString());
-            return CollisionResult.FAIL;
-        }
-    }
+	/**
+	 * проверить коллизию при движении к указанной точке
+	 * @param toX куда пытаемся передвинуть объект
+	 * @param toY куда пытаемся передвинуть объект
+	 * @param moveType тип движения
+	 * @param virtualObject виртуальный объект если он есть
+	 * @return вернет коллизию или null если была ошибка
+	 */
+	protected CollisionResult checkColiision(double toX,
+											 double toY,
+											 Move.MoveType moveType,
+											 VirtualObject virtualObject)
+	{
+		Grid grid = _activeObject.getPos().getGrid();
+		// а теперь пошла самая магия!)))
+		if (grid != null)
+		{
+			try
+			{
+				boolean locked = false;
+				try
+				{
+					// пробуем залочить грид, ждем всего 10 мс
+					locked = grid.tryLockSafe(10);
+					// обсчитаем коллизию на это передвижение
+					return grid.checkCollision(_activeObject,
+											   (int) Math.round(_currentX),
+											   (int) Math.round(_currentY),
+											   (int) Math.round(toX),
+											   (int) Math.round(toY),
+											   moveType, virtualObject, true);
+				}
+				finally
+				{
+					// полюбому надо разблокировать грид
+					if (locked)
+					{
+						grid.unlock();
+					}
+				}
+			}
+			catch (Grid.GridLoadException e)
+			{
+				_log.warn("checkColiision: GridLoadException " + e.getMessage() + " " + _activeObject
+						.toString() + "; " + toString());
+				return CollisionResult.FAIL;
+			}
+			catch (InterruptedException e)
+			{
+				_log.warn("checkColiision: cant lock grid " + _activeObject.toString() + "; " + toString());
+				return CollisionResult.FAIL;
+			}
+		}
+		else
+		{
+			_log.warn("checkColiision: grid is null! " + _activeObject.toString() + "; " + toString());
+			return CollisionResult.FAIL;
+		}
+	}
 }

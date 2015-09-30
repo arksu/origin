@@ -14,31 +14,31 @@ import java.util.List;
  */
 public class CraftTemplate
 {
-    private static final Logger _log = LoggerFactory.getLogger(CraftTemplate.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(CraftTemplate.class.getName());
 
-    /**
-     * количество результата на выходе (сколько вещей получим)
-     */
-    @SerializedName ("count")
-    private int _count = 1;
+	/**
+	 * количество результата на выходе (сколько вещей получим)
+	 */
+	@SerializedName("count")
+	private int _count = 1;
 
-    /**
-     * список требуемых ингридиентов для крафта
-     */
-    @SerializedName ("required")
-    private List<Ingridient> _required = new ArrayList<>();
+	/**
+	 * список требуемых ингридиентов для крафта
+	 */
+	@SerializedName("required")
+	private List<Ingridient> _required = new ArrayList<>();
 
-    /**
-     * что получаем в результате крафта
-     */
-    private ItemTemplate _resultTemplate;
+	/**
+	 * что получаем в результате крафта
+	 */
+	private ItemTemplate _resultTemplate;
 
-    public class Ingridient
-    {
-        @SerializedName ("name")
-        private String _name;
+	public class Ingridient
+	{
+		@SerializedName("name")
+		private String _name;
 
-        @SerializedName ("count")
-        private int _count = 1;
-    }
+		@SerializedName("count")
+		private int _count = 1;
+	}
 }

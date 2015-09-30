@@ -11,49 +11,49 @@ import org.slf4j.LoggerFactory;
  */
 public class LoginPacketHandler
 {
-    private static final Logger _log = LoggerFactory.getLogger(LoginPacketHandler.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(LoginPacketHandler.class.getName());
 
-    static public LoginClientPacket HandlePacket(byte[] buf, LoginClient client)
-    {
-        int opcode = buf[0] & 0xff;
+	static public LoginClientPacket HandlePacket(byte[] buf, LoginClient client)
+	{
+		int opcode = buf[0] & 0xff;
 
-        LoginClientPacket pkt = null;
-        LoginClient.LoginClientState state = client.getState();
+		LoginClientPacket pkt = null;
+		LoginClient.LoginClientState state = client.getState();
 
-        switch (state)
-        {
-            case CONNECTED:
-                switch (opcode)
-                {
-                    case 0x02:
-                        pkt = new Login();
-                        break;
+		switch (state)
+		{
+			case CONNECTED:
+				switch (opcode)
+				{
+					case 0x02:
+						pkt = new Login();
+						break;
 
-                    default:
-                        debugOpcode(opcode, state);
-                        break;
-                }
-                break;
-            case AUTHED_LOGIN:
-                switch (opcode)
-                {
+					default:
+						debugOpcode(opcode, state);
+						break;
+				}
+				break;
+			case AUTHED_LOGIN:
+				switch (opcode)
+				{
 
-                    default:
-                        debugOpcode(opcode, state);
-                        break;
-                }
-                break;
-        }
+					default:
+						debugOpcode(opcode, state);
+						break;
+				}
+				break;
+		}
 
-        if (pkt != null)
-        {
-            pkt.setData(buf);
-        }
-        return pkt;
-    }
+		if (pkt != null)
+		{
+			pkt.setData(buf);
+		}
+		return pkt;
+	}
 
-    static private void debugOpcode(int opcode, LoginClient.LoginClientState state)
-    {
-        _log.info("Unknown Opcode: " + opcode + " for state: " + state.name());
-    }
+	static private void debugOpcode(int opcode, LoginClient.LoginClientState state)
+	{
+		_log.info("Unknown Opcode: " + opcode + " for state: " + state.name());
+	}
 }

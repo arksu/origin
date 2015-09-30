@@ -5,7 +5,7 @@ package com.a4server.util.network;
  */
 public abstract class NetClient
 {
-    public abstract void ProcessPacket() throws InterruptedException;
+	public abstract void ProcessPacket() throws InterruptedException;
 
-    public abstract void onDisconnect();
+	public abstract void onDisconnect();
 }

@@ -1,7 +1,6 @@
 package com.a4server.gameserver.network.clientpackets;
 
 import com.a4server.gameserver.model.GameObject;
-import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.ai.player.MindMoveAction;
 import com.a4server.gameserver.model.inventory.AbstractItem;
@@ -57,19 +56,20 @@ public class MouseClick extends GameClientPacket
 								{
 									// chpok
 									AbstractItem item = player.getHand().getItem();
-									Grid grid = player.getPos().getGrid();
 									GameObject object = new GameObject(item.getObjectId(), item.getTemplate().getObjectTemplate());
 									object.setPos(new ObjectPosition(player.getPos(), object));
 									try
 									{
-										// todo: решить по спавну, удалить итем из таблицы вещей и добавить в таблицу объектов
+										// todo: решить по спавну, удалить итем из таблицы вещей
+										// и добавить в таблицу объектов
 										if (object.getPos().trySpawn())
 										{
+											_log.debug("item dropped: " + item);
 											player.setHand(null);
 										}
 										else
 										{
-											_log.debug("cant spawn " + item);
+											_log.debug("cant drop: " + item);
 										}
 									}
 									catch (Exception e)

@@ -8,17 +8,17 @@ import com.a4server.Config;
 public class Init extends LoginServerPacket
 {
 
-    @Override
-    protected void write()
-    {
-        // SInit 0x01
-        writeC(0x01);
+	@Override
+	protected void write()
+	{
+		// SInit 0x01
+		writeC(0x01);
 
-        // proto version
-        writeC(Config.LOGIN_PROTO_VERSION);
+		// proto version
+		writeC(Config.LOGIN_PROTO_VERSION);
 
-        writeD(Config.SCRYPT_N);
-        writeD(Config.SCRYPT_P);
-        writeD(Config.SCRYPT_R);
-    }
+		writeD(Config.SCRYPT_N);
+		writeD(Config.SCRYPT_P);
+		writeD(Config.SCRYPT_R);
+	}
 }

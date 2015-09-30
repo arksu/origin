@@ -10,20 +10,20 @@ import com.a4server.util.network.NetClient;
  */
 public abstract class LoginClientPacket extends BaseRecvPacket
 {
-    protected LoginClient client;
+	protected LoginClient client;
 
-    public void setClient(NetClient client)
-    {
-        this.client = (LoginClient) client;
-    }
+	public void setClient(NetClient client)
+	{
+		this.client = (LoginClient) client;
+	}
 
-    public LoginClient getClient()
-    {
-        return client;
-    }
+	public LoginClient getClient()
+	{
+		return client;
+	}
 
-    public void sendPacket(BaseSendPacket pkt)
-    {
-        getClient().sendPacket(pkt);
-    }
+	public void sendPacket(BaseSendPacket pkt)
+	{
+		getClient().sendPacket(pkt);
+	}
 }

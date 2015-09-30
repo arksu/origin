@@ -5,17 +5,17 @@ package com.a4server.gameserver.network.serverpackets;
  */
 public class ObjectRemove extends GameServerPacket
 {
-    int _objectId;
+	int _objectId;
 
-    public ObjectRemove(int objectId)
-    {
-        _objectId = objectId;
-    }
+	public ObjectRemove(int objectId)
+	{
+		_objectId = objectId;
+	}
 
-    @Override
-    protected void write()
-    {
-        writeC(0x12);
-        writeD(_objectId);
-    }
+	@Override
+	protected void write()
+	{
+		writeC(0x12);
+		writeD(_objectId);
+	}
 }

@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Craft
 {
-    private static final Logger _log = LoggerFactory.getLogger(Craft.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(Craft.class.getName());
 
-    public static List<CraftTemplate> _crafts = new ArrayList<>();
+	public static List<CraftTemplate> _crafts = new ArrayList<>();
 }

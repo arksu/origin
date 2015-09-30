@@ -5,21 +5,21 @@ package com.a4server.gameserver.idfactory;
  */
 public class BitSetIDFactory extends IdFactory
 {
-    @Override
-    public int getNextId()
-    {
-        return 0;
-    }
+	@Override
+	public int getNextId()
+	{
+		return 0;
+	}
 
-    @Override
-    public void releaseId(int id)
-    {
+	@Override
+	public void releaseId(int id)
+	{
 
-    }
+	}
 
-    @Override
-    public int size()
-    {
-        return 0;
-    }
+	@Override
+	public int size()
+	{
+		return 0;
+	}
 }

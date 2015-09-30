@@ -11,25 +11,25 @@ import io.netty.channel.ChannelHandlerContext;
  */
 public abstract class GameClientPacket extends BaseRecvPacket
 {
-    protected GameClient client;
+	protected GameClient client;
 
-    public void setClient(NetClient client)
-    {
-        this.client = (GameClient) client;
-    }
+	public void setClient(NetClient client)
+	{
+		this.client = (GameClient) client;
+	}
 
-    public GameClient getClient()
-    {
-        return client;
-    }
+	public GameClient getClient()
+	{
+		return client;
+	}
 
-    public void sendPacket(BaseSendPacket pkt)
-    {
-        getClient().sendPacket(pkt);
-    }
+	public void sendPacket(BaseSendPacket pkt)
+	{
+		getClient().sendPacket(pkt);
+	}
 
-    public ChannelHandlerContext getConnect()
-    {
-        return getClient().getChannel();
-    }
+	public ChannelHandlerContext getConnect()
+	{
+		return getClient().getChannel();
+	}
 }

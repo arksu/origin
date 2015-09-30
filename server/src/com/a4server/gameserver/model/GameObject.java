@@ -90,9 +90,9 @@ public class GameObject
 		_objectId = objectId;
 		_template = template;
 		_boundRect = new Rect(-_template.getWidth() / 2,
-				-_template.getHeight() / 2,
-				_template.getWidth() / 2,
-				_template.getHeight() / 2);
+							  -_template.getHeight() / 2,
+							  _template.getWidth() / 2,
+							  _template.getHeight() / 2);
 	}
 
 	/**
@@ -108,9 +108,9 @@ public class GameObject
 		int typeId = rset.getInt("type");
 		_template = ObjectsFactory.getInstance().getTemplate(typeId);
 		_boundRect = new Rect(-_template.getWidth() / 2,
-				-_template.getHeight() / 2,
-				_template.getWidth() / 2,
-				_template.getHeight() / 2);
+							  -_template.getHeight() / 2,
+							  _template.getWidth() / 2,
+							  _template.getHeight() / 2);
 		// есть ли у объекта инвентарь?
 		InventoryTemplate inventory = _template.getInventory();
 		if (inventory != null)

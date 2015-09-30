@@ -120,4 +120,10 @@ public class SimpleObjectTemplate implements ObjectTemplate
 	{
 		return _inventory;
 	}
+
+	@Override
+	public ItemTemplate getItem()
+	{
+		return _item;
+	}
 }

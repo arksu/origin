@@ -9,17 +9,17 @@ import org.slf4j.LoggerFactory;
  */
 public class TimeUpdate extends GameServerPacket
 {
-    private static final Logger _log = LoggerFactory.getLogger(TimeUpdate.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(TimeUpdate.class.getName());
 
-    @Override
-    protected void write()
-    {
-        writeC(0x0C);
-        // игровые минуты с начала мира
-        writeD(GameTimeController.getInstance().getGameTime());
-        // температура воздуха
-        writeC(25);
-        // погода
-        writeC(0);
-    }
+	@Override
+	protected void write()
+	{
+		writeC(0x0C);
+		// игровые минуты с начала мира
+		writeD(GameTimeController.getInstance().getGameTime());
+		// температура воздуха
+		writeC(25);
+		// погода
+		writeC(0);
+	}
 }

@@ -8,13 +8,13 @@ import org.slf4j.LoggerFactory;
  */
 public class WorldInfo extends GameServerPacket
 {
-    private static final Logger _log = LoggerFactory.getLogger(WorldInfo.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(WorldInfo.class.getName());
 
-    @Override
-    protected void write()
-    {
-        writeC(0x10);
-        // тип мира (пустыня, лес, север)
-        writeC(0);
-    }
+	@Override
+	protected void write()
+	{
+		writeC(0x10);
+		// тип мира (пустыня, лес, север)
+		writeC(0);
+	}
 }

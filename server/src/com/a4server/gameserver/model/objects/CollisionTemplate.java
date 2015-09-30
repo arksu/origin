@@ -14,23 +14,23 @@ import java.util.List;
  */
 public class CollisionTemplate
 {
-    private static final Logger _log = LoggerFactory.getLogger(CollisionTemplate.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(CollisionTemplate.class.getName());
 
-    @SerializedName ("all")
-    private boolean _allYes = true;
+	@SerializedName("all")
+	private boolean _allYes = true;
 
-    @SerializedName("exclude")
-    private List<String> _exclude = new ArrayList<>();
+	@SerializedName("exclude")
+	private List<String> _exclude = new ArrayList<>();
 
-    public boolean getCollision(GameObject other)
-    {
-        if (_allYes)
-        {
-            return !_exclude.contains(other.getTemplate().getName());
-        }
-        else
-        {
-            return _exclude.contains(other.getTemplate().getName());
-        }
-    }
+	public boolean getCollision(GameObject other)
+	{
+		if (_allYes)
+		{
+			return !_exclude.contains(other.getTemplate().getName());
+		}
+		else
+		{
+			return _exclude.contains(other.getTemplate().getName());
+		}
+	}
 }

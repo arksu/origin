@@ -8,6 +8,7 @@ import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.objects.CollisionTemplate;
 import com.a4server.gameserver.model.objects.InventoryTemplate;
+import com.a4server.gameserver.model.objects.ItemTemplate;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.*;
@@ -140,6 +141,12 @@ public class Player extends Human
 		public InventoryTemplate getInventory()
 		{
 			return new InventoryTemplate(_player.getInventoryWidth(), _player.getInventoryHeight());
+		}
+
+		@Override
+		public ItemTemplate getItem()
+		{
+			return null;
 		}
 	}
 

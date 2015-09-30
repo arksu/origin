@@ -9,23 +9,24 @@ import org.slf4j.LoggerFactory;
  */
 public class HotkeyAction extends GameClientPacket
 {
-    private static final Logger _log = LoggerFactory.getLogger(HotkeyAction.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(HotkeyAction.class.getName());
 
-    int _hotkey;
+	int _hotkey;
 
-    @Override
-    public void readImpl()
-    {
-        _hotkey = readD();
-    }
+	@Override
+	public void readImpl()
+	{
+		_hotkey = readD();
+	}
 
-    @Override
-    public void run()
-    {
-        switch (_hotkey) {
-            case 1:
-                sendPacket(new InventoryUpdate(getClient().getActiveChar().getInventory()));
-                break;
-        }
-    }
+	@Override
+	public void run()
+	{
+		switch (_hotkey)
+		{
+			case 1:
+				sendPacket(new InventoryUpdate(getClient().getActiveChar().getInventory()));
+				break;
+		}
+	}
 }

@@ -29,4 +29,6 @@ public interface ObjectTemplate
 	CollisionTemplate getCollision();
 
 	InventoryTemplate getInventory();
+
+	ItemTemplate getItem();
 }

@@ -10,29 +10,29 @@ import org.slf4j.LoggerFactory;
  */
 public class MoveFollow extends MoveController
 {
-    private static final Logger _log = LoggerFactory.getLogger(MoveFollow.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(MoveFollow.class.getName());
 
-    @Override
-    public boolean isMoving()
-    {
-        return false;
-    }
+	@Override
+	public boolean isMoving()
+	{
+		return false;
+	}
 
-    @Override
-    public boolean canStartMoving()
-    {
-        return false;
-    }
+	@Override
+	public boolean canStartMoving()
+	{
+		return false;
+	}
 
-    @Override
-    public GameServerPacket makeMovePacket()
-    {
-        return null;
-    }
+	@Override
+	public GameServerPacket makeMovePacket()
+	{
+		return null;
+	}
 
-    @Override
-    public boolean MovingImpl(double dt)
-    {
-        return false;
-    }
+	@Override
+	public boolean MovingImpl(double dt)
+	{
+		return false;
+	}
 }

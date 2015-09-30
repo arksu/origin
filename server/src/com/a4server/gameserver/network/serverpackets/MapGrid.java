@@ -9,26 +9,26 @@ import org.slf4j.LoggerFactory;
  */
 public class MapGrid extends GameServerPacket
 {
-    private static final Logger _log = LoggerFactory.getLogger(MapGrid.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(MapGrid.class.getName());
 
-    Grid _grid;
-    int  _px, _py;
+	Grid _grid;
+	int _px, _py;
 
-    public MapGrid(Grid grid, int px, int py)
-    {
-        _grid = grid;
-        _px = px;
-        _py = py;
-    }
+	public MapGrid(Grid grid, int px, int py)
+	{
+		_grid = grid;
+		_px = px;
+		_py = py;
+	}
 
-    @Override
-    protected void write()
-    {
-        writeC(0x0B);
-        writeD(_px);
-        writeD(_py);
-        writeD(_grid.getCoordX());
-        writeD(_grid.getCoordY());
-        writeB(_grid.getTilesBlob());
-    }
+	@Override
+	protected void write()
+	{
+		writeC(0x0B);
+		writeD(_px);
+		writeD(_py);
+		writeD(_grid.getCoordX());
+		writeD(_grid.getCoordY());
+		writeB(_grid.getTilesBlob());
+	}
 }

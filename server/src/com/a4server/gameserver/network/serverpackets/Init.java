@@ -7,11 +7,11 @@ import com.a4server.Config;
  */
 public class Init extends GameServerPacket
 {
-    @Override
-    protected void write()
-    {
-        writeC(0x01);
-        // proto version
-        writeC(Config.GAME_PROTO_VERSION);
-    }
+	@Override
+	protected void write()
+	{
+		writeC(0x01);
+		// proto version
+		writeC(Config.GAME_PROTO_VERSION);
+	}
 }
