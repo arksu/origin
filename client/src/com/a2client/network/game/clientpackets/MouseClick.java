@@ -9,29 +9,29 @@ import org.slf4j.LoggerFactory;
  */
 public class MouseClick extends GameClientPacket
 {
-    private static final Logger _log = LoggerFactory.getLogger(MouseClick.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(MouseClick.class.getName());
 
-    private final int _button;
-    private final int _x;
-    private final int _y;
-    private final int _objectId;
+	private final int _button;
+	private final int _x;
+	private final int _y;
+	private final int _objectId;
 
-    public MouseClick(boolean isDown, int button, int x, int y, int objectId)
-    {
-        // если кнопку подняли - то добавим 10
-        _button = button + (isDown ? 0 : 10);
-        _x = x;
-        _y = y;
-        _objectId = objectId;
-    }
+	public MouseClick(boolean isDown, int button, int x, int y, int objectId)
+	{
+		// если кнопку подняли - то добавим 10
+		_button = button + (isDown ? 0 : 10);
+		_x = x;
+		_y = y;
+		_objectId = objectId;
+	}
 
-    @Override
-    protected void write()
-    {
-        writeC(0x0E);
-        writeC(_button);
-        writeD(_x);
-        writeD(_y);
-        writeD(_objectId);
-    }
+	@Override
+	protected void write()
+	{
+		writeC(0x0E);
+		writeC(_button);
+		writeD(_x);
+		writeD(_y);
+		writeD(_objectId);
+	}
 }

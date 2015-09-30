@@ -24,50 +24,54 @@ import java.util.Random;
 @SuppressWarnings("serial")
 public class WeightList<T> implements java.io.Serializable
 {
-    List<T> c;
-    List<Integer> w;
-    int tw = 0;
+	List<T> c;
+	List<Integer> w;
+	int tw = 0;
 
-    public WeightList()
-    {
-        c = new ArrayList<T>();
-        w = new ArrayList<Integer>();
-    }
+	public WeightList()
+	{
+		c = new ArrayList<T>();
+		w = new ArrayList<Integer>();
+	}
 
-    public void add(T c, int w)
-    {
-        this.c.add(c);
-        this.w.add(w);
-        tw += w;
-    }
+	public void add(T c, int w)
+	{
+		this.c.add(c);
+		this.w.add(w);
+		tw += w;
+	}
 
-    public T pick(int p)
-    {
-        if (tw == 0)
-            return null;
-        p %= tw;
-        int i = 0;
-        while (true)
-        {
-            if ((p -= w.get(i)) <= 0)
-                break;
-            i++;
-        }
-        return (c.get(i));
-    }
+	public T pick(int p)
+	{
+		if (tw == 0)
+		{
+			return null;
+		}
+		p %= tw;
+		int i = 0;
+		while (true)
+		{
+			if ((p -= w.get(i)) <= 0)
+			{
+				break;
+			}
+			i++;
+		}
+		return (c.get(i));
+	}
 
-    public T pick_first()
-    {
-        return c.get(0);
-    }
+	public T pick_first()
+	{
+		return c.get(0);
+	}
 
-    public T pick(Random gen)
-    {
-        return (pick(gen.nextInt(tw)));
-    }
+	public T pick(Random gen)
+	{
+		return (pick(gen.nextInt(tw)));
+	}
 
-    public int size()
-    {
-        return (c.size());
-    }
+	public int size()
+	{
+		return (c.size());
+	}
 }

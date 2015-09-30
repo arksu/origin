@@ -60,9 +60,9 @@ public class Render1
 
 		_environment = new Environment();
 		_environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f,
-				0.4f, 0.4f, 1f));
+											0.4f, 0.4f, 1f));
 		_environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f,
-				-0.8f, -0.2f));
+													-0.8f, -0.2f));
 
 		depthshaderprovider = new FrontFaceDepthShaderProvider();
 		depthModelBatch = new ModelBatch(depthshaderprovider);
@@ -75,7 +75,7 @@ public class Render1
 		_shader = new ShaderTest();
 		_shader.init();
 		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888,
-				Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+									  Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 
 		fullScreenQuad = createFullScreenQuad();
 
@@ -121,7 +121,7 @@ public class Render1
 		program.begin();
 
 		program.setUniformf("size", new Vector2(Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight()));
+												Gdx.graphics.getHeight()));
 
 		fullScreenQuad.render(program, GL20.GL_TRIANGLE_STRIP);
 		program.end();
@@ -156,7 +156,7 @@ public class Render1
 
 					Vector3 intersection = new Vector3();
 					if (Intersector.intersectRayBounds(ray, o.getBoundingBox(),
-							intersection))
+													   intersection))
 					{
 						float dist = intersection.dst(camera.position);
 						if (dist < _selectedDist)
@@ -198,8 +198,8 @@ public class Render1
 
 		Mesh tmpMesh = new Mesh(true, 4, 0, new VertexAttribute(
 				VertexAttributes.Usage.Position, 2, "a_position"),
-				new VertexAttribute(VertexAttributes.Usage.TextureCoordinates,
-						2, "a_texCoord0"));
+								new VertexAttribute(VertexAttributes.Usage.TextureCoordinates,
+													2, "a_texCoord0"));
 		tmpMesh.setVertices(verts);
 		return tmpMesh;
 	}

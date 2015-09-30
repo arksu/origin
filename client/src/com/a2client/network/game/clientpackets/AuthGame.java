@@ -4,14 +4,16 @@ import com.a2client.screens.Login;
 
 public class AuthGame extends GameClientPacket
 {
-    public AuthGame() {}
+	public AuthGame()
+	{
+	}
 
-    @Override
-    protected void write()
-    {
-        writeC(0x02);
-        // шлем ид сессии полученный от логин сервера
-        writeD(Login._gameserver_key1);
-        writeD(Login._gameserver_key2);
-    }
+	@Override
+	protected void write()
+	{
+		writeC(0x02);
+		// шлем ид сессии полученный от логин сервера
+		writeD(Login._gameserver_key1);
+		writeD(Login._gameserver_key2);
+	}
 }

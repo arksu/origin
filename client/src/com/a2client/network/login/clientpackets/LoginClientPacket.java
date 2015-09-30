@@ -5,8 +5,8 @@ import com.a2client.util.network.BaseSendPacket;
 
 public abstract class LoginClientPacket extends BaseSendPacket
 {
-    public void Send()
-    {
-        Net.getConnection().sendPacket(this);
-    }
+	public void Send()
+	{
+		Net.getConnection().sendPacket(this);
+	}
 }

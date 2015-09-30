@@ -19,5 +19,5 @@ package com.a2client.dialogs;
 
 public interface DialogFactory
 {
-    public Dialog create();
+	public Dialog create();
 }

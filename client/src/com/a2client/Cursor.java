@@ -22,27 +22,29 @@ import com.badlogic.gdx.graphics.Pixmap;
 
 public class Cursor
 {
-    static private Cursor _instance;
+	static private Cursor _instance;
 
-    static public Cursor getInstance()
-    {
-        if (_instance == null)
-            _instance = new Cursor();
-        return _instance;
-    }
+	static public Cursor getInstance()
+	{
+		if (_instance == null)
+		{
+			_instance = new Cursor();
+		}
+		return _instance;
+	}
 
-    public void setCursor(String name)
-    {
-            name = "arrow";
-        // TODO : установить курсор
-        Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor1.png"));
-        Gdx.graphics.newCursor(pm, 0, 0).setSystemCursor();
+	public void setCursor(String name)
+	{
+		name = "arrow";
+		// TODO : установить курсор
+		Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor1.png"));
+		Gdx.graphics.newCursor(pm, 0, 0).setSystemCursor();
 
-        pm.dispose();
-    }
+		pm.dispose();
+	}
 
-    public void render()
-    {
+	public void render()
+	{
 
-    }
+	}
 }

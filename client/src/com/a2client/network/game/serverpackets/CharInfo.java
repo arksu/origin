@@ -7,28 +7,28 @@ import org.slf4j.LoggerFactory;
 
 public class CharInfo extends GameServerPacket
 {
-    static
-    {
-        GamePacketHandler.AddPacketType(0x0D, CharInfo.class);
-    }
+	static
+	{
+		GamePacketHandler.AddPacketType(0x0D, CharInfo.class);
+	}
 
-    private static final Logger _log = LoggerFactory.getLogger(CharInfo.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(CharInfo.class.getName());
 
-    private int _objectId;
-    private String _name;
+	private int _objectId;
+	private String _name;
 
-    @Override
-    public void readImpl()
-    {
-        _objectId = readD();
-        _name = readS();
-        _log.debug("CharInfo: " + _name + " id=" + _objectId);
-    }
+	@Override
+	public void readImpl()
+	{
+		_objectId = readD();
+		_name = readS();
+		_log.debug("CharInfo: " + _name + " id=" + _objectId);
+	}
 
-    @Override
-    public void run()
-    {
-        Player.getInstance().setObjectId(_objectId);
-        Player.getInstance().setName(_name);
-    }
+	@Override
+	public void run()
+	{
+		Player.getInstance().setObjectId(_objectId);
+		Player.getInstance().setName(_name);
+	}
 }

@@ -1,24 +1,21 @@
 package com.a2client.render;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.a2client.model.GameObject;
 import com.a2client.util.Vec2i;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * простая игровая камера
  * Created by arksu on 25.02.15.
  */
-public class GameCamera extends PerspectiveCamera 
+public class GameCamera extends PerspectiveCamera
 {
 	private static final Logger _log = LoggerFactory.getLogger(GameCamera.class.getName());
 
@@ -26,7 +23,6 @@ public class GameCamera extends PerspectiveCamera
 	 * на сколько передвигаем камеру за 1 тик клавишами (для дебага)
 	 */
 	static final float MOVE_STEP = 0.2f;
-
 
 	private Vector3 _cameraOffset = new Vector3(0, 0, 10);
 
@@ -60,20 +56,21 @@ public class GameCamera extends PerspectiveCamera
 	private GameObject chase_obj = null;
 
 	private Vector3 current = new Vector3(0, 0, 1f);
-	
-	public GameCamera() {
+
+	public GameCamera()
+	{
 		fieldOfView = 30f;
 		viewportWidth = 800;
 		viewportHeight = 600;
 		near = 1f;
 		far = 1000f;
-		
+
 		update();
 	}
-	
+
 	public void update()
 	{
-		if (chase_obj != null) 
+		if (chase_obj != null)
 		{
 			current.set(position).sub(direction).nor();
 			position.set(chase_obj.getWorldCoord());
@@ -83,7 +80,7 @@ public class GameCamera extends PerspectiveCamera
 			position.add(current);
 			direction.set(chase_obj.getWorldCoord()).sub(position).nor();
 		}
-		
+
 		if (com.a2client.Input.isWheelUpdated())
 		{
 			_cameraDistance += (_cameraDistance / 15f) * com.a2client.Input.MouseWheel;
@@ -93,18 +90,21 @@ public class GameCamera extends PerspectiveCamera
 		super.update();
 
 	}
-	
-	public void setChaseObject(GameObject obj) {
+
+	public void setChaseObject(GameObject obj)
+	{
 		chase_obj = obj;
-		
+
 		if (chase_obj == null)
+		{
 			return;
-		
+		}
+
 		this.position.set(chase_obj.getWorldCoord()).add(_cameraOffset);
 		this.direction.set(0, 0, -1);
-		
+
 //		current.set(position).sub(direction).nor();
-		
+
 	}
 
 	public void onResize(int width, int height)
@@ -114,7 +114,7 @@ public class GameCamera extends PerspectiveCamera
 
 		viewportWidth = width;
 		viewportHeight = height;
-		
+
 		update();
 	}
 

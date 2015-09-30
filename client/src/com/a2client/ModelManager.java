@@ -121,7 +121,7 @@ public class ModelManager
 
 		@SuppressWarnings("unchecked")
 		ArrayList<JsonValue> list = json.fromJson(ArrayList.class,
-				Gdx.files.internal("assets/objects.json"));
+												  Gdx.files.internal("assets/objects.json"));
 
 		for (JsonValue v : list)
 		{

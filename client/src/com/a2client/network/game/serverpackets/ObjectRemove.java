@@ -10,26 +10,26 @@ import org.slf4j.LoggerFactory;
  */
 public class ObjectRemove extends GameServerPacket
 {
-    static
-    {
-        GamePacketHandler.AddPacketType(0x12, ObjectRemove.class);
-    }
+	static
+	{
+		GamePacketHandler.AddPacketType(0x12, ObjectRemove.class);
+	}
 
-    private static final Logger _log = LoggerFactory.getLogger(ObjectRemove.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(ObjectRemove.class.getName());
 
-    int _objectId;
+	int _objectId;
 
-    @Override
-    public void readImpl()
-    {
-        _objectId = readD();
-    }
+	@Override
+	public void readImpl()
+	{
+		_objectId = readD();
+	}
 
-    @Override
-    public void run()
-    {
-        _log.debug("ObjectRemove "+_objectId);
-        ObjectCache.getInstance().removeObject(_objectId);
-        // todo : при удалении объекта надо удалить все инвентари этого объекта
-    }
+	@Override
+	public void run()
+	{
+		_log.debug("ObjectRemove " + _objectId);
+		ObjectCache.getInstance().removeObject(_objectId);
+		// todo : при удалении объекта надо удалить все инвентари этого объекта
+	}
 }

@@ -11,35 +11,35 @@ import org.slf4j.LoggerFactory;
  */
 public class ObjectAdd extends GameServerPacket
 {
-    static
-    {
-        GamePacketHandler.AddPacketType(0x11, ObjectAdd.class);
-    }
+	static
+	{
+		GamePacketHandler.AddPacketType(0x11, ObjectAdd.class);
+	}
 
-    private static final Logger _log = LoggerFactory.getLogger(ObjectAdd.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(ObjectAdd.class.getName());
 
-    public int _objectId;
-    public int _typeId;
-    public int _x;
-    public int _y;
-    public String _name;
-    public String _title;
+	public int _objectId;
+	public int _typeId;
+	public int _x;
+	public int _y;
+	public String _name;
+	public String _title;
 
-    @Override
-    public void readImpl()
-    {
-        _objectId = readD();
-        _typeId = readD();
-        _x = readD();
-        _y = readD();
-        _name = readS();
-        _title = readS();
-    }
+	@Override
+	public void readImpl()
+	{
+		_objectId = readD();
+		_typeId = readD();
+		_x = readD();
+		_y = readD();
+		_name = readS();
+		_title = readS();
+	}
 
-    @Override
-    public void run()
-    {
-        _log.debug("ObjectAdd " + _objectId + " type=" + _typeId+" ("+_x+", "+_y+")");
-        ObjectCache.getInstance().addObject(new GameObject(this));
-    }
+	@Override
+	public void run()
+	{
+		_log.debug("ObjectAdd " + _objectId + " type=" + _typeId + " (" + _x + ", " + _y + ")");
+		ObjectCache.getInstance().addObject(new GameObject(this));
+	}
 }

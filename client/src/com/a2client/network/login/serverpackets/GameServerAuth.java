@@ -12,47 +12,47 @@ import java.net.UnknownHostException;
 
 public class GameServerAuth extends LoginServerPacket
 {
-    private static final Logger _log = LoggerFactory.getLogger(GameServerAuth.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(GameServerAuth.class.getName());
 
-    byte[] _host;
+	byte[] _host;
 
-    @Override
-    public void readImpl()
-    {
-        Login._gameserver_key1 = readD();
-        Login._gameserver_key2 = readD();
+	@Override
+	public void readImpl()
+	{
+		Login._gameserver_key1 = readD();
+		Login._gameserver_key2 = readD();
 
-        _host = readB(4);
+		_host = readB(4);
 
-        Login._gameserver_port = readD();
-    }
+		Login._gameserver_port = readD();
+	}
 
-    @Override
-    public void run()
-    {
-        Login.setStatus("login_game");
+	@Override
+	public void run()
+	{
+		Login.setStatus("login_game");
 
-        // получаем хост гейм сервера
-        try
-        {
-            InetAddress adr = InetAddress.getByAddress(_host);
-            Login._gameserver_host = adr.getHostAddress();
+		// получаем хост гейм сервера
+		try
+		{
+			InetAddress adr = InetAddress.getByAddress(_host);
+			Login._gameserver_host = adr.getHostAddress();
 
-        }
-        catch (UnknownHostException e)
-        {
-            Login._gameserver_host = "";
-            _log.error("invalid gameserver hostname");
-            Main.ReleaseAll();
-            return;
-        }
+		}
+		catch (UnknownHostException e)
+		{
+			Login._gameserver_host = "";
+			_log.error("invalid gameserver hostname");
+			Main.ReleaseAll();
+			return;
+		}
 
-        // закроем текущее соединение
-        Net.CloseConnection();
+		// закроем текущее соединение
+		Net.CloseConnection();
 
-        // идем на гейм сервер
-        _log.debug("connecting to gameserver: " + Login._gameserver_host + " : " + Login._gameserver_port);
-        Net.NewConnection(Login._gameserver_host, Login._gameserver_port, NettyConnection.ConnectionType.GAME_SERVER);
+		// идем на гейм сервер
+		_log.debug("connecting to gameserver: " + Login._gameserver_host + " : " + Login._gameserver_port);
+		Net.NewConnection(Login._gameserver_host, Login._gameserver_port, NettyConnection.ConnectionType.GAME_SERVER);
 
-    }
+	}
 }

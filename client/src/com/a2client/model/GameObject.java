@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +45,7 @@ public class GameObject
 		_typeId = pkt._typeId;
 		_interactive = false;
 		_modelBoundingBox = new BoundingBox(new Vector3(-1, 0, -1),
-				new Vector3(+1, 1, +1));
+											new Vector3(+1, 1, +1));
 		_boundingBox = new BoundingBox();
 	}
 

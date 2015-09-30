@@ -27,52 +27,52 @@ import com.badlogic.gdx.graphics.Color;
 
 public class dlg_SysMsg
 {
-    public static GUI_Label sysmsg_lbl;
-    public static GUI_Panel sysmsg_panel;
-    public static int sysmsg_timer = 0;
+	public static GUI_Label sysmsg_lbl;
+	public static GUI_Panel sysmsg_panel;
+	public static int sysmsg_timer = 0;
 
-    public static void Update()
-    {
-        // если надо уменьшаем таймер
-        if (sysmsg_timer > 0)
-        {
-            sysmsg_timer -= Main.DT;
+	public static void Update()
+	{
+		// если надо уменьшаем таймер
+		if (sysmsg_timer > 0)
+		{
+			sysmsg_timer -= Main.DT;
 
-            // если таймер истек
-            if (sysmsg_timer <= 0)
-            {
-                // убираем контролы
-                sysmsg_panel.Unlink();
-                sysmsg_panel = null;
-                sysmsg_lbl = null;
-                sysmsg_timer = 0;
-            }
-        }
+			// если таймер истек
+			if (sysmsg_timer <= 0)
+			{
+				// убираем контролы
+				sysmsg_panel.Unlink();
+				sysmsg_panel = null;
+				sysmsg_lbl = null;
+				sysmsg_timer = 0;
+			}
+		}
 
-    }
+	}
 
-    public static void ShowSysMessage(String msg)
-    {
-        if (sysmsg_lbl != null)
-        {
-            sysmsg_lbl.caption = msg;
-        }
-        else
-        {
-            sysmsg_panel = new GUI_Panel(GUI.getInstance().popup);
-            sysmsg_panel.SetSize(500, 40);
-            sysmsg_panel.CenterX();
-            sysmsg_panel.SetY(100);
-            sysmsg_panel.render_mode = RenderMode.rmColor;
-            sysmsg_panel.bg_color = new Color(0f, 0f, 0f, 0.4f);
+	public static void ShowSysMessage(String msg)
+	{
+		if (sysmsg_lbl != null)
+		{
+			sysmsg_lbl.caption = msg;
+		}
+		else
+		{
+			sysmsg_panel = new GUI_Panel(GUI.getInstance().popup);
+			sysmsg_panel.SetSize(500, 40);
+			sysmsg_panel.CenterX();
+			sysmsg_panel.SetY(100);
+			sysmsg_panel.render_mode = RenderMode.rmColor;
+			sysmsg_panel.bg_color = new Color(0f, 0f, 0f, 0.4f);
 
-            sysmsg_lbl = new GUI_Label(sysmsg_panel);
-            sysmsg_lbl.caption = msg;
-            sysmsg_lbl.SetPos(0, 0);
-            sysmsg_lbl.SetSize(sysmsg_panel.size);
-            sysmsg_lbl.align = Align.Align_Center;
-        }
-        sysmsg_timer = 5000;
-    }
+			sysmsg_lbl = new GUI_Label(sysmsg_panel);
+			sysmsg_lbl.caption = msg;
+			sysmsg_lbl.SetPos(0, 0);
+			sysmsg_lbl.SetSize(sysmsg_panel.size);
+			sysmsg_lbl.align = Align.Align_Center;
+		}
+		sysmsg_timer = 5000;
+	}
 
 }

@@ -10,30 +10,30 @@ import org.slf4j.LoggerFactory;
  */
 public class ObjectPos extends GameServerPacket
 {
-    static
-    {
-        GamePacketHandler.AddPacketType(0x15, ObjectPos.class);
-    }
-    
-    private static final Logger _log = LoggerFactory.getLogger(ObjectPos.class.getName());
+	static
+	{
+		GamePacketHandler.AddPacketType(0x15, ObjectPos.class);
+	}
 
-    private int _objectId;
-    private int _x;
-    private int _y;
-    
-    @Override
-    public void readImpl()
-    {
-        _objectId = readD();
-        _x = readD();
-        _y = readD();
-    }
+	private static final Logger _log = LoggerFactory.getLogger(ObjectPos.class.getName());
 
-    @Override
-    public void run()
-    {
-        _log.debug("ObjectPos "+_objectId+" "+_x+", "+_y);
-        ObjectCache.getInstance().getObject(_objectId).setCoord(_x, _y);
-        ObjectCache.getInstance().getObject(_objectId).StopMove();
-    }
+	private int _objectId;
+	private int _x;
+	private int _y;
+
+	@Override
+	public void readImpl()
+	{
+		_objectId = readD();
+		_x = readD();
+		_y = readD();
+	}
+
+	@Override
+	public void run()
+	{
+		_log.debug("ObjectPos " + _objectId + " " + _x + ", " + _y);
+		ObjectCache.getInstance().getObject(_objectId).setCoord(_x, _y);
+		ObjectCache.getInstance().getObject(_objectId).StopMove();
+	}
 }

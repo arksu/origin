@@ -9,18 +9,19 @@ import org.slf4j.LoggerFactory;
 // todo : delete?
 public class HotkeyAction extends GameClientPacket
 {
-    private static final Logger _log = LoggerFactory.getLogger(HotkeyAction.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(HotkeyAction.class.getName());
 
-    int _hotkey;
+	int _hotkey;
 
-    public HotkeyAction(int hotkey) {
-        _hotkey = hotkey;
-    }
+	public HotkeyAction(int hotkey)
+	{
+		_hotkey = hotkey;
+	}
 
-    @Override
-    protected void write()
-    {
-        writeC(0x1A);
-        writeD(_hotkey);
-    }
+	@Override
+	protected void write()
+	{
+		writeC(0x1A);
+		writeD(_hotkey);
+	}
 }

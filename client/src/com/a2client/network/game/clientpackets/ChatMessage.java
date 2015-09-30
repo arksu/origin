@@ -8,22 +8,22 @@ import org.slf4j.LoggerFactory;
  */
 public class ChatMessage extends GameClientPacket
 {
-    private static final Logger _log = LoggerFactory.getLogger(ChatMessage.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(ChatMessage.class.getName());
 
-    private int _channelId;
-    private String _message;
+	private int _channelId;
+	private String _message;
 
-    public ChatMessage(int channelId, String message)
-    {
-        _channelId = channelId;
-        _message = message;
-    }
+	public ChatMessage(int channelId, String message)
+	{
+		_channelId = channelId;
+		_message = message;
+	}
 
-    @Override
-    protected void write()
-    {
-        writeC(0x16);
-        writeC(_channelId);
-        writeS(_message);
-    }
+	@Override
+	protected void write()
+	{
+		writeC(0x16);
+		writeC(_channelId);
+		writeS(_message);
+	}
 }

@@ -6,22 +6,22 @@ import org.slf4j.LoggerFactory;
 
 public class StatusUpdate extends GameServerPacket
 {
-    static
-    {
-        GamePacketHandler.AddPacketType(0x0F, StatusUpdate.class);
-    }
+	static
+	{
+		GamePacketHandler.AddPacketType(0x0F, StatusUpdate.class);
+	}
 
-    private static final Logger _log = LoggerFactory.getLogger(StatusUpdate.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(StatusUpdate.class.getName());
 
-    @Override
-    public void readImpl()
-    {
+	@Override
+	public void readImpl()
+	{
 
-    }
+	}
 
-    @Override
-    public void run()
-    {
+	@Override
+	public void run()
+	{
 
-    }
+	}
 }

@@ -28,148 +28,150 @@ import java.io.PrintWriter;
 public class ErrorHandler
 {
 
-    private static volatile boolean initialized = false;
-    private static ExceptionHandler exceptionHandler = new ExceptionHandler();
+	private static volatile boolean initialized = false;
+	private static ExceptionHandler exceptionHandler = new ExceptionHandler();
 
-    private static File errorLog = null;
+	private static File errorLog = null;
 
-    public static void initialize()
-    {
-        if (initialized)
-        {
-            return;
-        }
-        System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
+	public static void initialize()
+	{
+		if (initialized)
+		{
+			return;
+		}
+		System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
 
-        Thread.setDefaultUncaughtExceptionHandler(exceptionHandler);
+		Thread.setDefaultUncaughtExceptionHandler(exceptionHandler);
 
-        initialized = true;
-    }
+		initialized = true;
+	}
 
-    public static void registerExceptionHandler()
-    {
-        initialize();
+	public static void registerExceptionHandler()
+	{
+		initialize();
 
-        Thread.UncaughtExceptionHandler original = Thread.currentThread().getUncaughtExceptionHandler();
+		Thread.UncaughtExceptionHandler original = Thread.currentThread().getUncaughtExceptionHandler();
 
-        Thread.currentThread().setUncaughtExceptionHandler(new ExceptionHandler(original));
-    }
+		Thread.currentThread().setUncaughtExceptionHandler(new ExceptionHandler(original));
+	}
 
-    private static void saveException(Thread t, Throwable e) throws IOException
-    {
-        System.out.println("Uncaught exception from thread:" + t);
-        e.printStackTrace();
+	private static void saveException(Thread t, Throwable e) throws IOException
+	{
+		System.out.println("Uncaught exception from thread:" + t);
+		e.printStackTrace();
 
-        boolean append = true;
-        if (errorLog == null)
-        {
-            long time = System.currentTimeMillis();
-            errorLog = new File("error-" + time + ".log");
-            append = false;
-        }
+		boolean append = true;
+		if (errorLog == null)
+		{
+			long time = System.currentTimeMillis();
+			errorLog = new File("error-" + time + ".log");
+			append = false;
+		}
 
-        System.out.println("Writing exception data to file:" + errorLog + "   append=" + append);
-        FileWriter fOut = new FileWriter(errorLog, append);
-        PrintWriter out = new PrintWriter(fOut);
-        try
-        {
-            out.println("Uncaught exception from thread:" + t);
-            e.printStackTrace(out);
+		System.out.println("Writing exception data to file:" + errorLog + "   append=" + append);
+		FileWriter fOut = new FileWriter(errorLog, append);
+		PrintWriter out = new PrintWriter(fOut);
+		try
+		{
+			out.println("Uncaught exception from thread:" + t);
+			e.printStackTrace(out);
 
-            if (append)
-            {
-                out.println();
-                out.println(Utils.getMemoryString());
-                out.println();
-            }
-            else
-            {
-                out.println();
-                out.println("Build: " + Main.buildVersion());
-                out.println();
-            }
-        }
-        catch (Throwable ex)
-        {
-            Log.error("Error writing log info" + ex);
-        }
-        finally
-        {
-            out.close();
-        }
-    }
+			if (append)
+			{
+				out.println();
+				out.println(Utils.getMemoryString());
+				out.println();
+			}
+			else
+			{
+				out.println();
+				out.println("Build: " + Main.buildVersion());
+				out.println();
+			}
+		}
+		catch (Throwable ex)
+		{
+			Log.error("Error writing log info" + ex);
+		}
+		finally
+		{
+			out.close();
+		}
+	}
 
-    public static void handle(Throwable t)
-    {
-        Thread thread = Thread.currentThread();
-        Thread.UncaughtExceptionHandler ueh = thread.getUncaughtExceptionHandler();
-        if (!(ueh instanceof ExceptionHandler))
-        {
-            try
-            {
-                saveException(thread, t);
-            }
-            catch (Throwable bad)
-            {
-                System.err.println("Error saving exception information:" + bad);
-                bad.printStackTrace();
-                Log.error("Error saving exception information:" + bad);
-            }
-        }
-        ueh.uncaughtException(thread, t);
-    }
+	public static void handle(Throwable t)
+	{
+		Thread thread = Thread.currentThread();
+		Thread.UncaughtExceptionHandler ueh = thread.getUncaughtExceptionHandler();
+		if (!(ueh instanceof ExceptionHandler))
+		{
+			try
+			{
+				saveException(thread, t);
+			}
+			catch (Throwable bad)
+			{
+				System.err.println("Error saving exception information:" + bad);
+				bad.printStackTrace();
+				Log.error("Error saving exception information:" + bad);
+			}
+		}
+		ueh.uncaughtException(thread, t);
+	}
 
-    public static class ExceptionHandler implements Thread.UncaughtExceptionHandler
-    {
-        private Thread.UncaughtExceptionHandler original;
+	public static class ExceptionHandler implements Thread.UncaughtExceptionHandler
+	{
+		private Thread.UncaughtExceptionHandler original;
 
-        public ExceptionHandler()
-        {
-        }
+		public ExceptionHandler()
+		{
+		}
 
-        public ExceptionHandler(Thread.UncaughtExceptionHandler original)
-        {
-            this.original = original;
-        }
+		public ExceptionHandler(Thread.UncaughtExceptionHandler original)
+		{
+			this.original = original;
+		}
 
-        public void uncaughtException(Thread t, Throwable e)
-        {
-            try
-            {
-                ErrorHandler.saveException(t, e);
-            }
-            catch (Throwable bad)
-            {
-                System.err.println("Error saving exception information:" + bad);
-                bad.printStackTrace();
-                Log.error("Error saving exception information:" + bad);
-            }
+		public void uncaughtException(Thread t, Throwable e)
+		{
+			try
+			{
+				ErrorHandler.saveException(t, e);
+			}
+			catch (Throwable bad)
+			{
+				System.err.println("Error saving exception information:" + bad);
+				bad.printStackTrace();
+				Log.error("Error saving exception information:" + bad);
+			}
 
-            try
-            {
-                if (this.original != null)
-                    this.original.uncaughtException(t, e);
-            }
-            catch (Throwable bad)
-            {
-                System.err.println("Error delegating uncaught exception:" + bad);
-                bad.printStackTrace();
-                Log.error("Error delegating uncaught exception:" + bad);
-            }
-        }
+			try
+			{
+				if (this.original != null)
+				{
+					this.original.uncaughtException(t, e);
+				}
+			}
+			catch (Throwable bad)
+			{
+				System.err.println("Error delegating uncaught exception:" + bad);
+				bad.printStackTrace();
+				Log.error("Error delegating uncaught exception:" + bad);
+			}
+		}
 
-        public void handle(Throwable t)
-        {
-            try
-            {
-                ErrorHandler.saveException(Thread.currentThread(), t);
-            }
-            catch (Throwable bad)
-            {
-                System.err.println("Error saving exception information:" + bad);
-                bad.printStackTrace();
-                Log.error("Error saving exception information:" + bad);
-            }
-        }
-    }
+		public void handle(Throwable t)
+		{
+			try
+			{
+				ErrorHandler.saveException(Thread.currentThread(), t);
+			}
+			catch (Throwable bad)
+			{
+				System.err.println("Error saving exception information:" + bad);
+				bad.printStackTrace();
+				Log.error("Error saving exception information:" + bad);
+			}
+		}
+	}
 }

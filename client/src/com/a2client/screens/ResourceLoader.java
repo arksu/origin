@@ -106,8 +106,8 @@ public class ResourceLoader implements Screen
 		int percent = (int) (progress * 100f);
 		//        if (_state == State.LOADING || _state == State.FADEIN) {
 		GUIGDX.Text("system", (Gdx.graphics.getWidth() - 100) / 2, (Gdx.graphics.getHeight() / 2) - 50,
-				Lang.getTranslate("LoadingScreen.loading") + " " + percent,
-				new Color(t * 2.5f, t * 2.5f, t * 2.5f, 1f));
+					Lang.getTranslate("LoadingScreen.loading") + " " + percent,
+					new Color(t * 2.5f, t * 2.5f, t * 2.5f, 1f));
 		//        }
 		GUIGDX.getSpriteBatch().end();
 	}

@@ -17,7 +17,7 @@ public class ShaderTest extends BaseShader
 {
 	private static final Logger _log = LoggerFactory.getLogger(ShaderTest.class.getName());
 
-//	public ShaderProgram program;
+	//	public ShaderProgram program;
 	Camera camera;
 	RenderContext context;
 

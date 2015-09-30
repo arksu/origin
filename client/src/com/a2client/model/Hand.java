@@ -9,7 +9,7 @@ import com.a2client.util.Vec2i;
  */
 public class Hand
 {
-//	public static final String UNKNOWN_ICON = "icon_unknown";
+	//	public static final String UNKNOWN_ICON = "icon_unknown";
 	public static final String UNKNOWN_ICON = "hotbar_bg";
 
 	/**

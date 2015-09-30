@@ -22,28 +22,28 @@ import org.slf4j.LoggerFactory;
 
 public class Console
 {
-    private static final Logger _log = LoggerFactory.getLogger(Console.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(Console.class.getName());
 
-    static public boolean ExecuteCommand(String cmd)
-    {
-        _log.info("exec cmd: " + cmd);
+	static public boolean ExecuteCommand(String cmd)
+	{
+		_log.info("exec cmd: " + cmd);
 
-        //        if ("bar".equals(cmd))
-        //        {
-        //            if (dlg_Hotbars.Exist())
-        //                Dialog.Hide("dlg_hotbars");
-        //            else
-        //                Dialog.Show("dlg_hotbars");
-        //            return true;
-        //        }
-        //
-        if ("lang".equals(cmd))
-        {
+		//        if ("bar".equals(cmd))
+		//        {
+		//            if (dlg_Hotbars.Exist())
+		//                Dialog.Hide("dlg_hotbars");
+		//            else
+		//                Dialog.Show("dlg_hotbars");
+		//            return true;
+		//        }
+		//
+		if ("lang".equals(cmd))
+		{
 //            Lang.LoadFromSite();
-            return true;
-        }
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
 }

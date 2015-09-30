@@ -39,7 +39,7 @@ public class EquipUpdate extends GameServerPacket
 			int ticks = readH();
 			int ticksTotal = readH();
 			_items.add(new InventoryItem(Player.getInstance().getObjectId(),
-					objectId, typeId, icon, q, 200, slotCode, w, h, stage, amount, ticks, ticksTotal));
+										 objectId, typeId, icon, q, 200, slotCode, w, h, stage, amount, ticks, ticksTotal));
 		}
 	}
 

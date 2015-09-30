@@ -83,7 +83,7 @@ public class FrontFaceDepthShader extends DefaultShader
 	public FrontFaceDepthShader(final Renderable renderable, final Config config, final String prefix)
 	{
 		this(renderable, config, prefix, config.vertexShader != null ? config.vertexShader : getDefaultVertexShader(),
-				config.fragmentShader != null ? config.fragmentShader : getDefaultFragmentShader());
+			 config.fragmentShader != null ? config.fragmentShader : getDefaultFragmentShader());
 	}
 
 	public FrontFaceDepthShader(final Renderable renderable, final Config config, final String prefix, final String vertexShader,
