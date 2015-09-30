@@ -1,5 +1,7 @@
 package com.a4server.gameserver.model;
 
+import com.a4server.Database;
+import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.objects.InventoryTemplate;
@@ -16,6 +18,8 @@ import javolution.util.FastSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +31,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class GameObject
 {
 	private static final Logger _log = LoggerFactory.getLogger(GameObject.class.getName());
+
+	public static final String STORE = "REPLACE INTO sg_0_obj (id, grid, x, y, type, create_tick) VALUES (?, ?, ?, ?, ?, ?)";
 
 	/**
 	 * ид объекта, задается лишь единожды
@@ -117,6 +123,32 @@ public class GameObject
 		{
 			_inventory = new Inventory(this, inventory.getWidth(), inventory.getHeight());
 		}
+	}
+
+	/**
+	 * сохранить объект в базу
+	 */
+	public boolean store()
+	{
+		// query queue
+		try (Connection con = Database.getInstance().getConnection();
+			 PreparedStatement statement = con.prepareStatement(STORE))
+		{
+			statement.setInt(1, getObjectId());
+			statement.setInt(2, getPos().getGrid().getId());
+			statement.setInt(3, getPos().getX());
+			statement.setInt(4, getPos().getY());
+			statement.setInt(5, getTemplate().getTypeId());
+			statement.setInt(6, GameTimeController.getInstance().getTickCount());
+			statement.executeUpdate();
+			con.close();
+			return true;
+		}
+		catch (Exception e)
+		{
+			_log.warn("failed update xy item pos " + toString());
+		}
+		return false;
 	}
 
 	public int getObjectId()

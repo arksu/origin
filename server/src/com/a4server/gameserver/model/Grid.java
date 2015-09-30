@@ -242,6 +242,16 @@ public class Grid
 		return _level;
 	}
 
+	public int getSg()
+	{
+		return _sg;
+	}
+
+	public int getId()
+	{
+		return _grid;
+	}
+
 	/**
 	 * создать задание на загрузку грида
 	 */

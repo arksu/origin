@@ -60,12 +60,21 @@ public class MouseClick extends GameClientPacket
 									object.setPos(new ObjectPosition(player.getPos(), object));
 									try
 									{
-										// todo: решить по спавну, удалить итем из таблицы вещей
-										// и добавить в таблицу объектов
+										// спавним объект
 										if (object.getPos().trySpawn())
 										{
 											_log.debug("item dropped: " + item);
-											player.setHand(null);
+											// обновляем в базе
+											if (object.store() && item.markDeleted())
+											{
+												// уберем все из руки
+												player.setHand(null);
+											}
+											else
+											{
+												// но если чето сцуко пошло не так - уроним все к хуям
+												throw new RuntimeException("failed update db on item drop");
+											}
 										}
 										else
 										{

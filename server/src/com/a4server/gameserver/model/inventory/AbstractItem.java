@@ -24,7 +24,9 @@ public class AbstractItem
 	/**
 	 * обновить позицию вещи в инвентаре
 	 */
-	public static final String UPDATE_ITEM_XY = "UPDATE items SET x=?, y=? WHERE id=?";
+	public static final String UPDATE_ITEM_XY = "UPDATE items SET x=?, y=? WHERE id=? AND del=0";
+
+	public static final String MARK_DELETED = "UPDATE items SET del=1 WHERE id=?";
 
 	/**
 	 * уникальный ид объекта (вещи)
@@ -132,6 +134,9 @@ public class AbstractItem
 		return _y;
 	}
 
+	/**
+	 * обновить координаты, также обновить их и бвзе
+	 */
 	@SuppressWarnings("SuspiciousNameCombination")
 	public void setXY(int x, int y)
 	{
@@ -154,6 +159,27 @@ public class AbstractItem
 			_x = x;
 			_y = y;
 		}
+	}
+
+	/**
+	 * пометить вещь в базе как удаленную
+	 */
+	public boolean markDeleted()
+	{
+		// query queue
+		try (Connection con = Database.getInstance().getConnection();
+			 PreparedStatement statement = con.prepareStatement(MARK_DELETED))
+		{
+			statement.setInt(1, _objectId);
+			statement.executeUpdate();
+			con.close();
+			return true;
+		}
+		catch (Exception e)
+		{
+			_log.warn("failed update xy item pos " + toString());
+		}
+		return false;
 	}
 
 	public int getWidth()

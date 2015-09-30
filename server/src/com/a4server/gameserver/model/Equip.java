@@ -24,7 +24,7 @@ public class Equip
 	 * грузим эквип из основной таблицы с вещами, x=200
 	 * y - определяет номер слота в котором находится вещь
 	 */
-	public static final String LOAD_EQUIP = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal FROM items WHERE objectId=? AND x = 200";
+	public static final String LOAD_EQUIP = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal FROM items WHERE objectId=? AND x = 200 AND del=0";
 
 	final Player _player;
 
