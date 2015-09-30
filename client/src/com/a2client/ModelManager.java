@@ -1,30 +1,28 @@
 package com.a2client;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.RefCountedContainer;
-import com.badlogic.gdx.assets.loaders.ModelLoader;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.*;
+import org.slf4j.LoggerFactory;
 
-public class ModelManager {
+import java.util.ArrayList;
+
+public class ModelManager
+{
+	private static final org.slf4j.Logger _log = LoggerFactory.getLogger(ModelManager.class.getName());
 
 	private static long MODEL_TIMEOUT = 120000; // 2min
 
 	private static ModelManager _instance;
 
-	public static ModelManager getInstance() {
+	public static ModelManager getInstance()
+	{
 		if (_instance == null)
+		{
 			_instance = new ModelManager();
+		}
 
 		return _instance;
 	}
@@ -35,21 +33,27 @@ public class ModelManager {
 
 	private long current_time = TimeUtils.millis();
 
-	public ModelManager() {
+	public ModelManager()
+	{
 		_assets = Main.getAssetManager();
 		loadModelList();
 		Timer.schedule(new UpdateTimer(this), 0, 30);
 	}
 
-	public ModelInstance getModelByType(int _typeId) {
+	public ModelInstance getModelByType(int _typeId)
+	{
 
 		ModelMeta meta = _modelList.get(_typeId);
 
 		if (meta == null)
+		{
 			throw new RuntimeException("[ModelManager] no model by typeId = " + _typeId);
-		
+		}
+
 		if (!meta.loaded)
+		{
 			load(meta);
+		}
 
 		ModelInstance tmp = new ModelInstance(
 				_assets.get(meta.res, Model.class));
@@ -58,57 +62,69 @@ public class ModelManager {
 		return tmp;
 	}
 
-
-	public void updateModelTime(int _typeId) {
+	public void updateModelTime(int _typeId)
+	{
 		ModelMeta meta = _modelList.get(_typeId);
-		
+
 		if (meta == null)
+		{
 			return;
-		
+		}
+
 		meta.last_usage = current_time;
 	}
-	
-	public void update() {
-		Gdx.app.debug("ModelManager", "Update()");
+
+	public void update()
+	{
+		_log.debug("ModelManager", "Update()");
 		current_time = TimeUtils.millis();
 		long out_time = TimeUtils.millis() - MODEL_TIMEOUT;
 
-		for (ModelMeta meta : _modelList.values()) {
+		for (ModelMeta meta : _modelList.values())
+		{
 			if (meta.loaded && meta.last_usage < out_time)
+			{
 				unload(meta);
+			}
 		}
 	}
-	
-	private void load(ModelMeta meta) {
+
+	private void load(ModelMeta meta)
+	{
 		handleLoad(meta);
 		_assets.finishLoadingAsset(meta.res);
-		Gdx.app.debug("ModelManager", "Loaded = " + meta.res);
+		_log.debug("ModelManager", "Loaded = " + meta.res);
 		meta.loaded = true;
 		meta.last_usage = TimeUtils.millis();
 	}
 
-	private void handleLoad(ModelMeta meta) {
-		if (!_assets.isLoaded(meta.res)) {
+	private void handleLoad(ModelMeta meta)
+	{
+		if (!_assets.isLoaded(meta.res))
+		{
 			_assets.load(meta.res, Model.class);
-			Gdx.app.debug("ModelManager", "Load handled = " + meta.res);
+			_log.debug("ModelManager", "Load handled = " + meta.res);
 		}
 	}
 
-	private void unload(ModelMeta meta) {
-		Gdx.app.debug("ModelManager", "UnLoad = " + meta.res);
+	private void unload(ModelMeta meta)
+	{
+		_log.debug("ModelManager", "UnLoad = " + meta.res);
 		_assets.unload(meta.res);
 		meta.loaded = false;
 		meta.last_usage = 0;
 	}
 
-	public void loadModelList() {
+	public void loadModelList()
+	{
 		Json json = new Json();
 
 		@SuppressWarnings("unchecked")
 		ArrayList<JsonValue> list = json.fromJson(ArrayList.class,
 				Gdx.files.internal("assets/objects.json"));
 
-		for (JsonValue v : list) {
+		for (JsonValue v : list)
+		{
 			ModelMeta m = json.readValue(ModelMeta.class, v);
 			m.last_usage = TimeUtils.millis();
 			_modelList.put(m.typeId, m);
@@ -117,23 +133,27 @@ public class ModelManager {
 
 	}
 
-	public static class ModelMeta {
+	public static class ModelMeta
+	{
 		public boolean loaded = false;
 		public int typeId;
 		public String res;
 		public long last_usage = 0;
 	}
 
-	class UpdateTimer extends Timer.Task {
+	class UpdateTimer extends Timer.Task
+	{
 
 		private ModelManager _manager;
 
-		public UpdateTimer(ModelManager manager) {
+		public UpdateTimer(ModelManager manager)
+		{
 			_manager = manager;
 		}
 
 		@Override
-		public void run() {
+		public void run()
+		{
 			_manager.update();
 		}
 

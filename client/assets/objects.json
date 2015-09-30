@@ -1,10 +1,26 @@
 [
-{
-"typeId" : 1,
-"res" : "assets/debug/invader.obj"
-},
-{
-"typeId" : 2,
-"res" : "assets/debug/ship.obj"
-}
+	{
+		"typeId": 1,
+		"res": "assets/debug/ship.obj"
+	},
+	{
+		"typeId": 2,
+		"res": "assets/debug/invader.obj"
+	},
+	{
+		"typeId": 11,
+		"res": "assets/debug/invader.obj"
+	},
+	{
+		"typeId": 16,
+		"res": "assets/debug/ship.obj"
+	},
+	{
+		"typeId": 19,
+		"res": "assets/debug/ship.obj"
+	},
+	{
+		"typeId": 17,
+		"res": "assets/debug/ship.obj"
+	}
 ]

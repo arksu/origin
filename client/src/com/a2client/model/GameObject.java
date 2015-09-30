@@ -29,7 +29,7 @@ public class GameObject
 	private Mover _mover = null;
 	private BoundingBox _modelBoundingBox;
 	private BoundingBox _boundingBox;
-	
+
 	private ModelInstance _model = null;
 
 	private boolean _needUpdate = true;
@@ -41,13 +41,13 @@ public class GameObject
 		_name = pkt._name;
 		_title = pkt._title;
 		_coord = new Vector2(pkt._x, pkt._y);
-		_worldCoord = new Vector3(_coord.x / MapCache.TILE_SIZE, 0.5f, _coord.y / MapCache.TILE_SIZE); 
+		_worldCoord = new Vector3(_coord.x / MapCache.TILE_SIZE, 0.5f, _coord.y / MapCache.TILE_SIZE);
 		_objectId = pkt._objectId;
 		_typeId = pkt._typeId;
 		_interactive = false;
 		_modelBoundingBox = new BoundingBox(new Vector3(-1, 0, -1),
-									   new Vector3(+1, 1, +1));
-		_boundingBox= new BoundingBox();
+				new Vector3(+1, 1, +1));
+		_boundingBox = new BoundingBox();
 	}
 
 	public int getObjectId()
@@ -64,7 +64,7 @@ public class GameObject
 	{
 		return _coord;
 	}
-	
+
 	public Vector3 getWorldCoord()
 	{
 		return _worldCoord;
@@ -79,8 +79,9 @@ public class GameObject
 	{
 		return _boundingBox;
 	}
-	
-	public ModelInstance getModel() {
+
+	public ModelInstance getModel()
+	{
 		return _model;
 	}
 
@@ -143,14 +144,15 @@ public class GameObject
 
 	public void Update()
 	{
-		if (_needUpdate) {
+		if (_needUpdate)
+		{
 			_needUpdate = false;
 			InitModel();
-			
+
 		}
-		
+
 		ModelManager.getInstance().updateModelTime(_typeId);
-		
+
 		if (_mover != null)
 		{
 			_mover.Update();
@@ -161,16 +163,18 @@ public class GameObject
 		}
 	}
 
-	private void InitModel() {
+	private void InitModel()
+	{
 		_model = ModelManager.getInstance().getModelByType(_typeId);
-		if (_model == null) 
-			return;
-				
-		UpdateCoordandBB();
+		if (_model != null)
+		{
+			UpdateCoordandBB();
+		}
 	}
 
-	public void UpdateCoordandBB() {
-		_worldCoord = new Vector3(_coord.x / MapCache.TILE_SIZE, 0.5f, _coord.y / MapCache.TILE_SIZE); 
+	public void UpdateCoordandBB()
+	{
+		_worldCoord = new Vector3(_coord.x / MapCache.TILE_SIZE, 0.5f, _coord.y / MapCache.TILE_SIZE);
 		_model.transform.setToTranslation(_worldCoord);
 		_boundingBox.min.set(_worldCoord).add(_modelBoundingBox.min);
 		_boundingBox.max.set(_worldCoord).add(_modelBoundingBox.max);

@@ -55,7 +55,6 @@ public class MouseClick extends GameClientPacket
 								// в руке что-то держим?
 								if (player.getHand() != null)
 								{
-									// todo бросим это на землю
 									// chpok
 									AbstractItem item = player.getHand().getItem();
 									Grid grid = player.getPos().getGrid();
@@ -65,11 +64,12 @@ public class MouseClick extends GameClientPacket
 									{
 										// todo: решить по спавну, удалить итем из таблицы вещей и добавить в таблицу объектов
 										if (object.getPos().trySpawn())
-
-//										CollisionResult result = grid.trySpawnNear(object, Grid.TILE_SIZE / 2, true);
-//										if (result != null && result.isNoneCollision())
 										{
 											player.setHand(null);
+										}
+										else
+										{
+											_log.debug("cant spawn " + item);
 										}
 									}
 									catch (Exception e)
