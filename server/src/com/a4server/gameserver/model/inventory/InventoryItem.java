@@ -1,5 +1,6 @@
 package com.a4server.gameserver.model.inventory;
 
+import com.a4server.gameserver.model.GameObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,16 @@ public class InventoryItem extends AbstractItem
 	public InventoryItem(AbstractItem other)
 	{
 		super(other);
+	}
+
+	public InventoryItem(GameObject object, int typeId, int q, int amount, int stage, int ticks, int ticksTotal)
+	{
+		super(object, typeId, q, amount, stage, ticks, ticksTotal);
+	}
+
+	public InventoryItem(GameObject object, int typeId, int q)
+	{
+		super(object, typeId, q, 1, 0, 0, 0);
 	}
 
 	public Inventory getParentInventory()

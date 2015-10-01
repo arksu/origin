@@ -23,7 +23,7 @@ public class Inventory
 	/**
 	 * грузим список вещей из базы где строго x < 200, начиная с x>=200 храним особые
 	 */
-	public static final String LOAD_INVENTORY = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal FROM items WHERE objectId=? AND x < 200 AND del=0";
+	public static final String LOAD_INVENTORY = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal FROM items WHERE inventoryId=? AND x < 200 AND del=0";
 
 	/**
 	 * объект родитель, к которому относится инвентарь и все его вложенные

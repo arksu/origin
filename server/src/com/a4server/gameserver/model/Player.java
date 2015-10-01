@@ -6,6 +6,7 @@ import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.idfactory.IdFactory;
 import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.model.inventory.Inventory;
+import com.a4server.gameserver.model.inventory.InventoryItem;
 import com.a4server.gameserver.model.objects.*;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.*;
@@ -498,9 +499,23 @@ public class Player extends Human
 						ObjectTemplate template = ObjectsFactory.getInstance().getTemplate(typeId);
 						if (template != null)
 						{
-							int id = IdFactory.getInstance().getNextId();
-							_log.debug("spawn item: " + template.getName() + " count: " + count + " id: " + id);
-//							InventoryItem item = new InventoryItem()
+							while (count > 0)
+							{
+								int id = IdFactory.getInstance().getNextId();
+								_log.debug("сreate item: " + template.getName() + " count: " + count + " id: " + id);
+								InventoryItem item = new InventoryItem(this, typeId, 10);
+								// пробуем закинуть вещь в инвентарь
+								if (getInventory().putItem(item, -1, -1))
+								{
+									sendInteractPacket(new InventoryUpdate(getInventory()));
+									item.store();
+								}
+								else
+								{
+									break;
+								}
+								count--;
+							}
 						}
 					}
 					catch (NumberFormatException nfe)

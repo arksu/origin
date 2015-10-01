@@ -1,6 +1,7 @@
 package com.a4server.gameserver.model.inventory;
 
 import com.a4server.Database;
+import com.a4server.gameserver.idfactory.IdFactory;
 import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.objects.InventoryTemplate;
 import com.a4server.gameserver.model.objects.ItemTemplate;
@@ -28,10 +29,17 @@ public class AbstractItem
 
 	public static final String MARK_DELETED = "UPDATE items SET del=1 WHERE id=?";
 
+	public static final String STORE = "REPLACE INTO items (id,itemId,inventoryId,x,y,q,amount,stage,ticks,ticksTotal,del) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+
 	/**
 	 * уникальный ид объекта (вещи)
 	 */
 	protected final int _objectId;
+
+	/**
+	 * ид инвентаря в котором лежит вещь (объекта)
+	 */
+	protected int _inventoryId;
 
 	/**
 	 * шаблон вещи
@@ -69,6 +77,7 @@ public class AbstractItem
 	public AbstractItem(AbstractItem other)
 	{
 		_objectId = other.getObjectId();
+		_inventoryId = other._inventoryId;
 		_template = other.getTemplate();
 		_q = other.getQ();
 		_x = other.getX();
@@ -89,6 +98,7 @@ public class AbstractItem
 	public AbstractItem(GameObject object, ResultSet rset) throws SQLException
 	{
 		_objectId = rset.getInt("id");
+		_inventoryId = object.getObjectId();
 		_template = ObjectsFactory.getInstance().getItemTemplate(rset.getInt("itemId"));
 		_q = rset.getInt("q");
 		_x = rset.getInt("x");
@@ -107,11 +117,58 @@ public class AbstractItem
 	}
 
 	/**
+	 * спавн новой вещи в игровой мир
+	 * @param typeId тип вещи
+	 * @param q качество
+	 */
+	public AbstractItem(GameObject object, int typeId, int q, int amount, int stage, int ticks, int ticksTotal)
+	{
+		_objectId = IdFactory.getInstance().getNextId();
+		_inventoryId = object.getObjectId();
+		_template = ObjectsFactory.getInstance().getItemTemplate(typeId);
+		_q = q;
+		_amount = amount;
+		_stage = stage;
+		_ticks = ticks;
+		_ticksTotal = ticksTotal;
+		_x = -1;
+		_y = -1;
+		// вещь тоже может содержать внутри себя инвентарь
+		InventoryTemplate template = _template.getInventory();
+		if (template != null)
+		{
+			_inventory = new Inventory(object, _objectId, template);
+		}
+	}
+
+	/**
 	 * сохранить вещь в бд (обновить ее состояние)
 	 */
-	public void save()
+	public void store()
 	{
-
+		// query queue
+		try (Connection con = Database.getInstance().getConnection();
+			 PreparedStatement statement = con.prepareStatement(STORE))
+		{
+			statement.setInt(1, _objectId);
+			statement.setInt(2, _template.getItemId());
+			statement.setInt(3, _inventoryId);
+			statement.setInt(4, _x);
+			//noinspection SuspiciousNameCombination
+			statement.setInt(5, _y);
+			statement.setInt(6, _q);
+			statement.setInt(7, _amount);
+			statement.setInt(8, _stage);
+			statement.setInt(9, _ticks);
+			statement.setInt(10, _ticksTotal);
+			statement.setInt(11, 0);
+			statement.executeUpdate();
+			con.close();
+		}
+		catch (Exception e)
+		{
+			_log.warn("failed store item: " + toString());
+		}
 	}
 
 	public int getObjectId()
