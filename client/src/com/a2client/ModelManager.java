@@ -27,6 +27,8 @@ public class ModelManager
 		return _instance;
 	}
 
+	private ObjectMap<Model, IntArray> _modelHitList = new ObjectMap<Model, IntArray>();
+
 	private ObjectMap<Integer, ModelMeta> _modelList = new ObjectMap<Integer, ModelMeta>();
 
 	private AssetManager _assets;
@@ -47,7 +49,8 @@ public class ModelManager
 
 		if (meta == null)
 		{
-			throw new RuntimeException("[ModelManager] no model by typeId = " + _typeId);
+			throw new GdxRuntimeException(
+					"[ModelManager] no model by typeId = " + _typeId);
 		}
 
 		if (!meta.loaded)
@@ -91,26 +94,31 @@ public class ModelManager
 
 	private void load(ModelMeta meta)
 	{
-		handleLoad(meta);
-		_assets.finishLoadingAsset(meta.res);
-		_log.debug("ModelManager", "Loaded = " + meta.res);
+		if (!_assets.isLoaded(meta.res)) {
+			_assets.load(meta.res, Model.class);
+			_assets.finishLoadingAsset(meta.res);
+			_log.debug("ModelManager", "Loaded = " + meta.res);
+		}
+		Model model = _assets.get(meta.res, Model.class);
+		if (!_modelHitList.containsKey(model)) {
+			_modelHitList.put(model, new IntArray());
+		}
+		_modelHitList.get(model).add(meta.typeId);
 		meta.loaded = true;
 		meta.last_usage = TimeUtils.millis();
 	}
 
-	private void handleLoad(ModelMeta meta)
-	{
-		if (!_assets.isLoaded(meta.res))
-		{
-			_assets.load(meta.res, Model.class);
-			_log.debug("ModelManager", "Load handled = " + meta.res);
-		}
-	}
-
 	private void unload(ModelMeta meta)
 	{
-		_log.debug("ModelManager", "UnLoad = " + meta.res);
-		_assets.unload(meta.res);
+		Model model = _assets.get(meta.res, Model.class);
+
+		IntArray hitArray = _modelHitList.get(model);
+		hitArray.removeValue(meta.typeId);
+		if (hitArray.size == 0) {
+			_log.debug("ModelManager", "UnLoad = " + meta.res);
+			_assets.unload(meta.res);
+			_modelHitList.remove(model);
+		}
 		meta.loaded = false;
 		meta.last_usage = 0;
 	}
@@ -121,16 +129,14 @@ public class ModelManager
 
 		@SuppressWarnings("unchecked")
 		ArrayList<JsonValue> list = json.fromJson(ArrayList.class,
-												  Gdx.files.internal("assets/objects.json"));
+				Gdx.files.internal("assets/objects.json"));
 
 		for (JsonValue v : list)
 		{
 			ModelMeta m = json.readValue(ModelMeta.class, v);
 			m.last_usage = TimeUtils.millis();
 			_modelList.put(m.typeId, m);
-			handleLoad(m);
 		}
-
 	}
 
 	public static class ModelMeta

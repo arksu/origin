@@ -10,3 +10,4 @@ gradlew.bat
 client*.log
 server/tmp
 /client/bin
+/client/*.launch
