@@ -91,4 +91,9 @@ public class Tile
 	{
 		_type = getType(t);
 	}
+
+	public TileType getType()
+	{
+		return _type;
+	}
 }

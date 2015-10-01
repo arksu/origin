@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static com.a4server.gameserver.model.Tile.TileType.TILE_WATER_DEEP;
+import static com.a4server.gameserver.model.Tile.TileType.TILE_WATER_LOW;
 import static com.a4server.gameserver.model.collision.CollisionResult.CollisionType.COLLISION_VIRTUAL;
 import static com.a4server.gameserver.model.collision.CollisionResult.CollisionType.COLLISION_WORLD;
 
@@ -255,9 +257,25 @@ public class Collision
 		return true;
 	}
 
+	/**
+	 * дает ли тайл коллизию?
+	 * @param object объект который движется
+	 * @param moveType тип передвижения
+	 * @param tile объект тайла
+	 * @return истина - если дает коллизию
+	 */
 	private static boolean getTileCollision(GameObject object, Move.MoveType moveType, Tile tile)
 	{
-		return false;
+		switch (moveType)
+		{
+			case MOVE_WALK:
+			case MOVE_SPAWN:
+				return tile.getType() == TILE_WATER_DEEP;
+			case MOVE_SWIMMING:
+				return tile.getType() != TILE_WATER_DEEP && tile.getType() != TILE_WATER_LOW;
+			default:
+				return true;
+		}
 	}
 
 }
