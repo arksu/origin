@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * клик по карте (тайлы, объекты)
  * Created by arksu on 08.02.15.
  */
 public class MouseClick extends GameClientPacket
@@ -19,9 +20,20 @@ public class MouseClick extends GameClientPacket
 	private static final int BUTTON_LEFT = 0;
 	private static final int BUTTON_RIGHT = 1;
 
+	/**
+	 * какая кнопка была нажата
+	 */
 	private int _button;
+
+	/**
+	 * куда тыкнули на картне в абсолютных мировых координатах
+	 */
 	private int _x;
 	private int _y;
+
+	/**
+	 * ид объекта в который попали мышкой (если != 0)
+	 */
 	private int _objectId;
 
 	@Override

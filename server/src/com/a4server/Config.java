@@ -13,7 +13,7 @@ public class Config
 	public static final int LOGIN_PROTO_VERSION = 3;
 	public static final int GAME_PROTO_VERSION = 3;
 
-	public static final String CONFIGURATION_FILE = "./config/Server.properties";
+	public static final String CONFIGURATION_FILE = "./config/server.properties";
 	public static final String HIKARI_CONFIG_FILE = "./config/HikariDB.properties";
 
 	public static boolean DEBUG;

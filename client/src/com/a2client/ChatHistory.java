@@ -17,12 +17,6 @@ public class ChatHistory
 	static List<String> list = new ArrayList<>();
 	static int pos = 0;
 
-	// сбросить позицию в хистори
-	static public void Reset()
-	{
-		pos = list.size();
-	}
-
 	static public void add(String msg)
 	{
 		list.add(msg);

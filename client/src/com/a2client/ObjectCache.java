@@ -1,6 +1,7 @@
 package com.a2client;
 
 import com.a2client.model.GameObject;
+import com.a2client.screens.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +27,12 @@ public class ObjectCache
 	public void addObject(GameObject object)
 	{
 		_objects.add(object);
+		// запомним объект игрока, он много где пригодится
 		if (object.getObjectId() == Player.getInstance().getObjectId())
 		{
 			_me = object;
+			// например тут. надо сказать камере к чему привязаться
+			Game.getInstance().getCamera().setChaseObject(_me);
 		}
 	}
 

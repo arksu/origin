@@ -108,12 +108,6 @@ public class Game extends BaseScreen
 	{
 		_world_mouse_pos = screen2world(Gdx.input.getX(), Gdx.input.getY());
 
-		//XXX:tmp
-		if (ObjectCache.getInstance().getMe() != null)
-		{
-			_gameCamera.setChaseObject(ObjectCache.getInstance().getMe());
-		}
-
 		if (GUI.getInstance().focused_control == _chatEdit)
 		{
 			String h;
@@ -134,7 +128,7 @@ public class Game extends BaseScreen
 			}
 		}
 
-		if (_state == GameState.IN_GAME)
+		if (_state == GameState.IN_GAME && GUI.getInstance().mouse_in_control == null)
 		{
 			if (Input.KeyHit(Hotkey.INVENTORY))
 			{
