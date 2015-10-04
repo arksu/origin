@@ -9,6 +9,7 @@ import com.a2client.network.game.clientpackets.MouseClick;
 import com.a2client.render.GameCamera;
 import com.a2client.render.Render1;
 import com.a2client.util.Keys;
+import com.a2client.util.Utils;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
@@ -40,6 +41,11 @@ public class Game extends BaseScreen
 
 	private Render1 _render;
 	private GameCamera _gameCamera;
+
+	/**
+	 * мини костыльчик чтобы выключать фокус из чат эдита
+	 */
+	private boolean _lostFocus = false;
 
 	public Game()
 	{
@@ -76,8 +82,13 @@ public class Game extends BaseScreen
 			@Override
 			public void DoEnter()
 			{
-				if (_chatEdit.text.isEmpty())
+				if (Utils.isEmpty(_chatEdit.text))
 				{
+					if (GUI.getInstance().focused_control == _chatEdit)
+					{
+						GUI.getInstance().focused_control = null;
+						_lostFocus = true;
+					}
 					return;
 				}
 				new ChatMessage(0, _chatEdit.text).Send();
@@ -108,43 +119,63 @@ public class Game extends BaseScreen
 	{
 		_world_mouse_pos = screen2world(Gdx.input.getX(), Gdx.input.getY());
 
-		if (GUI.getInstance().focused_control == _chatEdit)
+		if (_state == GameState.IN_GAME)
 		{
-			String h;
-			if (Input.KeyHit(Keys.UP))
+			_statusText = "mouse coord: " + Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE) + ", " +
+					Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE);
+
+			if (GUI.getInstance().focused_control == _chatEdit)
 			{
-				h = ChatHistory.prev();
-				if (!h.isEmpty())
+				String h = "";
+				if (Input.KeyHit(Keys.UP))
+				{
+					h = ChatHistory.prev();
+				}
+				if (Input.KeyHit(Keys.DOWN))
+				{
+					h = ChatHistory.next();
+				}
+				if (!Utils.isEmpty(h))
 				{
 					_chatEdit.SetText(h);
 					_chatEdit.SetCursor(_chatEdit.text.length());
 				}
 			}
-			if (Input.KeyHit(Keys.DOWN))
+			else if (GUI.getInstance().mouse_in_control == null)
 			{
-				h = ChatHistory.next();
-				_chatEdit.SetText(h);
-				_chatEdit.SetCursor(_chatEdit.text.length());
-			}
-		}
-
-		if (_state == GameState.IN_GAME && GUI.getInstance().mouse_in_control == null)
-		{
-			if (Input.KeyHit(Hotkey.INVENTORY))
-			{
-				// по нажатию на таб - откроем инвентарь
-				Inventory inventory = InventoryCache.getInstance().get(Player.getInstance().getObjectId());
-				if (inventory != null)
+				if (Input.KeyHit(Hotkey.INVENTORY))
 				{
-					inventory.toggle();
+					// по нажатию на таб - откроем инвентарь
+					Inventory inventory = InventoryCache.getInstance().get(Player.getInstance().getObjectId());
+					if (inventory != null)
+					{
+						inventory.toggle();
+					}
+				}
+				else if (Input.KeyHit(Hotkey.EQUIP))
+				{
+					Player.getInstance().getEquip().toggle();
+				}
+				else if (Input.KeyHit(Hotkey.CHAT_ENTER))
+				{
+					if (GUI.getInstance().focused_control == null && !_lostFocus)
+					{
+						GUI.getInstance().focused_control = _chatEdit;
+					}
+					_lostFocus = false;
 				}
 			}
-			else if (Input.KeyHit(Hotkey.EQUIP))
+
+			if (ObjectCache.getInstance() != null)
 			{
-				Player.getInstance().getEquip().toggle();
+				for (GameObject o : ObjectCache.getInstance().getObjects())
+				{
+					o.Update();
+				}
 			}
-			_statusText = "mouse coord: " + Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE) + ", " +
-					Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE);
+
+			UpdateMouseButtons();
+			_gameCamera.update();
 		}
 		_lblStatus.caption =
 				"FPS: " + Gdx.graphics.getFramesPerSecond() +
@@ -152,17 +183,6 @@ public class Game extends BaseScreen
 						" chunks: " + _render.getChunksRendered() +
 						" selected: " + (_render.getSelected() != null ? "" + _render.getSelected() : "null") +
 						" objects: " + _render.getRenderedObjects();
-
-		if (ObjectCache.getInstance() != null)
-		{
-			for (GameObject o : ObjectCache.getInstance().getObjects())
-			{
-				o.Update();
-			}
-		}
-
-		UpdateMouseButtons();
-		_gameCamera.update();
 	}
 
 	protected void UpdateMouseButtons()
@@ -203,6 +223,7 @@ public class Game extends BaseScreen
 			{
 				if ((mouse_btns[i] && GUI.getInstance().mouse_in_control == null) || (!mouse_btns[i]))
 				{
+					GUI.getInstance().focused_control = null;
 					new MouseClick(
 							mouse_btns[i],
 							i,

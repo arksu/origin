@@ -22,7 +22,7 @@ public class ObjectCache
 	/**
 	 * объект моего персонажа
 	 */
-	GameObject _me;
+	private GameObject _me;
 
 	public void addObject(GameObject object)
 	{
