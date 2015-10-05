@@ -33,6 +33,7 @@ public class GUI_Control
     public Vec2i pos = Vec2i.z;
     public Vec2i size = Vec2i.z;
     public Vec2i min_size = new Vec2i(10, 10);
+    public Vec2i margins = new Vec2i(12, 12);
     public String skin_element = "";
     // юзер тег
     public String tag = "";
@@ -307,6 +308,24 @@ public class GUI_Control
         else
             Show();
         return visible;
+    }
+    
+    public void packSize() 
+    {
+    	size.x = 0;
+    	size.y = 0;
+    	
+        for (GUI_Control ctrl = child; ctrl != null; ctrl = ctrl.next)
+        {
+        	int dx = ctrl.pos.x + ctrl.size.x;
+        	int dy = ctrl.pos.y + ctrl.size.y;
+            if (size.x < dx)
+            	size.x = dx;
+            
+            if (size.y < dy)
+            	size.y = dy;
+        }
+        size.add(margins);
     }
 
     public final boolean HandleKey(char c, int code, boolean down)

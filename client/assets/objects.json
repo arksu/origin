@@ -1,7 +1,10 @@
 [
 	{
 		"typeId": 1,
-		"res": "assets/debug/ship.obj"
+		"res": "assets/debug/leg.g3db",
+		"scaleX": 0.001f
+		"scaleY": 0.001f
+		"scaleZ": 0.001f
 	},
 	{
 		"typeId": 2,

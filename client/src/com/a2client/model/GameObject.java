@@ -4,10 +4,13 @@ import com.a2client.MapCache;
 import com.a2client.ModelManager;
 import com.a2client.network.game.serverpackets.ObjectAdd;
 import com.a2client.util.Vec2i;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +33,8 @@ public class GameObject
 	private BoundingBox _boundingBox;
 
 	private ModelInstance _model = null;
+
+	private AnimationController _animation = null;
 
 	private boolean _needUpdate = true;
 
@@ -106,6 +111,17 @@ public class GameObject
 	{
 		_interactive = interactive;
 	}
+	
+	public void setAnimation(String id) 
+	{
+		setAnimation(id, -1);
+	}
+	
+	public void setAnimation(String id, int loop) 
+	{
+		if (_animation != null)
+			_animation.setAnimation(id, loop);
+	}
 
 	public boolean isInteractive()
 	{
@@ -128,6 +144,7 @@ public class GameObject
 		else
 		{
 			_mover = new Mover(this, cx, cy, vx, vy, speed);
+			setAnimation(_model.animations.first().id, -1);
 		}
 	}
 
@@ -151,6 +168,10 @@ public class GameObject
 		}
 
 		ModelManager.getInstance().updateModelTime(_typeId);
+		
+		if (_animation != null)
+			_animation.update(Gdx.graphics.getDeltaTime());
+		
 
 		if (_mover != null)
 		{
@@ -158,6 +179,7 @@ public class GameObject
 			if (_mover._arrived)
 			{
 				_mover = null;
+				setAnimation(null);
 			}
 		}
 	}
@@ -168,13 +190,17 @@ public class GameObject
 		if (_model != null)
 		{
 			UpdateCoordandBB();
+
+			if (_model.animations.size > 0)
+				_animation = new AnimationController(_model);
+
 		}
 	}
 
 	public void UpdateCoordandBB()
 	{
 		_worldCoord = new Vector3(_coord.x / MapCache.TILE_SIZE, 0.5f, _coord.y / MapCache.TILE_SIZE);
-		_model.transform.setToTranslation(_worldCoord);
+		_model.transform.setTranslation(_worldCoord);
 		_boundingBox.min.set(_worldCoord).add(_modelBoundingBox.min);
 		_boundingBox.max.set(_worldCoord).add(_modelBoundingBox.max);
 	}

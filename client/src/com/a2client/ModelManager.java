@@ -11,6 +11,8 @@ import java.util.ArrayList;
 
 public class ModelManager
 {
+	//TODO: Вые... арка за это!
+	//П.С Смотри стек вызова функции .debug
 	private static final org.slf4j.Logger _log = LoggerFactory.getLogger(ModelManager.class.getName());
 
 	private static long MODEL_TIMEOUT = 120000; // 2min
@@ -61,7 +63,7 @@ public class ModelManager
 		ModelInstance tmp = new ModelInstance(
 				_assets.get(meta.res, Model.class));
 		meta.last_usage = TimeUtils.millis();
-		// tmp.transform = meta.transform;
+		tmp.transform.scale(meta.scaleX, meta.scaleY, meta.scaleZ);
 		return tmp;
 	}
 
@@ -145,6 +147,10 @@ public class ModelManager
 		public int typeId;
 		public String res;
 		public long last_usage = 0;
+		
+		public float scaleX = 1f;
+		public float scaleY = 1f;
+		public float scaleZ = 1f;
 	}
 
 	class UpdateTimer extends Timer.Task
