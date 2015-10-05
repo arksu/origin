@@ -98,6 +98,11 @@ public class MouseClick extends GameClientPacket
 										_log.warn("failed spawn hand item " + player.getHand().getItem());
 									}
 								}
+								else if (_objectId != 0 && _objectId != player.getObjectId())
+								{
+									// клик по объекту. бежим к нему и делаем действие над ним
+									player.setMind(new MindMoveAction(player, _objectId));
+								}
 								else
 								{
 									_log.debug("MoveToPoint to (" + _x + ", " + _y + ")");
@@ -107,12 +112,9 @@ public class MouseClick extends GameClientPacket
 									player.StartMove(new MoveToPoint(_x, _y));
 								}
 								break;
+
 							case BUTTON_RIGHT:
-								if (_objectId != 0 && _objectId != player.getObjectId())
-								{
-									// клик по объекту. бежим к нему и делаем действие над ним
-									player.setMind(new MindMoveAction(player, _objectId));
-								}
+								break;
 						}
 					}
 					finally
