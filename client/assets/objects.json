@@ -2,9 +2,9 @@
 	{
 		"typeId": 1,
 		"res": "assets/debug/leg.g3db",
-		"scaleX": 0.001f
-		"scaleY": 0.001f
-		"scaleZ": 0.001f
+		"scaleX": 0.001,
+		"scaleY": 0.001,
+		"scaleZ": 0.001
 	},
 	{
 		"typeId": 2,

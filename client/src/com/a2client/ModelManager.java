@@ -5,9 +5,12 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.utils.*;
+import com.google.gson.Gson;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 public class ModelManager
 {
@@ -19,6 +22,8 @@ public class ModelManager
 
 	private static ModelManager _instance;
 
+	private static Gson _gson = new Gson();
+
 	public static ModelManager getInstance()
 	{
 		if (_instance == null)
@@ -29,9 +34,9 @@ public class ModelManager
 		return _instance;
 	}
 
-	private ObjectMap<Model, IntArray> _modelHitList = new ObjectMap<Model, IntArray>();
+	private ObjectMap<Model, IntArray> _modelHitList = new ObjectMap<>();
 
-	private ObjectMap<Integer, ModelMeta> _modelList = new ObjectMap<Integer, ModelMeta>();
+	private ObjectMap<Integer, ModelMeta> _modelList = new ObjectMap<>();
 
 	private AssetManager _assets;
 
@@ -96,13 +101,15 @@ public class ModelManager
 
 	private void load(ModelMeta meta)
 	{
-		if (!_assets.isLoaded(meta.res)) {
+		if (!_assets.isLoaded(meta.res))
+		{
 			_assets.load(meta.res, Model.class);
 			_assets.finishLoadingAsset(meta.res);
 			_log.debug("ModelManager", "Loaded = " + meta.res);
 		}
 		Model model = _assets.get(meta.res, Model.class);
-		if (!_modelHitList.containsKey(model)) {
+		if (!_modelHitList.containsKey(model))
+		{
 			_modelHitList.put(model, new IntArray());
 		}
 		_modelHitList.get(model).add(meta.typeId);
@@ -116,7 +123,8 @@ public class ModelManager
 
 		IntArray hitArray = _modelHitList.get(model);
 		hitArray.removeValue(meta.typeId);
-		if (hitArray.size == 0) {
+		if (hitArray.size == 0)
+		{
 			_log.debug("ModelManager", "UnLoad = " + meta.res);
 			_assets.unload(meta.res);
 			_modelHitList.remove(model);
@@ -127,27 +135,31 @@ public class ModelManager
 
 	public void loadModelList()
 	{
-		Json json = new Json();
-
-		@SuppressWarnings("unchecked")
-		ArrayList<JsonValue> list = json.fromJson(ArrayList.class,
-				Gdx.files.internal("assets/objects.json"));
-
-		for (JsonValue v : list)
+		File file = Gdx.files.internal("assets/objects.json").file();
+		try
 		{
-			ModelMeta m = json.readValue(ModelMeta.class, v);
-			m.last_usage = TimeUtils.millis();
-			_modelList.put(m.typeId, m);
+			ModelMeta[] arrayList = _gson.fromJson(new FileReader(file), ModelMeta[].class);
+			for (ModelMeta m : arrayList)
+			{
+				m.last_usage = TimeUtils.millis();
+				_modelList.put(m.typeId, m);
+			}
 		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+
 	}
 
 	public static class ModelMeta
 	{
-		public boolean loaded = false;
+		public transient boolean loaded = false;
+		public transient long last_usage = 0;
+
 		public int typeId;
 		public String res;
-		public long last_usage = 0;
-		
+
 		public float scaleX = 1f;
 		public float scaleY = 1f;
 		public float scaleZ = 1f;
