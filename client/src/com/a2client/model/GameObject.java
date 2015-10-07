@@ -144,7 +144,7 @@ public class GameObject
 		else
 		{
 			_mover = new Mover(this, cx, cy, vx, vy, speed);
-			setAnimation(_model.animations.first().id, -1);
+//			setAnimation(_model.animations.first().id, -1);
 		}
 	}
 

@@ -114,6 +114,13 @@ public class MouseClick extends GameClientPacket
 								break;
 
 							case BUTTON_RIGHT:
+								// клик по объекту?
+								GameObject object = player.isKnownObject(_objectId);
+								if (object != null)
+								{
+									// пкм по объекту - посмотрим что сделает объект
+
+								}
 								break;
 						}
 					}

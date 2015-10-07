@@ -1,7 +1,8 @@
 [
 	{
 		"typeId": 1,
-		"res": "assets/debug/leg.g3db",
+//		"res": "assets/debug/leg.g3db",
+		"res": "assets/untitled.g3db",
 		"scaleX": 0.001,
 		"scaleY": 0.001,
 		"scaleZ": 0.001
