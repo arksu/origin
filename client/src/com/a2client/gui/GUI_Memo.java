@@ -85,7 +85,7 @@ public class GUI_Memo extends GUI_ScrollPage
         Rect wr = WorkRect();
         Vec2i awr = AbsWorkCoord();
         int ay = awr.y;
-        GUIGDX.PushScissor(new Rect(abs_pos.x + ClientRect.x, abs_pos.y + ClientRect.y, wr.w, wr.h));
+        GUIGDX.PushScissor(new Rect(abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, wr.w, wr.h));
         for (int i = 0; i < render_lines.size(); i++)
         {
             DrawMemoLine(awr.x, ay, wr.w, wr.h, i);
@@ -124,7 +124,7 @@ public class GUI_Memo extends GUI_ScrollPage
 
     public void DoSetSize()
     {
-        ClientRect = new Rect(3, 3, size.x - 6, size.y - 6);
+        _clientRect = new Rect(3, 3, size.x - 6, size.y - 6);
         UpdateLines();
         super.DoSetSize();
     }

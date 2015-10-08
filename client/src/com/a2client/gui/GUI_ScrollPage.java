@@ -90,34 +90,34 @@ public class GUI_ScrollPage extends GUI_Control
         {
             y = FVerticalScrollbar.Pos;
             if (HaveHorizontalScrollbar)
-                h = ClientRect.h - FHorizontalScrollbar.Height();
+                h = _clientRect.h - FHorizontalScrollbar.Height();
             else
-                h = ClientRect.h;
+                h = _clientRect.h;
         }
         else
         {
             y = 0;
             if (HaveHorizontalScrollbar)
-                h = ClientRect.h - FHorizontalScrollbar.Height();
+                h = _clientRect.h - FHorizontalScrollbar.Height();
             else
-                h = ClientRect.h;
+                h = _clientRect.h;
         }
 
         if (HaveHorizontalScrollbar)
         {
             x = FHorizontalScrollbar.Pos;
             if (HaveVerticalScrollbar)
-                w = ClientRect.w - FVerticalScrollbar.Width();
+                w = _clientRect.w - FVerticalScrollbar.Width();
             else
-                w = ClientRect.w;
+                w = _clientRect.w;
         }
         else
         {
             x = 0;
             if (HaveVerticalScrollbar)
-                w = ClientRect.w - FVerticalScrollbar.Width();
+                w = _clientRect.w - FVerticalScrollbar.Width();
             else
-                w = ClientRect.w;
+                w = _clientRect.w;
         }
 
         return new Rect(x, y, w, h);
@@ -125,7 +125,7 @@ public class GUI_ScrollPage extends GUI_Control
 
     protected Vec2i AbsWorkCoord()
     {
-        Vec2i Result = new Vec2i(abs_pos.x + ClientRect.x - WorkRect().x, abs_pos.y + ClientRect.y - WorkRect().y);
+        Vec2i Result = new Vec2i(abs_pos.x + _clientRect.x - WorkRect().x, abs_pos.y + _clientRect.y - WorkRect().y);
 
         if (HaveHorizontalScrollbar)
             if (!HScrollBarIsBottom)
@@ -149,11 +149,11 @@ public class GUI_ScrollPage extends GUI_Control
                 FVerticalScrollbar.Hide();
 
             if (VScrollBarIsRight)
-                FVerticalScrollbar.SetX(ClientRect.x + ClientRect.w - FVerticalScrollbar.Width());
+                FVerticalScrollbar.SetX(_clientRect.x + _clientRect.w - FVerticalScrollbar.Width());
             else
-                FVerticalScrollbar.SetX(ClientRect.x);
+                FVerticalScrollbar.SetX(_clientRect.x);
 
-            FVerticalScrollbar.SetY(ClientRect.y);
+            FVerticalScrollbar.SetY(_clientRect.y);
             old_max = FVerticalScrollbar.Max;
             old_page_size = FVerticalScrollbar.PageSize;
             FVerticalScrollbar.Min = 0;
@@ -161,11 +161,11 @@ public class GUI_ScrollPage extends GUI_Control
 
             if (HaveHorizontalScrollbar)
             {
-                FVerticalScrollbar.SetHeight(ClientRect.h - FHorizontalScrollbar.Height());
+                FVerticalScrollbar.SetHeight(_clientRect.h - FHorizontalScrollbar.Height());
             }
             else
             {
-                FVerticalScrollbar.SetHeight(ClientRect.h);
+                FVerticalScrollbar.SetHeight(_clientRect.h);
             }
             FVerticalScrollbar.PageSize = FVerticalScrollbar.Height();
 
@@ -181,11 +181,11 @@ public class GUI_ScrollPage extends GUI_Control
             else
                 FHorizontalScrollbar.Hide();
 
-            FHorizontalScrollbar.SetX(ClientRect.x);
+            FHorizontalScrollbar.SetX(_clientRect.x);
             if (HScrollBarIsBottom)
-                FHorizontalScrollbar.SetY(ClientRect.y + ClientRect.h - FHorizontalScrollbar.Height());
+                FHorizontalScrollbar.SetY(_clientRect.y + _clientRect.h - FHorizontalScrollbar.Height());
             else
-                FHorizontalScrollbar.SetY(ClientRect.y);
+                FHorizontalScrollbar.SetY(_clientRect.y);
 
             old_max = FHorizontalScrollbar.Max;
             old_page_size = FHorizontalScrollbar.PageSize;
@@ -193,11 +193,11 @@ public class GUI_ScrollPage extends GUI_Control
             FHorizontalScrollbar.Max = FullWidth;
             if (HaveVerticalScrollbar)
             {
-                FHorizontalScrollbar.SetWidth(ClientRect.w - FVerticalScrollbar.Width());
+                FHorizontalScrollbar.SetWidth(_clientRect.w - FVerticalScrollbar.Width());
             }
             else
             {
-                FHorizontalScrollbar.SetWidth(ClientRect.w);
+                FHorizontalScrollbar.SetWidth(_clientRect.w);
             }
             FHorizontalScrollbar.PageSize = FHorizontalScrollbar.Width();
 

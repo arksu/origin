@@ -133,7 +133,7 @@ public class GUI
         String text = "";
 
         // получаем размер
-        if (mouse_in_control.is_simple_hint)
+        if (mouse_in_control._isSimpleHint)
         {
             text = mouse_in_control.getHint();
             if (text == null || text.length() == 0)
@@ -165,9 +165,9 @@ public class GUI
             y += HINT_OFFSET;
 
         // выводим хинт
-        if (mouse_in_control.need_hint_bg)
+        if (mouse_in_control._needHintBg)
             Skin.getInstance().draw("hint", x, y, w, h);
-        if (mouse_in_control.is_simple_hint)
+        if (mouse_in_control._isSimpleHint)
         {
             SimpleHint.Render(x, y, w, h, text);
         }

@@ -42,22 +42,29 @@ public class GUI_Control
 	// абсолютные координаты на экране
 	protected Vec2i abs_pos = Vec2i.z;
 	// рабочая область
-	protected Rect ClientRect = new Rect(0, 0, 0, 0);
+	protected Rect _clientRect = new Rect(0, 0, 0, 0);
 	// рендерить ли детей. если нет - то рендерим в ручном режиме.
-	public boolean render_childs = true;
+	public boolean _renderChilds = true;
 	// уничтожен ли контрол. елси истина - любое использование контрола не допускается
 	// его необходимо исключить из всех обработок и навсегда о нем забыть.
 	public boolean terminated = false;
-	// простой ли хинт у контрола
-	// если простой - выводится тупо текст. берется в getHint()
-	// если хинт продвинутый - контрол сам выводит содержимое. Vec2i getHintSize() - должен вернуть размер области под хинт
-	// RenderHint(int x, int y) - вывести сам хинт в этих координатах.
-	// гуи сам ищет оптимальное расположение хинта, а также выводит подложку если стоит need_hint_bg - иначе контрол должен вывести еще и подложку
-	public boolean is_simple_hint = true;
-	// текст простого хинта
-	public String simple_hint = "";
+
+	/**
+	 * простой ли хинт у контрола
+	 * если простой - выводится тупо текст. берется в getHint()
+	 * если хинт продвинутый - контрол сам выводит содержимое. Vec2i getHintSize() - должен вернуть размер области под хинт
+	 * RenderHint(int x, int y) - вывести сам хинт в этих координатах.
+	 * гуи сам ищет оптимальное расположение хинта, а также выводит подложку если стоит _needHintBg - иначе контрол должен вывести еще и подложку
+	 */
+	public boolean _isSimpleHint = true;
+
+	/**
+	 * текст простого хинта
+	 */
+	public String _simpleHint = "";
+
 	// нужно ли вывести подложку под хинт
-	public boolean need_hint_bg = true;
+	public boolean _needHintBg = true;
 
 	public GUI_Control prev, next, child, last_child, parent;
 	public boolean visible = true;
@@ -194,7 +201,7 @@ public class GUI_Control
 		if (visible)
 		{
 			DoRender();
-			if (render_childs)
+			if (_renderChilds)
 			{
 				for (GUI_Control c = child; c != null; c = c.next)
 				{
@@ -624,7 +631,7 @@ public class GUI_Control
 	// получить текст хинта
 	public String getHint()
 	{
-		return simple_hint;
+		return _simpleHint;
 	}
 
 	// получить размер хинта
@@ -697,7 +704,7 @@ public class GUI_Control
 	// смена размера
 	public void DoSetSize()
 	{
-		ClientRect = new Rect(3, 3, size.x - 6, size.y - 6);
+		_clientRect = new Rect(3, 3, size.x - 6, size.y - 6);
 	}
 
 	// завершить перетаскивание

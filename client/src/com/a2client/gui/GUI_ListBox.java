@@ -45,18 +45,18 @@ public class GUI_ListBox extends GUI_ScrollPage
 
         Rect wr = WorkRect();
         // координаты текущей записи относительно контрола
-        int ax = abs_pos.x + ClientRect.x - wr.x;
-        int ay = abs_pos.y + ClientRect.y - wr.y;
+        int ax = abs_pos.x + _clientRect.x - wr.x;
+        int ay = abs_pos.y + _clientRect.y - wr.y;
 
         // для отсечки записей находящихся на границе контрола - ставим доп. скиссор
-        GUIGDX.PushScissor(new Rect(abs_pos.x + ClientRect.x, abs_pos.y + ClientRect.y, wr.w, wr.h));
+        GUIGDX.PushScissor(new Rect(abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, wr.w, wr.h));
 
         int h;
         for (int i = 0; i < GetCount(); i++)
         {
             h = GetItemHeight(i);
             // если запись всяко за границами рисуемой области - пропускаем
-            if ((ay + h >= abs_pos.y + ClientRect.y) && (ay < abs_pos.y + ClientRect.y + wr.h))
+            if ((ay + h >= abs_pos.y + _clientRect.y) && (ay < abs_pos.y + _clientRect.y + wr.h))
             {
                 GUIGDX.PushScissor(new Rect(ax, ay, wr.w, h));
                 DrawItemBg(i, ax, ay, wr.w, h);
@@ -106,15 +106,15 @@ public class GUI_ListBox extends GUI_ScrollPage
 
         Rect wr = WorkRect();
         // координаты текущей записи относительно контрола
-        int ax = abs_pos.x + ClientRect.x - wr.x;
-        int ay = abs_pos.y + ClientRect.y - wr.y;
+        int ax = abs_pos.x + _clientRect.x - wr.x;
+        int ay = abs_pos.y + _clientRect.y - wr.y;
 
         int h;
         for (int i = 0; i < GetCount(); i++)
         {
             h = GetItemHeight(i);
             // если запись всяко за границами рисуемой области - пропускаем
-            if ((ay + h >= abs_pos.y + ClientRect.y) && (ay < abs_pos.y + ClientRect.y + wr.h))
+            if ((ay + h >= abs_pos.y + _clientRect.y) && (ay < abs_pos.y + _clientRect.y + wr.h))
             {
                 boolean mouse_captured;
                 mouse_captured = gui.MouseInRect(new Vec2i(ax, ay), new Vec2i(wr.w, h));
@@ -227,15 +227,15 @@ public class GUI_ListBox extends GUI_ScrollPage
 
         Rect wr = WorkRect();
         // координаты текущей записи относительно контрола
-        int ax = abs_pos.x + ClientRect.x - wr.x;
-        int ay = abs_pos.y + ClientRect.y - wr.y;
+        int ax = abs_pos.x + _clientRect.x - wr.x;
+        int ay = abs_pos.y + _clientRect.y - wr.y;
 
         int h;
         for (int i = 0; i < GetCount(); i++)
         {
             h = GetItemHeight(i);
             // если запись всяко за границами рисуемой области - пропускаем
-            if ((ay + h >= abs_pos.y + ClientRect.y) && (ay < abs_pos.y + ClientRect.y + wr.h))
+            if ((ay + h >= abs_pos.y + _clientRect.y) && (ay < abs_pos.y + _clientRect.y + wr.h))
             {
                 boolean mouse_captured;
                 mouse_captured = gui.MouseInRect(new Vec2i(ax, ay), new Vec2i(wr.w, h));

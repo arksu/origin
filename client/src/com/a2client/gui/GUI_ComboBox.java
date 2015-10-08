@@ -152,8 +152,8 @@ public class GUI_ComboBox extends GUI_Control
         super.DoSetSize();
         if (drop_button != null && !drop_button.terminated)
         {
-            drop_button.SetPos(ClientRect.x + ClientRect.w - drop_button.Width(),
-                               ClientRect.y + (ClientRect.h - drop_button.Height()) / 2);
+            drop_button.SetPos(_clientRect.x + _clientRect.w - drop_button.Width(),
+                               _clientRect.y + (_clientRect.h - drop_button.Height()) / 2);
         }
     }
 
@@ -174,11 +174,11 @@ public class GUI_ComboBox extends GUI_Control
 
         // ставим скиссор до кнопки
         GUIGDX.PushScissor(
-                new Rect(abs_pos.x + ClientRect.x, abs_pos.y + ClientRect.y, ClientRect.w - drop_button.Width(),
-                         ClientRect.h));
+                new Rect(abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, _clientRect.w - drop_button.Width(),
+                         _clientRect.h));
 
         // выводим текст
-        GUIGDX.Text("default", abs_pos.x + ClientRect.x, abs_pos.y + ClientRect.y, GetText(), Color.WHITE);
+        GUIGDX.Text("default", abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, GetText(), Color.WHITE);
 
         GUIGDX.PopScissor();
     }
