@@ -120,6 +120,10 @@ public abstract class BaseSendPacket
 				writeH(sbuf.length);
 				_bao.write(sbuf);
 			}
+			else
+			{
+				writeH(0);
+			}
 		}
 		catch (Exception e)
 		{
