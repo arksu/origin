@@ -25,15 +25,14 @@ public class NettyConnection
 		GAME_SERVER
 	}
 
-	final private String _host;
-	final private int _port;
-	final private ConnectionType _type;
+	private final String _host;
+	private final int _port;
+	private final ConnectionType _type;
+	private final LinkedList<BaseRecvPacket> _packet_queue = new LinkedList<BaseRecvPacket>();
 	private ChannelHandlerContext _channel;
-	NetWorker _worker;
-	LinkedList<BaseRecvPacket> _packet_queue = new LinkedList<BaseRecvPacket>();
 	private boolean _wait_connect;
-	private int _recv_counter;
-	private int _send_counter;
+	private volatile int _recv_counter;
+	private volatile int _send_counter;
 
 	public NettyConnection(String host, int port, ConnectionType type)
 	{
@@ -47,12 +46,12 @@ public class NettyConnection
 		start();
 	}
 
-	public void addRecvCounter(int val)
+	public void incRecvCounter(int val)
 	{
 		_recv_counter += val;
 	}
 
-	public void addSendCounter(int val)
+	public void incSendCounter(int val)
 	{
 		_send_counter += val;
 	}
@@ -69,8 +68,8 @@ public class NettyConnection
 
 	protected void start()
 	{
-		_worker = new NetWorker();
-		_worker.start();
+		NetWorker worker = new NetWorker();
+		worker.start();
 	}
 
 	synchronized public void Close()
@@ -99,7 +98,7 @@ public class NettyConnection
 		}
 	}
 
-	public void ProcessPackets()
+	public void processPackets()
 	{
 		while (true)
 		{

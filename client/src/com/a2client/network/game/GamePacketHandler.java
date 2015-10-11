@@ -32,7 +32,8 @@ public class GamePacketHandler
 			InventoryUpdate.class,
 			ObjectInteractive.class,
 			PlayerHand.class,
-			EquipUpdate.class
+			EquipUpdate.class,
+			ObjectState.class
 	};
 
 	static public void InitPackets()
@@ -52,7 +53,7 @@ public class GamePacketHandler
 
 	static private Map<Integer, Class<? extends GameServerPacket>> _packets = new HashMap<>();
 
-	static public GameServerPacket HandlePacket(byte[] data)
+	static public GameServerPacket handlePacket(byte[] data)
 	{
 		int opcode = data[0] & 0xff;
 
@@ -64,6 +65,11 @@ public class GamePacketHandler
 			try
 			{
 				pkt = pktClass.newInstance();
+				// установим данные в пакет
+				if (pkt != null)
+				{
+					pkt.setData(data);
+				}
 			}
 			catch (Exception e)
 			{
@@ -76,11 +82,6 @@ public class GamePacketHandler
 			debugOpcode(opcode);
 		}
 
-		// установим данные в пакет
-		if (pkt != null)
-		{
-			pkt.setData(data);
-		}
 		return pkt;
 	}
 

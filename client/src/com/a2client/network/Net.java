@@ -35,7 +35,7 @@ public class Net
 	{
 		if (_connection != null)
 		{
-			_connection.ProcessPackets();
+			_connection.processPackets();
 		}
 
 		if (Login._login_error != null)

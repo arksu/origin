@@ -36,7 +36,7 @@ public class ConnectionHandler extends SimpleChannelInboundHandler<byte[]>
 	protected void messageReceived(ChannelHandlerContext channelHandlerContext, byte[] bytes) throws Exception
 	{
 		BaseRecvPacket pkt = null;
-		_connection.addRecvCounter(bytes.length);
+		_connection.incRecvCounter(bytes.length);
 		switch (_connection.getType())
 		{
 			case LOGIN_SERVER:
@@ -51,7 +51,7 @@ public class ConnectionHandler extends SimpleChannelInboundHandler<byte[]>
 				}
 				break;
 			case GAME_SERVER:
-				pkt = GamePacketHandler.HandlePacket(bytes);
+				pkt = GamePacketHandler.handlePacket(bytes);
 				if (pkt != null)
 				{
 					((GameServerPacket) pkt).setConnect(_connection);
