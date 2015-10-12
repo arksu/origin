@@ -7,7 +7,15 @@ package com.a4server.gameserver.network.serverpackets;
 public class ObjectState extends GameServerPacket
 {
 	private int _objectId;
+
+	/**
+	 * можем передать состояние как в виде json (для гибкости)
+	 */
 	private String _jsonState;
+
+	/**
+	 * или в виде бинарных данных (компактнее)
+	 */
 	private byte[] _state;
 
 	public ObjectState(int objectId, String jsonState)

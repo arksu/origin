@@ -60,14 +60,14 @@ public class ModelManager
 					"[ModelManager] no model by typeId = " + _typeId);
 		}
 
-		if (!meta.loaded)
+		if (!meta._loaded)
 		{
 			load(meta);
 		}
 
 		ModelInstance tmp = new ModelInstance(
 				_assets.get(meta.res, Model.class));
-		meta.last_usage = TimeUtils.millis();
+		meta._lastUsage = TimeUtils.millis();
 		tmp.transform.scale(meta.scaleX, meta.scaleY, meta.scaleZ);
 		return tmp;
 	}
@@ -81,7 +81,7 @@ public class ModelManager
 			return;
 		}
 
-		meta.last_usage = current_time;
+		meta._lastUsage = current_time;
 	}
 
 	public void update()
@@ -92,7 +92,7 @@ public class ModelManager
 
 		for (ModelMeta meta : _modelList.values())
 		{
-			if (meta.loaded && meta.last_usage < out_time)
+			if (meta._loaded && meta._lastUsage < out_time)
 			{
 				unload(meta);
 			}
@@ -113,8 +113,8 @@ public class ModelManager
 			_modelHitList.put(model, new IntArray());
 		}
 		_modelHitList.get(model).add(meta.typeId);
-		meta.loaded = true;
-		meta.last_usage = TimeUtils.millis();
+		meta._loaded = true;
+		meta._lastUsage = TimeUtils.millis();
 	}
 
 	private void unload(ModelMeta meta)
@@ -129,8 +129,8 @@ public class ModelManager
 			_assets.unload(meta.res);
 			_modelHitList.remove(model);
 		}
-		meta.loaded = false;
-		meta.last_usage = 0;
+		meta._loaded = false;
+		meta._lastUsage = 0;
 	}
 
 	public void loadModelList()
@@ -138,11 +138,11 @@ public class ModelManager
 		File file = Gdx.files.internal("assets/objects.json").file();
 		try
 		{
-			ModelMeta[] arrayList = _gson.fromJson(new FileReader(file), ModelMeta[].class);
-			for (ModelMeta m : arrayList)
+			ModelMeta[] list = _gson.fromJson(new FileReader(file), ModelMeta[].class);
+			for (ModelMeta item : list)
 			{
-				m.last_usage = TimeUtils.millis();
-				_modelList.put(m.typeId, m);
+				item._lastUsage = TimeUtils.millis();
+				_modelList.put(item.typeId, item);
 			}
 		}
 		catch (FileNotFoundException e)
@@ -154,8 +154,8 @@ public class ModelManager
 
 	public static class ModelMeta
 	{
-		public transient boolean loaded = false;
-		public transient long last_usage = 0;
+		public transient boolean _loaded = false;
+		public transient long _lastUsage = 0;
 
 		public int typeId;
 		public String res;

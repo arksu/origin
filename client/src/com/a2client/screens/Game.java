@@ -16,6 +16,9 @@ import com.badlogic.gdx.math.Vector2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * основной игровой экран. тут выводим все объекты и всю информацию по ним
+ */
 public class Game extends BaseScreen
 {
 	private static final Logger _log = LoggerFactory.getLogger(Game.class.getName());
