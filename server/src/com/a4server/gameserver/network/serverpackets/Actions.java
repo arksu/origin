@@ -1,24 +1,30 @@
 package com.a4server.gameserver.network.serverpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.a4server.gameserver.model.Action;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Created by arksu on 13.10.15.
  */
 public class Actions extends GameServerPacket
 {
-	private static final Logger _log = LoggerFactory.getLogger(Actions.class.getName());
+	private static Gson _gson = new GsonBuilder().create();
 
 	/**
 	 * список действий в json
 	 */
-	String _actions;
+	private final Action[] _actions;
+
+	public Actions(Action[] actions)
+	{
+		_actions = actions;
+	}
 
 	@Override
 	protected void write()
 	{
 		writeC(0x20);
-		writeS(_actions);
+		writeS(_gson.toJson(_actions, Action[].class));
 	}
 }

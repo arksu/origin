@@ -250,7 +250,8 @@ public class Player extends Human
 				// раз это персонаж, отправим его представление, то как он должен выглядеть
 				.addNext(new PlayerAppearance(_appearance))
 				.addNext(new InventoryUpdate(_inventory))
-				.addNext(new EquipUpdate(_equip));
+				.addNext(new EquipUpdate(_equip))
+				.addNext(new Actions(getActions()));
 		if (_hand != null)
 		{
 			next.addNext(new PlayerHand(_hand));
@@ -586,5 +587,13 @@ public class Player extends Human
 			getClient().sendPacket(new PlayerHand(_hand));
 		}
 		return true;
+	}
+
+	public Action[] getActions()
+	{
+		Action[] list = new Action[2];
+		list[0] = new Action("craft");
+		list[1] = new Action("online");
+		return list;
 	}
 }
