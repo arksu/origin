@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * список действий доступных игроку
  * Created by arksu on 13.10.15.
  */
 public class Actions extends GameServerPacket
@@ -20,7 +21,7 @@ public class Actions extends GameServerPacket
 
 	private static Gson _gson = new Gson();
 
-	Action[] _list;
+	private Action[] _list;
 
 	@Override
 	public void readImpl()
