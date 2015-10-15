@@ -7,7 +7,7 @@ import com.google.gson.GsonBuilder;
 /**
  * Created by arksu on 13.10.15.
  */
-public class Actions extends GameServerPacket
+public class ActionsList extends GameServerPacket
 {
 	private static Gson _gson = new GsonBuilder().create();
 
@@ -16,7 +16,7 @@ public class Actions extends GameServerPacket
 	 */
 	private final Action[] _actions;
 
-	public Actions(Action[] actions)
+	public ActionsList(Action[] actions)
 	{
 		_actions = actions;
 	}

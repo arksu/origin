@@ -251,7 +251,7 @@ public class Player extends Human
 				.addNext(new PlayerAppearance(_appearance))
 				.addNext(new InventoryUpdate(_inventory))
 				.addNext(new EquipUpdate(_equip))
-				.addNext(new Actions(getActions()));
+				.addNext(new ActionsList(getActions()));
 		if (_hand != null)
 		{
 			next.addNext(new PlayerHand(_hand));

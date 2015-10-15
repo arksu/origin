@@ -10,13 +10,13 @@ import org.slf4j.LoggerFactory;
  * список действий доступных игроку
  * Created by arksu on 13.10.15.
  */
-public class Actions extends GameServerPacket
+public class ActionsList extends GameServerPacket
 {
-	private static final Logger _log = LoggerFactory.getLogger(Actions.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(ActionsList.class.getName());
 
 	static
 	{
-		GamePacketHandler.AddPacketType(0x20, Actions.class);
+		GamePacketHandler.AddPacketType(0x20, ActionsList.class);
 	}
 
 	private static Gson _gson = new Gson();
