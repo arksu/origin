@@ -72,6 +72,9 @@ public class GamePacketHandler
 					case 0x1E:
 						pkt = new EquipClick();
 						break;
+					case 0x21:
+						pkt = new Action();
+						break;
 
 					default:
 						debugOpcode(opcode, state);
