@@ -1,5 +1,6 @@
 package com.a2client;
 
+import com.a2client.model.Action;
 import com.a2client.model.Equip;
 import com.a2client.model.Hand;
 import org.slf4j.Logger;
@@ -19,6 +20,8 @@ public class Player
 
 	private Hand _hand;
 	private final Equip _equip = new Equip();
+
+	private Action[] _actionsList;
 
 	public void setObjectId(int myObjectId)
 	{
@@ -83,5 +86,15 @@ public class Player
 	public Equip getEquip()
 	{
 		return _equip;
+	}
+
+	public Action[] getActionsList()
+	{
+		return _actionsList;
+	}
+
+	public void setActionsList(Action[] actionsList)
+	{
+		_actionsList = actionsList;
 	}
 }
