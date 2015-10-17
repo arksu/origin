@@ -73,7 +73,7 @@ public class GamePacketHandler
 						pkt = new EquipClick();
 						break;
 					case 0x21:
-						pkt = new Action();
+						pkt = new ActionSelect();
 						break;
 
 					default:

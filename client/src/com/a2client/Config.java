@@ -194,7 +194,7 @@ public class Config
 		account = p.getString("account", "");
 		password = p.getString("password", "");
 		//
-		save_pass = p.getBoolean("save_pass", false);
+		save_pass = p.getBoolean("save_pass", true);
 	}
 
 	public static void SaveOptions()

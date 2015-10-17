@@ -4,6 +4,7 @@ import com.a2client.*;
 import com.a2client.gui.*;
 import com.a2client.model.GameObject;
 import com.a2client.model.Inventory;
+import com.a2client.network.game.clientpackets.ActionSelect;
 import com.a2client.network.game.clientpackets.ChatMessage;
 import com.a2client.network.game.clientpackets.MouseClick;
 import com.a2client.render.GameCamera;
@@ -35,6 +36,7 @@ public class Game extends BaseScreen
 	private GUI_Button _btnExit;
 	public GUI_Memo _chatMemo;
 	private GUI_Edit _chatEdit;
+	public GUI_StringList _actions;
 
 	private static Game _instance;
 	private GameState _state = GameState.ENTERING;
@@ -69,9 +71,9 @@ public class Game extends BaseScreen
 				Login.setStatus("disconnected");
 			}
 		};
-		_btnExit.caption = Lang.getTranslate("Game.cancel");
+		_btnExit.caption = Lang.getTranslate("Game.exit");
 		_btnExit.SetSize(100, 25);
-		_btnExit.SetPos(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 35);
+		_btnExit.SetPos(Gdx.graphics.getWidth() - 100, 0);
 
 		int hc = 100;
 		int wc = 200;
@@ -101,6 +103,18 @@ public class Game extends BaseScreen
 		};
 		_chatEdit.SetPos(5, py + _chatMemo.Height() + 5);
 		_chatEdit.SetSize(_chatMemo.Width(), 20);
+
+		_actions = new GUI_StringList(GUI.rootNormal())
+		{
+			@Override
+			public void DoClick()
+			{
+				String item = GetItem(GetSelected());
+				new ActionSelect(item).Send();
+			}
+		};
+		_actions.SetSize(150, 100);
+		_actions.SetPos(Config.getScreenWidth() - _actions.size.x, Config.getScreenHeight() - _actions.size.y);
 
 		_gameCamera = new GameCamera();
 		_render = new Render1(this);

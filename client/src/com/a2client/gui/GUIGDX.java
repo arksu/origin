@@ -70,13 +70,13 @@ public class GUIGDX
         BitmapFont f = getFont(font);
         Color c = f.getColor();
         f.setColor(color);
-        f.draw(_spriteBatch, text, (float) x, (float) (Gdx.graphics.getHeight() - y));
+        f.draw(_spriteBatch, text, (float) x, (float) (Gdx.graphics.getHeight() - y-2));
         f.setColor(c);
     }
 
     static public void Text(String font, int x, int y, String text)
     {
-        getFont(font).draw(_spriteBatch, text, (float) x, (float) (Gdx.graphics.getHeight() - y));
+        getFont(font).draw(_spriteBatch, text, (float) x, (float) (Gdx.graphics.getHeight() - y-2));
     }
 
     static public int getTextWidth(String font, String text)
@@ -86,14 +86,14 @@ public class GUIGDX
 
     static public int getTextHeight(String font, String text)
     {
-    	return (int) (new GlyphLayout(getFont(font), text).height);
+    	return (int) (new GlyphLayout(getFont(font), text).height + 5);
     }
 
 
     public static Vec2i getfontMetrics(String font, String text)
     {
     	GlyphLayout tmp = new GlyphLayout(getFont(font), text);
-        return new Vec2i((int) tmp.width, (int) tmp.height);
+        return new Vec2i((int) tmp.width, (int) tmp.height+2);
     }
 
     static public void FillRect(Vec2i pos, Vec2i size, Color color)

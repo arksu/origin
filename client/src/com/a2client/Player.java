@@ -3,6 +3,7 @@ package com.a2client;
 import com.a2client.model.Action;
 import com.a2client.model.Equip;
 import com.a2client.model.Hand;
+import com.a2client.screens.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,5 +97,10 @@ public class Player
 	public void setActionsList(Action[] actionsList)
 	{
 		_actionsList = actionsList;
+		Game.getInstance()._actions.Clear();
+		for (Action action : _actionsList)
+		{
+			Game.getInstance()._actions.Add(action.name);
+		}
 	}
 }
