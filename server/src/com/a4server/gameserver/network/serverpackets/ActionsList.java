@@ -25,6 +25,7 @@ public class ActionsList extends GameServerPacket
 	protected void write()
 	{
 		writeC(0x20);
-		writeS(_gson.toJson(_actions, Action[].class));
+		Action action = new Action("root", _actions);
+		writeS(_gson.toJson(action, Action.class));
 	}
 }

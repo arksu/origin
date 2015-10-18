@@ -13,25 +13,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 
-import java.util.Stack;
-
 import static com.a2client.Config.RESOURCE_DIR;
 import static com.a2client.util.Align.*;
 
 public class GUIGDX
 {
-    private static Stack<Rect> scissors = new Stack<Rect>();
-    private static Rect current_scissor = null;
     private static SpriteBatch _spriteBatch = new SpriteBatch();
 
-    private static Texture _texture;
+    private static Texture _emptyTexture;
 
     public static void Init()
     {
-        Pixmap _pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
-        _pixmap.setColor(Color.WHITE);
-        _pixmap.fill();
-        _texture = new Texture(_pixmap);
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+        _emptyTexture = new Texture(pixmap);
     }
 
     static public BitmapFont getFont(String name)
@@ -100,7 +96,7 @@ public class GUIGDX
     {
         Color c = _spriteBatch.getColor();
         _spriteBatch.setColor(color);
-        _spriteBatch.draw(_texture, pos.x, Gdx.graphics.getHeight() - pos.y, size.x, -size.y);
+        _spriteBatch.draw(_emptyTexture, pos.x, Gdx.graphics.getHeight() - pos.y, size.x, -size.y);
         _spriteBatch.setColor(c);
     }
 

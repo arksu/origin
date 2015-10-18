@@ -32,7 +32,7 @@ public class Log
 
 	public static void debug(String msg)
 	{
-		if (!Config.debug) return;
+		if (!Config._debug) return;
 		_log.debug(msg);
 	}
 

@@ -51,7 +51,7 @@ public class Main extends com.badlogic.gdx.Game
 		// установим дефолт курсор
 		Cursor.getInstance().setCursor("");
 
-		_log.debug("gl ver: " + Gdx.gl.glGetString(GL20.GL_VENDOR));
+		_log.debug("gl vendor: " + Gdx.gl.glGetString(GL20.GL_VENDOR));
 		_log.debug("gl ver: " + Gdx.gl.glGetString(GL20.GL_VERSION));
 
 		// экран загрузки ресурсов
@@ -67,13 +67,14 @@ public class Main extends com.badlogic.gdx.Game
 		_log.info("Build: " + buildVersion());
 
 		// прочтем аргументы командной строки
-		Config.ParseCMD(args);
-		Config.Load();
+		Config.parseCMD(args);
+		Config.loadOptions();
 		Lang.LoadTranslate();
 
 		// загрузим нативные либы
 		LoadNativeLibs();
 
+		// инициализурем пакеты (заполним опкоды)
 		GamePacketHandler.InitPackets();
 
 		// запускаем приложение
@@ -83,15 +84,15 @@ public class Main extends com.badlogic.gdx.Game
 		cfg.addIcon("assets/a1_32.png", Files.FileType.Internal);
 		cfg.addIcon("assets/a1_128.png", Files.FileType.Internal);
 		cfg.useGL30 = false;
-		cfg.vSyncEnabled = Config.vSync;
-		cfg.foregroundFPS = Config.FrameFate;
-		if (Config.ReduceInBackground)
+		cfg.vSyncEnabled = Config._vSync;
+		cfg.foregroundFPS = Config._framePerSecond;
+		if (Config._reduceInBackground)
 		{
 			cfg.backgroundFPS = 7;
 		}
 		else
 		{
-			cfg.backgroundFPS = Config.FrameFate;
+			cfg.backgroundFPS = Config._framePerSecond;
 		}
 		cfg.width = Config.getScreenWidth();
 		cfg.height = Config.getScreenHeight();
@@ -170,7 +171,7 @@ public class Main extends com.badlogic.gdx.Game
 
 	static public void ReleaseAll()
 	{
-		Config.SaveOptions();
+		Config.saveOptions();
 		Dialog.HideAll();
 		ChatHistory.clear();
 

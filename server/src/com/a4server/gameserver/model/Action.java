@@ -17,4 +17,10 @@ public class Action
 	{
 		_name = name;
 	}
+
+	public Action(String name, Action[] list)
+	{
+		_name = name;
+		_list = list;
+	}
 }

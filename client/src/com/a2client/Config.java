@@ -31,7 +31,7 @@ public class Config
 
 	static
 	{
-		isFullscreen = false;
+		_isFullscreen = false;
 		WindowWidth = 640;
 		WindowHeight = 480;
 	}
@@ -41,9 +41,9 @@ public class Config
 	// имя конфиг файла в каталоге с клиентом
 	public static final String CONFIG_FILE = "origin-world.prefs";
 	// адрес логин сервера
-	public static String login_server = "origin-world.com";
+	public static String _loginServer = "origin-world.com";
 	// порт логин сервера
-	public static int login_server_port = 2040;
+	public static int _loginServerPort = 2040;
 	// раземры экрана
 	public static int ScreenWidth;
 	public static int ScreenHeight;
@@ -51,27 +51,25 @@ public class Config
 	public static int WindowWidth;
 	public static int WindowHeight;
 	// желаемое значение фпс
-	public static int FrameFate;
+	public static int _framePerSecond;
 	// включать ли вертикальную синхронизацию
-	public static boolean vSync;
+	public static boolean _vSync;
 	// Снижение фоновой активности окна
-	public static boolean ReduceInBackground;
+	public static boolean _reduceInBackground;
 	// запускать в полноэкранном режиме
-	public static boolean isFullscreen;
+	public static boolean _isFullscreen;
 	// размеры экрана для сохранения в конфиг файле (применятся при следующем запуске)
-	public static int ScreenWidth_to_save;
-	public static int ScreenHeight_to_save;
-	// адрес сервера с переводами
-	public static String lang_remote_host = "origin-world.com";
+	public static int _screenWidthToSave;
+	public static int _screenHeightToSave;
 	// юзер агент для http запросов
 	public static String user_agent = "origin_client";
 	// текущий язык
-	public static String current_lang;
+	public static String _currentLang;
 	// логин и пароль под которым заходит юзер на сервер
-	public static String account;
-	public static transient String password;
+	public static String _account;
+	public static transient String _password;
 	// сохранять ли пароль
-	public static boolean save_pass;
+	public static boolean _savePassword;
 
 	public static final int PROTO_VERSION = 3;
 	public static final int CLIENT_VERSION = 80;
@@ -79,13 +77,13 @@ public class Config
 	public static final int ICON_SIZE = 32;
 
 	// режим дебага
-	public static boolean debug = false;
+	public static boolean _debug = false;
 	// показывать детальную расшифровку пакетов
-	public static boolean debug_packets = false;
+	public static boolean _debugPackets = false;
 	// режим быстрого входа с последним вырбарным чаром
-	public static boolean quick_login_mode = false;
+	public static boolean _quickLoginMode = false;
 
-	public static void ParseCMD(String[] args)
+	public static void parseCMD(String[] args)
 	{
 		try
 		{
@@ -95,25 +93,25 @@ public class Config
 				String arg = args[i];
 				if (arg.equals("-d"))
 				{ // Debug mode. Format: "-d"
-					debug = true;
+					_debug = true;
 				}
 				if (arg.equals("-r"))
 				{ // Debug pkt mode. Format: "-r"
-					debug_packets = true;
+					_debugPackets = true;
 				}
 				if (arg.equals("-s"))
 				{ // Change server. Format: "-s servername"
 					i++;
-					login_server = args[i];
+					_loginServer = args[i];
 				}
 				if (arg.equals("-p"))
 				{ // Change server. Format: "-p port"
 					i++;
-					login_server_port = Integer.parseInt(args[i]);
+					_loginServerPort = Integer.parseInt(args[i]);
 				}
 				if (arg.equals("-q"))
 				{ // Quick login mode. Format: "-q"
-					quick_login_mode = true;
+					_quickLoginMode = true;
 				}
 				//                if (arg.equals("-dev_tile"))
 				//                { // Format: -dev_tile <filename tiles.xml>
@@ -141,7 +139,7 @@ public class Config
 //        _log.info("    Developer mode: tiles debug. Format: -dev_tile <filename tiles.xml>");
 	}
 
-	public static void Apply()
+	public static void apply()
 	{
 		//TODO: sound
 		//        float val = SoundVolume;
@@ -152,12 +150,12 @@ public class Config
 
 	public static int getScreenWidth()
 	{
-		return isFullscreen ? ScreenWidth : WindowWidth;
+		return _isFullscreen ? ScreenWidth : WindowWidth;
 	}
 
 	public static int getScreenHeight()
 	{
-		return isFullscreen ? ScreenHeight : WindowHeight;
+		return _isFullscreen ? ScreenHeight : WindowHeight;
 	}
 
 	static protected Preferences getPrefs()
@@ -165,24 +163,24 @@ public class Config
 		return new LwjglPreferences(CONFIG_FILE, ".prefs/");
 	}
 
-	public static void Load()
+	public static void loadOptions()
 	{
 		Preferences p = getPrefs();
 		WindowWidth = p.getInteger("window_width", 1024);
 		WindowHeight = p.getInteger("window_height", 650);
 		ScreenWidth = p.getInteger("screen_width", 1024);
 		ScreenHeight = p.getInteger("screen_height", 768);
-		FrameFate = p.getInteger("frame_rate", 60);
-		vSync = p.getBoolean("use_vsync", true);
-		ReduceInBackground = p.getBoolean("reduce_bg", true);
+		_framePerSecond = p.getInteger("frame_rate", 60);
+		_vSync = p.getBoolean("use_vsync", true);
+		_reduceInBackground = p.getBoolean("reduce_bg", true);
 		//        SoundVolume = AppSettings.getInt("sound_vol", 50);
 		//        MusicVolume = AppSettings.getInt("music_vol", 50);
-		//        ScreenWidth_to_save = ScreenWidth;
-		//        ScreenHeight_to_save = ScreenHeight;
-		isFullscreen = p.getBoolean("start_fullscreen", false);
+		//        _screenWidthToSave = ScreenWidth;
+		//        _screenHeightToSave = ScreenHeight;
+		_isFullscreen = p.getBoolean("start_fullscreen", false);
 		//        SoundEnabled = AppSettings.getBool("sound_enabled", true);
 		//        DebugEngine = AppSettings.getBool("debug_engine", false);
-		current_lang = p.getString("language", "en");
+		_currentLang = p.getString("language", "en");
 
 		//        count_objs = AppSettings.getBool("count_objs", true);
 		//        hide_overlapped = AppSettings.getBool("hide_overlapped", true);
@@ -191,29 +189,28 @@ public class Config
 		//        zoom_over_mouse = AppSettings.getBool("zoom_over_mouse", true);
 		//        fullscreen_alt_enter = AppSettings.getBool("fullscreen_alt_enter", true);
 		//        minimap_draw_objects = AppSettings.getBool("minimap_draw_objects", false);
-		account = p.getString("account", "");
-		password = p.getString("password", "");
+		_account = p.getString("account", "");
+		_password = p.getString("password", "");
 		//
-		save_pass = p.getBoolean("save_pass", true);
+		_savePassword = p.getBoolean("save_pass", true);
 	}
 
-	public static void SaveOptions()
+	public static void saveOptions()
 	{
-		//        Preferences p = getPrefs();
 		Preferences p = Gdx.app.getPreferences(CONFIG_FILE);
 		p.putInteger("window_width", WindowWidth);
 		p.putInteger("window_height", WindowHeight);
-		p.putInteger("screen_width", ScreenWidth_to_save);
-		p.putInteger("screen_height", ScreenHeight_to_save);
-		p.putInteger("frame_rate", FrameFate);
-		p.putBoolean("use_vsync", vSync);
-		p.putBoolean("reduce_bg", ReduceInBackground);
-		p.putBoolean("start_fullscreen", isFullscreen);
+		p.putInteger("screen_width", _screenWidthToSave);
+		p.putInteger("screen_height", _screenHeightToSave);
+		p.putInteger("frame_rate", _framePerSecond);
+		p.putBoolean("use_vsync", _vSync);
+		p.putBoolean("reduce_bg", _reduceInBackground);
+		p.putBoolean("start_fullscreen", _isFullscreen);
 		//        AppSettings.put("sound_enabled", SoundEnabled);
 		//        AppSettings.put("sound_vol", SoundVolume);
 		//        AppSettings.put("music_vol", MusicVolume);
 		//        AppSettings.put("debug_engine", DebugEngine);
-		p.putString("language", current_lang);
+		p.putString("language", _currentLang);
 		//        AppSettings.put("count_objs", count_objs);
 		//        AppSettings.put("hide_overlapped", hide_overlapped);
 		//        AppSettings.put("move_inst_left_mouse", move_inst_left_mouse);
@@ -221,13 +218,14 @@ public class Config
 		//        AppSettings.put("zoom_over_mouse", zoom_over_mouse);
 		//        AppSettings.put("fullscreen_alt_enter", fullscreen_alt_enter);
 		//        AppSettings.put("minimap_draw_objects", minimap_draw_objects);
-		p.putString("account", account);
-		if (save_pass)
+		p.putString("account", _account);
+		// только если надо - сохраняем пароль
+		if (_savePassword)
 		{
 			// если это уже хэш - спокойно его сохраняем
-			if (Crypt.isPassowrdHash(password))
+			if (Crypt.isPassowrdHash(_password))
 			{
-				p.putString("password", (password));
+				p.putString("password", (_password));
 			}
 			else
 			{
@@ -235,16 +233,16 @@ public class Config
 				// сохраним хэш от пароля
 				if (Crypt.initialized())
 				{
-					p.putString("password",
-								(SCryptUtil.scrypt(password, Crypt.SCRYPT_N, Crypt.SCRYPT_R, Crypt.SCRYPT_P)));
+					p.putString("password", (SCryptUtil.scrypt(_password, Crypt.SCRYPT_N, Crypt.SCRYPT_R, Crypt.SCRYPT_P)));
 				}
 			}
 		}
 		else
 		{
+			// иначе затрем пароль
 			p.putString("password", "");
 		}
-		p.putBoolean("save_pass", save_pass);
+		p.putBoolean("save_pass", _savePassword);
 
 		p.flush();
 	}

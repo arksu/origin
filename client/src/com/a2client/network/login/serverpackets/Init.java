@@ -16,7 +16,7 @@ public class Init extends LoginServerPacket
 		Crypt.SCRYPT_N = readD();
 		Crypt.SCRYPT_P = readD();
 		Crypt.SCRYPT_R = readD();
-		Config.SaveOptions();
+		Config.saveOptions();
 	}
 
 	@Override

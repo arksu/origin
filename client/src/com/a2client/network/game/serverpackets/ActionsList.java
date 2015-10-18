@@ -22,20 +22,20 @@ public class ActionsList extends GameServerPacket
 
 	private static Gson _gson = new Gson();
 
-	private Action[] _list;
+	private Action _action;
 
 	@Override
 	public void readImpl()
 	{
 		String list = readS();
 		// cписок шлем в json
-		_list = _gson.fromJson(list, Action[].class);
-		_log.debug("recv actions: " + _list.length);
+		_action = _gson.fromJson(list, Action.class);
+		_log.debug("recv actions: " + _action.list.length);
 	}
 
 	@Override
 	public void run()
 	{
-		Player.getInstance().setActionsList(_list);
+		Player.getInstance().setActions(_action);
 	}
 }

@@ -22,7 +22,7 @@ public class Player
 	private Hand _hand;
 	private final Equip _equip = new Equip();
 
-	private Action[] _actionsList;
+	private Action _rootAction;
 
 	public void setObjectId(int myObjectId)
 	{
@@ -89,16 +89,11 @@ public class Player
 		return _equip;
 	}
 
-	public Action[] getActionsList()
+	public void setActions(Action rootAction)
 	{
-		return _actionsList;
-	}
-
-	public void setActionsList(Action[] actionsList)
-	{
-		_actionsList = actionsList;
+		_rootAction = rootAction;
 		Game.getInstance()._actions.Clear();
-		for (Action action : _actionsList)
+		for (Action action : _rootAction.list)
 		{
 			Game.getInstance()._actions.Add(action.name);
 		}

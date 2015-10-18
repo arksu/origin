@@ -11,7 +11,7 @@ public class CharacterSelect extends GameClientPacket
 
 	public CharacterSelect(int char_id)
 	{
-		if (Config.debug)
+		if (Config._debug)
 		{
 			_log.info("CharacterSelect: " + char_id);
 		}
