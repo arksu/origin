@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by arksu on 09.01.2015.
  * объект который может передвигаться в мире
+ * Created by arksu on 09.01.2015.
  */
 public abstract class MoveObject extends GameObject
 {

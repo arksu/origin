@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by arksu on 02.02.15.
  * объект описывающий поведение живых, активных объектов (игроки, животные)
+ * Created by arksu on 02.02.15.
  */
 public abstract class Human extends MoveObject
 {
@@ -68,9 +68,11 @@ public abstract class Human extends MoveObject
 	public void UpdateVisibleObjects(boolean force)
 	{
 		// только если отошли достаточно далеко от последней позиции апдейта
-		if (force || (getPos() != null && _lastVisibleUpdatePos != null &&
+		if (force || (
+				getPos() != null && _lastVisibleUpdatePos != null &&
 				!getPos().equals(_lastVisibleUpdatePos) &&
-				getPos().getDistance(_lastVisibleUpdatePos) > VISIBLE_UPDATE_DISTANCE))
+				getPos().getDistance(_lastVisibleUpdatePos) > VISIBLE_UPDATE_DISTANCE
+		))
 		{
 			_log.debug("UpdateVisibleObjects " + toString());
 			// запомним те объекты которые видимы при текущем апдейте

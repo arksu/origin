@@ -1,5 +1,6 @@
 package com.a4server.gameserver.network.clientpackets;
 
+import com.a4server.gameserver.model.GameLock;
 import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.ai.player.MindMoveAction;
@@ -48,86 +49,84 @@ public class MouseClick extends GameClientPacket
 	@Override
 	public void run()
 	{
-		// нажатая кнопка < 10
+		// нажатость передаем отриацательным числом
 		boolean isDown = _button < 10;
+		// восстановим кнопку
 		_button = _button >= 10 ? _button - 10 : _button;
 		Player player = client.getActiveChar();
 		if (player != null)
 		{
 			if (isDown)
 			{
-				if (player.tryLock(Player.WAIT_LOCK))
+				try (GameLock ignored = player.tryLock())
 				{
-					try
+					switch (_button)
 					{
-						switch (_button)
-						{
-							case BUTTON_LEFT:
-								// в руке что-то держим?
-								if (player.getHand() != null)
+						case BUTTON_LEFT:
+							// в руке что-то держим?
+							if (player.getHand() != null)
+							{
+								// chpok
+								AbstractItem item = player.getHand().getItem();
+								GameObject object = new GameObject(item.getObjectId(), item.getTemplate().getObjectTemplate());
+								object.setPos(new ObjectPosition(player.getPos(), object));
+								try
 								{
-									// chpok
-									AbstractItem item = player.getHand().getItem();
-									GameObject object = new GameObject(item.getObjectId(), item.getTemplate().getObjectTemplate());
-									object.setPos(new ObjectPosition(player.getPos(), object));
-									try
+									// спавним объект
+									if (object.getPos().trySpawn())
 									{
-										// спавним объект
-										if (object.getPos().trySpawn())
+										_log.debug("item dropped: " + item);
+										// обновляем в базе
+										if (object.store() && item.markDeleted())
 										{
-											_log.debug("item dropped: " + item);
-											// обновляем в базе
-											if (object.store() && item.markDeleted())
-											{
-												// уберем все из руки
-												player.setHand(null);
-											}
-											else
-											{
-												// но если чето сцуко пошло не так - уроним все к хуям
-												throw new RuntimeException("failed update db on item drop");
-											}
+											// уберем все из руки
+											player.setHand(null);
 										}
 										else
 										{
-											_log.debug("cant drop: " + item);
+											// но если чето сцуко пошло не так - уроним все к хуям
+											throw new RuntimeException("failed update db on item drop");
 										}
 									}
-									catch (Exception e)
+									else
 									{
-										_log.warn("failed spawn hand item " + player.getHand().getItem());
+										_log.debug("cant drop: " + item);
 									}
 								}
-								else if (_objectId != 0 && _objectId != player.getObjectId())
+								catch (Exception e)
 								{
-									// клик по объекту. бежим к нему и делаем действие над ним
-									player.setMind(new MindMoveAction(player, _objectId));
+									_log.warn("failed spawn hand item " + player.getHand().getItem());
 								}
-								else
-								{
-									_log.debug("MoveToPoint to (" + _x + ", " + _y + ")");
-									// для простого передвижения не требуется мозг) не надо ни о чем думать
-									player.setMind(null);
-									// запустим движение. создадим контроллер для этого
-									player.StartMove(new MoveToPoint(_x, _y));
-								}
-								break;
+							}
+							else if (_objectId != 0 && _objectId != player.getObjectId())
+							{
+								// клик по объекту. бежим к нему и делаем действие над ним
+								player.setMind(new MindMoveAction(player, _objectId));
+							}
+							else
+							{
+								_log.debug("MoveToPoint to (" + _x + ", " + _y + ")");
+								// для простого передвижения не требуется мозг) не надо ни о чем думать
+								player.setMind(null);
+								// запустим движение. создадим контроллер для этого
+								player.StartMove(new MoveToPoint(_x, _y));
+							}
+							break;
 
-							case BUTTON_RIGHT:
-								// клик по объекту?
-								GameObject object = player.isKnownObject(_objectId);
-								if (object != null)
-								{
-									// пкм по объекту - посмотрим что сделает объект
+						case BUTTON_RIGHT:
+							// клик по объекту?
+							GameObject object = player.isKnownObject(_objectId);
+							if (object != null)
+							{
+								// пкм по объекту - посмотрим что сделает объект
 
-								}
-								break;
-						}
+							}
+							break;
 					}
-					finally
-					{
-						player.unlock();
-					}
+				}
+				catch (Exception e)
+				{
+					_log.error("MouseClick error:" + e.getMessage(), e);
 				}
 			}
 		}

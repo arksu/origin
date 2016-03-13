@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * игровой объект
+ * базовый игровой объект
  */
 public class GameObject
 {
@@ -85,6 +85,9 @@ public class GameObject
 	 */
 	protected final ReentrantLock _lock = new ReentrantLock();
 
+	/**
+	 * время ожидания блокировки объекта по умолчанию
+	 */
 	public static final int WAIT_LOCK = 300;
 
 	public GameObject(int objectId, ObjectTemplate template)
@@ -205,6 +208,19 @@ public class GameObject
 	public boolean isDeleteing()
 	{
 		return _isDeleteing;
+	}
+
+	/**
+	 * попытаться захватить блокировку на этот объект
+	 * @return истина если блокировку получили
+	 */
+	public GameLock tryLock()
+	{
+		if (tryLock(WAIT_LOCK))
+		{
+			return new GameLock(this);
+		}
+		throw new RuntimeException("failed get game object lock: " + this);
 	}
 
 	/**

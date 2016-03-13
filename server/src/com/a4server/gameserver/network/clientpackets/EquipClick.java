@@ -1,13 +1,12 @@
 package com.a4server.gameserver.network.clientpackets;
 
 import com.a4server.gameserver.model.EquipSlot;
+import com.a4server.gameserver.model.GameLock;
 import com.a4server.gameserver.model.Hand;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.network.serverpackets.EquipUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static com.a4server.gameserver.model.GameObject.WAIT_LOCK;
 
 /**
  * клик в инвентаре по слоту
@@ -46,9 +45,9 @@ public class EquipClick extends GameClientPacket
 		EquipSlot.Slot slot = EquipSlot.getSlotType(_slotCode);
 		_log.debug("obj=" + _objectId + " slot=" + slot + " offset=" + _offsetX + ", " + _offsetY + " mod=" + _mod);
 		Player player = client.getActiveChar();
-		if (player != null && _btn == 0 && player.tryLock(WAIT_LOCK))
+		if (player != null && _btn == 0)
 		{
-			try
+			try (GameLock ignored = player.tryLock())
 			{
 				// держим в руке что-то?
 				if (player.getHand() == null)
@@ -70,9 +69,9 @@ public class EquipClick extends GameClientPacket
 					}
 				}
 			}
-			finally
+			catch (Exception e)
 			{
-				player.unlock();
+				_log.error("EquipClick error: " + e.getMessage(), e);
 			}
 		}
 	}
