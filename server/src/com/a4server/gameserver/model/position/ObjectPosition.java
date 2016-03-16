@@ -123,7 +123,7 @@ public class ObjectPosition
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				_log.error("trySpawn error: " + e.getMessage(), e);
 			}
 		}
 		_log.debug("spawn failed " + toString());

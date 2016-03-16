@@ -149,7 +149,7 @@ public class GameObject
 		}
 		catch (Exception e)
 		{
-			_log.warn("failed update xy item pos " + toString());
+			_log.warn("failed update xy item pos " + toString(), e);
 		}
 		return false;
 	}

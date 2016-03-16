@@ -211,7 +211,7 @@ public class AbstractItem
 			}
 			catch (Exception e)
 			{
-				_log.warn("failed update xy item pos " + toString());
+				_log.warn("failed update xy item pos " + toString(), e);
 			}
 			_x = x;
 			_y = y;
@@ -234,7 +234,7 @@ public class AbstractItem
 		}
 		catch (Exception e)
 		{
-			_log.warn("failed update xy item pos " + toString());
+			_log.warn("failed update xy item pos " + toString(), e);
 		}
 		return false;
 	}
@@ -286,12 +286,12 @@ public class AbstractItem
 		final int r = x + w - 1;
 		final int b = y + h - 1;
 		return (
-				((_x >= x) && (_x <= r)) || ((tr >= x) && (tr <= r)) ||
-						((x >= _x) && (x <= tr)) || ((r >= _x) && (r <= tr))
-		) && (
-				((_y >= y) && (_y <= b)) || ((tb >= y) && (tb <= b)) ||
-						((y >= _y) && (y <= tb)) || ((b >= _y) && (b <= tb))
-		);
+					   ((_x >= x) && (_x <= r)) || ((tr >= x) && (tr <= r)) ||
+					   ((x >= _x) && (x <= tr)) || ((r >= _x) && (r <= tr))
+			   ) && (
+					   ((_y >= y) && (_y <= b)) || ((tb >= y) && (tb <= b)) ||
+					   ((y >= _y) && (y <= tb)) || ((b >= _y) && (b <= tb))
+			   );
 	}
 
 	@Override
