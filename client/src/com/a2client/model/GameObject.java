@@ -135,11 +135,11 @@ public class GameObject
 	 * @param vx вектор движения
 	 * @param vy вектор движения
 	 */
-	public void Move(int cx, int cy, int vx, int vy, int speed)
+	public void move(int cx, int cy, int vx, int vy, int speed)
 	{
 		if (_mover != null)
 		{
-			_mover.NewMove(cx, cy, vx, vy, speed);
+			_mover.newMove(cx, cy, vx, vy, speed);
 		}
 		else
 		{
@@ -148,7 +148,7 @@ public class GameObject
 		}
 	}
 
-	public void StopMove()
+	public void stopMove()
 	{
 		_mover = null;
 	}
@@ -158,12 +158,12 @@ public class GameObject
 		return _mover != null;
 	}
 
-	public void Update()
+	public void update()
 	{
 		if (_needUpdate)
 		{
 			_needUpdate = false;
-			InitModel();
+			initModel();
 
 		}
 
@@ -175,7 +175,7 @@ public class GameObject
 
 		if (_mover != null)
 		{
-			_mover.Update();
+			_mover.update();
 			if (_mover._arrived)
 			{
 				_mover = null;
@@ -184,12 +184,12 @@ public class GameObject
 		}
 	}
 
-	private void InitModel()
+	private void initModel()
 	{
 		_model = ModelManager.getInstance().getModelByType(_typeId);
 		if (_model != null)
 		{
-			UpdateCoordandBB();
+			updateCoordAndBB();
 
 			if (_model.animations.size > 0)
 				_animation = new AnimationController(_model);
@@ -197,7 +197,7 @@ public class GameObject
 		}
 	}
 
-	public void UpdateCoordandBB()
+	public void updateCoordAndBB()
 	{
 		_worldCoord = new Vector3(_coord.x / MapCache.TILE_SIZE, 0.5f, _coord.y / MapCache.TILE_SIZE);
 		_model.transform.setTranslation(_worldCoord);

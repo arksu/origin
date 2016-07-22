@@ -413,7 +413,7 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
         }
         getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y, state);
 
-        GUIGDX.PushScissor(new Rect(abs_pos.x + OFFSET, abs_pos.y + OFFSET, size.x - OFFSET, size.y - OFFSET));
+        GUIGDX.pushScissor(new Rect(abs_pos.x + OFFSET, abs_pos.y + OFFSET, size.x - OFFSET, size.y - OFFSET));
         int left = GUIGDX.getTextWidth(font_name, getVisualText().substring(0, getSelectionStart()));
         int SelectionWidth = GUIGDX.getTextWidth(font_name,
                                                  getVisualText().substring(getSelectionStart(), getSelectionFinish()));
@@ -424,14 +424,14 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
             // выделение текста
             if (pos1 != pos2)
             {
-                GUIGDX.FillRect(new Vec2i(abs_pos.x + left + OFFSET - scroll, abs_pos.y),
-                                new Vec2i(SelectionWidth, size.y), new Color(0.5f, 0.5f, 0.8f, 0.9f));
+                GUIGDX.fillRect(new Vec2i(abs_pos.x + left + OFFSET - scroll, abs_pos.y),
+								new Vec2i(SelectionWidth, size.y), new Color(0.5f, 0.5f, 0.8f, 0.9f));
             }
             // позиция курсора
             if ((System.currentTimeMillis() % 1000) > 500)
             {
-                GUIGDX.FillRect(new Vec2i(abs_pos.x + CursorShift + OFFSET - scroll + 1, abs_pos.y),
-                                new Vec2i(1, size.y), Color.WHITE);
+                GUIGDX.fillRect(new Vec2i(abs_pos.x + CursorShift + OFFSET - scroll + 1, abs_pos.y),
+								new Vec2i(1, size.y), Color.WHITE);
             }
         }
 
@@ -440,7 +440,7 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
             GUIGDX.Text(font_name, abs_pos.x + OFFSET - scroll, abs_pos.y + OFFSET, size.x - OFFSET, size.y - OFFSET,
                         Align.Align_Left + Align.Align_VStretch, getVisualText(), text_color);
 
-        GUIGDX.PopScissor();
+        GUIGDX.popScissor();
     }
 
     public void DoGetFocus()

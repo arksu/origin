@@ -49,7 +49,7 @@ public class GUI_ListBox extends GUI_ScrollPage
         int ay = abs_pos.y + _clientRect.y - wr.y;
 
         // для отсечки записей находящихся на границе контрола - ставим доп. скиссор
-        GUIGDX.PushScissor(new Rect(abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, wr.w, wr.h));
+        GUIGDX.pushScissor(new Rect(abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, wr.w, wr.h));
 
         int h;
         for (int i = 0; i < GetCount(); i++)
@@ -58,15 +58,15 @@ public class GUI_ListBox extends GUI_ScrollPage
             // если запись всяко за границами рисуемой области - пропускаем
             if ((ay + h >= abs_pos.y + _clientRect.y) && (ay < abs_pos.y + _clientRect.y + wr.h))
             {
-                GUIGDX.PushScissor(new Rect(ax, ay, wr.w, h));
+                GUIGDX.pushScissor(new Rect(ax, ay, wr.w, h));
                 DrawItemBg(i, ax, ay, wr.w, h);
                 DoDrawItem(i, ax, ay, wr.w, h);
 
-                GUIGDX.PopScissor();
+                GUIGDX.popScissor();
             }
             ay += h;
         }
-        GUIGDX.PopScissor();
+        GUIGDX.popScissor();
     }
 
     protected void UpdateFullSize()

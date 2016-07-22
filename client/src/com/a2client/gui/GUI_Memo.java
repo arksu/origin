@@ -85,13 +85,13 @@ public class GUI_Memo extends GUI_ScrollPage
         Rect wr = WorkRect();
         Vec2i awr = AbsWorkCoord();
         int ay = awr.y;
-        GUIGDX.PushScissor(new Rect(abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, wr.w, wr.h));
+        GUIGDX.pushScissor(new Rect(abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, wr.w, wr.h));
         for (int i = 0; i < render_lines.size(); i++)
         {
             DrawMemoLine(awr.x, ay, wr.w, wr.h, i);
             ay += GUIGDX.getTextHeight(render_lines.get(i).font, render_lines.get(i).text);
         }
-        GUIGDX.PopScissor();
+        GUIGDX.popScissor();
     }
 
     protected void DrawMemoLine(int ax, int ay, int aw, int ah, int index)

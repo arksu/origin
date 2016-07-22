@@ -67,7 +67,7 @@ public class GUI_Panel extends GUI_Control
         switch (render_mode)
         {
             case rmColor:
-                GUIGDX.FillRect(abs_pos, size, bg_color);
+                GUIGDX.fillRect(abs_pos, size, bg_color);
                 break;
             case rmSkin:
                 getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);

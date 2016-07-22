@@ -34,6 +34,6 @@ public class ObjectPos extends GameServerPacket
 	{
 		_log.debug("ObjectPos " + _objectId + " " + _x + ", " + _y);
 		ObjectCache.getInstance().getObject(_objectId).setCoord(_x, _y);
-		ObjectCache.getInstance().getObject(_objectId).StopMove();
+		ObjectCache.getInstance().getObject(_objectId).stopMove();
 	}
 }

@@ -49,9 +49,9 @@ public class GUI_Progressbar extends GUI_Control
         getSkin().draw(bg_element_skin_name, abs_pos.sub(2, 2), size.add(4, 4));
         if (bg_color != null)
         {
-            GUIGDX.FillRect(abs_pos, size, bg_color);
+            GUIGDX.fillRect(abs_pos, size, bg_color);
         }
-        GUIGDX.FillRect(abs_pos, new Vec2i(w, size.y), color);
+        GUIGDX.fillRect(abs_pos, new Vec2i(w, size.y), color);
     }
 
     public void SetValue(int val)

@@ -187,7 +187,7 @@ public class Game extends BaseScreen
 			{
 				for (GameObject o : ObjectCache.getInstance().getObjects())
 				{
-					o.Update();
+					o.update();
 				}
 			}
 

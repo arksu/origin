@@ -26,6 +26,6 @@ public class gui_somedrag extends GUI_DragControl
 {
     public void DoRender()
     {
-        GUIGDX.FillRect(abs_pos, new Vec2i(50, 50), Color.DARK_GRAY);
+        GUIGDX.fillRect(abs_pos, new Vec2i(50, 50), Color.DARK_GRAY);
     }
 }

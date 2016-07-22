@@ -46,11 +46,6 @@ public class GridChunk
 	 */
 	private BoundingBox _boundingBox;
 
-	public Mesh getMesh()
-	{
-		return _mesh;
-	}
-
 	public GridChunk(Grid grid, int gx, int gy)
 	{
 		_vertex = new float[CHUNK_SIZE * CHUNK_SIZE * 9 * 4];
@@ -95,9 +90,9 @@ public class GridChunk
 
 				tx = ox + x;
 				ty = oy + y;
-//                int h = tx+ty*3+x*5+y;
-//                f = (h % 10) / 40f;
-				f = 0;
+				int h = tx + ty * 3 + x * 5 + y;
+				f = (h % 10) / 40f;
+//				f = 0;
 
 				// 0 =====
 				_vertex[idx++] = tx;
@@ -174,6 +169,11 @@ public class GridChunk
 		}
 		_mesh.setVertices(_vertex);
 		_mesh.setIndices(_index);
+	}
+
+	public Mesh getMesh()
+	{
+		return _mesh;
 	}
 
 	public BoundingBox getBoundingBox()

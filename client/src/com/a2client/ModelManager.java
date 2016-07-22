@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.utils.*;
 import com.google.gson.Gson;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
@@ -14,9 +15,7 @@ import java.io.FileReader;
 
 public class ModelManager
 {
-	//TODO: Вые... арка за это!
-	//П.С Смотри стек вызова функции .debug
-	private static final org.slf4j.Logger _log = LoggerFactory.getLogger(ModelManager.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(ModelManager.class.getName());
 
 	private static long MODEL_TIMEOUT = 120000; // 2min
 

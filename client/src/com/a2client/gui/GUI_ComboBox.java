@@ -173,14 +173,14 @@ public class GUI_ComboBox extends GUI_Control
         getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
 
         // ставим скиссор до кнопки
-        GUIGDX.PushScissor(
+        GUIGDX.pushScissor(
                 new Rect(abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, _clientRect.w - drop_button.Width(),
                          _clientRect.h));
 
         // выводим текст
         GUIGDX.Text("default", abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, GetText(), Color.WHITE);
 
-        GUIGDX.PopScissor();
+        GUIGDX.popScissor();
     }
 
     public boolean DoMouseBtn(int btn, boolean down)

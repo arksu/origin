@@ -34,6 +34,6 @@ public class ObjectMove extends GameServerPacket
 	@Override
 	public void run()
 	{
-		ObjectCache.getInstance().getObject(_objectId).Move(_tox, _toy, _vx, _vy, _speed);
+		ObjectCache.getInstance().getObject(_objectId).move(_tox, _toy, _vx, _vy, _speed);
 	}
 }

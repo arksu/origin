@@ -98,11 +98,11 @@ public class gui_drag_container extends GUI_Control
     public void DoRender()
     {
         if (drag_above_me)
-            GUIGDX.FillRect(abs_pos, size, Color.YELLOW);
+            GUIGDX.fillRect(abs_pos, size, Color.YELLOW);
         else if (have_some)
-            GUIGDX.FillRect(abs_pos, size, Color.RED);
+            GUIGDX.fillRect(abs_pos, size, Color.RED);
         else
-            GUIGDX.FillRect(abs_pos, size, Color.WHITE);
+            GUIGDX.fillRect(abs_pos, size, Color.WHITE);
     }
 
 }

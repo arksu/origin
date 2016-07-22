@@ -37,6 +37,9 @@ public class Inventory
 	 */
 	private final Map<Integer, InventoryItem> _items = new HashMap<>();
 
+	/**
+	 * окно инвентаря которое отображает содержимое
+	 */
 	private GUI_InventoryWindow _wnd;
 
 	public Inventory(int parentObjectId, int inventoryId, int width, int height)
@@ -54,7 +57,6 @@ public class Inventory
 
 	/**
 	 * добавить вещь в инвентарь или заменит если уже есть с таким же ид
-	 * @param item
 	 */
 	public void addItem(InventoryItem item)
 	{
@@ -96,6 +98,7 @@ public class Inventory
 
 	public void show()
 	{
+		// если окна еще нет - создадим
 		if (_wnd == null)
 		{
 			_wnd = new GUI_InventoryWindow(GUI.rootNormal())
@@ -108,14 +111,19 @@ public class Inventory
 				}
 			};
 			_wnd.assign(this);
+			// TODO хранить позиции инвентарей
 			_wnd.SetPos(50, 50);
 		}
 		else
 		{
+			// окно есть, поместим поверх
 			_wnd.BringToFront();
 		}
 	}
 
+	/**
+	 * скрыть инвентарь с экрана
+	 */
 	public void hide()
 	{
 		if (_wnd != null)
@@ -125,6 +133,9 @@ public class Inventory
 		}
 	}
 
+	/**
+	 * показать/скрыть инвентарь
+	 */
 	public void toggle()
 	{
 		if (_wnd != null)

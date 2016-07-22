@@ -12,13 +12,44 @@ public class Mover
 {
 	private static final Logger _log = LoggerFactory.getLogger(Mover.class.getName());
 
+	/**
+	 * объект который двигаем
+	 */
 	private final GameObject _object;
+
+	/**
+	 * текущая позиция объекта
+	 */
 	private Vector2 _current;
+
+	/**
+	 * куда должны передвинутся, конечная позиция
+	 */
 	private Vector2 _end;
+
+	/**
+	 * начальная позиция
+	 */
 	private Vector2 _start;
+
+	/**
+	 * время начала движения
+	 */
 	private long _startTime;
+
+	/**
+	 * скорость движения в единицах / сек
+	 */
 	private double _speed;
+
+	/**
+	 * длина
+	 */
 	private double _len;
+
+	/**
+	 * достигли конечной точки? передвижение закончено?
+	 */
 	public boolean _arrived = false;
 
 	static final int SMOTH_RADIUS = 20;
@@ -39,7 +70,7 @@ public class Mover
 		}
 	}
 
-	public void NewMove(int cx, int cy, int vx, int vy, int speed)
+	public void newMove(int cx, int cy, int vx, int vy, int speed)
 	{
 		Vector2 new_end = new Vector2(vx, vy);
 		Vector2 new_start = new Vector2(cx, cy);
@@ -71,11 +102,11 @@ public class Mover
 		_arrived = _start.dst(_end) < 0.5f;
 		if (_arrived)
 		{
-			_log.debug("NewMove already arrived");
+			_log.debug("newMove already arrived");
 		}
 	}
 
-	public void Update()
+	public void update()
 	{
 		if (_arrived)
 		{
@@ -99,6 +130,6 @@ public class Mover
 
 //        _log.info("dt= " + dt + " cur=" + _current.toString() + " cur_len=" + _len + " speed=" + _speed);
 		_object.setCoord(_current);
-		_object.UpdateCoordandBB();
+		_object.updateCoordAndBB();
 	}
 }
