@@ -1,5 +1,7 @@
 package com.a2client.model;
 
+import com.a2client.MapCache;
+import com.a2client.util.OpenSimplexNoise;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -10,26 +12,46 @@ import static com.a2client.MapCache.GRID_SIZE;
 
 public class Grid
 {
+	private static OpenSimplexNoise noise = new OpenSimplexNoise();
+
 	public byte[][] _tiles;
+
+	public float[][] _heights;
+
 	/**
-	 * координаты грида
+	 * координаты грида в абсолютных мировых координатах (11 точек на тайл)
 	 */
 	private Vec2i _gc;
+
+	/**
+	 * координаты грида в координатах тайлов
+	 */
+	private Vec2i _tc;
 
 	private GridChunk[] _chunks;
 
 	public Grid(Vec2i c, byte[] data)
 	{
-		this._gc = c;
+		_gc = c;
+		_tc = _gc.div(MapCache.TILE_SIZE);
+		System.out.println("gc: " + _gc);
 		_tiles = new byte[GRID_SIZE][GRID_SIZE];
+		_heights = new float[GRID_SIZE][GRID_SIZE];
 		fillTiles(data);
+		fillHeights();
 		makeTerrainObjects();
-		fillChunks();
 	}
 
 	public void fillChunks()
 	{
 		int chunksCount = GRID_SIZE / GridChunk.CHUNK_SIZE;
+		if (_chunks != null)
+		{
+			for (GridChunk chunk : _chunks)
+			{
+				chunk.clear();
+			}
+		}
 		_chunks = new GridChunk[chunksCount * chunksCount];
 		for (int x = 0; x < chunksCount; x++)
 		{
@@ -79,9 +101,28 @@ public class Grid
 		}
 	}
 
+	private void fillHeights()
+	{
+		double div = 4d;
+		for (int x = 0; x < GRID_SIZE; x++)
+		{
+			for (int y = 0; y < GRID_SIZE; y++)
+			{
+				double tx = _tc.x + x;
+				double ty = _tc.y + y;
+				_heights[y][x] = ((float) noise.eval(tx / div, ty / div)) * 2f;
+			}
+		}
+	}
+
 	public Vec2i getGC()
 	{
 		return _gc;
+	}
+
+	public Vec2i getTc()
+	{
+		return _tc;
 	}
 
 	public void setData(byte[] data)

@@ -16,7 +16,16 @@ public class MapCache
 	// размер одного грида в байтах для передачи по сети
 	public static final int GRID_SIZE_BYTES = GRID_SIZE * GRID_SIZE * 2;
 
-	public static List<Grid> grids = new LinkedList<Grid>();
+	public static List<Grid> grids = new LinkedList<>();
+
+	public static void addGrid(Grid grid)
+	{
+		grids.add(grid);
+		for (Grid grid1 : grids)
+		{
+			grid1.fillChunks();
+		}
+	}
 
 	/**
 	 * удалить гриды за пределами активности игрока (область 3 на 3)
@@ -51,6 +60,31 @@ public class MapCache
 	public static void clear()
 	{
 		grids.clear();
+	}
+
+	public static Grid getGrid(int tx, int ty)
+	{
+		for (Grid grid : grids)
+		{
+			Vec2i tc = grid.getTc();
+			if (tx >= tc.x && tx < tc.x + GRID_SIZE
+				&& ty >= tc.y && ty < tc.y + GRID_SIZE)
+			{
+				return grid;
+			}
+		}
+		return null;
+	}
+
+	public static float getTileHeight(int tx, int ty)
+	{
+		Grid grid = getGrid(tx, ty);
+		if (grid != null)
+		{
+			Vec2i tc = new Vec2i(tx, ty).sub(grid.getTc());
+			return grid._heights[tc.y][tc.x];
+		}
+		return -100000f;
 	}
 
 }

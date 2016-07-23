@@ -1,7 +1,6 @@
 package com.a2client.model;
 
 import com.a2client.MapCache;
-import com.a2client.util.OpenSimplexNoise;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
@@ -47,8 +46,13 @@ public class GridChunk
 	 */
 	private BoundingBox _boundingBox;
 
+	int ox, oy;
+
+	private Grid _grid;
+
 	public GridChunk(Grid grid, int gx, int gy)
 	{
+		_grid = grid;
 		_vertex = new float[CHUNK_SIZE * CHUNK_SIZE * 9 * 4];
 		_index = new short[CHUNK_SIZE * CHUNK_SIZE * 6];
 		_mesh = new Mesh(
@@ -67,19 +71,17 @@ public class GridChunk
 						ShaderProgram.TEXCOORD_ATTRIBUTE)
 		);
 
-		makeMesh(grid, gx, gy);
+		makeMesh(gx, gy);
 	}
 
-	protected void makeMesh(Grid grid, int gx, int gy)
+	protected void makeMesh(int gx, int gy)
 	{
 		int idx = 0;
 		int idv = 0;
-		int ox = (grid.getGC().x / MapCache.TILE_SIZE);
-		int oy = (grid.getGC().y / MapCache.TILE_SIZE);
+		ox = _grid.getTc().x;
+		oy = _grid.getTc().y;
 		_boundingBox = new BoundingBox(new Vector3(ox + gx, -1, oy + gy),
 									   new Vector3(ox + gx + CHUNK_SIZE, 3, oy + gy + CHUNK_SIZE));
-
-		OpenSimplexNoise noise = new OpenSimplexNoise();
 
 		short vertex_count = 0;
 		for (int x = gx; x < gx + CHUNK_SIZE; x++)
@@ -95,13 +97,11 @@ public class GridChunk
 				ty = oy + y;
 //				int h = tx + ty * 3 + x * 5 + y;
 //				f = (h % 10) / 40f;
-				double div = 4d;
-				height = ((float) noise.eval(tx / div, ty / div)) / 2f;
 //				f = 0;
 
 				// 0 =====
 				_vertex[idx++] = tx;
-				_vertex[idx++] = height;
+				_vertex[idx++] = getHeight(tx, ty);
 				_vertex[idx++] = ty;
 
 				// normal
@@ -111,13 +111,13 @@ public class GridChunk
 
 				idx += 1; // skip color
 
-				uv = Tile.getTileUV(grid._tiles[y][x]);
+				uv = Tile.getTileUV(_grid._tiles[y][x]);
 				_vertex[idx++] = uv.x;
 				_vertex[idx++] = uv.y;
 
 				// 1 =====
 				_vertex[idx++] = tx + 1;
-				_vertex[idx++] = height;
+				_vertex[idx++] = getHeight(tx + 1, ty);
 				_vertex[idx++] = ty;
 
 				// normal
@@ -132,7 +132,7 @@ public class GridChunk
 
 				// 2 =====
 				_vertex[idx++] = tx;
-				_vertex[idx++] = height;
+				_vertex[idx++] = getHeight(tx, ty + 1);
 				_vertex[idx++] = ty + 1;
 
 				// normal
@@ -147,7 +147,7 @@ public class GridChunk
 
 				// 3 =====
 				_vertex[idx++] = tx + 1;
-				_vertex[idx++] = height;
+				_vertex[idx++] = getHeight(tx + 1, ty + 1);
 				_vertex[idx++] = ty + 1;
 
 				// normal
@@ -177,6 +177,16 @@ public class GridChunk
 		_mesh.setIndices(_index);
 	}
 
+	private float getHeight(int tx, int ty)
+	{
+		float h1 = MapCache.getTileHeight(tx, ty);
+		float h2 = MapCache.getTileHeight(tx - 1, ty - 1);
+		float h3 = MapCache.getTileHeight(tx - 1, ty);
+		float h4 = MapCache.getTileHeight(tx, ty - 1);
+
+		return (h1 + h2 + h3 + h4) / 4f;
+	}
+
 	public Mesh getMesh()
 	{
 		return _mesh;
@@ -185,5 +195,10 @@ public class GridChunk
 	public BoundingBox getBoundingBox()
 	{
 		return _boundingBox;
+	}
+
+	public void clear()
+	{
+		_mesh.dispose();
 	}
 }

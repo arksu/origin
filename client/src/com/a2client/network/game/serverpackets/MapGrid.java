@@ -41,7 +41,8 @@ public class MapGrid extends GameServerPacket
 		}
 		if (!f)
 		{
-			MapCache.grids.add(new Grid(_gc, _data));
+			Grid grid = new Grid(_gc, _data);
+			MapCache.addGrid(grid);
 		}
 
 	}
