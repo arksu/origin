@@ -76,6 +76,11 @@ public class Config
 
 	public static final int ICON_SIZE = 32;
 
+	/**
+	 * cell shading?
+	 */
+	public static boolean _renderOutline = true;
+
 	// режим дебага
 	public static boolean _debug = false;
 	// показывать детальную расшифровку пакетов

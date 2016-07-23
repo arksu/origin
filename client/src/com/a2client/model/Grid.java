@@ -103,14 +103,14 @@ public class Grid
 
 	private void fillHeights()
 	{
-		double div = 4d;
+		double div = 3d;
 		for (int x = 0; x < GRID_SIZE; x++)
 		{
 			for (int y = 0; y < GRID_SIZE; y++)
 			{
 				double tx = _tc.x + x;
 				double ty = _tc.y + y;
-				_heights[y][x] = ((float) noise.eval(tx / div, ty / div)) * 2f;
+				_heights[y][x] = ((float) noise.eval(tx / div, ty / div)) * 2.8f;
 			}
 		}
 	}

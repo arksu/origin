@@ -1,5 +1,6 @@
 package com.a2client.render;
 
+import com.a2client.Config;
 import com.a2client.ObjectCache;
 import com.a2client.Terrain;
 import com.a2client.model.GameObject;
@@ -47,9 +48,9 @@ public class Render1
 	private final Shader _shader;
 
 	FrameBuffer frameBuffer;
-	FrontFaceDepthShaderProvider depthshaderprovider;
-	ModelBatch depthModelBatch;
-	ModelBatch simpleModelBatch;
+	FrontFaceDepthShaderProvider _depthShaderProvider;
+	ModelBatch _depthModelBatch;
+	ModelBatch _simpleModelBatch;
 
 	private Mesh fullScreenQuad;
 
@@ -64,11 +65,11 @@ public class Render1
 		_environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f,
 													-0.8f, -0.2f));
 
-		depthshaderprovider = new FrontFaceDepthShaderProvider();
-		depthModelBatch = new ModelBatch(depthshaderprovider);
+		_depthShaderProvider = new FrontFaceDepthShaderProvider();
+		_depthModelBatch = new ModelBatch(_depthShaderProvider);
 
-		simpleModelBatch = new ModelBatch();
-		_modelBatch = depthModelBatch;
+		_simpleModelBatch = new ModelBatch();
+		_modelBatch = _depthModelBatch;
 
 		_terrain = new Terrain();
 
@@ -88,45 +89,48 @@ public class Render1
 
 	public void render(Camera camera)
 	{
-		_modelBatch = depthModelBatch;
-		_terrain._shader = _terrain._shaderDepth;
+		if (Config._renderOutline)
+		{
+			_modelBatch = _depthModelBatch;
+			_terrain._shader = _terrain._shaderDepth;
 
+			frameBuffer.begin();
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		frameBuffer.begin();
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-		// Gdx.gl.glCullFace(GL20.GL_BACK);
-		// Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		// Gdx.gl.glDepthFunc(GL20.GL_LEQUAL);
-		// Gdx.gl.glDepthMask(true);
+			// Gdx.gl.glCullFace(GL20.GL_BACK);
+			// Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+			// Gdx.gl.glDepthFunc(GL20.GL_LEQUAL);
+			// Gdx.gl.glDepthMask(true);
 
 //		_terrain.Render(camera, _environment);
-		renderObjects(camera);
-		frameBuffer.end();
+			renderObjects(camera);
+			frameBuffer.end();
+		}
 
-		 Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT
-		 | GL20.GL_DEPTH_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		Gdx.gl.glCullFace(GL20.GL_BACK);
 
-		 Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		 Gdx.gl.glCullFace(GL20.GL_BACK);
-		_modelBatch = simpleModelBatch;
+		_modelBatch = _simpleModelBatch;
 		_terrain._shader = _terrain._shaderBasic;
-		_terrain.Render(camera, _environment);
+		renderTerrain(camera);
 		renderObjects(camera);
 
 		// GUIGDX.getSpriteBatch().begin();
 
+		if (Config._renderOutline)
+		{
+			// выводим содержимое буфера
+			frameBuffer.getColorBufferTexture().bind();
 
-		// выводим содержимое буфера
-		frameBuffer.getColorBufferTexture().bind();
+			ShaderProgram program = _terrain._shaderOutline;
+			// ShaderProgram program = _terrain._shaderCel;
 
-		ShaderProgram program = _terrain._shaderOutline;
-		// ShaderProgram program = _terrain._shaderCel;
-
-		program.begin();
-		program.setUniformf("size", new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		fullScreenQuad.render(program, GL20.GL_TRIANGLE_STRIP);
-		program.end();
+			program.begin();
+			program.setUniformf("size", new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			fullScreenQuad.render(program, GL20.GL_TRIANGLE_STRIP);
+			program.end();
+		}
 
 		// GUIGDX.getSpriteBatch().setShader(_terrain._shader);
 		// _terrain._shader.begin();
@@ -174,6 +178,11 @@ public class Render1
 			}
 			_modelBatch.end();
 		}
+	}
+
+	protected void renderTerrain(Camera camera) {
+//		_terrain._shader.setUniformf();
+		_terrain.Render(camera, _environment);
 	}
 
 	public Mesh createFullScreenQuad()

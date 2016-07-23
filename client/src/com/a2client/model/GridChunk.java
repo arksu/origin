@@ -59,16 +59,10 @@ public class GridChunk
 				true,
 				_vertex.length / 3,
 				_index.length,
-				new VertexAttribute(
-						VertexAttributes.Usage.Position, 3,
-						ShaderProgram.POSITION_ATTRIBUTE),
-				new VertexAttribute(
-						VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
-				new VertexAttribute(VertexAttributes.Usage.ColorPacked, 4,
-									ShaderProgram.COLOR_ATTRIBUTE),
-				new VertexAttribute(
-						VertexAttributes.Usage.TextureCoordinates, 2,
-						ShaderProgram.TEXCOORD_ATTRIBUTE)
+				new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+				new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
+				new VertexAttribute(VertexAttributes.Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE),
+				new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE)
 		);
 
 		makeMesh(gx, gy);
@@ -84,13 +78,13 @@ public class GridChunk
 									   new Vector3(ox + gx + CHUNK_SIZE, 3, oy + gy + CHUNK_SIZE));
 
 		short vertex_count = 0;
+		NormalHeight nh;
 		for (int x = gx; x < gx + CHUNK_SIZE; x++)
 		{
 			for (int y = gy; y < gy + CHUNK_SIZE; y++)
 			{
 				int tx;
 				int ty;
-				float height;
 				Vector2 uv;
 
 				tx = ox + x;
@@ -100,14 +94,15 @@ public class GridChunk
 //				f = 0;
 
 				// 0 =====
+				nh = new NormalHeight(tx, ty);
 				_vertex[idx++] = tx;
-				_vertex[idx++] = getHeight(tx, ty);
+				_vertex[idx++] = nh.h;
 				_vertex[idx++] = ty;
 
 				// normal
-				_vertex[idx++] = 0f;
-				_vertex[idx++] = 1f;
-				_vertex[idx++] = 0f;
+				_vertex[idx++] = nh.normal.x;
+				_vertex[idx++] = nh.normal.y;
+				_vertex[idx++] = nh.normal.z;
 
 				idx += 1; // skip color
 
@@ -116,14 +111,15 @@ public class GridChunk
 				_vertex[idx++] = uv.y;
 
 				// 1 =====
+				nh = new NormalHeight(tx + 1, ty);
 				_vertex[idx++] = tx + 1;
-				_vertex[idx++] = getHeight(tx + 1, ty);
+				_vertex[idx++] = nh.h;
 				_vertex[idx++] = ty;
 
 				// normal
-				_vertex[idx++] = 0;
-				_vertex[idx++] = 1f;
-				_vertex[idx++] = 0;
+				_vertex[idx++] = nh.normal.x;
+				_vertex[idx++] = nh.normal.y;
+				_vertex[idx++] = nh.normal.z;
 
 				idx += 1; // skip color
 
@@ -131,14 +127,15 @@ public class GridChunk
 				_vertex[idx++] = uv.y;
 
 				// 2 =====
+				nh = new NormalHeight(tx, ty + 1);
 				_vertex[idx++] = tx;
-				_vertex[idx++] = getHeight(tx, ty + 1);
+				_vertex[idx++] = nh.h;
 				_vertex[idx++] = ty + 1;
 
 				// normal
-				_vertex[idx++] = 0;
-				_vertex[idx++] = 1f;
-				_vertex[idx++] = 0;
+				_vertex[idx++] = nh.normal.x;
+				_vertex[idx++] = nh.normal.y;
+				_vertex[idx++] = nh.normal.z;
 
 				idx += 1; // skip color
 
@@ -146,14 +143,15 @@ public class GridChunk
 				_vertex[idx++] = uv.y + TILE_ATLAS_SIZE;
 
 				// 3 =====
+				nh = new NormalHeight(tx + 1, ty + 1);
 				_vertex[idx++] = tx + 1;
-				_vertex[idx++] = getHeight(tx + 1, ty + 1);
+				_vertex[idx++] = nh.h;
 				_vertex[idx++] = ty + 1;
 
 				// normal
-				_vertex[idx++] = 0;
-				_vertex[idx++] = 1f;
-				_vertex[idx++] = 0;
+				_vertex[idx++] = nh.normal.x;
+				_vertex[idx++] = nh.normal.y;
+				_vertex[idx++] = nh.normal.z;
 
 				idx += 1; // skip color
 
@@ -177,14 +175,32 @@ public class GridChunk
 		_mesh.setIndices(_index);
 	}
 
-	private float getHeight(int tx, int ty)
+	private class NormalHeight
 	{
-		float h1 = MapCache.getTileHeight(tx, ty);
-		float h2 = MapCache.getTileHeight(tx - 1, ty - 1);
-		float h3 = MapCache.getTileHeight(tx - 1, ty);
-		float h4 = MapCache.getTileHeight(tx, ty - 1);
+		public float h;
+		public Vector3 normal;
 
-		return (h1 + h2 + h3 + h4) / 4f;
+		public NormalHeight(int tx, int ty)
+		{
+			float h1 = MapCache.getTileHeight(tx, ty);
+			float h2 = MapCache.getTileHeight(tx - 1, ty - 1);
+			float h3 = MapCache.getTileHeight(tx - 1, ty);
+			float h4 = MapCache.getTileHeight(tx, ty - 1);
+
+			h1 = Math.max(-10f, h1);
+			h2 = Math.max(-10f, h2);
+			h3 = Math.max(-10f, h3);
+			h4 = Math.max(-10f, h4);
+
+			h = (h1 + h2 + h3 + h4) / 4f;
+
+			Vector3 v1 = new Vector3(h1, 1f, 0f);
+			Vector3 v2 = new Vector3(-h2, 1f, 0f);
+			Vector3 v3 = new Vector3(0f, 1f, h3);
+			Vector3 v4 = new Vector3(0f, 1f, -h4);
+
+			normal = v1.add(v2).add(v3).add(v4);
+		}
 	}
 
 	public Mesh getMesh()

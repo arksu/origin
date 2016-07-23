@@ -11,7 +11,7 @@ varying vec2 texCoords;
 varying vec4 v_diffuse;
 
 vec3 lightPosition = vec3(10, 10, 10);
-vec4 diffuse = vec4(0.8,0.8,0.8,1);
+vec4 diffuse = vec4(2,2,2,1);
  
 void main() {
 
@@ -23,4 +23,4 @@ void main() {
     texCoords = a_texCoord;
 
     gl_Position = u_MVPMatrix * a_position;
-}
+}
