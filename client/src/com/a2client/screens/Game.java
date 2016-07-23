@@ -42,7 +42,7 @@ public class Game extends BaseScreen
 	private GameState _state = GameState.ENTERING;
 
 	private Vector2 _world_mouse_pos = new Vector2();
-	private boolean[] mouse_btns = new boolean[3];
+	private boolean[] _mouseBtns = new boolean[3];
 
 	private Render1 _render;
 	private GameCamera _gameCamera;
@@ -205,18 +205,18 @@ public class Game extends BaseScreen
 	protected void UpdateMouseButtons()
 	{
 		boolean[] old_btns = new boolean[3];
-		old_btns[0] = mouse_btns[0];
-		old_btns[1] = mouse_btns[1];
-		old_btns[2] = mouse_btns[2];
+		old_btns[0] = _mouseBtns[0];
+		old_btns[1] = _mouseBtns[1];
+		old_btns[2] = _mouseBtns[2];
 		for (int i = 0; i < 3; i++)
 		{
-			mouse_btns[i] = Input.MouseBtns[i];
-			boolean click = mouse_btns[i] != old_btns[i];
+			_mouseBtns[i] = Input.MouseBtns[i];
+			boolean click = _mouseBtns[i] != old_btns[i];
 			// вращаем камеру
 			if (i == Hotkey.CAMERA_BUTTON)
 			{
 				// если кнопка нажата
-				if (mouse_btns[i])
+				if (_mouseBtns[i])
 				{
 					// это был клик?
 					if (click)
@@ -238,11 +238,11 @@ public class Game extends BaseScreen
 			// узнаем на какую кнопку нажали
 			else if (click)
 			{
-				if ((mouse_btns[i] && GUI.getInstance().mouse_in_control == null) || (!mouse_btns[i]))
+				if ((_mouseBtns[i] && GUI.getInstance().mouse_in_control == null) || (!_mouseBtns[i]))
 				{
 					GUI.getInstance().focused_control = null;
 					new MouseClick(
-							mouse_btns[i],
+							_mouseBtns[i],
 							i,
 							Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE),
 							Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE),

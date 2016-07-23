@@ -11,5 +11,5 @@ public class Hotkey
 	public static int EQUIP = Keys.E;
 	public static int CHAT_ENTER = Keys.ENTER;
 
-	public static int CAMERA_BUTTON = Input.MB_MIDDLE;
+	public static int CAMERA_BUTTON = Input.MB_RIGHT;
 }

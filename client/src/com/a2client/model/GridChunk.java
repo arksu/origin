@@ -1,6 +1,7 @@
 package com.a2client.model;
 
 import com.a2client.MapCache;
+import com.a2client.util.OpenSimplexNoise;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
@@ -78,6 +79,8 @@ public class GridChunk
 		_boundingBox = new BoundingBox(new Vector3(ox + gx, -1, oy + gy),
 									   new Vector3(ox + gx + CHUNK_SIZE, 3, oy + gy + CHUNK_SIZE));
 
+		OpenSimplexNoise noise = new OpenSimplexNoise();
+
 		short vertex_count = 0;
 		for (int x = gx; x < gx + CHUNK_SIZE; x++)
 		{
@@ -85,18 +88,20 @@ public class GridChunk
 			{
 				int tx;
 				int ty;
-				float f;
+				float height;
 				Vector2 uv;
 
 				tx = ox + x;
 				ty = oy + y;
-				int h = tx + ty * 3 + x * 5 + y;
-				f = (h % 10) / 40f;
+//				int h = tx + ty * 3 + x * 5 + y;
+//				f = (h % 10) / 40f;
+				double div = 4d;
+				height = ((float) noise.eval(tx / div, ty / div)) / 2f;
 //				f = 0;
 
 				// 0 =====
 				_vertex[idx++] = tx;
-				_vertex[idx++] = f;
+				_vertex[idx++] = height;
 				_vertex[idx++] = ty;
 
 				// normal
@@ -112,7 +117,7 @@ public class GridChunk
 
 				// 1 =====
 				_vertex[idx++] = tx + 1;
-				_vertex[idx++] = f;
+				_vertex[idx++] = height;
 				_vertex[idx++] = ty;
 
 				// normal
@@ -127,7 +132,7 @@ public class GridChunk
 
 				// 2 =====
 				_vertex[idx++] = tx;
-				_vertex[idx++] = f;
+				_vertex[idx++] = height;
 				_vertex[idx++] = ty + 1;
 
 				// normal
@@ -142,7 +147,7 @@ public class GridChunk
 
 				// 3 =====
 				_vertex[idx++] = tx + 1;
-				_vertex[idx++] = f;
+				_vertex[idx++] = height;
 				_vertex[idx++] = ty + 1;
 
 				// normal
@@ -157,10 +162,11 @@ public class GridChunk
 
 				//index
 				_index[idv++] = vertex_count;
+				_index[idv++] = (short) (vertex_count + 3);
 				_index[idv++] = (short) (vertex_count + 1);
+
+				_index[idv++] = (short) (vertex_count + 0);
 				_index[idv++] = (short) (vertex_count + 2);
-				_index[idv++] = (short) (vertex_count + 2);
-				_index[idv++] = (short) (vertex_count + 1);
 				_index[idv++] = (short) (vertex_count + 3);
 
 				vertex_count += 4;

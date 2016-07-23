@@ -91,6 +91,7 @@ public class Render1
 		_modelBatch = depthModelBatch;
 		_terrain._shader = _terrain._shaderDepth;
 
+
 		frameBuffer.begin();
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
@@ -99,13 +100,15 @@ public class Render1
 		// Gdx.gl.glDepthFunc(GL20.GL_LEQUAL);
 		// Gdx.gl.glDepthMask(true);
 
-		_terrain.Render(camera, _environment);
+//		_terrain.Render(camera, _environment);
 		renderObjects(camera);
 		frameBuffer.end();
 
-		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT
-		// | GL20.GL_DEPTH_BUFFER_BIT);
+		 Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT
+		 | GL20.GL_DEPTH_BUFFER_BIT);
 
+		 Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		 Gdx.gl.glCullFace(GL20.GL_BACK);
 		_modelBatch = simpleModelBatch;
 		_terrain._shader = _terrain._shaderBasic;
 		_terrain.Render(camera, _environment);
@@ -113,16 +116,15 @@ public class Render1
 
 		// GUIGDX.getSpriteBatch().begin();
 
+
+		// выводим содержимое буфера
 		frameBuffer.getColorBufferTexture().bind();
 
 		ShaderProgram program = _terrain._shaderOutline;
 		// ShaderProgram program = _terrain._shaderCel;
 
 		program.begin();
-
-		program.setUniformf("size", new Vector2(Gdx.graphics.getWidth(),
-												Gdx.graphics.getHeight()));
-
+		program.setUniformf("size", new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		fullScreenQuad.render(program, GL20.GL_TRIANGLE_STRIP);
 		program.end();
 
@@ -148,17 +150,20 @@ public class Render1
 			for (GameObject o : ObjectCache.getInstance().getObjects())
 			{
 				ModelInstance model = o.getModel();
+				// если объект попадает в поле зрения камеры
 				if (model != null && camera.frustum.boundsInFrustum(o.getBoundingBox()))
 				{
-
 					_modelBatch.render(model, _environment);
 					_renderedObjects++;
 
+					// попадает ли луч из мыши в объект?
 					Vector3 intersection = new Vector3();
 					if (Intersector.intersectRayBounds(ray, o.getBoundingBox(),
 													   intersection))
 					{
+						// дистанция до объекта
 						float dist = intersection.dst(camera.position);
+						// если дистанция меньше предыдушего - обновим объект в который попадает мышь
 						if (dist < _selectedDist)
 						{
 							_selected = o;
@@ -196,10 +201,9 @@ public class Render1
 		verts[i++] = 1.f; // u4
 		verts[i] = 1.f; // v4
 
-		Mesh tmpMesh = new Mesh(true, 4, 0, new VertexAttribute(
-				VertexAttributes.Usage.Position, 2, "a_position"),
-								new VertexAttribute(VertexAttributes.Usage.TextureCoordinates,
-													2, "a_texCoord0"));
+		Mesh tmpMesh = new Mesh(true, 4, 0,
+								new VertexAttribute(VertexAttributes.Usage.Position, 2, "a_position"),
+								new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "a_texCoord0"));
 		tmpMesh.setVertices(verts);
 		return tmpMesh;
 	}

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.utils.*;
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,7 @@ public class ModelManager
 
 	private ObjectMap<Model, IntArray> _modelHitList = new ObjectMap<>();
 
-	private ObjectMap<Integer, ModelMeta> _modelList = new ObjectMap<>();
+	private ObjectMap<Integer, ModelDesc> _modelList = new ObjectMap<>();
 
 	private AssetManager _assets;
 
@@ -48,32 +49,31 @@ public class ModelManager
 		Timer.schedule(new UpdateTimer(this), 0, 30);
 	}
 
-	public ModelInstance getModelByType(int _typeId)
+	public ModelInstance getModelByType(int typeId)
 	{
 
-		ModelMeta meta = _modelList.get(_typeId);
+		ModelDesc desc = _modelList.get(typeId);
 
-		if (meta == null)
+		if (desc == null)
 		{
 			throw new GdxRuntimeException(
-					"[ModelManager] no model by typeId = " + _typeId);
+					"[ModelManager] no model by typeId = " + typeId);
 		}
 
-		if (!meta._loaded)
+		if (!desc._loaded)
 		{
-			load(meta);
+			load(desc);
 		}
 
-		ModelInstance tmp = new ModelInstance(
-				_assets.get(meta.res, Model.class));
-		meta._lastUsage = TimeUtils.millis();
-		tmp.transform.scale(meta.scaleX, meta.scaleY, meta.scaleZ);
+		ModelInstance tmp = new ModelInstance(_assets.get(desc._resource, Model.class));
+		desc._lastUsage = TimeUtils.millis();
+		tmp.transform.scale(desc._scaleX, desc._scaleY, desc._scaleZ);
 		return tmp;
 	}
 
-	public void updateModelTime(int _typeId)
+	public void updateModelTime(int typeId)
 	{
-		ModelMeta meta = _modelList.get(_typeId);
+		ModelDesc meta = _modelList.get(typeId);
 
 		if (meta == null)
 		{
@@ -85,11 +85,10 @@ public class ModelManager
 
 	public void update()
 	{
-		_log.debug("ModelManager", "Update()");
 		current_time = TimeUtils.millis();
 		long out_time = TimeUtils.millis() - MODEL_TIMEOUT;
 
-		for (ModelMeta meta : _modelList.values())
+		for (ModelDesc meta : _modelList.values())
 		{
 			if (meta._loaded && meta._lastUsage < out_time)
 			{
@@ -98,38 +97,38 @@ public class ModelManager
 		}
 	}
 
-	private void load(ModelMeta meta)
+	private void load(ModelDesc desc)
 	{
-		if (!_assets.isLoaded(meta.res))
+		if (!_assets.isLoaded(desc._resource))
 		{
-			_assets.load(meta.res, Model.class);
-			_assets.finishLoadingAsset(meta.res);
-			_log.debug("ModelManager", "Loaded = " + meta.res);
+			_assets.load(desc._resource, Model.class);
+			_assets.finishLoadingAsset(desc._resource);
+			_log.debug("ModelManager load model: " + desc._resource);
 		}
-		Model model = _assets.get(meta.res, Model.class);
+		Model model = _assets.get(desc._resource, Model.class);
 		if (!_modelHitList.containsKey(model))
 		{
 			_modelHitList.put(model, new IntArray());
 		}
-		_modelHitList.get(model).add(meta.typeId);
-		meta._loaded = true;
-		meta._lastUsage = TimeUtils.millis();
+		_modelHitList.get(model).add(desc._typeId);
+		desc._loaded = true;
+		desc._lastUsage = TimeUtils.millis();
 	}
 
-	private void unload(ModelMeta meta)
+	private void unload(ModelDesc desc)
 	{
-		Model model = _assets.get(meta.res, Model.class);
+		Model model = _assets.get(desc._resource, Model.class);
 
 		IntArray hitArray = _modelHitList.get(model);
-		hitArray.removeValue(meta.typeId);
+		hitArray.removeValue(desc._typeId);
 		if (hitArray.size == 0)
 		{
-			_log.debug("ModelManager", "UnLoad = " + meta.res);
-			_assets.unload(meta.res);
+			_log.debug("ModelManager unLoad model: " + desc._resource);
+			_assets.unload(desc._resource);
 			_modelHitList.remove(model);
 		}
-		meta._loaded = false;
-		meta._lastUsage = 0;
+		desc._loaded = false;
+		desc._lastUsage = 0;
 	}
 
 	public void loadModelList()
@@ -137,11 +136,11 @@ public class ModelManager
 		File file = Gdx.files.internal("assets/objects.json").file();
 		try
 		{
-			ModelMeta[] list = _gson.fromJson(new FileReader(file), ModelMeta[].class);
-			for (ModelMeta item : list)
+			ModelDesc[] list = _gson.fromJson(new FileReader(file), ModelDesc[].class);
+			for (ModelDesc item : list)
 			{
 				item._lastUsage = TimeUtils.millis();
-				_modelList.put(item.typeId, item);
+				_modelList.put(item._typeId, item);
 			}
 		}
 		catch (FileNotFoundException e)
@@ -151,17 +150,25 @@ public class ModelManager
 
 	}
 
-	public static class ModelMeta
+	public static class ModelDesc
 	{
 		public transient boolean _loaded = false;
 		public transient long _lastUsage = 0;
 
-		public int typeId;
-		public String res;
+		@SerializedName("typeId")
+		public int _typeId;
 
-		public float scaleX = 1f;
-		public float scaleY = 1f;
-		public float scaleZ = 1f;
+		@SerializedName("res")
+		public String _resource;
+
+		@SerializedName("scaleX")
+		public float _scaleX = 1f;
+
+		@SerializedName("scaleY")
+		public float _scaleY = 1f;
+
+		@SerializedName("scaleZ")
+		public float _scaleZ = 1f;
 	}
 
 	class UpdateTimer extends Timer.Task
