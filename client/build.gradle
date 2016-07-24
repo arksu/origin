@@ -8,13 +8,16 @@ repositories {
 
 dependencies {
     compile name: 'gdx'
+    compile name: 'gdx-freetype'
+    runtime name: 'gdx-backend-lwjgl-natives'
+    runtime name: 'gdx-natives'
+    runtime name: 'gdx-freetype-natives'
+
     compile name: 'netty'
     compile name: 'gdx-backend-lwjgl'
     compile name: 'slf4j-api-1.7.6'
     compile name: 'slf4j-simple-1.7.6'
     compile name: 'gson-2.3.1'
-    runtime name: 'gdx-backend-lwjgl-natives'
-    runtime name: 'gdx-natives'
 }
 
 jar {

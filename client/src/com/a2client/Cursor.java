@@ -38,7 +38,8 @@ public class Cursor
 		name = "arrow";
 		// TODO : установить курсор
 		Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor1.png"));
-		Gdx.graphics.newCursor(pm, 0, 0).setSystemCursor();
+		com.badlogic.gdx.graphics.Cursor cursor = Gdx.graphics.newCursor(pm, 0, 0);
+		Gdx.graphics.setCursor(cursor);
 
 		pm.dispose();
 	}

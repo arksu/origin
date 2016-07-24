@@ -8,10 +8,7 @@ import com.a2client.network.game.GamePacketHandler;
 import com.a2client.screens.Login;
 import com.a2client.screens.ResourceLoader;
 import com.a2client.util.Utils;
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Files;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -51,6 +48,7 @@ public class Main extends com.badlogic.gdx.Game
 		// установим дефолт курсор
 		Cursor.getInstance().setCursor("");
 
+		_log.debug("GDX ver: " + Version.VERSION);
 		_log.debug("gl vendor: " + Gdx.gl.glGetString(GL20.GL_VENDOR));
 		_log.debug("gl ver: " + Gdx.gl.glGetString(GL20.GL_VERSION));
 
