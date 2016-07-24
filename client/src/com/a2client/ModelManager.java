@@ -67,7 +67,7 @@ public class ModelManager
 
 		ModelInstance tmp = new ModelInstance(_assets.get(desc._resource, Model.class));
 		desc._lastUsage = TimeUtils.millis();
-		tmp.transform.scale(desc._scaleX, desc._scaleY, desc._scaleZ);
+		tmp.transform.scale(desc._scale, desc._scale, desc._scale);
 		return tmp;
 	}
 
@@ -161,14 +161,8 @@ public class ModelManager
 		@SerializedName("res")
 		public String _resource;
 
-		@SerializedName("scaleX")
-		public float _scaleX = 1f;
-
-		@SerializedName("scaleY")
-		public float _scaleY = 1f;
-
-		@SerializedName("scaleZ")
-		public float _scaleZ = 1f;
+		@SerializedName("scale")
+		public float _scale = 1f;
 	}
 
 	class UpdateTimer extends Timer.Task

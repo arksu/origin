@@ -79,7 +79,7 @@ public class Config
 	/**
 	 * cell shading?
 	 */
-	public static boolean _renderOutline = true;
+	public static boolean _renderOutline = false;
 
 	// режим дебага
 	public static boolean _debug = false;

@@ -103,7 +103,7 @@ public class Grid
 
 	private void fillHeights()
 	{
-		double div = 3d;
+		double div = 5d;
 		for (int x = 0; x < GRID_SIZE; x++)
 		{
 			for (int y = 0; y < GRID_SIZE; y++)

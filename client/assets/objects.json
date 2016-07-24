@@ -3,9 +3,7 @@
 		"typeId": 1,
 //		"res": "assets/debug/leg.g3db",
 		"res": "assets/untitled.g3db",
-		"scaleX": 0.001,
-		"scaleY": 0.001,
-		"scaleZ": 0.001
+		"scale": 0.001
 	},
 	{
 		"typeId": 2,
@@ -21,7 +19,8 @@
 	},
 	{
 		"typeId": 19,
-		"res": "assets/debug/ship.obj"
+		"scale": 0.2,
+		"res": "assets/fern.obj"
 	},
 	{
 		"typeId": 17,

@@ -60,10 +60,9 @@ public class Render1
 		_game = game;
 
 		_environment = new Environment();
-		_environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f,
-											0.4f, 0.4f, 1f));
-		_environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f,
-													-0.8f, -0.2f));
+		_environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+		_environment.set(new ColorAttribute(ColorAttribute.Fog, 0.5f, 0.5f, 0.5f, 1f));
+		_environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
 		_depthShaderProvider = new FrontFaceDepthShaderProvider();
 		_depthModelBatch = new ModelBatch(_depthShaderProvider);
@@ -84,7 +83,6 @@ public class Render1
 
 		// test2.d
 		// System.out.println(test2.);
-
 	}
 
 	public void render(Camera camera)
@@ -97,18 +95,19 @@ public class Render1
 			frameBuffer.begin();
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-			// Gdx.gl.glCullFace(GL20.GL_BACK);
-			// Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+			 Gdx.gl.glCullFace(GL20.GL_FRONT);
 			// Gdx.gl.glDepthFunc(GL20.GL_LEQUAL);
 			// Gdx.gl.glDepthMask(true);
 
-//		_terrain.Render(camera, _environment);
+//			renderTerrain(camera);
 			renderObjects(camera);
 			frameBuffer.end();
 		}
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glCullFace(GL20.GL_BACK);
 
 		_modelBatch = _simpleModelBatch;
@@ -180,7 +179,8 @@ public class Render1
 		}
 	}
 
-	protected void renderTerrain(Camera camera) {
+	protected void renderTerrain(Camera camera)
+	{
 //		_terrain._shader.setUniformf();
 		_terrain.Render(camera, _environment);
 	}
