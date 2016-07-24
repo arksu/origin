@@ -29,8 +29,8 @@ public class GameCamera extends PerspectiveCamera
 	/**
 	 * углы поворота камеры
 	 */
-	private float _angleY = -127;
-	private float _angleX = -72f;
+	private float _angleY = 45f;
+	private float _angleX = 72f;
 
 	/**
 	 * координаты мыши в которых начали вращение камеры
@@ -64,13 +64,22 @@ public class GameCamera extends PerspectiveCamera
 	{
 		if (_chaseObj != null)
 		{
-			_current.set(position).sub(direction).nor();
-			position.set(_chaseObj.getWorldCoord());
-			_current.rotate(_angleX, 1f, 0f, 0f).nor();
-			_current.rotate(_angleY, 0f, 1f, 0f);
-			_current.nor().scl(_cameraDistance);
-			position.add(_current);
-			direction.set(_chaseObj.getWorldCoord()).sub(position).nor();
+			// установим верх
+			up.set(0, 1, 0);
+
+			// обнулим позицию
+			position.setZero();
+			// установим камеру на нужную нам дистанцию
+			position.add(0, _cameraDistance, 0);
+			// а теперь повернем как надо
+			position.rotate(Vector3.X, _angleX);
+			position.rotate(Vector3.Y, _angleY);
+
+			// и сместим до положения игрока
+			position.add(_chaseObj.getWorldCoord());
+
+			// скажем смотреть на игрока
+			lookAt(_chaseObj.getWorldCoord());
 		}
 
 		if (com.a2client.Input.isWheelUpdated())
@@ -131,6 +140,11 @@ public class GameCamera extends PerspectiveCamera
 		{
 			_angleY = _startAngleY - (c.sub(_startDrag).x * 0.3f);
 			_angleX = _startAngleX - (c.sub(_startDrag).y * 0.3f);
+
+			// ограничим вертикальный угол
+			_angleX = Math.min(_angleX, 89f);
+			_angleX = Math.max(_angleX, 1f);
+
 //			_log.debug("ay: " + _angleY + " ax:" + _angleX);
 		}
 	}
