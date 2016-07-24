@@ -57,7 +57,7 @@ public class ModelManager
 		if (desc == null)
 		{
 			throw new GdxRuntimeException(
-					"[ModelManager] no model by typeId = " + typeId);
+					"no model by typeId: " + typeId);
 		}
 
 		if (!desc._loaded)
@@ -103,7 +103,7 @@ public class ModelManager
 		{
 			_assets.load(desc._resource, Model.class);
 			_assets.finishLoadingAsset(desc._resource);
-			_log.debug("ModelManager load model: " + desc._resource);
+			_log.debug("load model: " + desc._resource);
 		}
 		Model model = _assets.get(desc._resource, Model.class);
 		if (!_modelHitList.containsKey(model))
@@ -123,7 +123,7 @@ public class ModelManager
 		hitArray.removeValue(desc._typeId);
 		if (hitArray.size == 0)
 		{
-			_log.debug("ModelManager unLoad model: " + desc._resource);
+			_log.debug("unLoad model: " + desc._resource);
 			_assets.unload(desc._resource);
 			_modelHitList.remove(model);
 		}
@@ -165,12 +165,11 @@ public class ModelManager
 		public float _scale = 1f;
 	}
 
-	class UpdateTimer extends Timer.Task
+	private class UpdateTimer extends Timer.Task
 	{
-
 		private ModelManager _manager;
 
-		public UpdateTimer(ModelManager manager)
+		UpdateTimer(ModelManager manager)
 		{
 			_manager = manager;
 		}

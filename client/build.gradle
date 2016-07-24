@@ -17,7 +17,7 @@ dependencies {
     compile name: 'gdx-backend-lwjgl'
     compile name: 'slf4j-api-1.7.6'
     compile name: 'slf4j-simple-1.7.6'
-    compile name: 'gson-2.3.1'
+    compile name: 'gson-2.7'
 }
 
 jar {
