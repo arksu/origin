@@ -8,7 +8,7 @@ import com.a2client.network.game.clientpackets.ActionSelect;
 import com.a2client.network.game.clientpackets.ChatMessage;
 import com.a2client.network.game.clientpackets.MouseClick;
 import com.a2client.render.GameCamera;
-import com.a2client.render.Render1;
+import com.a2client.render.Render;
 import com.a2client.util.Keys;
 import com.a2client.util.Utils;
 import com.a2client.util.Vec2i;
@@ -44,7 +44,7 @@ public class Game extends BaseScreen
 	private Vector2 _world_mouse_pos = new Vector2();
 	private boolean[] _mouseBtns = new boolean[3];
 
-	private Render1 _render;
+	private Render _render;
 	private GameCamera _gameCamera;
 
 	/**
@@ -117,7 +117,8 @@ public class Game extends BaseScreen
 		_actions.SetPos(Config.getScreenWidth() - _actions.size.x, Config.getScreenHeight() - _actions.size.y);
 
 		_gameCamera = new GameCamera();
-		_render = new Render1(this);
+		_render = new Render(this);
+		_bgcolor = Render.SKY_COLOR;
 	}
 
 	@Override

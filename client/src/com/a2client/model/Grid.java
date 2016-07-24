@@ -14,8 +14,14 @@ public class Grid
 {
 	private static OpenSimplexNoise noise = new OpenSimplexNoise();
 
+	/**
+	 * типы тайлов
+	 */
 	public byte[][] _tiles;
 
+	/**
+	 * высоты тайлов
+	 */
 	public float[][] _heights;
 
 	/**
@@ -34,7 +40,6 @@ public class Grid
 	{
 		_gc = c;
 		_tc = _gc.div(MapCache.TILE_SIZE);
-		System.out.println("gc: " + _gc);
 		_tiles = new byte[GRID_SIZE][GRID_SIZE];
 		_heights = new float[GRID_SIZE][GRID_SIZE];
 		fillTiles(data);

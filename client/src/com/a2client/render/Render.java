@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -26,9 +25,11 @@ import org.slf4j.LoggerFactory;
  * примитивный рендер, пока один. может еще добавим других Created by arksu on
  * 25.02.15.
  */
-public class Render1
+public class Render
 {
-	private static final Logger _log = LoggerFactory.getLogger(Render1.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(Render.class.getName());
+
+	public static Color SKY_COLOR = new Color(0.4f, 0.5f, 0.7f, 1f);
 
 	private Game _game;
 
@@ -45,7 +46,6 @@ public class Render1
 
 	private float _selectedDist;
 	private int _renderedObjects;
-	private final Shader _shader;
 
 	FrameBuffer frameBuffer;
 	FrontFaceDepthShaderProvider _depthShaderProvider;
@@ -54,28 +54,24 @@ public class Render1
 
 	private Mesh fullScreenQuad;
 
-	public Render1(Game game)
+	public Render(Game game)
 	{
 		ShaderProgram.pedantic = false;
 		_game = game;
 
 		_environment = new Environment();
 		_environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-		_environment.set(new ColorAttribute(ColorAttribute.Fog, 0.5f, 0.5f, 0.5f, 1f));
 		_environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
 		_depthShaderProvider = new FrontFaceDepthShaderProvider();
 		_depthModelBatch = new ModelBatch(_depthShaderProvider);
 
-		_simpleModelBatch = new ModelBatch();
+		_simpleModelBatch = new ModelBatch(new ModelShaderProvider());
 		_modelBatch = _depthModelBatch;
 
 		_terrain = new Terrain();
 
-		_shader = new ShaderTest();
-		_shader.init();
-		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888,
-									  Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 
 		fullScreenQuad = createFullScreenQuad();
 
@@ -111,7 +107,7 @@ public class Render1
 		Gdx.gl.glCullFace(GL20.GL_BACK);
 
 		_modelBatch = _simpleModelBatch;
-		_terrain._shader = _terrain._shaderBasic;
+		_terrain._shader = _terrain._shaderTerrain;
 		renderTerrain(camera);
 		renderObjects(camera);
 

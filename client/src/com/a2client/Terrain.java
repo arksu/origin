@@ -1,16 +1,22 @@
 package com.a2client;
 
 import com.a2client.model.Grid;
+import com.a2client.render.Render;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix4;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Terrain
 {
-	public ShaderProgram _shaderBasic;
+	private static final Logger _log = LoggerFactory.getLogger(Terrain.class.getName());
+
+	public ShaderProgram _shaderTerrain;
 	public ShaderProgram _shaderCel;
 	public ShaderProgram _shaderOutline;
 	public ShaderProgram _shaderDepth;
@@ -24,7 +30,7 @@ public class Terrain
 	public Terrain()
 	{
 
-		_shaderBasic = makeShader("assets/basic_vert.glsl", "assets/basic_frag.glsl");
+		_shaderTerrain = makeShader("assets/terrainVertex.glsl", "assets/terrainFragment.glsl");
 		_shaderCel = makeShader("assets/cel_vert.glsl", "assets/cel_frag.glsl");
 		_shaderOutline = makeShader("assets/outline_vert.glsl", "assets/outline_frag.glsl");
 		_shaderDepth = makeShader("assets/depth_vertex.glsl", "assets/depth_frag.glsl");
@@ -41,28 +47,37 @@ public class Terrain
 
 		if (!program.isCompiled())
 		{
-			Gdx.app.log("Shader", program.getLog());
-			Gdx.app.log("Shader V", program.getVertexShaderSource());
-			Gdx.app.log("Shader F", program.getFragmentShaderSource());
+			_log.warn("Terrain shader ERROR " + program.getLog());
+			_log.warn("Shader V " + program.getVertexShaderSource());
+			_log.warn("Shader F " + program.getFragmentShaderSource());
 		}
 		return program;
 	}
 
-	public void Render(Camera _camera, Environment _environment)
+	public void Render(Camera camera, Environment environment)
 	{
 		_shader.begin();
-		_shader.setUniformMatrix("u_MVPMatrix", _camera.combined);
-		_shader.setUniformMatrix("u_projViewWorldTrans", _camera.combined);
-//        _shader.setUniformMatrix("u_view", _camera.view);
-		_shader.setUniformi("u_texture", 0);
+		_shader.setUniformMatrix("u_projTrans", camera.projection);
+		_shader.setUniformMatrix("u_viewTrans", camera.view);
+		_shader.setUniformMatrix("u_projViewTrans", camera.combined);
+
+		_shader.setUniformf("u_cameraPosition", camera.position.x, camera.position.y, camera.position.z,
+							1.1881f / (camera.far * camera.far));
+		_shader.setUniformf("u_cameraDirection", camera.direction);
+
+		_shader.setUniformMatrix("u_worldTrans", new Matrix4().idt());
+
+		_shader.setUniformf("u_ambient", ((ColorAttribute) environment.get(ColorAttribute.AmbientLight)).color);
+//		_shader.setUniformi("u_texture", 0);
+
+		_shader.setUniformf("u_skyColor", Render.SKY_COLOR.r, Render.SKY_COLOR.g, Render.SKY_COLOR.b);
 
 		_tileAtlas.bind();
 
-		_shader.setUniformf("u_ambient", ((ColorAttribute) _environment.get(ColorAttribute.AmbientLight)).color);
 		_chunksRendered = 0;
 		for (Grid grid : MapCache.grids)
 		{
-			_chunksRendered += grid.render(_shader, _camera);
+			_chunksRendered += grid.render(_shader, camera);
 		}
 		_shader.end();
 	}
