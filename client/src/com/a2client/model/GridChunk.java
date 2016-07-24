@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.a2client.model.Grid.CHUNK_SIZE;
 import static com.a2client.model.Tile.TILE_ATLAS_SIZE;
 
 /**
@@ -20,11 +21,6 @@ import static com.a2client.model.Tile.TILE_ATLAS_SIZE;
 public class GridChunk
 {
 	private static final Logger _log = LoggerFactory.getLogger(GridChunk.class.getName());
-
-	/**
-	 * размер чанка в тайлах
-	 */
-	public static final int CHUNK_SIZE = 10;
 
 	/**
 	 * меш
@@ -49,6 +45,11 @@ public class GridChunk
 	int ox, oy;
 
 	private Grid _grid;
+
+	/**
+	 * этот чанк на границе мира? есть тайлы с неопределенной высотой...
+	 */
+	private boolean _isBorder = false;
 
 	public GridChunk(Grid grid, int gx, int gy)
 	{
@@ -79,6 +80,7 @@ public class GridChunk
 
 		short vertex_count = 0;
 		NormalHeight nh;
+		_isBorder = false;
 		for (int x = gx; x < gx + CHUNK_SIZE; x++)
 		{
 			for (int y = gy; y < gy + CHUNK_SIZE; y++)
@@ -95,6 +97,7 @@ public class GridChunk
 
 				// 0 =====
 				nh = new NormalHeight(tx, ty);
+				_isBorder = _isBorder || nh.isBorder;
 				_vertex[idx++] = tx;
 				_vertex[idx++] = nh.h;
 				_vertex[idx++] = ty;
@@ -112,6 +115,7 @@ public class GridChunk
 
 				// 1 =====
 				nh = new NormalHeight(tx + 1, ty);
+				_isBorder = _isBorder || nh.isBorder;
 				_vertex[idx++] = tx + 1;
 				_vertex[idx++] = nh.h;
 				_vertex[idx++] = ty;
@@ -128,6 +132,7 @@ public class GridChunk
 
 				// 2 =====
 				nh = new NormalHeight(tx, ty + 1);
+				_isBorder = _isBorder || nh.isBorder;
 				_vertex[idx++] = tx;
 				_vertex[idx++] = nh.h;
 				_vertex[idx++] = ty + 1;
@@ -144,6 +149,7 @@ public class GridChunk
 
 				// 3 =====
 				nh = new NormalHeight(tx + 1, ty + 1);
+				_isBorder = _isBorder || nh.isBorder;
 				_vertex[idx++] = tx + 1;
 				_vertex[idx++] = nh.h;
 				_vertex[idx++] = ty + 1;
@@ -163,7 +169,7 @@ public class GridChunk
 				_index[idv++] = (short) (vertex_count + 3);
 				_index[idv++] = (short) (vertex_count + 1);
 
-				_index[idv++] = (short) (vertex_count + 0);
+				_index[idv++] = vertex_count;
 				_index[idv++] = (short) (vertex_count + 2);
 				_index[idv++] = (short) (vertex_count + 3);
 
@@ -179,6 +185,9 @@ public class GridChunk
 	{
 		public float h;
 		public Vector3 normal;
+		public boolean isBorder;
+
+		private static final float MIN_HEIGHT = -10f;
 
 		public NormalHeight(int tx, int ty)
 		{
@@ -187,19 +196,16 @@ public class GridChunk
 			float h3 = MapCache.getTileHeight(tx - 1, ty);
 			float h4 = MapCache.getTileHeight(tx, ty - 1);
 
-			h1 = Math.max(-10f, h1);
-			h2 = Math.max(-10f, h2);
-			h3 = Math.max(-10f, h3);
-			h4 = Math.max(-10f, h4);
+			isBorder = h1 <= MapCache.FAKE_HEIGHT || h2 <= MapCache.FAKE_HEIGHT || h3 <= MapCache.FAKE_HEIGHT || h4 <= MapCache.FAKE_HEIGHT;
+
+			h1 = h1 <= MapCache.FAKE_HEIGHT ? 0f : h1;
+			h2 = h2 <= MapCache.FAKE_HEIGHT ? 0f : h2;
+			h3 = h3 <= MapCache.FAKE_HEIGHT ? 0f : h3;
+			h4 = h4 <= MapCache.FAKE_HEIGHT ? 0f : h4;
 
 			h = (h1 + h2 + h3 + h4) / 4f;
 
-			Vector3 v1 = new Vector3(h1, 1f, 0f);
-			Vector3 v2 = new Vector3(-h2, 1f, 0f);
-			Vector3 v3 = new Vector3(0f, 1f, h3);
-			Vector3 v4 = new Vector3(0f, 1f, -h4);
-
-			normal = v1.add(v2).add(v3).add(v4);
+			normal = new Vector3(h1 - h2, h3 - h4, 2.0f).nor();
 		}
 	}
 
@@ -216,5 +222,10 @@ public class GridChunk
 	public void clear()
 	{
 		_mesh.dispose();
+	}
+
+	public boolean isBorder()
+	{
+		return _isBorder;
 	}
 }

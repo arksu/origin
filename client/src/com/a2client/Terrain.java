@@ -1,7 +1,7 @@
 package com.a2client;
 
 import com.a2client.model.Grid;
-import com.a2client.render.Render;
+import com.a2client.render.Fog;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
@@ -70,7 +70,9 @@ public class Terrain
 		_shader.setUniformf("u_ambient", ((ColorAttribute) environment.get(ColorAttribute.AmbientLight)).color);
 //		_shader.setUniformi("u_texture", 0);
 
-		_shader.setUniformf("u_skyColor", Render.SKY_COLOR.r, Render.SKY_COLOR.g, Render.SKY_COLOR.b);
+		_shader.setUniformf("u_skyColor", Fog.skyColor.r, Fog.skyColor.g, Fog.skyColor.b);
+		_shader.setUniformf("u_density", Fog.enabled ? Fog.density : 0f);
+		_shader.setUniformf("u_gradient", Fog.gradient);
 
 		_tileAtlas.bind();
 

@@ -18,9 +18,9 @@ varying float visibility;
 vec3 lightPosition = vec3(10, 10, 10);
 vec4 diffuse = vec4(2,2,2,1);
 
-const float density = 0.02;
-const float gradient = 2.5;
- 
+uniform float u_density;
+uniform float u_gradient;
+
 void main() {
 	vec4 worldPosition = u_worldTrans * a_position;
     vec3 normal = normalize( a_normal);
@@ -36,7 +36,7 @@ void main() {
 //    toLightVector = lightPosition - worldPosition.xyz;
 
     float distance = length(u_cameraPosition.xyz - worldPosition.xyz);
-    visibility = exp(-pow((distance * density), gradient));
+    visibility = exp(-pow((distance * u_density), u_gradient));
 
     gl_Position = u_projViewTrans * a_position;
 }

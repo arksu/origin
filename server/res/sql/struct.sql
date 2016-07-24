@@ -1,8 +1,8 @@
--- MySQL dump 10.15  Distrib 10.0.20-MariaDB, for osx10.10 (x86_64)
+-- MySQL dump 10.15  Distrib 10.0.21-MariaDB, for osx10.11 (x86_64)
 --
 -- Host: 127.0.0.1    Database: a4server
 -- ------------------------------------------------------
--- Server version	10.0.20-MariaDB
+-- Server version	10.0.21-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -163,4 +163,4 @@ CREATE TABLE `sg_0_obj` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-02  1:41:11
+-- Dump completed on 2016-07-24 22:53:44

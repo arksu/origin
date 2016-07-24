@@ -2,12 +2,16 @@ package com.a2client;
 
 import com.a2client.model.Grid;
 import com.a2client.util.Vec2i;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class MapCache
 {
+	private static final Logger _log = LoggerFactory.getLogger(MapCache.class.getName());
+
 	// сколько единиц координат в одном тайле
 	public static final int TILE_SIZE = 12;
 	// размер одного грида в тайлах
@@ -18,13 +22,19 @@ public class MapCache
 
 	public static List<Grid> grids = new LinkedList<>();
 
+	public static final float FAKE_HEIGHT = -100000f;
+
 	public static void addGrid(Grid grid)
 	{
 		grids.add(grid);
+		long timeMillis = System.currentTimeMillis();
+//		_log.debug("add grid");
 		for (Grid grid1 : grids)
 		{
-			grid1.fillChunks();
+			grid1.fillChunks(false);
 		}
+//		grid.fillChunks();
+		_log.debug("grid " + grid.getTc() + " added in " + (System.currentTimeMillis() - timeMillis) + " ms");
 	}
 
 	/**
@@ -84,7 +94,7 @@ public class MapCache
 			Vec2i tc = new Vec2i(tx, ty).sub(grid.getTc());
 			return grid._heights[tc.y][tc.x];
 		}
-		return -100000f;
+		return FAKE_HEIGHT;
 	}
 
 }

@@ -7,6 +7,7 @@ import com.a2client.model.Inventory;
 import com.a2client.network.game.clientpackets.ActionSelect;
 import com.a2client.network.game.clientpackets.ChatMessage;
 import com.a2client.network.game.clientpackets.MouseClick;
+import com.a2client.render.Fog;
 import com.a2client.render.GameCamera;
 import com.a2client.render.Render;
 import com.a2client.util.Keys;
@@ -118,7 +119,7 @@ public class Game extends BaseScreen
 
 		_gameCamera = new GameCamera();
 		_render = new Render(this);
-		_bgcolor = Render.SKY_COLOR;
+		_bgcolor = Fog.skyColor;
 	}
 
 	@Override
@@ -140,7 +141,7 @@ public class Game extends BaseScreen
 		if (_state == GameState.IN_GAME)
 		{
 			_statusText = "mouse coord: " + Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE) + ", " +
-					Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE);
+						  Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE);
 
 			if (GUI.getInstance().focused_control == _chatEdit)
 			{
@@ -182,6 +183,10 @@ public class Game extends BaseScreen
 					}
 					_lostFocus = false;
 				}
+				else if (Input.KeyHit(Hotkey.FOG))
+				{
+					Fog.enabled = !Fog.enabled;
+				}
 			}
 
 			if (ObjectCache.getInstance() != null)
@@ -197,10 +202,10 @@ public class Game extends BaseScreen
 		}
 		_lblStatus.caption =
 				"FPS: " + Gdx.graphics.getFramesPerSecond() +
-						" " + _statusText +
-						" chunks: " + _render.getChunksRendered() +
-						" selected: " + (_render.getSelected() != null ? "" + _render.getSelected() : "null") +
-						" objects: " + _render.getRenderedObjects();
+				" " + _statusText +
+				" chunks: " + _render.getChunksRendered() +
+				" selected: " + (_render.getSelected() != null ? "" + _render.getSelected() : "null") +
+				" objects: " + _render.getRenderedObjects();
 	}
 
 	protected void UpdateMouseButtons()

@@ -29,8 +29,6 @@ public class Render
 {
 	private static final Logger _log = LoggerFactory.getLogger(Render.class.getName());
 
-	public static Color SKY_COLOR = new Color(0.4f, 0.5f, 0.7f, 1f);
-
 	private Game _game;
 
 	//

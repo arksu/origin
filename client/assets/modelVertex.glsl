@@ -185,8 +185,8 @@ varying vec3 v_ambientLight;
 #endif // lightingFlag
 
 // arksu
-const float density = 0.02;
-const float gradient = 2.5;
+uniform float u_density;
+uniform float u_gradient;
 varying float visibility;
 
 
@@ -341,6 +341,5 @@ void main() {
 	#endif // lightingFlag
 
 	float distance = length(u_cameraPosition.xyz - pos.xyz);
-	visibility = exp(-pow((distance * density), gradient));
-
+	visibility = exp(-pow((distance * u_density), u_gradient));
 }

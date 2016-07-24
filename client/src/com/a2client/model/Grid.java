@@ -7,75 +7,118 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.a2client.MapCache.GRID_SIZE;
 
+/**
+ * 1 грид поверхности игрового мира
+ */
 public class Grid
 {
+	private static final Logger _log = LoggerFactory.getLogger(Grid.class.getName());
+
 	private static OpenSimplexNoise noise = new OpenSimplexNoise();
+
+	/**
+	 * размер чанка в тайлах
+	 */
+	public static final int CHUNK_SIZE = 10;
+
+	/**
+	 * на сколько кусков делим грид
+	 */
+	private static final int CHUNKS_COUNT = GRID_SIZE / CHUNK_SIZE;
 
 	/**
 	 * типы тайлов
 	 */
-	public byte[][] _tiles;
+	public final byte[][] _tiles = new byte[GRID_SIZE][GRID_SIZE];
 
 	/**
 	 * высоты тайлов
 	 */
-	public float[][] _heights;
+	public final float[][] _heights = new float[GRID_SIZE][GRID_SIZE];
 
 	/**
 	 * координаты грида в абсолютных мировых координатах (11 точек на тайл)
 	 */
-	private Vec2i _gc;
+	private final Vec2i _gc;
 
 	/**
 	 * координаты грида в координатах тайлов
 	 */
-	private Vec2i _tc;
+	private final Vec2i _tc;
 
-	private GridChunk[] _chunks;
+	/**
+	 * разбиваем весь грид на кусочки, выводим их только если они попадают в область камеры
+	 */
+	private final GridChunk[][] _chunks = new GridChunk[CHUNKS_COUNT][CHUNKS_COUNT];
 
 	public Grid(Vec2i c, byte[] data)
 	{
 		_gc = c;
 		_tc = _gc.div(MapCache.TILE_SIZE);
-		_tiles = new byte[GRID_SIZE][GRID_SIZE];
-		_heights = new float[GRID_SIZE][GRID_SIZE];
 		fillTiles(data);
 		fillHeights();
 		makeTerrainObjects();
 	}
 
-	public void fillChunks()
+	public void fillChunks(boolean force)
 	{
-		int chunksCount = GRID_SIZE / GridChunk.CHUNK_SIZE;
-		if (_chunks != null)
+//		_log.debug("fillChunks " + _tc);
+//		for (GridChunk[] list : _chunks)
+//		{
+//			if (list != null)
+//			{
+//				for (GridChunk chunk : list)
+//				{
+//					if (chunk != null)
+//					{
+//						chunk.clear();
+//					}
+//				}
+//			}
+//		}
+
+		int bordered = 0;
+		for (int x = 0; x < CHUNKS_COUNT; x++)
 		{
-			for (GridChunk chunk : _chunks)
+			for (int y = 0; y < CHUNKS_COUNT; y++)
 			{
-				chunk.clear();
+				if (force || (_chunks[x][y] != null && _chunks[x][y].isBorder()))
+				{
+					_chunks[x][y].clear();
+					_chunks[x][y] = null;
+					bordered++;
+				}
+
+				if (_chunks[x][y] == null)
+				{
+					_chunks[x][y] = new GridChunk(this, x * CHUNK_SIZE, y * CHUNK_SIZE);
+				}
 			}
 		}
-		_chunks = new GridChunk[chunksCount * chunksCount];
-		for (int x = 0; x < chunksCount; x++)
-		{
-			for (int y = 0; y < chunksCount; y++)
-			{
-				_chunks[x + y * chunksCount] = new GridChunk(this, x * GridChunk.CHUNK_SIZE, y * GridChunk.CHUNK_SIZE);
-			}
-		}
+//		_log.debug("bordered : " + bordered);
+//		_log.debug("fillChunks end");
 	}
 
 	public int render(ShaderProgram shaderProgram, Camera camera)
 	{
 		int result = 0;
-		for (GridChunk c : _chunks)
+		for (GridChunk[] list : _chunks)
 		{
-			if (camera.frustum.boundsInFrustum(c.getBoundingBox()))
+			if (list != null)
 			{
-				c.getMesh().render(shaderProgram, GL20.GL_TRIANGLES);
-				result++;
+				for (GridChunk chunk : list)
+				{
+					if (camera.frustum.boundsInFrustum(chunk.getBoundingBox()))
+					{
+						chunk.getMesh().render(shaderProgram, GL20.GL_TRIANGLES);
+						result++;
+					}
+				}
 			}
 		}
 		return result;
@@ -133,6 +176,8 @@ public class Grid
 	public void setData(byte[] data)
 	{
 		fillTiles(data);
+		fillHeights();
+		fillChunks(true);
 	}
 
 	/**
