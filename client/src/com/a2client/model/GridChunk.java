@@ -42,14 +42,27 @@ public class GridChunk
 	 */
 	private BoundingBox _boundingBox;
 
-	int ox, oy;
+	/**
+	 * отступ данного грида в тайлах
+	 */
+	int _gx, _gy;
 
+	/**
+	 * отступ чанка внутри грида
+	 */
+	int _cx, _cy;
+
+	/**
+	 * грид в котором создаем чанк
+	 */
 	private Grid _grid;
 
 	/**
 	 * этот чанк на границе мира? есть тайлы с неопределенной высотой...
 	 */
 	private boolean _isBorder = false;
+
+	private final NormalHeight[][] _heights = new NormalHeight[CHUNK_SIZE + 1][CHUNK_SIZE + 1];
 
 	public GridChunk(Grid grid, int gx, int gy)
 	{
@@ -66,37 +79,52 @@ public class GridChunk
 				new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE)
 		);
 
-		makeMesh(gx, gy);
+		_cx = gx;
+		_cy = gy;
+		makeMesh();
 	}
 
-	protected void makeMesh(int gx, int gy)
+	protected NormalHeight getNormalHeight(int tx, int ty)
+	{
+		NormalHeight normalHeight = _heights[tx - _gx - _cx][ty - _gy - _cy];
+		if (normalHeight != null)
+		{
+			return normalHeight;
+		}
+		normalHeight = new NormalHeight(tx, ty, this);
+		_heights[tx - _gx - _cx][ty - _gy - _cy] = normalHeight;
+		return normalHeight;
+	}
+
+	protected void makeMesh()
 	{
 		int idx = 0;
 		int idv = 0;
-		ox = _grid.getTc().x;
-		oy = _grid.getTc().y;
-		_boundingBox = new BoundingBox(new Vector3(ox + gx, -1, oy + gy),
-									   new Vector3(ox + gx + CHUNK_SIZE, 3, oy + gy + CHUNK_SIZE));
+
+		// отступ данного грида в тайлах
+		_gx = _grid.getTc().x;
+		_gy = _grid.getTc().y;
+		_boundingBox = new BoundingBox(new Vector3(_gx + _cx, -1, _gy + _cy),
+									   new Vector3(_gx + _cx + CHUNK_SIZE, 3, _gy + _cy + CHUNK_SIZE));
 
 		short vertex_count = 0;
 		NormalHeight nh;
 		_isBorder = false;
-		for (int x = gx; x < gx + CHUNK_SIZE; x++)
+
+		for (int x = _cx; x < _cx + CHUNK_SIZE; x++)
 		{
-			for (int y = gy; y < gy + CHUNK_SIZE; y++)
+			for (int y = _cy; y < _cy + CHUNK_SIZE; y++)
 			{
 				int tx;
 				int ty;
 				Vector2 uv;
 
-				tx = ox + x;
-				ty = oy + y;
-//				int h = tx + ty * 3 + x * 5 + y;
-//				f = (h % 10) / 40f;
-//				f = 0;
+				// абсолютные координаты тайла
+				tx = _gx + x;
+				ty = _gy + y;
 
 				// 0 =====
-				nh = new NormalHeight(tx, ty);
+				nh = getNormalHeight(tx, ty);
 				_isBorder = _isBorder || nh.isBorder;
 				_vertex[idx++] = tx;
 				_vertex[idx++] = nh.h;
@@ -114,7 +142,7 @@ public class GridChunk
 				_vertex[idx++] = uv.y;
 
 				// 1 =====
-				nh = new NormalHeight(tx + 1, ty);
+				nh = getNormalHeight(tx + 1, ty);
 				_isBorder = _isBorder || nh.isBorder;
 				_vertex[idx++] = tx + 1;
 				_vertex[idx++] = nh.h;
@@ -131,7 +159,7 @@ public class GridChunk
 				_vertex[idx++] = uv.y;
 
 				// 2 =====
-				nh = new NormalHeight(tx, ty + 1);
+				nh = getNormalHeight(tx, ty + 1);
 				_isBorder = _isBorder || nh.isBorder;
 				_vertex[idx++] = tx;
 				_vertex[idx++] = nh.h;
@@ -148,7 +176,7 @@ public class GridChunk
 				_vertex[idx++] = uv.y + TILE_ATLAS_SIZE;
 
 				// 3 =====
-				nh = new NormalHeight(tx + 1, ty + 1);
+				nh = getNormalHeight(tx + 1, ty + 1);
 				_isBorder = _isBorder || nh.isBorder;
 				_vertex[idx++] = tx + 1;
 				_vertex[idx++] = nh.h;
@@ -187,26 +215,43 @@ public class GridChunk
 		public Vector3 normal;
 		public boolean isBorder;
 
-		private static final float MIN_HEIGHT = -10f;
-
-		public NormalHeight(int tx, int ty)
+		public NormalHeight(int tx, int ty, GridChunk chunk)
 		{
-			float h1 = MapCache.getTileHeight(tx, ty);
-			float h2 = MapCache.getTileHeight(tx - 1, ty - 1);
-			float h3 = MapCache.getTileHeight(tx - 1, ty);
-			float h4 = MapCache.getTileHeight(tx, ty - 1);
+			// получаем высоты соседних тайлов
+			float h1 = chunk.getHeight(tx, ty);
+			float h2 = chunk.getHeight(tx - 1, ty - 1);
+			float h3 = chunk.getHeight(tx - 1, ty);
+			float h4 = chunk.getHeight(tx, ty - 1);
 
+			// если хоть один из соседних тайлов не определен поставим признак того что это граница чанка
 			isBorder = h1 <= MapCache.FAKE_HEIGHT || h2 <= MapCache.FAKE_HEIGHT || h3 <= MapCache.FAKE_HEIGHT || h4 <= MapCache.FAKE_HEIGHT;
 
+			// выставим тайлам которых нет
 			h1 = h1 <= MapCache.FAKE_HEIGHT ? 0f : h1;
 			h2 = h2 <= MapCache.FAKE_HEIGHT ? 0f : h2;
 			h3 = h3 <= MapCache.FAKE_HEIGHT ? 0f : h3;
 			h4 = h4 <= MapCache.FAKE_HEIGHT ? 0f : h4;
 
+			// посчитаем среднюю высоту вершины по четырем соседним тайлам
 			h = (h1 + h2 + h3 + h4) / 4f;
 
+			// посчитаем нормаль
 			normal = new Vector3(h1 - h2, h3 - h4, 2.0f).nor();
 		}
+	}
+
+	/**
+	 * получить высоту указанного тайла
+	 */
+	public float getHeight(int tx, int ty)
+	{
+		int x = tx - _gx;
+		int y = ty - _gy;
+		if (x >= _gx && x < _gx + MapCache.GRID_SIZE && y >= _gy && y < _gy + MapCache.GRID_SIZE)
+		{
+			return _grid._heights[y][x];
+		}
+		return MapCache.getTileHeight(tx, ty);
 	}
 
 	public Mesh getMesh()
