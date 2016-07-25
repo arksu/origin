@@ -28,12 +28,10 @@ public class MapCache
 	{
 		grids.add(grid);
 		long timeMillis = System.currentTimeMillis();
-//		_log.debug("add grid");
 		for (Grid grid1 : grids)
 		{
 			grid1.fillChunks(false);
 		}
-//		grid.fillChunks();
 		_log.debug("grid " + grid.getTc() + " added in " + (System.currentTimeMillis() - timeMillis) + " ms");
 	}
 

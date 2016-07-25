@@ -22,7 +22,20 @@ public class Main extends com.badlogic.gdx.Game
 {
 	private static final Logger _log = LoggerFactory.getLogger(Main.class.getName());
 	public static Input _input;
+
+	/**
+	 * время за кадр в мс
+	 */
 	public static long DT;
+
+	/**
+	 * время за кадр в секундах
+	 */
+	public static float deltaTime;
+
+	/**
+	 * последний системный тик
+	 */
 	private static long _last_tick;
 
 	private static AssetManager _assetManager;
@@ -123,6 +136,7 @@ public class Main extends com.badlogic.gdx.Game
 		long now = System.currentTimeMillis();
 		DT = now - _last_tick;
 		_last_tick = now;
+		deltaTime = DT / 1000f;
 
 		Net.ProcessPackets();
 

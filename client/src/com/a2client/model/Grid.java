@@ -68,26 +68,12 @@ public class Grid
 
 	public void fillChunks(boolean force)
 	{
-//		_log.debug("fillChunks " + _tc);
-//		for (GridChunk[] list : _chunks)
-//		{
-//			if (list != null)
-//			{
-//				for (GridChunk chunk : list)
-//				{
-//					if (chunk != null)
-//					{
-//						chunk.clear();
-//					}
-//				}
-//			}
-//		}
-
 		int bordered = 0;
 		for (int x = 0; x < CHUNKS_COUNT; x++)
 		{
 			for (int y = 0; y < CHUNKS_COUNT; y++)
 			{
+				// перестроим только пограничные чанки или если явно указано что перестраивать весь грид
 				if (force || (_chunks[x][y] != null && _chunks[x][y].isBorder()))
 				{
 					_chunks[x][y].clear();
@@ -179,7 +165,8 @@ public class Grid
 	{
 		fillTiles(data);
 		fillHeights();
-		fillChunks(true);
+		// принудительно перестроим весь грид
+//		fillChunks(true);
 	}
 
 	/**

@@ -19,6 +19,8 @@ public class GameCamera extends PerspectiveCamera
 {
 	private static final Logger _log = LoggerFactory.getLogger(GameCamera.class.getName());
 
+	public static final float OFFSET_SPEED = 8f;
+
 	private Vector3 _cameraOffset = new Vector3(0, 0, 10);
 
 	/**
@@ -47,7 +49,7 @@ public class GameCamera extends PerspectiveCamera
 
 	private GameObject _chaseObj = null;
 
-	private Vector3 _current = new Vector3(0, 0, 1f);
+	private final Vector3 _offset = new Vector3(0, 0, 0);
 
 	public GameCamera()
 	{
@@ -80,6 +82,8 @@ public class GameCamera extends PerspectiveCamera
 
 			// скажем смотреть на игрока
 			lookAt(_chaseObj.getWorldCoord());
+
+			position.add(_offset);
 		}
 
 		if (com.a2client.Input.isWheelUpdated())
@@ -142,10 +146,15 @@ public class GameCamera extends PerspectiveCamera
 			_angleX = _startAngleX - (c.sub(_startDrag).y * 0.3f);
 
 			// ограничим вертикальный угол
-			_angleX = Math.min(_angleX, 89f);
+			_angleX = Math.min(_angleX, 110f);
 			_angleX = Math.max(_angleX, 1f);
 
 //			_log.debug("ay: " + _angleY + " ax:" + _angleX);
 		}
+	}
+
+	public Vector3 getOffset()
+	{
+		return _offset;
 	}
 }

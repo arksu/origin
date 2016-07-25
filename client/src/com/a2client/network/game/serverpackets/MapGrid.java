@@ -28,22 +28,37 @@ public class MapGrid extends GameServerPacket
 	@Override
 	public void run()
 	{
+		// удалим лишные гриды
 		MapCache.removeOutsideGrids(_px, _py);
 
-		boolean f = false;
+		Grid fg = null;
+		// ищем грид в списке
 		for (Grid g : MapCache.grids)
 		{
 			if (g.getGC().equals(_gc))
 			{
 				g.setData(_data);
-				f = true;
+				g.fillChunks(true);
+				fg = g;
+				break;
 			}
 		}
-		if (!f)
+		// если не нашли - добавим
+		if (fg == null)
 		{
 			Grid grid = new Grid(_gc, _data);
 			MapCache.addGrid(grid);
 		}
-
+		else
+		{
+			// иначе перестроим остальные гриды, найденный перестроится выше
+			for (Grid g : MapCache.grids)
+			{
+				if (g != fg)
+				{
+					g.fillChunks(false);
+				}
+			}
+		}
 	}
 }

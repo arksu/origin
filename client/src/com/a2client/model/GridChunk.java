@@ -109,7 +109,8 @@ public class GridChunk
 
 		short vertex_count = 0;
 		NormalHeight nh;
-		_isBorder = false;
+
+		// _isBorder запомним навсегда! т.к. это явно граничный чанк в гриде
 
 		for (int x = _cx; x < _cx + CHUNK_SIZE; x++)
 		{
@@ -268,7 +269,7 @@ public class GridChunk
 	{
 		int x = tx - _gx;
 		int y = ty - _gy;
-		if (x >= _gx && x < _gx + MapCache.GRID_SIZE && y >= _gy && y < _gy + MapCache.GRID_SIZE)
+		if (x >= 0 && x < MapCache.GRID_SIZE && y >= 0 && y < MapCache.GRID_SIZE)
 		{
 			return _grid._heights[y][x];
 		}

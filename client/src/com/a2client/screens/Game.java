@@ -191,6 +191,22 @@ public class Game extends BaseScreen
 				{
 					Config._renderTerrainWireframe = !Config._renderTerrainWireframe;
 				}
+				else if (Input.KeyDown(Keys.W))
+				{
+					_gameCamera.getOffset().add(0, 0, Main.deltaTime * GameCamera.OFFSET_SPEED);
+				}
+				else if (Input.KeyDown(Keys.S))
+				{
+					_gameCamera.getOffset().add(0, 0, -Main.deltaTime * GameCamera.OFFSET_SPEED);
+				}
+				else if (Input.KeyDown(Keys.A))
+				{
+					_gameCamera.getOffset().add(Main.deltaTime * GameCamera.OFFSET_SPEED, 0, 0);
+				}
+				else if (Input.KeyDown(Keys.D))
+				{
+					_gameCamera.getOffset().add(-Main.deltaTime * GameCamera.OFFSET_SPEED, 0, 0);
+				}
 			}
 
 			if (ObjectCache.getInstance() != null)
