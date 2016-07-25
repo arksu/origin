@@ -94,7 +94,7 @@ public class Render
 			// Gdx.gl.glDepthFunc(GL20.GL_LEQUAL);
 			// Gdx.gl.glDepthMask(true);
 
-//			renderTerrain(camera);
+			renderTerrain(camera);
 			renderObjects(camera);
 			frameBuffer.end();
 		}

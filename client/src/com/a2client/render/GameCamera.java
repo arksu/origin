@@ -21,8 +21,6 @@ public class GameCamera extends PerspectiveCamera
 
 	public static final float OFFSET_SPEED = 8f;
 
-	private Vector3 _cameraOffset = new Vector3(0, 0, 10);
-
 	/**
 	 * дистанция от камеры до точки куда смотрим
 	 */
@@ -105,7 +103,6 @@ public class GameCamera extends PerspectiveCamera
 			return;
 		}
 
-		position.set(_chaseObj.getWorldCoord()).add(_cameraOffset);
 		direction.set(0, 0, -1);
 
 //		_current.set(position).sub(direction).nor();

@@ -19,6 +19,8 @@ package com.a2client.util;
 
 import com.a2client.Config;
 import com.a2client.Log;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.image.BufferedImage;
@@ -180,9 +182,9 @@ public class Utils
 		{
 			bindex = i * 3;
 			pixels[i] = 0xFF000000                                          // A
-					| ((framebytes.get(bindex) & 0x000000FF) << 16)     // R
-					| ((framebytes.get(bindex + 1) & 0x000000FF) << 8)    // G
-					| ((framebytes.get(bindex + 2) & 0x000000FF) << 0);   // B
+						| ((framebytes.get(bindex) & 0x000000FF) << 16)     // R
+						| ((framebytes.get(bindex + 1) & 0x000000FF) << 8)    // G
+						| ((framebytes.get(bindex + 2) & 0x000000FF) << 0);   // B
 		}
 		// free up this memory
 		framebytes = null;
@@ -307,5 +309,14 @@ public class Utils
 	public static boolean isEmpty(String s)
 	{
 		return s == null || s.isEmpty();
+	}
+
+	public static float baryCentric(Vector3 p1, Vector3 p2, Vector3 p3, Vector2 pos)
+	{
+		float det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
+		float l1 = ((p2.z - p3.z) * (pos.x - p3.x) + (p3.x - p2.x) * (pos.y - p3.z)) / det;
+		float l2 = ((p3.z - p1.z) * (pos.x - p3.x) + (p1.x - p3.x) * (pos.y - p3.z)) / det;
+		float l3 = 1.0f - l1 - l2;
+		return l1 * p1.y + l2 * p2.y + l3 * p3.y;
 	}
 }

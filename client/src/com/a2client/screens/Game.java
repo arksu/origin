@@ -57,7 +57,7 @@ public class Game extends BaseScreen
 	{
 		Player.init();
 		ObjectCache.getInstance().clear();
-		MapCache.clear();
+		Terrain.clear();
 
 		GUI.reCreate();
 		_lblStatus = new GUI_Label(GUI.rootNormal());
@@ -128,7 +128,7 @@ public class Game extends BaseScreen
 		Player.getInstance().dispose();
 		ObjectCache.getInstance().clear();
 		InventoryCache.getInstance().clear();
-		MapCache.clear();
+		Terrain.clear();
 		_instance = null;
 		super.dispose();
 	}
@@ -140,8 +140,8 @@ public class Game extends BaseScreen
 
 		if (_state == GameState.IN_GAME)
 		{
-			_statusText = "mouse coord: " + Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE) + ", " +
-						  Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE);
+			_statusText = "mouse coord: " + Math.round(_world_mouse_pos.x * Terrain.TILE_SIZE) + ", " +
+						  Math.round(_world_mouse_pos.y * Terrain.TILE_SIZE);
 
 			if (GUI.getInstance().focused_control == _chatEdit)
 			{
@@ -190,6 +190,10 @@ public class Game extends BaseScreen
 				else if (Input.KeyHit(Hotkey.TERRAIN_WIREFRAME))
 				{
 					Config._renderTerrainWireframe = !Config._renderTerrainWireframe;
+				}
+				else if (Input.KeyHit(Hotkey.RENDER_OUTLINE))
+				{
+					Config._renderOutline = !Config._renderOutline;
 				}
 				else if (Input.KeyDown(Keys.W))
 				{
@@ -270,8 +274,8 @@ public class Game extends BaseScreen
 					new MouseClick(
 							_mouseBtns[i],
 							i,
-							Math.round(_world_mouse_pos.x * MapCache.TILE_SIZE),
-							Math.round(_world_mouse_pos.y * MapCache.TILE_SIZE),
+							Math.round(_world_mouse_pos.x * Terrain.TILE_SIZE),
+							Math.round(_world_mouse_pos.y * Terrain.TILE_SIZE),
 							(_render.getSelected() != null ? _render.getSelected().getObjectId() : 0)
 					).Send();
 				}

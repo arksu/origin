@@ -2,8 +2,9 @@
 	{
 		"typeId": 1,
 //		"res": "assets/debug/leg.g3db",
-		"res": "assets/untitled.g3db",
-		"scale": 0.001
+//		"res": "assets/untitled.g3db",
+		"res": "assets/debug/cube_test.obj",
+		"scale": 0.5
 	},
 	{
 		"typeId": 2,

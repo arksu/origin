@@ -1,7 +1,6 @@
 package com.a2client.model;
 
 import com.a2client.Config;
-import com.a2client.MapCache;
 import com.a2client.util.OpenSimplexNoise;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.graphics.Camera;
@@ -11,7 +10,8 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.a2client.MapCache.GRID_SIZE;
+import static com.a2client.Terrain.GRID_SIZE;
+import static com.a2client.Terrain.TILE_SIZE;
 
 /**
  * 1 грид поверхности игрового мира
@@ -25,7 +25,7 @@ public class Grid
 	/**
 	 * размер чанка в тайлах
 	 */
-	public static final int CHUNK_SIZE = 10;
+	public static final int CHUNK_SIZE = 20;
 
 	/**
 	 * на сколько кусков делим грид
@@ -60,7 +60,7 @@ public class Grid
 	public Grid(Vec2i c, byte[] data)
 	{
 		_gc = c;
-		_tc = _gc.div(MapCache.TILE_SIZE);
+		_tc = _gc.div(TILE_SIZE);
 		fillTiles(data);
 		fillHeights();
 		makeTerrainObjects();
@@ -146,7 +146,9 @@ public class Grid
 			{
 				double tx = _tc.x + x;
 				double ty = _tc.y + y;
-				_heights[y][x] = ((float) noise.eval(tx / div, ty / div)) * 2.8f;
+				float h = ((float) noise.eval(tx / div, ty / div)) * 2.8f;
+//				float h = 0;
+				_heights[y][x] = h;
 			}
 		}
 	}
@@ -169,12 +171,17 @@ public class Grid
 //		fillChunks(true);
 	}
 
+	public GridChunk getChunk(int x, int y)
+	{
+		return _chunks[x][y];
+	}
+
 	/**
 	 * создать террайн объекты (локальные)
 	 */
 	public void makeTerrainObjects()
 	{
-
+		// TODO makeTerrainObjects
 	}
 
 	/**

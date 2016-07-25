@@ -1,6 +1,6 @@
 package com.a2client.model;
 
-import com.a2client.MapCache;
+import com.a2client.Terrain;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
@@ -62,7 +62,7 @@ public class GridChunk
 	 */
 	private boolean _isBorder = false;
 
-	private final NormalHeight[][] _heights = new NormalHeight[CHUNK_SIZE + 1][CHUNK_SIZE + 1];
+	private final NormalHeight[][] _heights = new NormalHeight[CHUNK_SIZE + 2][CHUNK_SIZE + 2];
 
 	public GridChunk(Grid grid, int gx, int gy)
 	{
@@ -84,15 +84,20 @@ public class GridChunk
 		makeMesh();
 	}
 
-	protected NormalHeight getNormalHeight(int tx, int ty)
+	/**
+	 * получить нормаль и высоту вершины
+	 * @param tx, ty от 0 до CHUNK_SIZE+2, 0 это -1 от начала чанка. и до +1 длины чанка. 2 лишних вершины для избыточности
+	 */
+	public NormalHeight getNormalHeight(int tx, int ty)
 	{
-		NormalHeight normalHeight = _heights[tx - _gx - _cx][ty - _gy - _cy];
+//		_log.debug("tx="+tx+" ty="+ty);
+		NormalHeight normalHeight = _heights[tx - _gx - _cx + 1][ty - _gy - _cy + 1];
 		if (normalHeight != null)
 		{
 			return normalHeight;
 		}
 		normalHeight = new NormalHeight(tx, ty, this);
-		_heights[tx - _gx - _cx][ty - _gy - _cy] = normalHeight;
+		_heights[tx - _gx - _cx + 1][ty - _gy - _cy + 1] = normalHeight;
 		return normalHeight;
 	}
 
@@ -104,13 +109,25 @@ public class GridChunk
 		// отступ данного грида в тайлах
 		_gx = _grid.getTc().x;
 		_gy = _grid.getTc().y;
-		_boundingBox = new BoundingBox(new Vector3(_gx + _cx, -1, _gy + _cy),
-									   new Vector3(_gx + _cx + CHUNK_SIZE, 3, _gy + _cy + CHUNK_SIZE));
+		_boundingBox = new BoundingBox(
+				new Vector3(_gx + _cx, -1, _gy + _cy),
+				new Vector3(_gx + _cx + CHUNK_SIZE, 3, _gy + _cy + CHUNK_SIZE));
 
 		short vertex_count = 0;
 		NormalHeight nh;
 
 		// _isBorder запомним навсегда! т.к. это явно граничный чанк в гриде
+
+		for (int x = _cx - 1; x <= _cx + CHUNK_SIZE; x++)
+		{
+			getNormalHeight(_gx + x, _gy + _cy - 1);
+			getNormalHeight(_gx + x, _gy + _cy + CHUNK_SIZE);
+		}
+		for (int y = _cy - 1; y <= _cy + CHUNK_SIZE; y++)
+		{
+			getNormalHeight(_gx + _cx - 1, _gy + y);
+			getNormalHeight(_gx + _cx + CHUNK_SIZE, _gy + y);
+		}
 
 		for (int x = _cx; x < _cx + CHUNK_SIZE; x++)
 		{
@@ -231,11 +248,11 @@ public class GridChunk
 		_mesh.setIndices(_index);
 	}
 
-	private class NormalHeight
+	public class NormalHeight
 	{
-		public float h;
-		public Vector3 normal;
-		public boolean isBorder;
+		public final float h;
+		public final Vector3 normal;
+		public final boolean isBorder;
 
 		public NormalHeight(int tx, int ty, GridChunk chunk)
 		{
@@ -246,13 +263,13 @@ public class GridChunk
 			float h4 = chunk.getHeight(tx, ty - 1);
 
 			// если хоть один из соседних тайлов не определен поставим признак того что это граница чанка
-			isBorder = h1 <= MapCache.FAKE_HEIGHT || h2 <= MapCache.FAKE_HEIGHT || h3 <= MapCache.FAKE_HEIGHT || h4 <= MapCache.FAKE_HEIGHT;
+			isBorder = h1 <= Terrain.FAKE_HEIGHT || h2 <= Terrain.FAKE_HEIGHT || h3 <= Terrain.FAKE_HEIGHT || h4 <= Terrain.FAKE_HEIGHT;
 
 			// выставим тайлам которых нет
-			h1 = h1 <= MapCache.FAKE_HEIGHT ? 0f : h1;
-			h2 = h2 <= MapCache.FAKE_HEIGHT ? 0f : h2;
-			h3 = h3 <= MapCache.FAKE_HEIGHT ? 0f : h3;
-			h4 = h4 <= MapCache.FAKE_HEIGHT ? 0f : h4;
+			h1 = h1 <= Terrain.FAKE_HEIGHT ? 0f : h1;
+			h2 = h2 <= Terrain.FAKE_HEIGHT ? 0f : h2;
+			h3 = h3 <= Terrain.FAKE_HEIGHT ? 0f : h3;
+			h4 = h4 <= Terrain.FAKE_HEIGHT ? 0f : h4;
 
 			// посчитаем среднюю высоту вершины по четырем соседним тайлам
 			h = (h1 + h2 + h3 + h4) / 4f;
@@ -269,11 +286,11 @@ public class GridChunk
 	{
 		int x = tx - _gx;
 		int y = ty - _gy;
-		if (x >= 0 && x < MapCache.GRID_SIZE && y >= 0 && y < MapCache.GRID_SIZE)
+		if (x >= 0 && x < Terrain.GRID_SIZE && y >= 0 && y < Terrain.GRID_SIZE)
 		{
 			return _grid._heights[y][x];
 		}
-		return MapCache.getTileHeight(tx, ty);
+		return Terrain.getTileHeight(tx, ty);
 	}
 
 	public Mesh getMesh()

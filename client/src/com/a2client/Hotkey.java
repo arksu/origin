@@ -12,6 +12,7 @@ public class Hotkey
 	public static int CHAT_ENTER = Keys.ENTER;
 	public static int FOG = Keys.O;
 	public static int TERRAIN_WIREFRAME = Keys.I;
+	public static int RENDER_OUTLINE = Keys.L;
 
 	public static int CAMERA_BUTTON = Input.MB_RIGHT;
 }
