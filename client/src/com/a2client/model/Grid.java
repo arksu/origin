@@ -1,5 +1,6 @@
 package com.a2client.model;
 
+import com.a2client.Config;
 import com.a2client.MapCache;
 import com.a2client.util.OpenSimplexNoise;
 import com.a2client.util.Vec2i;
@@ -115,7 +116,8 @@ public class Grid
 				{
 					if (camera.frustum.boundsInFrustum(chunk.getBoundingBox()))
 					{
-						chunk.getMesh().render(shaderProgram, GL20.GL_TRIANGLES);
+						chunk.getMesh().render(shaderProgram,
+											   Config._renderTerrainWireframe ? GL20.GL_LINE_STRIP : GL20.GL_TRIANGLES);
 						result++;
 					}
 				}

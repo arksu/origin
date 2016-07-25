@@ -187,6 +187,10 @@ public class Game extends BaseScreen
 				{
 					Fog.enabled = !Fog.enabled;
 				}
+				else if (Input.KeyHit(Hotkey.TERRAIN_WIREFRAME))
+				{
+					Config._renderTerrainWireframe = !Config._renderTerrainWireframe;
+				}
 			}
 
 			if (ObjectCache.getInstance() != null)

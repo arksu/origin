@@ -119,6 +119,8 @@ public class GridChunk
 				int ty;
 				Vector2 uv;
 
+				Float h, hX, hY, hXY;
+
 				// абсолютные координаты тайла
 				tx = _gx + x;
 				ty = _gy + y;
@@ -129,6 +131,7 @@ public class GridChunk
 				_vertex[idx++] = tx;
 				_vertex[idx++] = nh.h;
 				_vertex[idx++] = ty;
+				h = nh.h;
 
 				// normal
 				_vertex[idx++] = nh.normal.x;
@@ -147,6 +150,7 @@ public class GridChunk
 				_vertex[idx++] = tx + 1;
 				_vertex[idx++] = nh.h;
 				_vertex[idx++] = ty;
+				hX = nh.h;
 
 				// normal
 				_vertex[idx++] = nh.normal.x;
@@ -164,6 +168,7 @@ public class GridChunk
 				_vertex[idx++] = tx;
 				_vertex[idx++] = nh.h;
 				_vertex[idx++] = ty + 1;
+				hY = nh.h;
 
 				// normal
 				_vertex[idx++] = nh.normal.x;
@@ -181,6 +186,7 @@ public class GridChunk
 				_vertex[idx++] = tx + 1;
 				_vertex[idx++] = nh.h;
 				_vertex[idx++] = ty + 1;
+				hXY = nh.h;
 
 				// normal
 				_vertex[idx++] = nh.normal.x;
@@ -192,17 +198,32 @@ public class GridChunk
 				_vertex[idx++] = uv.x + TILE_ATLAS_SIZE;
 				_vertex[idx++] = uv.y + TILE_ATLAS_SIZE;
 
-				//index
-				_index[idv++] = vertex_count;
-				_index[idv++] = (short) (vertex_count + 3);
-				_index[idv++] = (short) (vertex_count + 1);
+				float rightDelta = Math.abs(h - hXY);
+				float leftDelta = Math.abs(hX - hY);
 
-				_index[idv++] = vertex_count;
-				_index[idv++] = (short) (vertex_count + 2);
-				_index[idv++] = (short) (vertex_count + 3);
+				//index
+				if (rightDelta < leftDelta)
+				{
+					_index[idv++] = vertex_count;
+					_index[idv++] = (short) (vertex_count + 3);
+					_index[idv++] = (short) (vertex_count + 1);
+
+					_index[idv++] = vertex_count;
+					_index[idv++] = (short) (vertex_count + 2);
+					_index[idv++] = (short) (vertex_count + 3);
+				}
+				else
+				{
+					_index[idv++] = vertex_count;
+					_index[idv++] = (short) (vertex_count + 2);
+					_index[idv++] = (short) (vertex_count + 1);
+
+					_index[idv++] = (short) (vertex_count + 1);
+					_index[idv++] = (short) (vertex_count + 2);
+					_index[idv++] = (short) (vertex_count + 3);
+				}
 
 				vertex_count += 4;
-
 			}
 		}
 		_mesh.setVertices(_vertex);

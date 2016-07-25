@@ -81,6 +81,11 @@ public class Config
 	 */
 	public static boolean _renderOutline = false;
 
+	/**
+	 * сетку ладншафта выводить?
+	 */
+	public static boolean _renderTerrainWireframe = false;
+
 	// режим дебага
 	public static boolean _debug = false;
 	// показывать детальную расшифровку пакетов
