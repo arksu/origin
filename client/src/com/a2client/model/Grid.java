@@ -93,7 +93,7 @@ public class Grid
 
 	public int render(ShaderProgram shaderProgram, Camera camera)
 	{
-		int result = 0;
+		int chunksRendered = 0;
 		for (GridChunk[] list : _chunks)
 		{
 			if (list != null)
@@ -102,14 +102,15 @@ public class Grid
 				{
 					if (camera.frustum.boundsInFrustum(chunk.getBoundingBox()))
 					{
-						chunk.getMesh().render(shaderProgram,
-											   Config._renderTerrainWireframe ? GL20.GL_LINE_STRIP : GL20.GL_TRIANGLES);
-						result++;
+						chunk.getMesh().render(
+								shaderProgram,
+								Config._renderTerrainWireframe ? GL20.GL_LINE_STRIP : GL20.GL_TRIANGLES);
+						chunksRendered++;
 					}
 				}
 			}
 		}
-		return result;
+		return chunksRendered;
 	}
 
 	public static Color getTileColor(byte tile)
@@ -167,8 +168,6 @@ public class Grid
 	{
 		fillTiles(data);
 		fillHeights();
-		// принудительно перестроим весь грид
-//		fillChunks(true);
 	}
 
 	public GridChunk getChunk(int x, int y)

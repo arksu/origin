@@ -63,6 +63,7 @@ public class Terrain
 		_shaderDepth = makeShader("assets/depth_vertex.glsl", "assets/depth_frag.glsl");
 
 		_tileAtlas = Main.getAssetManager().get(Config.RESOURCE_DIR + "tiles_atlas.png", Texture.class);
+		_tileAtlas.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
 	}
 

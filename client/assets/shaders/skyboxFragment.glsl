@@ -1,9 +1,22 @@
 #version 120
 
-uniform samplerCube u_texture;
+uniform samplerCube u_texture1;
+uniform samplerCube u_texture2;
+uniform float u_blendValue;
+
+uniform vec3 u_skyColor;
 
 varying vec3 texCoords;
 
+const float lowerLimit = 0.0;
+const float upperLimit = 20.0;
+
 void main() {
-	gl_FragColor = textureCube(u_texture, texCoords);
+	vec4 color1 = textureCube(u_texture1, texCoords);
+	vec4 color2 = textureCube(u_texture2, texCoords);
+	vec4 finalColor = mix(color1, color2, u_blendValue);
+
+	float factor = (texCoords.y - lowerLimit) / (upperLimit - lowerLimit);
+	factor = clamp(factor, 0.0, 1.0);
+	gl_FragColor = mix(vec4(u_skyColor, 1.0), finalColor, factor);
 }
