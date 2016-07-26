@@ -2,6 +2,7 @@ package com.a2client.render;
 
 import com.a2client.model.GameObject;
 import com.a2client.util.Vec2i;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
@@ -40,14 +41,13 @@ public class GameCamera extends PerspectiveCamera
 	private float _startAngleY;
 	private float _startAngleX;
 
-	/**
-	 * плоскость горизонта (тайлов) нужно для поиска позиции мыши на карте
-	 */
-	private final Plane _xzPlane = new Plane(new Vector3(0, 1, 0), 0);
-
 	private GameObject _chaseObj = null;
 
 	private final Vector3 _offset = new Vector3(0, 0, 0);
+
+	private Ray _ray;
+
+	private MousePicker _mousePicker;
 
 	public GameCamera()
 	{
@@ -57,11 +57,17 @@ public class GameCamera extends PerspectiveCamera
 		near = 1f;
 		far = 1000f;
 
+		_mousePicker = new MousePicker();
+
 		update();
 	}
 
 	public void update()
 	{
+		_ray = getPickRay(Gdx.input.getX(), Gdx.input.getY());
+		_mousePicker.update(_ray, this);
+		_log.debug("terrain point: " + _mousePicker.getCurrentTerrainPoint());
+
 		if (_chaseObj != null)
 		{
 			// установим верх
@@ -120,14 +126,6 @@ public class GameCamera extends PerspectiveCamera
 		update();
 	}
 
-	public Vector2 screen2world(int x, int y)
-	{
-		Vector3 intersection = new Vector3();
-		Ray ray = getPickRay(x, y);
-		Intersector.intersectRayPlane(ray, _xzPlane, intersection);
-		return new Vector2(intersection.x, intersection.z);
-	}
-
 	public void startDrag(Vec2i startDrag)
 	{
 		_startDrag = startDrag;
@@ -153,5 +151,15 @@ public class GameCamera extends PerspectiveCamera
 	public Vector3 getOffset()
 	{
 		return _offset;
+	}
+
+	public Ray getRay()
+	{
+		return _ray;
+	}
+
+	public MousePicker getMousePicker()
+	{
+		return _mousePicker;
 	}
 }

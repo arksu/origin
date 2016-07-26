@@ -14,7 +14,7 @@ import com.a2client.util.Keys;
 import com.a2client.util.Utils;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +42,7 @@ public class Game extends BaseScreen
 	private static Game _instance;
 	private GameState _state = GameState.ENTERING;
 
-	private Vector2 _world_mouse_pos = new Vector2();
+	private Vector3 _worldMousePos;
 	private boolean[] _mouseBtns = new boolean[3];
 
 	private Render _render;
@@ -136,13 +136,16 @@ public class Game extends BaseScreen
 	@Override
 	public void onUpdate()
 	{
-		_world_mouse_pos = screen2world(Gdx.input.getX(), Gdx.input.getY());
-
 		if (_state == GameState.IN_GAME)
 		{
-			_statusText = "mouse coord: " + Math.round(_world_mouse_pos.x * Terrain.TILE_SIZE) + ", " +
-						  Math.round(_world_mouse_pos.y * Terrain.TILE_SIZE);
+			if (_worldMousePos != null)
+			{
+				_statusText = "mouse coord: " + Math.round(_worldMousePos.x * Terrain.TILE_SIZE) + ", " +
+							  Math.round(_worldMousePos.z * Terrain.TILE_SIZE);
 
+			} else {
+				_statusText = "mouse coord: NULL";
+			}
 			if (GUI.getInstance().focused_control == _chatEdit)
 			{
 				String h = "";
@@ -221,8 +224,9 @@ public class Game extends BaseScreen
 				}
 			}
 
-			UpdateMouseButtons();
 			_gameCamera.update();
+			_worldMousePos = _gameCamera.getMousePicker().getCurrentTerrainPoint();
+			UpdateMouseButtons();
 		}
 		_lblStatus.caption =
 				"FPS: " + Gdx.graphics.getFramesPerSecond() +
@@ -274,8 +278,8 @@ public class Game extends BaseScreen
 					new MouseClick(
 							_mouseBtns[i],
 							i,
-							Math.round(_world_mouse_pos.x * Terrain.TILE_SIZE),
-							Math.round(_world_mouse_pos.y * Terrain.TILE_SIZE),
+							Math.round(_worldMousePos.x * Terrain.TILE_SIZE),
+							Math.round(_worldMousePos.y * Terrain.TILE_SIZE),
 							(_render.getSelected() != null ? _render.getSelected().getObjectId() : 0)
 					).Send();
 				}
@@ -294,11 +298,6 @@ public class Game extends BaseScreen
 	{
 		super.resize(width, height);
 		_gameCamera.onResize(width, height);
-	}
-
-	public Vector2 screen2world(int x, int y)
-	{
-		return _gameCamera.screen2world(x, y);
 	}
 
 	public void setState(GameState state)
@@ -331,5 +330,10 @@ public class Game extends BaseScreen
 	public GameCamera getCamera()
 	{
 		return _gameCamera;
+	}
+
+	public Vector3 getWorldMousePos()
+	{
+		return _worldMousePos;
 	}
 }

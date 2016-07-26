@@ -1,6 +1,7 @@
 package com.a2client.render;
 
 import com.a2client.Config;
+import com.a2client.ModelManager;
 import com.a2client.ObjectCache;
 import com.a2client.Terrain;
 import com.a2client.model.GameObject;
@@ -17,7 +18,6 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.Ray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +54,8 @@ public class Render
 
 	private Mesh fullScreenQuad;
 
+	ModelInstance _testModel;
+
 	public Render(Game game)
 	{
 		ShaderProgram.pedantic = false;
@@ -81,6 +83,8 @@ public class Render
 		// System.out.println(test2.);
 
 		_skybox = new Skybox();
+
+		_testModel = ModelManager.getInstance().getModelByType(1);
 	}
 
 	public void render(Camera camera)
@@ -94,12 +98,12 @@ public class Render
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-			 Gdx.gl.glCullFace(GL20.GL_FRONT);
+			Gdx.gl.glCullFace(GL20.GL_FRONT);
 			// Gdx.gl.glDepthFunc(GL20.GL_LEQUAL);
 			// Gdx.gl.glDepthMask(true);
 
 			renderTerrain(camera);
-			renderObjects(camera);
+			renderObjects(camera, false);
 			frameBuffer.end();
 		}
 
@@ -112,7 +116,16 @@ public class Render
 		_terrain._shader = _terrain._shaderTerrain;
 		_skybox.Render(camera, _environment);
 		renderTerrain(camera);
-		renderObjects(camera);
+		renderObjects(camera, true);
+
+
+//		if (_mousePicker.getCurrentTerrainPoint() != null)
+//		{
+//			_modelBatch.begin(camera);
+//			_testModel.transform.setTranslation(_mousePicker.getCurrentTerrainPoint());
+//			_modelBatch.render(_testModel);
+//			_modelBatch.end();
+//		}
 
 		// GUIGDX.getSpriteBatch().begin();
 
@@ -140,14 +153,13 @@ public class Render
 		// GUIGDX.getSpriteBatch().end();
 	}
 
-	protected void renderObjects(Camera camera)
+	protected void renderObjects(Camera camera, boolean findIntersect)
 	{
 		_renderedObjects = 0;
 		if (ObjectCache.getInstance() != null)
 		{
 			_selected = null;
 			_selectedDist = 100500;
-			Ray ray = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
 			_modelBatch.begin(camera);
 			for (GameObject o : ObjectCache.getInstance().getObjects())
 			{
@@ -155,21 +167,28 @@ public class Render
 				// если объект попадает в поле зрения камеры
 				if (model != null && camera.frustum.boundsInFrustum(o.getBoundingBox()))
 				{
+					if (o.getTypeId() == 1 && _game.getWorldMousePos() != null)
+					{
+						model.transform.setTranslation(_game.getWorldMousePos());
+					}
 					_modelBatch.render(model, _environment);
 					_renderedObjects++;
 
 					// попадает ли луч из мыши в объект?
-					Vector3 intersection = new Vector3();
-					if (Intersector.intersectRayBounds(ray, o.getBoundingBox(),
-													   intersection))
+					if (_game.getCamera().getRay() != null && findIntersect)
 					{
-						// дистанция до объекта
-						float dist = intersection.dst(camera.position);
-						// если дистанция меньше предыдушего - обновим объект в который попадает мышь
-						if (dist < _selectedDist)
+						Vector3 intersection = new Vector3();
+						if (Intersector.intersectRayBounds(_game.getCamera().getRay(), o.getBoundingBox(),
+														   intersection))
 						{
-							_selected = o;
-							_selectedDist = dist;
+							// дистанция до объекта
+							float dist = intersection.dst(camera.position);
+							// если дистанция меньше предыдушего - обновим объект в который попадает мышь
+							if (dist < _selectedDist)
+							{
+								_selected = o;
+								_selectedDist = dist;
+							}
 						}
 					}
 				}
