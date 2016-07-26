@@ -84,7 +84,7 @@ public class Render
 
 		_skybox = new Skybox();
 
-		_testModel = ModelManager.getInstance().getModelByType(1);
+		_testModel = ModelManager.getInstance().getModelByType(19);
 	}
 
 	public void render(Camera camera)
@@ -119,13 +119,13 @@ public class Render
 		renderObjects(camera, true);
 
 
-//		if (_mousePicker.getCurrentTerrainPoint() != null)
-//		{
-//			_modelBatch.begin(camera);
-//			_testModel.transform.setTranslation(_mousePicker.getCurrentTerrainPoint());
-//			_modelBatch.render(_testModel);
-//			_modelBatch.end();
-//		}
+		if (_game.getWorldMousePos() != null)
+		{
+			_modelBatch.begin(camera);
+			_testModel.transform.setTranslation(_game.getWorldMousePos());
+			_modelBatch.render(_testModel, _environment);
+			_modelBatch.end();
+		}
 
 		// GUIGDX.getSpriteBatch().begin();
 
@@ -167,10 +167,10 @@ public class Render
 				// если объект попадает в поле зрения камеры
 				if (model != null && camera.frustum.boundsInFrustum(o.getBoundingBox()))
 				{
-					if (o.getTypeId() == 1 && _game.getWorldMousePos() != null)
-					{
-						model.transform.setTranslation(_game.getWorldMousePos());
-					}
+//					if (o.getTypeId() == 1 && _game.getWorldMousePos() != null)
+//					{
+//						model.transform.setTranslation(_game.getWorldMousePos());
+//					}
 					_modelBatch.render(model, _environment);
 					_renderedObjects++;
 

@@ -4,9 +4,6 @@ import com.a2client.model.GameObject;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Plane;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import org.slf4j.Logger;
@@ -66,7 +63,7 @@ public class GameCamera extends PerspectiveCamera
 	{
 		_ray = getPickRay(Gdx.input.getX(), Gdx.input.getY());
 		_mousePicker.update(_ray, this);
-		_log.debug("terrain point: " + _mousePicker.getCurrentTerrainPoint());
+//		_log.debug("terrain point: " + _mousePicker.getCurrentTerrainPoint());
 
 		if (_chaseObj != null)
 		{

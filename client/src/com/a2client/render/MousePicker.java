@@ -14,35 +14,51 @@ public class MousePicker
 {
 	private static final Logger _log = LoggerFactory.getLogger(MousePicker.class.getName());
 
-	private static final int RECURSION_COUNT = 200;
-	private static final float RAY_RANGE = 200;
+	private static final int RECURSION_COUNT = 300;
+	private static final float RAY_RANGE = 100;
 
-	private static final float STEP_LEN = 3f;
+	private static final float STEP_LEN = 1.3f;
 
 	private Vector3 _currentTerrainPoint;
 
 	public void update(Ray ray, Camera camera)
 	{
-//		camera.position.sub(camera.direction)
-		if (intersectionInRange(0, RAY_RANGE, ray))
+		long time = System.currentTimeMillis();
+		float len = 0;
+
+		_currentTerrainPoint = null;
+//		int steps = 0;
+//		float f1 = 0, f2 = 0;
+		while (len < RAY_RANGE)
 		{
-			_currentTerrainPoint = binarySearch(0, 0, RAY_RANGE, ray);
+			if (intersectionInRange(len, len + STEP_LEN, ray))
+			{
+//				f1 = len;
+//				f2 = len + STEP_LEN;
+				_currentTerrainPoint = binarySearch(0, len, len + STEP_LEN, ray);
+				break;
+			}
+			len += STEP_LEN;
+//			steps++;
 		}
-		else
-		{
-			_currentTerrainPoint = null;
-		}
+//		_log.debug(
+//				"steps: " + steps +
+//				" " + (_currentTerrainPoint != null ? "Found" : "NULL") +
+//				" " + f1 + " " + f2 +
+//				" in " + (System.currentTimeMillis() - time) + " ms");
 	}
 
 	private Vector3 getPointOnRay(Ray ray, float distance)
 	{
 		Vector3 start = ray.origin.cpy();
-		return start.add(ray.direction.x * distance, ray.direction.y * distance, ray.direction.z * distance);
+		Vector3 dir = ray.direction.cpy();
+		dir.nor();
+		return start.add(dir.x * distance, dir.y * distance, dir.z * distance);
 	}
 
 	private Vector3 binarySearch(int count, float start, float finish, Ray ray)
 	{
-		float half = start + ((finish - start) / 2f);
+		float half = start + ((finish - start) * 0.5f);
 		if (count >= RECURSION_COUNT)
 		{
 			return getPointOnRay(ray, half);

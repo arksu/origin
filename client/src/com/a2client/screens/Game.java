@@ -143,7 +143,9 @@ public class Game extends BaseScreen
 				_statusText = "mouse coord: " + Math.round(_worldMousePos.x * Terrain.TILE_SIZE) + ", " +
 							  Math.round(_worldMousePos.z * Terrain.TILE_SIZE);
 
-			} else {
+			}
+			else
+			{
 				_statusText = "mouse coord: NULL";
 			}
 			if (GUI.getInstance().focused_control == _chatEdit)
@@ -214,6 +216,14 @@ public class Game extends BaseScreen
 				{
 					_gameCamera.getOffset().add(-Main.deltaTime * GameCamera.OFFSET_SPEED, 0, 0);
 				}
+				else if (Input.KeyDown(Keys.E))
+				{
+					_gameCamera.getOffset().add(0, Main.deltaTime * GameCamera.OFFSET_SPEED, 0);
+				}
+				else if (Input.KeyDown(Keys.Q))
+				{
+					_gameCamera.getOffset().add(0, -Main.deltaTime * GameCamera.OFFSET_SPEED, 0);
+				}
 			}
 
 			if (ObjectCache.getInstance() != null)
@@ -279,7 +289,7 @@ public class Game extends BaseScreen
 							_mouseBtns[i],
 							i,
 							Math.round(_worldMousePos.x * Terrain.TILE_SIZE),
-							Math.round(_worldMousePos.y * Terrain.TILE_SIZE),
+							Math.round(_worldMousePos.z * Terrain.TILE_SIZE),
 							(_render.getSelected() != null ? _render.getSelected().getObjectId() : 0)
 					).Send();
 				}

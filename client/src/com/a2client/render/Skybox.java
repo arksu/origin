@@ -22,7 +22,7 @@ public class Skybox
 	/**
 	 * degrees per second
 	 */
-	private static final float ROTATE_SPEED = 1f;
+	private static final float ROTATE_SPEED = 0.8f;
 
 	private static final float[] VERTICES = {
 			-SIZE, SIZE, -SIZE,
@@ -155,7 +155,7 @@ public class Skybox
 	}
 
 	protected void updateDayNight() {
-		_time += Main.deltaTime * 2000f;
+		_time += Main.deltaTime * 500f;
 		_time %= 24000;
 
 		Cubemap texture1;
