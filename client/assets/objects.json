@@ -3,8 +3,10 @@
 		"typeId": 1,
 //		"res": "assets/debug/leg.g3db",
 //		"res": "assets/untitled.g3db",
-		"res": "assets/debug/cube_test.obj",
-		"scale": 0.5
+//		"res": "assets/debug/cube_test.obj",
+		"res": "assets/models/Rabbit.obj",
+//		"res": "assets/models/rabbit.g3dj",
+		"scale": 1
 	},
 	{
 		"typeId": 2,

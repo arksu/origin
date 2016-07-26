@@ -110,6 +110,7 @@ public class ModelManager
 		{
 			_modelHitList.put(model, new IntArray());
 		}
+//		model.
 		_modelHitList.get(model).add(desc._typeId);
 		desc._loaded = true;
 		desc._lastUsage = TimeUtils.millis();

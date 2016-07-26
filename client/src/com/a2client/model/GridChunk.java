@@ -1,6 +1,7 @@
 package com.a2client.model;
 
 import com.a2client.Terrain;
+import com.a2client.util.Utils;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.a2client.model.Grid.CHUNK_SIZE;
+import static com.a2client.model.Grid.WATER_LEVEL;
 import static com.a2client.model.Tile.TILE_ATLAS_SIZE;
 
 /**
@@ -26,6 +28,8 @@ public class GridChunk
 	 * меш
 	 */
 	private Mesh _mesh;
+
+	private Mesh _waterMesh;
 
 	/**
 	 * массив вершин
@@ -63,6 +67,8 @@ public class GridChunk
 	private boolean _isBorder = false;
 
 	private final NormalHeight[][] _heights = new NormalHeight[CHUNK_SIZE + 2][CHUNK_SIZE + 2];
+
+	private float _maxHeight;
 
 	public GridChunk(Grid grid, int gx, int gy)
 	{
@@ -108,9 +114,6 @@ public class GridChunk
 		// отступ данного грида в тайлах
 		_gx = _grid.getTc().x;
 		_gy = _grid.getTc().y;
-		_boundingBox = new BoundingBox(
-				new Vector3(_gx + _cx, -1, _gy + _cy),
-				new Vector3(_gx + _cx + CHUNK_SIZE, 3, _gy + _cy + CHUNK_SIZE));
 
 		short vertex_count = 0;
 		NormalHeight nh;
@@ -127,6 +130,11 @@ public class GridChunk
 //			getNormalHeight(_gx + _cx - 1, _gy + y);
 //			getNormalHeight(_gx + _cx + CHUNK_SIZE, _gy + y);
 //		}
+
+		// определим нужна ли вода в этом чанке?
+		// хоть одна вершина ниже уровня воды?
+		boolean needWater = false;
+		_maxHeight = 0;
 
 		for (int x = _cx; x < _cx + CHUNK_SIZE; x++)
 		{
@@ -210,6 +218,13 @@ public class GridChunk
 				float rightDelta = Math.abs(h - hXY);
 				float leftDelta = Math.abs(hX - hY);
 
+				needWater = needWater || h < WATER_LEVEL ||
+							hX < WATER_LEVEL ||
+							hY < WATER_LEVEL ||
+							hXY < WATER_LEVEL;
+
+				_maxHeight = Utils.max(_maxHeight, h, hX, hY, hXY);
+
 				//index
 				if (rightDelta < leftDelta)
 				{
@@ -237,6 +252,46 @@ public class GridChunk
 		}
 		_mesh.setVertices(_vertex);
 		_mesh.setIndices(_index);
+
+		_boundingBox = new BoundingBox(
+				new Vector3(_gx + _cx, -1, _gy + _cy),
+				new Vector3(_gx + _cx + CHUNK_SIZE, _maxHeight, _gy + _cy + CHUNK_SIZE));
+
+		if (needWater)
+		{
+			makeWater();
+		}
+	}
+
+	protected void makeWater()
+	{
+		final float x = _gx + _cx;
+		final float y = _gy + _cy;
+
+		_waterMesh = new Mesh(
+				true,
+				4,
+				6,
+				new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+				new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
+				new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE)
+		);
+
+		float[] vertices = new float[]{
+				x, WATER_LEVEL, y, 0, 1, 0, 0, 0,
+				x + CHUNK_SIZE, WATER_LEVEL, y, 0, 1, 0, 1, 0,
+				x, WATER_LEVEL, y + CHUNK_SIZE, 0, 1, 0, 0, 1,
+				x + CHUNK_SIZE, WATER_LEVEL, y + CHUNK_SIZE, 0, 1, 0, 1, 1
+
+		};
+
+		short[] indices = new short[]{
+				0, 2, 1,
+				1, 2, 3
+		};
+		_waterMesh.setVertices(vertices);
+		_waterMesh.setIndices(indices);
+
 	}
 
 	public class NormalHeight
@@ -287,6 +342,11 @@ public class GridChunk
 	public Mesh getMesh()
 	{
 		return _mesh;
+	}
+
+	public Mesh getWaterMesh()
+	{
+		return _waterMesh;
 	}
 
 	public BoundingBox getBoundingBox()

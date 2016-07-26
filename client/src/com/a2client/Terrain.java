@@ -42,6 +42,7 @@ public class Terrain
 	public static final float FAKE_HEIGHT = -100000f;
 
 	public ShaderProgram _shaderTerrain;
+	public ShaderProgram _shaderWater;
 
 	public ShaderProgram _shaderCel;
 	public ShaderProgram _shaderOutline;
@@ -57,6 +58,7 @@ public class Terrain
 	{
 
 		_shaderTerrain = makeShader("assets/shaders/terrainVertex.glsl", "assets/shaders/terrainFragment.glsl");
+		_shaderWater = makeShader("assets/shaders/waterVertex.glsl", "assets/shaders/waterFragment.glsl");
 
 		_shaderCel = makeShader("assets/cel_vert.glsl", "assets/cel_frag.glsl");
 		_shaderOutline = makeShader("assets/outline_vert.glsl", "assets/outline_frag.glsl");
@@ -67,43 +69,57 @@ public class Terrain
 
 	}
 
-	public void Render(Camera camera, Environment environment)
+	public void render(Camera camera, Environment environment)
 	{
 		_shader.begin();
-		prepareShader(camera, environment);
+		prepareShader(camera, environment, _shader);
 		_tileAtlas.bind();
 
 		_chunksRendered = 0;
 		for (Grid grid : grids)
 		{
-			_chunksRendered += grid.render(_shader, camera);
+			_chunksRendered += grid.render(_shader, camera, false);
 		}
 		_shader.end();
 	}
 
-	protected void prepareShader(Camera camera, Environment environment)
+	public void renderWater(Camera camera, Environment environment)
 	{
-		_shader.setUniformMatrix("u_projTrans", camera.projection);
-		_shader.setUniformMatrix("u_viewTrans", camera.view);
-		_shader.setUniformMatrix("u_projViewTrans", camera.combined);
+		_shaderWater.begin();
+		prepareShader(camera, environment, _shaderWater);
+//		_tileAtlas.bind();
+
+		_chunksRendered = 0;
+		for (Grid grid : grids)
+		{
+			_chunksRendered += grid.render(_shader, camera, true);
+		}
+		_shaderWater.end();
+	}
+
+	protected void prepareShader(Camera camera, Environment environment, ShaderProgram shader)
+	{
+		shader.setUniformMatrix("u_projTrans", camera.projection);
+		shader.setUniformMatrix("u_viewTrans", camera.view);
+		shader.setUniformMatrix("u_projViewTrans", camera.combined);
 
 		Matrix4 tmp = new Matrix4();
 		tmp.set(camera.combined).mul(new Matrix4().idt());
-		_shader.setUniformMatrix("u_projViewWorldTrans", tmp);
+		shader.setUniformMatrix("u_projViewWorldTrans", tmp);
 
-		_shader.setUniformf("u_cameraPosition", camera.position.x, camera.position.y, camera.position.z,
-							1.1881f / (camera.far * camera.far));
-		_shader.setUniformf("u_cameraDirection", camera.direction);
+		shader.setUniformf("u_cameraPosition", camera.position.x, camera.position.y, camera.position.z,
+						   1.1881f / (camera.far * camera.far));
+		shader.setUniformf("u_cameraDirection", camera.direction);
 
-		_shader.setUniformMatrix("u_worldTrans", new Matrix4().idt());
+		shader.setUniformMatrix("u_worldTrans", new Matrix4().idt());
 
-		_shader.setUniformf("u_ambient", ((ColorAttribute) environment.get(ColorAttribute.AmbientLight)).color);
+		shader.setUniformf("u_ambient", ((ColorAttribute) environment.get(ColorAttribute.AmbientLight)).color);
 
-		_shader.setUniformf("u_skyColor", Fog.skyColor.r, Fog.skyColor.g, Fog.skyColor.b);
-		_shader.setUniformf("u_density", Fog.enabled ? Fog.density : 0f);
-		_shader.setUniformf("u_gradient", Fog.gradient);
+		shader.setUniformf("u_skyColor", Fog.skyColor.r, Fog.skyColor.g, Fog.skyColor.b);
+		shader.setUniformf("u_density", Fog.enabled ? Fog.density : 0f);
+		shader.setUniformf("u_gradient", Fog.gradient);
 
-		_shader.setUniformi("u_texture", 0);
+		shader.setUniformi("u_texture", 0);
 
 	}
 

@@ -143,6 +143,15 @@ public class Utils
 		return a < b ? a : b;
 	}
 
+	public static float max(float a, float b, float c, float d, float e)
+	{
+		float m = a;
+		m = b > m ? b : m;
+		m = c > m ? c : m;
+		m = e > m ? e : m;
+		return d > m ? d : m;
+	}
+
 	// ******** Screenshot Section Begin ********//
 	private static ByteBuffer allocBytes(int howmany)
 	{

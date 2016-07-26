@@ -27,6 +27,8 @@ public class Grid
 	 */
 	public static final int CHUNK_SIZE = 20;
 
+	public static final float WATER_LEVEL = 0;
+
 	/**
 	 * на сколько кусков делим грид
 	 */
@@ -91,7 +93,7 @@ public class Grid
 //		_log.debug("fillChunks end");
 	}
 
-	public int render(ShaderProgram shaderProgram, Camera camera)
+	public int render(ShaderProgram shaderProgram, Camera camera, boolean isWater)
 	{
 		int chunksRendered = 0;
 		for (GridChunk[] list : _chunks)
@@ -102,9 +104,19 @@ public class Grid
 				{
 					if (camera.frustum.boundsInFrustum(chunk.getBoundingBox()))
 					{
-						chunk.getMesh().render(
-								shaderProgram,
-								Config._renderTerrainWireframe ? GL20.GL_LINE_STRIP : GL20.GL_TRIANGLES);
+						if (isWater)
+						{
+							chunk.getWaterMesh().render(
+									shaderProgram,
+									Config._renderTerrainWireframe ? GL20.GL_LINE_STRIP : GL20.GL_TRIANGLES);
+
+						}
+						else
+						{
+							chunk.getMesh().render(
+									shaderProgram,
+									Config._renderTerrainWireframe ? GL20.GL_LINE_STRIP : GL20.GL_TRIANGLES);
+						}
 						chunksRendered++;
 					}
 				}

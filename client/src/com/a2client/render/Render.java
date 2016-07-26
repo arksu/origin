@@ -116,8 +116,8 @@ public class Render
 		_terrain._shader = _terrain._shaderTerrain;
 		_skybox.Render(camera, _environment);
 		renderTerrain(camera);
+		renderWater(camera);
 		renderObjects(camera, true);
-
 
 		if (_game.getWorldMousePos() != null)
 		{
@@ -200,7 +200,12 @@ public class Render
 	protected void renderTerrain(Camera camera)
 	{
 //		_terrain._shader.setUniformf();
-		_terrain.Render(camera, _environment);
+		_terrain.render(camera, _environment);
+	}
+
+	protected void renderWater(Camera camera)
+	{
+		_terrain.renderWater(camera, _environment);
 	}
 
 	public Mesh createFullScreenQuad()
