@@ -35,7 +35,9 @@ public class Render
 	private ModelBatch _modelBatch;
 
 	//
-	Terrain _terrain;
+	private Terrain _terrain;
+
+	private Skybox _skybox;
 
 	//
 	private Environment _environment;
@@ -77,6 +79,8 @@ public class Render
 
 		// test2.d
 		// System.out.println(test2.);
+
+		_skybox = new Skybox();
 	}
 
 	public void render(Camera camera)
@@ -106,6 +110,7 @@ public class Render
 
 		_modelBatch = _simpleModelBatch;
 		_terrain._shader = _terrain._shaderTerrain;
+		_skybox.Render(camera, _environment);
 		renderTerrain(camera);
 		renderObjects(camera);
 
@@ -224,5 +229,20 @@ public class Render
 	public int getRenderedObjects()
 	{
 		return _renderedObjects;
+	}
+
+	public static ShaderProgram makeShader(String vertFile, String fragFile)
+	{
+		ShaderProgram program = new ShaderProgram(
+				Gdx.files.internal(vertFile),
+				Gdx.files.internal(fragFile));
+
+		if (!program.isCompiled())
+		{
+			_log.warn("shader ERROR " + program.getLog());
+			_log.warn("shader V " + program.getVertexShaderSource());
+			_log.warn("shader F " + program.getFragmentShaderSource());
+		}
+		return program;
 	}
 }

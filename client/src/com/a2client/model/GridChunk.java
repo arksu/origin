@@ -30,12 +30,12 @@ public class GridChunk
 	/**
 	 * массив вершин
 	 */
-	private float[] _vertex;
+	private final float[] _vertex;
 
 	/**
 	 * массив индексов
 	 */
-	private short[] _index;
+	private final short[] _index;
 
 	/**
 	 * границы чанка для определения видимости
@@ -67,18 +67,8 @@ public class GridChunk
 	public GridChunk(Grid grid, int gx, int gy)
 	{
 		_grid = grid;
-		_vertex = new float[CHUNK_SIZE * CHUNK_SIZE * 9 * 4];
+		_vertex = new float[CHUNK_SIZE * CHUNK_SIZE * 8 * 4];
 		_index = new short[CHUNK_SIZE * CHUNK_SIZE * 6];
-		_mesh = new Mesh(
-				true,
-				_vertex.length / 3,
-				_index.length,
-				new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
-				new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
-				new VertexAttribute(VertexAttributes.Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE),
-				new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE)
-		);
-
 		_cx = gx;
 		_cy = gy;
 		makeMesh();
@@ -103,6 +93,15 @@ public class GridChunk
 
 	protected void makeMesh()
 	{
+		_mesh = new Mesh(
+				true,
+				_vertex.length / 8,
+				_index.length,
+				new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+				new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
+				new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE)
+		);
+
 		int idx = 0;
 		int idv = 0;
 
@@ -118,16 +117,16 @@ public class GridChunk
 
 		// _isBorder запомним навсегда! т.к. это явно граничный чанк в гриде
 
-		for (int x = _cx - 1; x <= _cx + CHUNK_SIZE; x++)
-		{
-			getNormalHeight(_gx + x, _gy + _cy - 1);
-			getNormalHeight(_gx + x, _gy + _cy + CHUNK_SIZE);
-		}
-		for (int y = _cy - 1; y <= _cy + CHUNK_SIZE; y++)
-		{
-			getNormalHeight(_gx + _cx - 1, _gy + y);
-			getNormalHeight(_gx + _cx + CHUNK_SIZE, _gy + y);
-		}
+//		for (int x = _cx - 1; x <= _cx + CHUNK_SIZE; x++)
+//		{
+//			getNormalHeight(_gx + x, _gy + _cy - 1);
+//			getNormalHeight(_gx + x, _gy + _cy + CHUNK_SIZE);
+//		}
+//		for (int y = _cy - 1; y <= _cy + CHUNK_SIZE; y++)
+//		{
+//			getNormalHeight(_gx + _cx - 1, _gy + y);
+//			getNormalHeight(_gx + _cx + CHUNK_SIZE, _gy + y);
+//		}
 
 		for (int x = _cx; x < _cx + CHUNK_SIZE; x++)
 		{
@@ -156,8 +155,6 @@ public class GridChunk
 				_vertex[idx++] = nh.normal.y;
 				_vertex[idx++] = nh.normal.z;
 
-				idx += 1; // skip color
-
 				uv = Tile.getTileUV(_grid._tiles[y][x]);
 				_vertex[idx++] = uv.x;
 				_vertex[idx++] = uv.y;
@@ -175,8 +172,6 @@ public class GridChunk
 				_vertex[idx++] = nh.normal.y;
 				_vertex[idx++] = nh.normal.z;
 
-				idx += 1; // skip color
-
 				_vertex[idx++] = uv.x + TILE_ATLAS_SIZE;
 				_vertex[idx++] = uv.y;
 
@@ -193,8 +188,6 @@ public class GridChunk
 				_vertex[idx++] = nh.normal.y;
 				_vertex[idx++] = nh.normal.z;
 
-				idx += 1; // skip color
-
 				_vertex[idx++] = uv.x;
 				_vertex[idx++] = uv.y + TILE_ATLAS_SIZE;
 
@@ -210,8 +203,6 @@ public class GridChunk
 				_vertex[idx++] = nh.normal.x;
 				_vertex[idx++] = nh.normal.y;
 				_vertex[idx++] = nh.normal.z;
-
-				idx += 1; // skip color
 
 				_vertex[idx++] = uv.x + TILE_ATLAS_SIZE;
 				_vertex[idx++] = uv.y + TILE_ATLAS_SIZE;

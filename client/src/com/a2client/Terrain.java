@@ -5,7 +5,6 @@ import com.a2client.model.GridChunk;
 import com.a2client.render.Fog;
 import com.a2client.util.Utils;
 import com.a2client.util.Vec2i;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -21,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.a2client.model.Grid.CHUNK_SIZE;
+import static com.a2client.render.Render.makeShader;
 
 /**
  * ландшафт мира и все что с ним связано
@@ -66,24 +66,22 @@ public class Terrain
 
 	}
 
-	public ShaderProgram makeShader(String vertFile, String fragFile)
-	{
-		ShaderProgram program = new ShaderProgram(
-				Gdx.files.internal(vertFile),
-				Gdx.files.internal(fragFile));
-
-		if (!program.isCompiled())
-		{
-			_log.warn("Terrain shader ERROR " + program.getLog());
-			_log.warn("Shader V " + program.getVertexShaderSource());
-			_log.warn("Shader F " + program.getFragmentShaderSource());
-		}
-		return program;
-	}
-
 	public void Render(Camera camera, Environment environment)
 	{
 		_shader.begin();
+		prepareShader(camera, environment);
+		_tileAtlas.bind();
+
+		_chunksRendered = 0;
+		for (Grid grid : grids)
+		{
+			_chunksRendered += grid.render(_shader, camera);
+		}
+		_shader.end();
+	}
+
+	protected void prepareShader(Camera camera, Environment environment)
+	{
 		_shader.setUniformMatrix("u_projTrans", camera.projection);
 		_shader.setUniformMatrix("u_viewTrans", camera.view);
 		_shader.setUniformMatrix("u_projViewTrans", camera.combined);
@@ -104,14 +102,8 @@ public class Terrain
 		_shader.setUniformf("u_density", Fog.enabled ? Fog.density : 0f);
 		_shader.setUniformf("u_gradient", Fog.gradient);
 
-		_tileAtlas.bind();
+		_shader.setUniformi("u_texture", 0);
 
-		_chunksRendered = 0;
-		for (Grid grid : grids)
-		{
-			_chunksRendered += grid.render(_shader, camera);
-		}
-		_shader.end();
 	}
 
 	public int getChunksRendered()

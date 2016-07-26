@@ -12,7 +12,7 @@ public class Fog
 
 	public static float gradient = 2.5f;
 
-	public static Color skyColor = new Color(0.34f, 0.56f, 0.61f, 1f);
+	public static Color skyColor = new Color(0.5444f, 0.62f, 0.69f, 1f);
 
 	public static boolean enabled = true;
 }
