@@ -12,16 +12,18 @@
 	},
 	{
 		"typeId": 11,
-		"res": "assets/debug/invader.obj"
+		"scale": 0.2,
+		"res": "assets/models/pine.obj"
 	},
 	{
 		"typeId": 16,
-		"res": "assets/debug/ship.obj"
+		"scale": 0.2,
+		"res": "assets/models/pine.obj"
 	},
 	{
 		"typeId": 19,
 		"scale": 0.1,
-		"res": "assets/fern.obj"
+		"res": "assets/models/fern.obj"
 	},
 	{
 		"typeId": 17,

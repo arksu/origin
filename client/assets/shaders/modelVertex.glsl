@@ -188,6 +188,7 @@ varying vec3 v_ambientLight;
 uniform float u_density;
 uniform float u_gradient;
 varying float visibility;
+varying float NdotL;
 
 
 void main() {
@@ -314,7 +315,7 @@ void main() {
 		#if (numDirectionalLights > 0) && defined(normalFlag)
 			for (int i = 0; i < numDirectionalLights; i++) {
 				vec3 lightDir = -u_dirLights[i].direction;
-				float NdotL = clamp(dot(normal, lightDir), 0.0, 1.0);
+				NdotL = clamp(dot(normal, lightDir), 0.0, 1.0);
 				vec3 value = u_dirLights[i].color * NdotL;
 				v_lightDiffuse += value;
 				#ifdef specularFlag
@@ -329,7 +330,7 @@ void main() {
 				vec3 lightDir = u_pointLights[i].position - pos.xyz;
 				float dist2 = dot(lightDir, lightDir);
 				lightDir *= inversesqrt(dist2);
-				float NdotL = clamp(dot(normal, lightDir), 0.0, 1.0);
+				NdotL = clamp(dot(normal, lightDir), 0.0, 1.0);
 				vec3 value = u_pointLights[i].color * (NdotL / (1.0 + dist2));
 				v_lightDiffuse += value;
 				#ifdef specularFlag

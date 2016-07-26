@@ -104,8 +104,11 @@ uniform vec4 u_fogColor;
 varying float v_fog;
 #endif // fogFlag
 
+// arksu
 uniform vec3 u_skyColor;
 varying float visibility;
+varying float NdotL;
+const float numShades = 7.0;
 
 void main() {
 	#if defined(normalFlag)
@@ -187,6 +190,10 @@ void main() {
 	#else
 		gl_FragColor.a = 1.0;
 	#endif
+
+//	float intensity = max(NdotL, 0.0);
+//	float shadeIntensity = ceil(intensity * numShades)/numShades;
+//	gl_FragColor.xyz = gl_FragColor.xyz * shadeIntensity;
 
 	gl_FragColor = mix(vec4(u_skyColor, 1.0), gl_FragColor, visibility);
 }

@@ -56,7 +56,7 @@ public class Terrain
 	public Terrain()
 	{
 
-		_shaderTerrain = makeShader("assets/terrainVertex.glsl", "assets/terrainFragment.glsl");
+		_shaderTerrain = makeShader("assets/shaders/terrainVertex.glsl", "assets/shaders/terrainFragment.glsl");
 
 		_shaderCel = makeShader("assets/cel_vert.glsl", "assets/cel_frag.glsl");
 		_shaderOutline = makeShader("assets/outline_vert.glsl", "assets/outline_frag.glsl");

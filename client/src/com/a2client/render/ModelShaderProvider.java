@@ -15,8 +15,8 @@ public class ModelShaderProvider extends BaseShaderProvider
 {
 	private static final Logger _log = LoggerFactory.getLogger(ModelShaderProvider.class.getName());
 
-	public static final String VERTEX = "assets/modelVertex.glsl";
-	public static final String FRAGMENT = "assets/modelFragment.glsl";
+	public static final String VERTEX = "assets/shaders/modelVertex.glsl";
+	public static final String FRAGMENT = "assets/shaders/modelFragment.glsl";
 
 	private DefaultShader.Config _config;
 
