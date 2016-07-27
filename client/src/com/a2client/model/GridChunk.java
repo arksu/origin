@@ -12,8 +12,8 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.a2client.Terrain.WATER_LEVEL;
 import static com.a2client.model.Grid.CHUNK_SIZE;
-import static com.a2client.model.Grid.WATER_LEVEL;
 import static com.a2client.model.Tile.TILE_ATLAS_SIZE;
 
 /**
@@ -254,7 +254,7 @@ public class GridChunk
 
 		// определим нужна ли вода в этом чанке?
 		// хоть одна вершина ниже уровня воды?
-		if (_minHeight < Grid.WATER_LEVEL)
+		if (_minHeight < WATER_LEVEL)
 		{
 			makeWater();
 		}

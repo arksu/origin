@@ -27,8 +27,6 @@ public class Grid
 	 */
 	public static final int CHUNK_SIZE = 20;
 
-	public static final float WATER_LEVEL = 0;
-
 	/**
 	 * на сколько кусков делим грид
 	 */

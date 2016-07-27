@@ -30,12 +30,26 @@ public class Terrain
 {
 	private static final Logger _log = LoggerFactory.getLogger(Terrain.class.getName());
 
-	// сколько единиц координат в одном тайле
+	/**
+	 * уровень воды в мире
+	 */
+	public static final float WATER_LEVEL = 0;
+
+	/**
+	 * сколько единиц координат в одном тайле
+	 */
 	public static final int TILE_SIZE = 12;
-	// размер одного грида в тайлах
+
+	/**
+	 * размер одного грида в тайлах
+	 */
 	public static final int GRID_SIZE = 100;
+
 	public static final int GRID_FULL_SIZE = GRID_SIZE * TILE_SIZE;
-	// размер одного грида в байтах для передачи по сети
+
+	/**
+	 * размер одного грида в байтах для передачи по сети
+	 */
 	public static final int GRID_SIZE_BYTES = GRID_SIZE * GRID_SIZE * 2;
 
 	public static List<Grid> grids = new LinkedList<>();

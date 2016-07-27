@@ -21,6 +21,8 @@ import com.badlogic.gdx.math.Vector3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.a2client.Terrain.WATER_LEVEL;
+
 /**
  * примитивный рендер, пока один. может еще добавим других Created by arksu on
  * 25.02.15.
@@ -59,7 +61,8 @@ public class Render
 	ModelBatch _simpleModelBatch;
 
 	private Mesh fullScreenQuad;
-	private Mesh testQuad;
+	private Mesh testQuad1;
+	private Mesh testQuad2;
 
 	ModelInstance _testModel;
 
@@ -83,7 +86,8 @@ public class Render
 		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 
 		fullScreenQuad = createFullScreenQuad();
-		testQuad = createTestQuad();
+		testQuad1 = createTestQuad(0.7f, -1, 0.3f);
+		testQuad2 = createTestQuad(0.7f, 0, 0.3f);
 
 		// _modelInstance3.copy();
 
@@ -121,6 +125,15 @@ public class Render
 		_modelBatch = _simpleModelBatch;
 		_terrain._shader = _terrain._shaderTerrain;
 
+		Gdx.gl.glEnable(GL_CLIP_DISTANCE0);
+
+		// WATER 1 REFLECTION ==========================================================================================
+		float camDistance = 2 * (camera.position.y - WATER_LEVEL);
+		camera.position.y -= camDistance;
+		camera.direction.y = -camera.direction.y;
+		camera.update(true);
+		clipNormal = new Vector3(0, 1, 0);
+		clipHeight = -WATER_LEVEL;
 		_waterFrameBuffers.getReflectionFrameBuffer().begin();
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
@@ -133,12 +146,32 @@ public class Render
 		renderObjects(camera, false);
 
 		_waterFrameBuffers.getReflectionFrameBuffer().end();
+		camera.position.y += camDistance;
+		camera.direction.y = -camera.direction.y;
+		camera.update(true);
 
+		// WATER 2 REFRACTION, UNDER WATER =============================================================================
+		clipNormal = new Vector3(0, -1, 0);
+		clipHeight = WATER_LEVEL;
+		_waterFrameBuffers.getRefractionFrameBuffer().begin();
+
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+		// под водой всяко не видать неба
+//		_skybox.Render(camera, _environment);
+		renderTerrain(camera);
+		renderObjects(camera, false);
+
+		_waterFrameBuffers.getRefractionFrameBuffer().end();
+
+		// MAIN RENDER =================================================================================================
+
+		Gdx.gl.glDisable(GL_CLIP_DISTANCE0);
+//		clipNormal = new Vector3(0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glCullFace(GL20.GL_BACK);
-		Gdx.gl.glEnable(GL_CLIP_DISTANCE0);
 		_skybox.Render(camera, _environment);
 		renderWater(camera);
 		renderTerrain(camera);
@@ -171,13 +204,15 @@ public class Render
 		if (Config._renderOutline)
 		{
 			// выводим содержимое буфера
-			_waterFrameBuffers.getReflectionFrameBuffer().getColorBufferTexture().bind();
 
 			ShaderProgram program = _terrain._shaderCel;
 
 			program.begin();
 //			program.setUniformf("size", new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-			testQuad.render(program, GL20.GL_TRIANGLE_STRIP);
+			_waterFrameBuffers.getReflectionFrameBuffer().getColorBufferTexture().bind();
+			testQuad1.render(program, GL20.GL_TRIANGLE_STRIP);
+			_waterFrameBuffers.getRefractionFrameBuffer().getColorBufferTexture().bind();
+			testQuad2.render(program, GL20.GL_TRIANGLE_STRIP);
 			program.end();
 		}
 
@@ -278,28 +313,28 @@ public class Render
 		return tmpMesh;
 	}
 
-	public Mesh createTestQuad()
+	public Mesh createTestQuad(float size, float x, float y)
 	{
 		float[] verts = new float[16];
 		int i = 0;
 
-		verts[i++] = -1.f; // x1
-		verts[i++] = -1.f; // y1
+		verts[i++] = x; // x1
+		verts[i++] = y; // y1
 		verts[i++] = 0.f; // u1
 		verts[i++] = 0.f; // v1
 
-		verts[i++] = 0.f; // x2
-		verts[i++] = -1.f; // y2
+		verts[i++] = x + size; // x2
+		verts[i++] = y; // y2
 		verts[i++] = 1.f; // u2
 		verts[i++] = 0.f; // v2
 
-		verts[i++] = -1.f; // x3
-		verts[i++] = 0.f; // y2
+		verts[i++] = x; // x3
+		verts[i++] = y + size; // y2
 		verts[i++] = 0.f; // u3
 		verts[i++] = 1.f; // v3
 
-		verts[i++] = 0.f; // x4
-		verts[i++] = 0.f; // y4
+		verts[i++] = x + size; // x4
+		verts[i++] = y + size; // y4
 		verts[i++] = 1.f; // u4
 		verts[i] = 1.f; // v4
 
