@@ -22,7 +22,7 @@ void main() {
 	float intensity = max(NdotL, 0.0);
 	float shadeIntensity = ceil(intensity * numShades)/numShades;
 
-	gl_FragColor.xyz = gl_FragColor.xyz * shadeIntensity;
+//	gl_FragColor.xyz = gl_FragColor.xyz * shadeIntensity;
 	gl_FragColor = mix(vec4(u_skyColor, 1.0), gl_FragColor, visibility);
 
 }

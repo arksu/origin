@@ -96,7 +96,6 @@ public class Render
 		// test2.d
 		// System.out.println(test2.);
 
-
 		_testModel = ModelManager.getInstance().getModelByType(19);
 	}
 
@@ -126,7 +125,6 @@ public class Render
 		_modelBatch = _simpleModelBatch;
 		_terrain._shader = _terrain._shaderTerrain;
 
-
 		// WATER 1 REFLECTION ==========================================================================================
 		if (water)
 		{
@@ -155,9 +153,11 @@ public class Render
 
 			// WATER 2 REFRACTION, UNDER WATER =============================================================================
 			clipNormal = new Vector3(0, -1, 0);
-			clipHeight = WATER_LEVEL;
+			// чуть чуть приподнимем. иначе у берега видно дырки
+			clipHeight = WATER_LEVEL + 0.05f;
 			_waterFrameBuffers.getRefractionFrameBuffer().begin();
 
+//			Gdx.gl.glClearColor(0, 0.3f, 0.5f, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 			// под водой всяко не видать неба

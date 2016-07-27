@@ -75,6 +75,7 @@ public class Terrain
 
 	private Texture _tileAtlas;
 	private Texture _waterDuDv;
+	private Texture _waterNormalMap;
 
 	private final WaterFrameBuffers _waterFrameBuffers;
 
@@ -91,10 +92,15 @@ public class Terrain
 		_shaderDepth = makeShader("assets/shaders/depthVertex.glsl", "assets/shaders/depthFragment.glsl");
 
 		_tileAtlas = Main.getAssetManager().get(Config.RESOURCE_DIR + "tiles_atlas.png", Texture.class);
-		_waterDuDv = Main.getAssetManager().get(Config.RESOURCE_DIR + "waterdudv.png", Texture.class);
+		_waterDuDv = Main.getAssetManager().get(Config.RESOURCE_DIR + "water/waterdudv.png", Texture.class);
+		_waterNormalMap = Main.getAssetManager().get(Config.RESOURCE_DIR + "water/normalmap.png", Texture.class);
+
 		_tileAtlas.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
 		_waterDuDv.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		_waterDuDv.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+		_waterNormalMap.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+		_waterNormalMap.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 	}
 
 	public void render(Camera camera, Environment environment)
@@ -127,6 +133,9 @@ public class Terrain
 
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE2);
 		_waterDuDv.bind();
+
+		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE3);
+		_waterNormalMap.bind();
 
 		_chunksWaterRendered = 0;
 		for (Grid grid : grids)
@@ -186,10 +195,13 @@ public class Terrain
 		shader.setUniformf("u_gradient", Fog.gradient);
 
 		shader.setUniformf("u_moveFactor", _waterMoveFactor);
+		shader.setUniformf("u_lightColor", new Vector3(1, 1, 1));
+		shader.setUniformf("u_lightPosition", new Vector3(10, 10, 10));
 
 		shader.setUniformi("u_reflectionTexture", 0);
 		shader.setUniformi("u_refractionTexture", 1);
 		shader.setUniformi("u_dudvMap", 2);
+		shader.setUniformi("u_normalMap", 3);
 
 	}
 

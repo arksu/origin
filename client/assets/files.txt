@@ -2,4 +2,5 @@ icons0.pack
 origin_logo.png
 core_skin.png
 tiles_atlas.png
-waterDUDV.png
+water/waterDUDV.png
+water/normalMap.png

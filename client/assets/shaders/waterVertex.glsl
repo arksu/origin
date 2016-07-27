@@ -8,17 +8,19 @@ uniform mat4 u_worldTrans;
 uniform mat3 u_viewTrans;
 uniform vec4 u_cameraPosition;
 uniform vec3 u_cameraDirection;
+uniform vec3 u_lightPosition;
 
 out float visibility;
 out vec2 textureCoords;
 out vec4 clipSpace;
 out vec3 toCameraVector;
+out vec3 fromLightVector;
 
 uniform float u_density;
 uniform float u_gradient;
 
 
-const float tiling = 3;
+const float tiling = 4;
 
 void main() {
 	vec4 worldPosition = u_worldTrans * a_position;
@@ -32,4 +34,5 @@ void main() {
 	clipSpace = u_projViewTrans * a_position;
     gl_Position = clipSpace;
     toCameraVector = u_cameraPosition.xyz - worldPosition.xyz;
+    fromLightVector = worldPosition.xyz - u_lightPosition;
 }
