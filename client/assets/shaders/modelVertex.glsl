@@ -187,6 +187,7 @@ varying vec3 v_ambientLight;
 // arksu
 uniform float u_density;
 uniform float u_gradient;
+uniform vec4 u_clipPlane;
 varying float visibility;
 varying float NdotL;
 
@@ -244,6 +245,8 @@ void main() {
 	#else
 		vec4 pos = u_worldTrans * vec4(a_position, 1.0);
 	#endif
+
+	gl_ClipDistance[0] = dot(pos, u_clipPlane);
 
 	gl_Position = u_projViewTrans * pos;
 

@@ -17,10 +17,12 @@ public class ModelShader extends DefaultShader
 	public final int u_skyColor;
 	public final int u_density;
 	public final int u_gradient;
+	public final int u_clipPlane;
 
 	public final static Uniform skyColor = new Uniform("u_skyColor");
 	public final static Uniform density = new Uniform("u_density");
 	public final static Uniform gradient = new Uniform("u_gradient");
+	public final static Uniform clipPlane = new Uniform("u_clipPlane");
 
 	public final static Setter skyColorSetter = new GlobalSetter()
 	{
@@ -46,6 +48,14 @@ public class ModelShader extends DefaultShader
 			shader.set(inputID, Fog.gradient);
 		}
 	};
+	public final static Setter clipPlanetSetter = new GlobalSetter()
+	{
+		@Override
+		public void set(BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes)
+		{
+			shader.set(inputID, Render.clipNormal.x, Render.clipNormal.y, Render.clipNormal.z, Render.clipHeight);
+		}
+	};
 
 	public ModelShader(Renderable renderable, Config config)
 	{
@@ -53,5 +63,6 @@ public class ModelShader extends DefaultShader
 		u_skyColor = register(skyColor, skyColorSetter);
 		u_density = register(density, densitySetter);
 		u_gradient = register(gradient, gradientSetter);
+		u_clipPlane = register(clipPlane, clipPlanetSetter);
 	}
 }

@@ -3,6 +3,7 @@ package com.a2client;
 import com.a2client.model.Grid;
 import com.a2client.model.GridChunk;
 import com.a2client.render.Fog;
+import com.a2client.render.Render;
 import com.a2client.util.Utils;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.graphics.Camera;
@@ -65,7 +66,6 @@ public class Terrain
 
 		_tileAtlas = Main.getAssetManager().get(Config.RESOURCE_DIR + "tiles_atlas.png", Texture.class);
 		_tileAtlas.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-
 	}
 
 	public void render(Camera camera, Environment environment)
@@ -117,6 +117,8 @@ public class Terrain
 		shader.setUniformf("u_skyColor", Fog.skyColor.r, Fog.skyColor.g, Fog.skyColor.b);
 		shader.setUniformf("u_density", Fog.enabled ? Fog.density : 0f);
 		shader.setUniformf("u_gradient", Fog.gradient);
+
+		shader.setUniformf("u_clipPlane", Render.clipNormal.x, Render.clipNormal.y, Render.clipNormal.z, Render.clipHeight);
 
 		shader.setUniformi("u_texture", 0);
 

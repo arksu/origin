@@ -31,6 +31,11 @@ public class Render
 
 	public static final String SHADER_VERSION = "#version 140";
 
+	public static final int GL_CLIP_DISTANCE0 = 0x3000;
+
+	public static Vector3 clipNormal = new Vector3(0, -1, 0);
+	public static float clipHeight = 1.5f;
+
 	private Game _game;
 
 	private ModelBatch _modelBatch;
@@ -133,7 +138,7 @@ public class Render
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glCullFace(GL20.GL_BACK);
-		Gdx.gl.glEnable(0x3000);
+		Gdx.gl.glEnable(GL_CLIP_DISTANCE0);
 		_skybox.Render(camera, _environment);
 		renderWater(camera);
 		renderTerrain(camera);
