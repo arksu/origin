@@ -1,7 +1,7 @@
 package com.a2client.render.water;
 
+import com.a2client.render.DepthFrameBuffer;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,23 +19,25 @@ public class WaterFrameBuffers
 	protected static final int REFRACTION_WIDTH = 1280;
 	private static final int REFRACTION_HEIGHT = 720;
 
-	private final FrameBuffer _reflectionFrameBuffer;
-	private final FrameBuffer _refractionFrameBuffer;
+	private final DepthFrameBuffer _reflectionFrameBuffer;
+	private final DepthFrameBuffer _refractionFrameBuffer;
 
 	private boolean _cleared = false;
 
 	public WaterFrameBuffers()
 	{
-		_reflectionFrameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, REFLECTION_WIDTH, REFLECTION_HEIGHT, true);
-		_refractionFrameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, REFRACTION_WIDTH, REFRACTION_HEIGHT, true);
+		_reflectionFrameBuffer = new DepthFrameBuffer(Pixmap.Format.RGBA8888, REFLECTION_WIDTH, REFLECTION_HEIGHT, true);
+		_refractionFrameBuffer = new DepthFrameBuffer(Pixmap.Format.RGBA8888, REFRACTION_WIDTH, REFRACTION_HEIGHT, true);
+
+		_refractionFrameBuffer.createDepthTextre();
 	}
 
-	public FrameBuffer getReflectionFrameBuffer()
+	public DepthFrameBuffer getReflectionFrameBuffer()
 	{
 		return _cleared ? null : _reflectionFrameBuffer;
 	}
 
-	public FrameBuffer getRefractionFrameBuffer()
+	public DepthFrameBuffer getRefractionFrameBuffer()
 	{
 		return _cleared ? null : _refractionFrameBuffer;
 	}

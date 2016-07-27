@@ -138,12 +138,14 @@ public class Render
 
 			Gdx.gl.glEnable(GL_CLIP_DISTANCE0);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 			Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 			Gdx.gl.glCullFace(GL20.GL_BACK);
 
+			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 			_skybox.Render(camera, _environment);
+			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 			renderTerrain(camera);
+			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 			renderObjects(camera, false);
 
 			_waterFrameBuffers.getReflectionFrameBuffer().end();
@@ -162,7 +164,9 @@ public class Render
 
 			// под водой всяко не видать неба
 //		_skybox.Render(camera, _environment);
+			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 			renderTerrain(camera);
+			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 			renderObjects(camera, false);
 
 			_waterFrameBuffers.getRefractionFrameBuffer().end();
@@ -172,13 +176,19 @@ public class Render
 		Gdx.gl.glDisable(GL_CLIP_DISTANCE0);
 		clipNormal = new Vector3(0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glCullFace(GL20.GL_BACK);
-		_skybox.Render(camera, _environment);
-		renderWater(camera);
+
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		renderTerrain(camera);
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		renderObjects(camera, true);
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		_skybox.Render(camera, _environment);
+
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		renderWater(camera);
+
 
 		if (_game.getWorldMousePos() != null)
 		{

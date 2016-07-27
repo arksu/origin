@@ -19,14 +19,12 @@ out vec3 fromLightVector;
 uniform float u_density;
 uniform float u_gradient;
 
-
-const float tiling = 4;
+const float tiling = 3;
 
 void main() {
 	vec4 worldPosition = u_worldTrans * a_position;
 
 	textureCoords = vec2(a_texCoord.x, a_texCoord.y) * tiling;
-//	textureCoords = vec2(a_position.x/2.0 + 0.5, a_position.y/2.0 + 0.5);// * tiling;
 
     float distance = length(u_cameraPosition.xyz - worldPosition.xyz);
     visibility = exp(-pow((distance * u_density), u_gradient));

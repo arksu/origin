@@ -42,6 +42,9 @@ public class Config
 	public static final String CONFIG_FILE = "origin-world.prefs";
 	// адрес логин сервера
 	public static String _loginServer = "origin-world.com";
+
+	public static String _gameServer;
+
 	// порт логин сервера
 	public static int _loginServerPort = 2040;
 	// раземры экрана
@@ -113,6 +116,11 @@ public class Config
 				{ // Change server. Format: "-s servername"
 					i++;
 					_loginServer = args[i];
+				}
+				if (arg.equals("-g"))
+				{ // Change server. Format: "-s servername"
+					i++;
+					_gameServer = args[i];
 				}
 				if (arg.equals("-p"))
 				{ // Change server. Format: "-p port"

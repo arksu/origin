@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,12 +138,17 @@ public class Terrain
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE3);
 		_waterNormalMap.bind();
 
+		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE4);
+		Gdx.gl.glBindTexture(GL11.GL_TEXTURE_2D, _waterFrameBuffers.getRefractionFrameBuffer().getDepthTexture());
+
 		_chunksWaterRendered = 0;
 		for (Grid grid : grids)
 		{
 			_chunksWaterRendered += grid.render(_shaderWater, camera, true);
 		}
 		_shaderWater.end();
+
+		Gdx.gl.glDisable(GL11.GL_BLEND);
 	}
 
 	protected void prepareShader(Camera camera, Environment environment, ShaderProgram shader)
@@ -172,6 +178,7 @@ public class Terrain
 		shader.setUniformi("u_texture", 0);
 
 	}
+
 	protected void prepareWaterShader(Camera camera, Environment environment, ShaderProgram shader)
 	{
 		shader.setUniformMatrix("u_projTrans", camera.projection);
@@ -202,7 +209,10 @@ public class Terrain
 		shader.setUniformi("u_refractionTexture", 1);
 		shader.setUniformi("u_dudvMap", 2);
 		shader.setUniformi("u_normalMap", 3);
+		shader.setUniformi("u_depthMap", 4);
 
+		Gdx.gl.glEnable(GL11.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	public int getChunksRendered()

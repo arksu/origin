@@ -18,7 +18,7 @@ public class ModelManager
 {
 	private static final Logger _log = LoggerFactory.getLogger(ModelManager.class.getName());
 
-	private static long MODEL_TIMEOUT = 120000; // 2min
+	private static long MODEL_TIMEOUT = 12000000; // 2min
 
 	private static ModelManager _instance;
 

@@ -1,9 +1,11 @@
 package com.a2client.network.login.serverpackets;
 
+import com.a2client.Config;
 import com.a2client.Main;
 import com.a2client.network.Net;
 import com.a2client.network.netty.NettyConnection;
 import com.a2client.screens.Login;
+import com.a2client.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +38,14 @@ public class GameServerAuth extends LoginServerPacket
 		try
 		{
 			InetAddress adr = InetAddress.getByAddress(_host);
-			Login._gameserver_host = adr.getHostAddress();
+			if (!Utils.isEmpty(Config._gameServer))
+			{
+				Login._gameserver_host = Config._gameServer;
+			}
+			else
+			{
+				Login._gameserver_host = adr.getHostAddress();
+			}
 
 		}
 		catch (UnknownHostException e)
