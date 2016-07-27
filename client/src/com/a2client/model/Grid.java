@@ -106,9 +106,12 @@ public class Grid
 					{
 						if (isWater)
 						{
-							chunk.getWaterMesh().render(
-									shaderProgram,
-									Config._renderTerrainWireframe ? GL20.GL_LINE_STRIP : GL20.GL_TRIANGLES);
+							if (chunk.getWaterMesh() != null)
+							{
+								chunk.getWaterMesh().render(
+										shaderProgram,
+										Config._renderTerrainWireframe ? GL20.GL_LINE_STRIP : GL20.GL_TRIANGLES);
+							}
 
 						}
 						else

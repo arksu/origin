@@ -5,6 +5,7 @@ import com.a2client.ModelManager;
 import com.a2client.ObjectCache;
 import com.a2client.Terrain;
 import com.a2client.model.GameObject;
+import com.a2client.render.water.WaterFrameBuffers;
 import com.a2client.screens.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
@@ -16,7 +17,6 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,15 +31,14 @@ public class Render
 
 	private Game _game;
 
-	//
 	private ModelBatch _modelBatch;
 
-	//
 	private Terrain _terrain;
 
 	private Skybox _skybox;
 
-	//
+	private WaterFrameBuffers _waterFrameBuffers;
+
 	private Environment _environment;
 
 	private GameObject _selected;
@@ -53,6 +52,7 @@ public class Render
 	ModelBatch _simpleModelBatch;
 
 	private Mesh fullScreenQuad;
+	private Mesh testQuad;
 
 	ModelInstance _testModel;
 
@@ -76,6 +76,7 @@ public class Render
 		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 
 		fullScreenQuad = createFullScreenQuad();
+		testQuad = createTestQuad();
 
 		// _modelInstance3.copy();
 
@@ -83,13 +84,16 @@ public class Render
 		// System.out.println(test2.);
 
 		_skybox = new Skybox();
+		_waterFrameBuffers = new WaterFrameBuffers();
 
 		_testModel = ModelManager.getInstance().getModelByType(19);
 	}
 
 	public void render(Camera camera)
 	{
-		if (Config._renderOutline)
+		_skybox.updateDayNight();
+
+		/*if (Config._renderOutline)
 		{
 			_modelBatch = _depthModelBatch;
 			_terrain._shader = _terrain._shaderDepth;
@@ -105,41 +109,72 @@ public class Render
 			renderTerrain(camera);
 			renderObjects(camera, false);
 			frameBuffer.end();
-		}
+		}*/
+
+		_modelBatch = _simpleModelBatch;
+		_terrain._shader = _terrain._shaderTerrain;
+
+		_waterFrameBuffers.getReflectionFrameBuffer().begin();
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glCullFace(GL20.GL_BACK);
 
-		_modelBatch = _simpleModelBatch;
-		_terrain._shader = _terrain._shaderTerrain;
 		_skybox.Render(camera, _environment);
 		renderTerrain(camera);
+		ShaderProgram.prependVertexCode = "#version 140\n#define varying out\n#define attribute in\n";
+		ShaderProgram.prependFragmentCode = "#version 140\n#define varying in\n#define texture2D texture\n#define gl_FragColor fragColor\nout vec4 fragColor;\n";
+		renderObjects(camera, false);
+		ShaderProgram.prependVertexCode = null;
+		ShaderProgram.prependFragmentCode = null;
+
+		_waterFrameBuffers.getReflectionFrameBuffer().end();
+
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
+		Gdx.gl.glCullFace(GL20.GL_BACK);
+		Gdx.gl.glEnable(0x3000);
+		_skybox.Render(camera, _environment);
 		renderWater(camera);
+		renderTerrain(camera);
 		renderObjects(camera, true);
 
 		if (_game.getWorldMousePos() != null)
 		{
 			_modelBatch.begin(camera);
 			_testModel.transform.setTranslation(_game.getWorldMousePos());
-			_modelBatch.render(_testModel, _environment);
+//			_modelBatch.render(_testModel, _environment);
 			_modelBatch.end();
 		}
 
 		// GUIGDX.getSpriteBatch().begin();
 
-		if (Config._renderOutline)
+		/*if (Config._renderOutline)
 		{
 			// выводим содержимое буфера
 			frameBuffer.getColorBufferTexture().bind();
 
 			ShaderProgram program = _terrain._shaderOutline;
-			// ShaderProgram program = _terrain._shaderCel;
+//			 ShaderProgram program = _terrain._shaderCel;
 
 			program.begin();
 			program.setUniformf("size", new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 			fullScreenQuad.render(program, GL20.GL_TRIANGLE_STRIP);
+			program.end();
+		}*/
+
+		if (Config._renderOutline)
+		{
+			// выводим содержимое буфера
+			_waterFrameBuffers.getReflectionFrameBuffer().getColorBufferTexture().bind();
+
+			ShaderProgram program = _terrain._shaderCel;
+
+			program.begin();
+//			program.setUniformf("size", new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			testQuad.render(program, GL20.GL_TRIANGLE_STRIP);
 			program.end();
 		}
 
@@ -230,6 +265,38 @@ public class Render
 
 		verts[i++] = 1.f; // x4
 		verts[i++] = 1.f; // y4
+		verts[i++] = 1.f; // u4
+		verts[i] = 1.f; // v4
+
+		Mesh tmpMesh = new Mesh(true, 4, 0,
+								new VertexAttribute(VertexAttributes.Usage.Position, 2, "a_position"),
+								new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "a_texCoord0"));
+		tmpMesh.setVertices(verts);
+		return tmpMesh;
+	}
+
+	public Mesh createTestQuad()
+	{
+		float[] verts = new float[16];
+		int i = 0;
+
+		verts[i++] = -1.f; // x1
+		verts[i++] = -1.f; // y1
+		verts[i++] = 0.f; // u1
+		verts[i++] = 0.f; // v1
+
+		verts[i++] = 0.f; // x2
+		verts[i++] = -1.f; // y2
+		verts[i++] = 1.f; // u2
+		verts[i++] = 0.f; // v2
+
+		verts[i++] = -1.f; // x3
+		verts[i++] = 0.f; // y2
+		verts[i++] = 0.f; // u3
+		verts[i++] = 1.f; // v3
+
+		verts[i++] = 0.f; // x4
+		verts[i++] = 0.f; // y4
 		verts[i++] = 1.f; // u4
 		verts[i] = 1.f; // v4
 

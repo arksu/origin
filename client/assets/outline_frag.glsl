@@ -1,4 +1,8 @@
-#version 120
+#version 140
+#define varying in
+#define texture2D texture
+#define gl_FragColor fragColor
+out vec4 fragColor;
 
 #ifdef GL_ES
 #define LOWP lowp

@@ -1,4 +1,6 @@
-#version 120
+#version 140
+#define varying out
+#define attribute in
 
 
 attribute vec4 a_position;

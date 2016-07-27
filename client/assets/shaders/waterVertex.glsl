@@ -1,4 +1,7 @@
-#version 120
+#version 140
+#define varying out
+#define attribute in
+
 attribute vec4 a_position;
 attribute vec3 a_normal;
 attribute vec2 a_texCoord;

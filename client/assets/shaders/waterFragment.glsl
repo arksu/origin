@@ -1,4 +1,8 @@
-#version 120
+#version 140
+#define varying in
+#define texture2D texture
+#define gl_FragColor fragColor
+out vec4 fragColor;
 
 uniform sampler2D u_texture;
 uniform vec4 u_ambient;

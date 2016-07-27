@@ -13,6 +13,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +57,6 @@ public class Main extends com.badlogic.gdx.Game
 		_input = new Input();
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		Gdx.input.setInputProcessor(_input);
-		GUIGDX.init();
 
 		// установим дефолт курсор
 		Cursor.getInstance().setCursor("");
@@ -64,6 +64,8 @@ public class Main extends com.badlogic.gdx.Game
 		_log.debug("GDX ver: " + Version.VERSION);
 		_log.debug("gl vendor: " + Gdx.gl.glGetString(GL20.GL_VENDOR));
 		_log.debug("gl ver: " + Gdx.gl.glGetString(GL20.GL_VERSION));
+
+		GUIGDX.init();
 
 		// экран загрузки ресурсов
 		this.setScreen(new ResourceLoader());
@@ -94,7 +96,9 @@ public class Main extends com.badlogic.gdx.Game
 		cfg.addIcon("assets/a1_16.png", Files.FileType.Internal);
 		cfg.addIcon("assets/a1_32.png", Files.FileType.Internal);
 		cfg.addIcon("assets/a1_128.png", Files.FileType.Internal);
-		cfg.useGL30 = false;
+		cfg.useGL30 = true;
+//		ShaderProgram.prependVertexCode="#version 140\n#define varying out\n#define attribute in\n";
+//		ShaderProgram.prependFragmentCode = "#version 140\n#define varying in\n#define texture2D texture\n#define gl_FragColor fragColor\nout vec4 fragColor;\n";
 		cfg.vSyncEnabled = Config._vSync;
 		cfg.foregroundFPS = Config._framePerSecond;
 		if (Config._reduceInBackground)

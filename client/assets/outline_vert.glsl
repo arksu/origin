@@ -1,4 +1,6 @@
-#version 120
+#version 140
+#define varying out
+#define attribute in
 
 #ifdef GL_ES
 #define LOWP lowp

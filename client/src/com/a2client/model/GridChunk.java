@@ -69,6 +69,7 @@ public class GridChunk
 	private final NormalHeight[][] _heights = new NormalHeight[CHUNK_SIZE + 2][CHUNK_SIZE + 2];
 
 	private float _maxHeight;
+	private float _minHeight;
 
 	public GridChunk(Grid grid, int gx, int gy)
 	{
@@ -105,7 +106,7 @@ public class GridChunk
 				_index.length,
 				new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
 				new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
-				new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE)
+				new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0")
 		);
 
 		int idx = 0;
@@ -131,10 +132,8 @@ public class GridChunk
 //			getNormalHeight(_gx + _cx + CHUNK_SIZE, _gy + y);
 //		}
 
-		// определим нужна ли вода в этом чанке?
-		// хоть одна вершина ниже уровня воды?
-		boolean needWater = false;
 		_maxHeight = 0;
+		_minHeight = 0;
 
 		for (int x = _cx; x < _cx + CHUNK_SIZE; x++)
 		{
@@ -218,12 +217,8 @@ public class GridChunk
 				float rightDelta = Math.abs(h - hXY);
 				float leftDelta = Math.abs(hX - hY);
 
-				needWater = needWater || h < WATER_LEVEL ||
-							hX < WATER_LEVEL ||
-							hY < WATER_LEVEL ||
-							hXY < WATER_LEVEL;
-
 				_maxHeight = Utils.max(_maxHeight, h, hX, hY, hXY);
+				_minHeight = Utils.min(_minHeight, h, hX, hY, hXY);
 
 				//index
 				if (rightDelta < leftDelta)
@@ -254,10 +249,12 @@ public class GridChunk
 		_mesh.setIndices(_index);
 
 		_boundingBox = new BoundingBox(
-				new Vector3(_gx + _cx, -1, _gy + _cy),
+				new Vector3(_gx + _cx, _minHeight, _gy + _cy),
 				new Vector3(_gx + _cx + CHUNK_SIZE, _maxHeight, _gy + _cy + CHUNK_SIZE));
 
-		if (needWater)
+		// определим нужна ли вода в этом чанке?
+		// хоть одна вершина ниже уровня воды?
+		if (_minHeight < Grid.WATER_LEVEL)
 		{
 			makeWater();
 		}

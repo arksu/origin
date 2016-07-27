@@ -134,7 +134,7 @@ public class Skybox
 		_shader.setUniformMatrix("u_projTrans", camera.projection);
 
 		Matrix4 tmp;
-		tmp = camera.view;
+		tmp = camera.view.cpy();
 		tmp.translate(camera.position);
 		tmp.rotate(0, 1, 0, _rotate);
 		_shader.setUniformMatrix("u_viewTrans", tmp);
@@ -143,7 +143,7 @@ public class Skybox
 		_shader.setUniformf("u_density", Fog.enabled ? Fog.density : 0f);
 		_shader.setUniformf("u_gradient", Fog.gradient);
 
-		updateDayNight();
+		setTextures();
 	}
 
 	protected void makeMesh()
@@ -154,10 +154,13 @@ public class Skybox
 		_mesh.setVertices(VERTICES);
 	}
 
-	protected void updateDayNight() {
+	public void updateDayNight()
+	{
 		_time += Main.deltaTime * 500f;
 		_time %= 24000;
 
+	}
+	protected void setTextures() {
 		Cubemap texture1;
 		Cubemap texture2;
 

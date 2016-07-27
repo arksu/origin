@@ -104,7 +104,7 @@ public class Terrain
 		shader.setUniformMatrix("u_projViewTrans", camera.combined);
 
 		Matrix4 tmp = new Matrix4();
-		tmp.set(camera.combined).mul(new Matrix4().idt());
+		tmp.set(camera.combined.cpy()).mul(new Matrix4().idt());
 		shader.setUniformMatrix("u_projViewWorldTrans", tmp);
 
 		shader.setUniformf("u_cameraPosition", camera.position.x, camera.position.y, camera.position.z,
