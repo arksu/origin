@@ -56,13 +56,12 @@ public class Terrain
 
 	public Terrain()
 	{
-
 		_shaderTerrain = makeShader("assets/shaders/terrainVertex.glsl", "assets/shaders/terrainFragment.glsl");
 		_shaderWater = makeShader("assets/shaders/waterVertex.glsl", "assets/shaders/waterFragment.glsl");
 
-		_shaderCel = makeShader("assets/cel_vert.glsl", "assets/cel_frag.glsl");
-		_shaderOutline = makeShader("assets/outline_vert.glsl", "assets/outline_frag.glsl");
-		_shaderDepth = makeShader("assets/depth_vertex.glsl", "assets/depth_frag.glsl");
+		_shaderCel = makeShader("assets/shaders/celVertex.glsl", "assets/shaders/celFragment.glsl");
+		_shaderOutline = makeShader("assets/shaders/outlineVertex.glsl", "assets/shaders/outlineFragment.glsl");
+		_shaderDepth = makeShader("assets/shaders/depthVertex.glsl", "assets/shaders/depthFragment.glsl");
 
 		_tileAtlas = Main.getAssetManager().get(Config.RESOURCE_DIR + "tiles_atlas.png", Texture.class);
 		_tileAtlas.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);

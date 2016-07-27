@@ -1,4 +1,3 @@
-#version 140
 #define varying out
 #define attribute in
 
@@ -13,7 +12,7 @@ uniform mat3 u_viewTrans;
 uniform vec4 u_cameraPosition;
 uniform vec3 u_cameraDirection;
 
-uniform vec4 u_clipPlane;
+const vec4 u_clipPlane = vec4(0,-1,0, 1);
 
 varying vec2 texCoords;
 varying vec4 v_diffuse;

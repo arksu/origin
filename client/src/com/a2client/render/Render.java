@@ -29,6 +29,8 @@ public class Render
 {
 	private static final Logger _log = LoggerFactory.getLogger(Render.class.getName());
 
+	public static final String SHADER_VERSION = "#version 140";
+
 	private Game _game;
 
 	private ModelBatch _modelBatch;
@@ -123,11 +125,7 @@ public class Render
 
 		_skybox.Render(camera, _environment);
 		renderTerrain(camera);
-		ShaderProgram.prependVertexCode = "#version 140\n#define varying out\n#define attribute in\n";
-		ShaderProgram.prependFragmentCode = "#version 140\n#define varying in\n#define texture2D texture\n#define gl_FragColor fragColor\nout vec4 fragColor;\n";
 		renderObjects(camera, false);
-		ShaderProgram.prependVertexCode = null;
-		ShaderProgram.prependFragmentCode = null;
 
 		_waterFrameBuffers.getReflectionFrameBuffer().end();
 
@@ -324,9 +322,13 @@ public class Render
 
 	public static ShaderProgram makeShader(String vertFile, String fragFile)
 	{
-		ShaderProgram program = new ShaderProgram(
-				Gdx.files.internal(vertFile),
-				Gdx.files.internal(fragFile));
+		String vertSource = Gdx.files.internal(vertFile).readString();
+		String fragSource = Gdx.files.internal(fragFile).readString();
+
+		vertSource = SHADER_VERSION + "\n" + vertSource;
+		fragSource = SHADER_VERSION + "\n" + fragSource;
+
+		ShaderProgram program = new ShaderProgram(vertSource, fragSource);
 
 		if (!program.isCompiled())
 		{

@@ -1,4 +1,3 @@
-#version 140
 #define varying out
 #define attribute in
 

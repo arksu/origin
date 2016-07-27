@@ -1,4 +1,3 @@
-#version 140
 #define varying in
 #define texture2D texture
 #define gl_FragColor fragColor
