@@ -1,10 +1,7 @@
-#define varying out
-#define attribute in
-
-attribute vec4 a_position;
-attribute vec3 a_normal;
-attribute vec2 a_texCoord;
-attribute vec4 a_color;
+in vec4 a_position;
+in vec3 a_normal;
+in vec2 a_texCoord;
+in vec4 a_color;
 
 uniform mat4 u_projViewTrans;
 uniform mat4 u_worldTrans;
@@ -12,11 +9,10 @@ uniform mat3 u_viewTrans;
 uniform vec4 u_cameraPosition;
 uniform vec3 u_cameraDirection;
 
-varying vec2 texCoords;
-varying vec4 v_diffuse;
-varying float visibility;
+out vec4 v_diffuse;
+out float visibility;
 
-varying float NdotL;
+out float NdotL;
 
 
 vec3 lightPosition = vec3(10, 10, 10);
@@ -24,6 +20,8 @@ vec4 diffuse = vec4(2,2,2,1);
 
 uniform float u_density;
 uniform float u_gradient;
+
+out vec4 clipSpace;
 
 void main() {
 	vec4 worldPosition = u_worldTrans * a_position;
@@ -34,7 +32,8 @@ void main() {
 //    v_diffuse = u_ambient * NdotL;
     v_diffuse = diffuse * NdotL;
 
-    texCoords = a_texCoord;
+//    texCoords = a_texCoord;
+//	texCoords = vec2(a_texCoord.x/2.0 + 0.5, a_texCoord.y/2.0 + 0.5);
 
 //    surfaceNormal = (u_worldTrans * vec4(normal, 0.0)).xyz;
 //    toLightVector = lightPosition - worldPosition.xyz;
@@ -42,5 +41,6 @@ void main() {
     float distance = length(u_cameraPosition.xyz - worldPosition.xyz);
     visibility = exp(-pow((distance * u_density), u_gradient));
 
-    gl_Position = u_projViewTrans * a_position;
+	clipSpace = u_projViewTrans * a_position;
+    gl_Position = clipSpace;
 }

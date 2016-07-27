@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * буферы для отражений в воде
+ * буферы для отрисовки воды
  * Created by arksu on 27.07.16.
  */
 public class WaterFrameBuffers

@@ -1,29 +1,29 @@
-#define varying in
-#define texture2D texture
-#define gl_FragColor fragColor
-out vec4 fragColor;
+out vec4 outColor;
 
-uniform sampler2D u_texture;
+uniform sampler2D u_reflectionTexture;
+uniform sampler2D u_refractionTexture;
 uniform vec4 u_ambient;
 uniform vec3 u_skyColor;
 
-varying vec2 texCoords;
-varying vec4 v_diffuse;
-varying float visibility;
+in vec4 v_diffuse;
+in float visibility;
 
-varying float NdotL;
-
-const float numShades = 7.0;
+in vec4 clipSpace;
 
 void main() {
-	gl_FragColor = vec4(0, 0, 1, 1);
-//    gl_FragColor = u_ambient * v_diffuse * texture2D(u_texture, texCoords);
+	vec2 ndc = (clipSpace.xy/clipSpace.w)/2.0 + 0.5;
+	vec2 refractTexCoords = vec2(ndc.x, ndc.y);
+	vec2 reflectTexCoords = vec2(ndc.x, 1-ndc.y);
 
-//	float intensity = max(NdotL, 0.0);
-//	float shadeIntensity = ceil(intensity * numShades)/numShades;
+
+    vec4 reflectColor =  texture(u_reflectionTexture, reflectTexCoords);
+    vec4 refractColor =  texture(u_refractionTexture, refractTexCoords);
+
+    outColor = mix(reflectColor, refractColor, 0.5);
+
 
 //	gl_FragColor.xyz = gl_FragColor.xyz * shadeIntensity;
-	gl_FragColor = mix(vec4(u_skyColor, 1.0), gl_FragColor, visibility);
+	outColor = mix(vec4(u_skyColor, 1.0), outColor, visibility);
 
 
 }

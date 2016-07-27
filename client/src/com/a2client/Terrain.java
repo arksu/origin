@@ -4,8 +4,10 @@ import com.a2client.model.Grid;
 import com.a2client.model.GridChunk;
 import com.a2client.render.Fog;
 import com.a2client.render.Render;
+import com.a2client.render.water.WaterFrameBuffers;
 import com.a2client.util.Utils;
 import com.a2client.util.Vec2i;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -14,6 +16,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import org.lwjgl.opengl.GL13;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,8 +72,11 @@ public class Terrain
 
 	private Texture _tileAtlas;
 
-	public Terrain()
+	private final WaterFrameBuffers _waterFrameBuffers;
+
+	public Terrain(WaterFrameBuffers waterFrameBuffers)
 	{
+		_waterFrameBuffers = waterFrameBuffers;
 		_shaderTerrain = makeShader("assets/shaders/terrainVertex.glsl", "assets/shaders/terrainFragment.glsl");
 		_shaderWater = makeShader("assets/shaders/waterVertex.glsl", "assets/shaders/waterFragment.glsl");
 
@@ -86,6 +92,7 @@ public class Terrain
 	{
 		_shader.begin();
 		prepareShader(camera, environment, _shader);
+		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
 		_tileAtlas.bind();
 
 		_chunksRendered = 0;
@@ -99,13 +106,20 @@ public class Terrain
 	public void renderWater(Camera camera, Environment environment)
 	{
 		_shaderWater.begin();
-		prepareShader(camera, environment, _shaderWater);
+		prepareWaterShader(camera, environment, _shaderWater);
 //		_tileAtlas.bind();
+
+		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
+//		_tileAtlas.bind();
+		_waterFrameBuffers.getReflectionFrameBuffer().getColorBufferTexture().bind();
+		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE1);
+		_waterFrameBuffers.getRefractionFrameBuffer().getColorBufferTexture().bind();
+
 
 		_chunksRendered = 0;
 		for (Grid grid : grids)
 		{
-			_chunksRendered += grid.render(_shader, camera, true);
+			_chunksRendered += grid.render(_shaderWater, camera, true);
 		}
 		_shaderWater.end();
 	}
@@ -135,6 +149,33 @@ public class Terrain
 		shader.setUniformf("u_clipPlane", Render.clipNormal.x, Render.clipNormal.y, Render.clipNormal.z, Render.clipHeight);
 
 		shader.setUniformi("u_texture", 0);
+
+	}
+	protected void prepareWaterShader(Camera camera, Environment environment, ShaderProgram shader)
+	{
+		shader.setUniformMatrix("u_projTrans", camera.projection);
+		shader.setUniformMatrix("u_viewTrans", camera.view);
+		shader.setUniformMatrix("u_projViewTrans", camera.combined);
+
+		Matrix4 tmp = new Matrix4();
+		tmp.set(camera.combined.cpy()).mul(new Matrix4().idt());
+		shader.setUniformMatrix("u_projViewWorldTrans", tmp);
+
+		shader.setUniformf("u_cameraPosition", camera.position.x, camera.position.y, camera.position.z,
+						   1.1881f / (camera.far * camera.far));
+		shader.setUniformf("u_cameraDirection", camera.direction);
+
+		shader.setUniformMatrix("u_worldTrans", new Matrix4().idt());
+
+		shader.setUniformf("u_ambient", ((ColorAttribute) environment.get(ColorAttribute.AmbientLight)).color);
+
+		shader.setUniformf("u_skyColor", Fog.skyColor.r, Fog.skyColor.g, Fog.skyColor.b);
+		shader.setUniformf("u_density", Fog.enabled ? Fog.density : 0f);
+		shader.setUniformf("u_gradient", Fog.gradient);
+
+//		shader.setUniformi("u_texture", 0);
+		shader.setUniformi("u_reflectionTexture", 0);
+		shader.setUniformi("u_refractionTexture", 1);
 
 	}
 

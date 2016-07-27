@@ -81,7 +81,9 @@ public class Render
 		_simpleModelBatch = new ModelBatch(new ModelShaderProvider());
 		_modelBatch = _depthModelBatch;
 
-		_terrain = new Terrain();
+		_skybox = new Skybox();
+		_waterFrameBuffers = new WaterFrameBuffers();
+		_terrain = new Terrain(_waterFrameBuffers);
 
 		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 
@@ -94,14 +96,13 @@ public class Render
 		// test2.d
 		// System.out.println(test2.);
 
-		_skybox = new Skybox();
-		_waterFrameBuffers = new WaterFrameBuffers();
 
 		_testModel = ModelManager.getInstance().getModelByType(19);
 	}
 
 	public void render(Camera camera)
 	{
+		boolean water = true;
 		_skybox.updateDayNight();
 
 		/*if (Config._renderOutline)
@@ -125,45 +126,47 @@ public class Render
 		_modelBatch = _simpleModelBatch;
 		_terrain._shader = _terrain._shaderTerrain;
 
-		Gdx.gl.glEnable(GL_CLIP_DISTANCE0);
 
 		// WATER 1 REFLECTION ==========================================================================================
-		float camDistance = 2 * (camera.position.y - WATER_LEVEL);
-		camera.position.y -= camDistance;
-		camera.direction.y = -camera.direction.y;
-		camera.update(true);
-		clipNormal = new Vector3(0, 1, 0);
-		clipHeight = -WATER_LEVEL;
-		_waterFrameBuffers.getReflectionFrameBuffer().begin();
+		if (water)
+		{
+			float camDistance = 2 * (camera.position.y - WATER_LEVEL);
+			camera.position.y -= camDistance;
+			camera.direction.y = -camera.direction.y;
+			camera.update(true);
+			clipNormal = new Vector3(0, 1, 0);
+			clipHeight = -WATER_LEVEL;
+			_waterFrameBuffers.getReflectionFrameBuffer().begin();
 
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
-		Gdx.gl.glCullFace(GL20.GL_BACK);
+			Gdx.gl.glEnable(GL_CLIP_DISTANCE0);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+			Gdx.gl.glEnable(GL20.GL_CULL_FACE);
+			Gdx.gl.glCullFace(GL20.GL_BACK);
 
-		_skybox.Render(camera, _environment);
-		renderTerrain(camera);
-		renderObjects(camera, false);
+			_skybox.Render(camera, _environment);
+			renderTerrain(camera);
+			renderObjects(camera, false);
 
-		_waterFrameBuffers.getReflectionFrameBuffer().end();
-		camera.position.y += camDistance;
-		camera.direction.y = -camera.direction.y;
-		camera.update(true);
+			_waterFrameBuffers.getReflectionFrameBuffer().end();
+			camera.position.y += camDistance;
+			camera.direction.y = -camera.direction.y;
+			camera.update(true);
 
-		// WATER 2 REFRACTION, UNDER WATER =============================================================================
-		clipNormal = new Vector3(0, -1, 0);
-		clipHeight = WATER_LEVEL;
-		_waterFrameBuffers.getRefractionFrameBuffer().begin();
+			// WATER 2 REFRACTION, UNDER WATER =============================================================================
+			clipNormal = new Vector3(0, -1, 0);
+			clipHeight = WATER_LEVEL;
+			_waterFrameBuffers.getRefractionFrameBuffer().begin();
 
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		// под водой всяко не видать неба
+			// под водой всяко не видать неба
 //		_skybox.Render(camera, _environment);
-		renderTerrain(camera);
-		renderObjects(camera, false);
+			renderTerrain(camera);
+			renderObjects(camera, false);
 
-		_waterFrameBuffers.getRefractionFrameBuffer().end();
-
+			_waterFrameBuffers.getRefractionFrameBuffer().end();
+		}
 		// MAIN RENDER =================================================================================================
 
 		Gdx.gl.glDisable(GL_CLIP_DISTANCE0);
@@ -181,7 +184,7 @@ public class Render
 		{
 			_modelBatch.begin(camera);
 			_testModel.transform.setTranslation(_game.getWorldMousePos());
-//			_modelBatch.render(_testModel, _environment);
+			_modelBatch.render(_testModel, _environment);
 			_modelBatch.end();
 		}
 
