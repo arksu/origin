@@ -170,7 +170,7 @@ public class Render
 		// MAIN RENDER =================================================================================================
 
 		Gdx.gl.glDisable(GL_CLIP_DISTANCE0);
-//		clipNormal = new Vector3(0, 0, 0);
+		clipNormal = new Vector3(0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
@@ -351,6 +351,11 @@ public class Render
 	public int getChunksRendered()
 	{
 		return _terrain.getChunksRendered();
+	}
+
+	public int getWaterChunksRendered()
+	{
+		return _terrain.getChunksWaterRendered();
 	}
 
 	public GameObject getSelected()

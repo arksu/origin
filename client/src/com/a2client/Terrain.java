@@ -38,6 +38,8 @@ public class Terrain
 	 */
 	public static final float WATER_LEVEL = 0;
 
+	public static final float WATER_WAVE_SPEED = 0.03f;
+
 	/**
 	 * сколько единиц координат в одном тайле
 	 */
@@ -69,10 +71,14 @@ public class Terrain
 	public ShaderProgram _shader;
 
 	private int _chunksRendered = 0;
+	private int _chunksWaterRendered = 0;
 
 	private Texture _tileAtlas;
+	private Texture _waterDuDv;
 
 	private final WaterFrameBuffers _waterFrameBuffers;
+
+	private float _waterMoveFactor = 0;
 
 	public Terrain(WaterFrameBuffers waterFrameBuffers)
 	{
@@ -85,7 +91,10 @@ public class Terrain
 		_shaderDepth = makeShader("assets/shaders/depthVertex.glsl", "assets/shaders/depthFragment.glsl");
 
 		_tileAtlas = Main.getAssetManager().get(Config.RESOURCE_DIR + "tiles_atlas.png", Texture.class);
+		_waterDuDv = Main.getAssetManager().get(Config.RESOURCE_DIR + "waterdudv.png", Texture.class);
 		_tileAtlas.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+		_waterDuDv.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+		_waterDuDv.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 	}
 
 	public void render(Camera camera, Environment environment)
@@ -105,21 +114,24 @@ public class Terrain
 
 	public void renderWater(Camera camera, Environment environment)
 	{
+		_waterMoveFactor += WATER_WAVE_SPEED * Main.deltaTime;
+		_waterMoveFactor %= 1;
 		_shaderWater.begin();
 		prepareWaterShader(camera, environment, _shaderWater);
-//		_tileAtlas.bind();
 
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
-//		_tileAtlas.bind();
 		_waterFrameBuffers.getReflectionFrameBuffer().getColorBufferTexture().bind();
+
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE1);
 		_waterFrameBuffers.getRefractionFrameBuffer().getColorBufferTexture().bind();
 
+		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE2);
+		_waterDuDv.bind();
 
-		_chunksRendered = 0;
+		_chunksWaterRendered = 0;
 		for (Grid grid : grids)
 		{
-			_chunksRendered += grid.render(_shaderWater, camera, true);
+			_chunksWaterRendered += grid.render(_shaderWater, camera, true);
 		}
 		_shaderWater.end();
 	}
@@ -173,15 +185,22 @@ public class Terrain
 		shader.setUniformf("u_density", Fog.enabled ? Fog.density : 0f);
 		shader.setUniformf("u_gradient", Fog.gradient);
 
-//		shader.setUniformi("u_texture", 0);
+		shader.setUniformf("u_moveFactor", _waterMoveFactor);
+
 		shader.setUniformi("u_reflectionTexture", 0);
 		shader.setUniformi("u_refractionTexture", 1);
+		shader.setUniformi("u_dudvMap", 2);
 
 	}
 
 	public int getChunksRendered()
 	{
 		return _chunksRendered;
+	}
+
+	public int getChunksWaterRendered()
+	{
+		return _chunksWaterRendered;
 	}
 
 	/**

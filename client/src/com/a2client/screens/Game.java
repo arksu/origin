@@ -241,7 +241,7 @@ public class Game extends BaseScreen
 		_lblStatus.caption =
 				"FPS: " + Gdx.graphics.getFramesPerSecond() +
 				" " + _statusText +
-				" chunks: " + _render.getChunksRendered() +
+				" chunks: " + _render.getChunksRendered() + " / " + _render.getWaterChunksRendered() +
 				" selected: " + (_render.getSelected() != null ? "" + _render.getSelected() : "null") +
 				" objects: " + _render.getRenderedObjects();
 	}
