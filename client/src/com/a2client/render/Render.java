@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +57,7 @@ public class Render
 	private int _renderedObjects;
 
 	FrameBuffer frameBuffer;
-	FrontFaceDepthShaderProvider _depthShaderProvider;
+	DepthShaderProvider _depthShaderProvider;
 	ModelBatch _depthModelBatch;
 	ModelBatch _simpleModelBatch;
 
@@ -75,7 +76,7 @@ public class Render
 		_environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 		_environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
-		_depthShaderProvider = new FrontFaceDepthShaderProvider();
+		_depthShaderProvider = new DepthShaderProvider();
 		_depthModelBatch = new ModelBatch(_depthShaderProvider);
 
 		_simpleModelBatch = new ModelBatch(new ModelShaderProvider());
@@ -104,7 +105,7 @@ public class Render
 		boolean water = true;
 		_skybox.updateDayNight();
 
-		/*if (Config._renderOutline)
+		if (Config._renderOutline)
 		{
 			_modelBatch = _depthModelBatch;
 			_terrain._shader = _terrain._shaderDepth;
@@ -120,7 +121,7 @@ public class Render
 			renderTerrain(camera);
 			renderObjects(camera, false);
 			frameBuffer.end();
-		}*/
+		}
 
 		_modelBatch = _simpleModelBatch;
 		_terrain._shader = _terrain._shaderTerrain;
@@ -131,7 +132,8 @@ public class Render
 			float camDistance = 2 * (camera.position.y - WATER_LEVEL);
 			camera.position.y -= camDistance;
 			camera.direction.y = -camera.direction.y;
-			camera.update(true);
+			camera.up.set(0, 1, 0);
+			camera.update(false);
 			clipNormal = new Vector3(0, 1, 0);
 			clipHeight = -WATER_LEVEL;
 			_waterFrameBuffers.getReflectionFrameBuffer().begin();
@@ -151,7 +153,7 @@ public class Render
 			_waterFrameBuffers.getReflectionFrameBuffer().end();
 			camera.position.y += camDistance;
 			camera.direction.y = -camera.direction.y;
-			camera.update(true);
+			camera.update(false);
 
 			// WATER 2 REFRACTION, UNDER WATER =============================================================================
 			clipNormal = new Vector3(0, -1, 0);
@@ -189,7 +191,6 @@ public class Render
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		renderWater(camera);
 
-
 		if (_game.getWorldMousePos() != null)
 		{
 			_modelBatch.begin(camera);
@@ -200,7 +201,7 @@ public class Render
 
 		// GUIGDX.getSpriteBatch().begin();
 
-		/*if (Config._renderOutline)
+		if (Config._renderOutline)
 		{
 			// выводим содержимое буфера
 			frameBuffer.getColorBufferTexture().bind();
@@ -212,8 +213,9 @@ public class Render
 			program.setUniformf("size", new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 			fullScreenQuad.render(program, GL20.GL_TRIANGLE_STRIP);
 			program.end();
-		}*/
+		}
 
+/*
 		if (Config._renderOutline)
 		{
 			// выводим содержимое буфера
@@ -228,6 +230,7 @@ public class Render
 			testQuad2.render(program, GL20.GL_TRIANGLE_STRIP);
 			program.end();
 		}
+*/
 
 		// GUIGDX.getSpriteBatch().setShader(_terrain._shader);
 		// _terrain._shader.begin();

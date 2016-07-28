@@ -77,7 +77,7 @@ public class Skybox
 
 	private float _rotate;
 
-	private float _time;
+	private float _time = 5000;
 
 	public Skybox()
 	{

@@ -58,7 +58,7 @@ void main() {
 
 	vec3 viewVector = normalize(toCameraVector);
 	float refractiveFactor = dot(viewVector, normal);
-	refractiveFactor = pow(refractiveFactor, 0.4	);
+	refractiveFactor = pow(refractiveFactor, 0.6);
 
 	vec3 reflectedLight = reflect(normalize(fromLightVector), normal);
     float specular = max(dot(reflectedLight, viewVector), 0.0);
@@ -70,7 +70,4 @@ void main() {
 	outColor = mix(vec4(u_skyColor, 1.0), outColor, visibility);
 
 	outColor.a = depthFactor;
-
-//	outColor = vec4(waterDepth / 10);
-//	outColor = vec4(vec3(depth), 1.0);
 }

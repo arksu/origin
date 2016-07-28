@@ -7,18 +7,15 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 /**
  * Created by arksu on 24.09.15.
  */
-public class FrontFaceDepthShader extends DefaultShader
+public class DepthShader extends DefaultShader
 {
 	public static class Config extends DefaultShader.Config
 	{
 		public boolean depthBufferOnly = false;
-		public float defaultAlphaTest = 0.5f;
 
 		public Config()
 		{
 			super();
-//			defaultCullFace = GL20.GL_FRONT;
-//			defaultCullFace = GL20.GL_BACK;
 		}
 
 		public Config(String vertexShader, String fragmentShader)
@@ -33,7 +30,7 @@ public class FrontFaceDepthShader extends DefaultShader
 	{
 		if (defaultVertexShader == null)
 		{
-			defaultVertexShader = Gdx.files.internal("assets/depth_vertex.glsl").readString();
+			defaultVertexShader = Gdx.files.internal("assets/shaders/depthVertex.glsl").readString();
 		}
 		return defaultVertexShader;
 	}
@@ -44,7 +41,7 @@ public class FrontFaceDepthShader extends DefaultShader
 	{
 		if (defaultFragmentShader == null)
 		{
-			defaultFragmentShader = Gdx.files.internal("assets/depth_frag.glsl").readString();
+			defaultFragmentShader = Gdx.files.internal("assets/shaders/depthFragment.glsl").readString();
 		}
 		return defaultFragmentShader;
 	}
@@ -56,12 +53,12 @@ public class FrontFaceDepthShader extends DefaultShader
 		return prefix;
 	}
 
-	public FrontFaceDepthShader(final Renderable renderable, final Config config)
+	public DepthShader(final Renderable renderable, final Config config)
 	{
 		this(renderable, config, createPrefix(renderable, config));
 	}
 
-	public FrontFaceDepthShader(final Renderable renderable, final Config config, final String prefix)
+	public DepthShader(final Renderable renderable, final Config config, final String prefix)
 	{
 		super(renderable, config, prefix, config.vertexShader != null ? config.vertexShader : getDefaultVertexShader(),
 			  config.fragmentShader != null ? config.fragmentShader : getDefaultFragmentShader());

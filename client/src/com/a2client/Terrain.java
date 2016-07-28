@@ -149,6 +149,7 @@ public class Terrain
 		_shaderWater.end();
 
 		Gdx.gl.glDisable(GL11.GL_BLEND);
+		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
 	}
 
 	protected void prepareShader(Camera camera, Environment environment, ShaderProgram shader)
