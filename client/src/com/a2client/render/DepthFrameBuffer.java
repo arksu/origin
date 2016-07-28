@@ -1,5 +1,6 @@
 package com.a2client.render;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -26,11 +27,6 @@ public class DepthFrameBuffer extends FrameBuffer
 		super(format, width, height, hasDepth);
 	}
 
-	public DepthFrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth, boolean hasStencil)
-	{
-		super(format, width, height, hasDepth, hasStencil);
-	}
-
 	public void createDepthTextre()
 	{
 		// сначала биндим наш буфер
@@ -49,15 +45,15 @@ public class DepthFrameBuffer extends FrameBuffer
 		gl.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 		// связываем нашу текстуру с буфером
 		gl.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT,
-									  GL20.GL_TEXTURE_2D,
-									  _depthTexture, 0);
+								  GL20.GL_TEXTURE_2D,
+								  _depthTexture, 0);
 
 		// а вот тут может случится ата-та. т.к. надо знать ид буфера экрана. см код libgdx
 		gl.glBindFramebuffer(GL20.GL_FRAMEBUFFER, 0);
 	}
 
-	public int getDepthTexture()
+	public void bindDepthTexture()
 	{
-		return _depthTexture;
+		Gdx.gl.glBindTexture(GL11.GL_TEXTURE_2D, _depthTexture);
 	}
 }

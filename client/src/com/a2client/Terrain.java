@@ -64,6 +64,7 @@ public class Terrain
 	public ShaderProgram _shaderTerrain;
 	public ShaderProgram _shaderWater;
 	public ShaderProgram _shaderWaterSimple;
+	public ShaderProgram _shaderShadow;
 
 	public ShaderProgram _shaderCel;
 	public ShaderProgram _shaderOutline;
@@ -88,6 +89,7 @@ public class Terrain
 		_shaderTerrain = makeShader("assets/shaders/terrainVertex.glsl", "assets/shaders/terrainFragment.glsl");
 		_shaderWater = makeShader("assets/shaders/waterVertex.glsl", "assets/shaders/waterFragment.glsl");
 		_shaderWaterSimple = makeShader("assets/shaders/waterSimpleVertex.glsl", "assets/shaders/waterSimpleFragment.glsl");
+		_shaderShadow = makeShader("assets/shaders/shadowVertex.glsl", "assets/shaders/shadowFragment.glsl");
 
 		_shaderCel = makeShader("assets/shaders/celVertex.glsl", "assets/shaders/celFragment.glsl");
 		_shaderOutline = makeShader("assets/shaders/outlineVertex.glsl", "assets/shaders/outlineFragment.glsl");
@@ -140,7 +142,7 @@ public class Terrain
 		_waterNormalMap.bind();
 
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE4);
-		Gdx.gl.glBindTexture(GL11.GL_TEXTURE_2D, _render.getWaterFrameBuffers().getRefractionFrameBuffer().getDepthTexture());
+		_render.getWaterFrameBuffers().getRefractionFrameBuffer().bindDepthTexture();
 
 		renderWaterChunks(camera);
 		_shaderWater.end();

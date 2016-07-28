@@ -17,7 +17,6 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +56,8 @@ public class Render
 	private Skybox _skybox;
 
 	private WaterFrameBuffers _waterFrameBuffers;
+
+	private Shadow _shadow;
 
 	private Environment _environment;
 
@@ -126,6 +127,29 @@ public class Render
 			frameBuffer.end();
 		}
 
+		// SHADOWS =====================================================================================================
+		if (Config._renderShadows)
+		{
+			if (_shadow == null)
+			{
+				_shadow = new Shadow();
+			}
+			_modelBatch = _shadow.getModelBatch();
+			_terrain._shader = _terrain._shaderShadow;
+			_shadow.getFrameBuffer().begin();
+
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+			Gdx.gl.glEnable(GL20.GL_CULL_FACE);
+			Gdx.gl.glCullFace(GL20.GL_BACK);
+
+			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+			renderObjects(camera, false);
+
+			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+			renderTerrain(camera);
+			_shadow.getFrameBuffer().end();
+		}
+
 		_modelBatch = _simpleModelBatch;
 		_terrain._shader = _terrain._shaderTerrain;
 
@@ -143,6 +167,7 @@ public class Render
 			camera.update(false);
 			clipNormal = new Vector3(0, 1, 0);
 			clipHeight = -WATER_LEVEL;
+
 			_waterFrameBuffers.getReflectionFrameBuffer().begin();
 
 			Gdx.gl.glEnable(GL_CLIP_DISTANCE0);
@@ -158,6 +183,7 @@ public class Render
 			renderObjects(camera, false);
 
 			_waterFrameBuffers.getReflectionFrameBuffer().end();
+
 			camera.position.y += camDistance;
 			camera.direction.y = -camera.direction.y;
 			camera.update(false);
@@ -166,6 +192,7 @@ public class Render
 			clipNormal = new Vector3(0, -1, 0);
 			// чуть чуть приподнимем. иначе у берега видно дырки
 			clipHeight = WATER_LEVEL + 0.05f;
+
 			_waterFrameBuffers.getRefractionFrameBuffer().begin();
 
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
@@ -179,8 +206,8 @@ public class Render
 
 			_waterFrameBuffers.getRefractionFrameBuffer().end();
 		}
-		// MAIN RENDER =================================================================================================
 
+		// MAIN RENDER =================================================================================================
 		Gdx.gl.glDisable(GL_CLIP_DISTANCE0);
 		clipNormal = new Vector3(0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
@@ -205,9 +232,7 @@ public class Render
 			_modelBatch.end();
 		}
 
-		// GUIGDX.getSpriteBatch().begin();
-
-		if (Config._renderOutline)
+		/*if (Config._renderOutline)
 		{
 			// выводим содержимое буфера
 			frameBuffer.getColorBufferTexture().bind();
@@ -219,9 +244,9 @@ public class Render
 			program.setUniformf("size", new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 			fullScreenQuad.render(program, GL20.GL_TRIANGLE_STRIP);
 			program.end();
-		}
+		}*/
 
-/*
+
 		if (Config._renderOutline)
 		{
 			// выводим содержимое буфера
@@ -229,14 +254,16 @@ public class Render
 			ShaderProgram program = _terrain._shaderCel;
 
 			program.begin();
-//			program.setUniformf("size", new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-			_waterFrameBuffers.getReflectionFrameBuffer().getColorBufferTexture().bind();
+//			_waterFrameBuffers.getReflectionFrameBuffer().getColorBufferTexture().bind();
+//			_shadow.getFrameBuffer().getColorBufferTexture().bind();
+			_shadow.getFrameBuffer().bindDepthTexture();
 			testQuad1.render(program, GL20.GL_TRIANGLE_STRIP);
+
 			_waterFrameBuffers.getRefractionFrameBuffer().getColorBufferTexture().bind();
 			testQuad2.render(program, GL20.GL_TRIANGLE_STRIP);
 			program.end();
 		}
-*/
+
 	}
 
 	protected void renderObjects(Camera camera, boolean findIntersect)

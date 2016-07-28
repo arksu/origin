@@ -75,7 +75,7 @@ public class Config
 	public static boolean _savePassword;
 
 	public static final int PROTO_VERSION = 3;
-	public static final int CLIENT_VERSION = 80;
+	public static final int CLIENT_VERSION = 200;
 
 	public static final int ICON_SIZE = 32;
 
@@ -92,7 +92,12 @@ public class Config
 	/**
 	 * рисовать красивую "продвинутую" воду
 	 */
-	public static boolean _renderImproveWater = false;
+	public static boolean _renderImproveWater = true;
+
+	/**
+	 * отрисовывать тени?
+	 */
+	public static boolean _renderShadows = true;
 
 	// режим дебага
 	public static boolean _debug = false;
