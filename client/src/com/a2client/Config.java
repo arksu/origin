@@ -89,6 +89,11 @@ public class Config
 	 */
 	public static boolean _renderTerrainWireframe = false;
 
+	/**
+	 * рисовать красивую "продвинутую" воду
+	 */
+	public static boolean _renderImproveWater = false;
+
 	// режим дебага
 	public static boolean _debug = false;
 	// показывать детальную расшифровку пакетов

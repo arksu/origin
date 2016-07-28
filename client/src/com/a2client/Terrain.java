@@ -4,7 +4,6 @@ import com.a2client.model.Grid;
 import com.a2client.model.GridChunk;
 import com.a2client.render.Fog;
 import com.a2client.render.Render;
-import com.a2client.render.water.WaterFrameBuffers;
 import com.a2client.util.Utils;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
@@ -64,6 +63,7 @@ public class Terrain
 
 	public ShaderProgram _shaderTerrain;
 	public ShaderProgram _shaderWater;
+	public ShaderProgram _shaderWaterSimple;
 
 	public ShaderProgram _shaderCel;
 	public ShaderProgram _shaderOutline;
@@ -78,15 +78,16 @@ public class Terrain
 	private Texture _waterDuDv;
 	private Texture _waterNormalMap;
 
-	private final WaterFrameBuffers _waterFrameBuffers;
+	private final Render _render;
 
 	private float _waterMoveFactor = 0;
 
-	public Terrain(WaterFrameBuffers waterFrameBuffers)
+	public Terrain(Render render)
 	{
-		_waterFrameBuffers = waterFrameBuffers;
+		_render = render;
 		_shaderTerrain = makeShader("assets/shaders/terrainVertex.glsl", "assets/shaders/terrainFragment.glsl");
 		_shaderWater = makeShader("assets/shaders/waterVertex.glsl", "assets/shaders/waterFragment.glsl");
+		_shaderWaterSimple = makeShader("assets/shaders/waterSimpleVertex.glsl", "assets/shaders/waterSimpleFragment.glsl");
 
 		_shaderCel = makeShader("assets/shaders/celVertex.glsl", "assets/shaders/celFragment.glsl");
 		_shaderOutline = makeShader("assets/shaders/outlineVertex.glsl", "assets/shaders/outlineFragment.glsl");
@@ -107,7 +108,7 @@ public class Terrain
 	public void render(Camera camera, Environment environment)
 	{
 		_shader.begin();
-		prepareShader(camera, environment, _shader);
+		prepareTerrainShader(camera, environment, _shader);
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
 		_tileAtlas.bind();
 
@@ -119,7 +120,7 @@ public class Terrain
 		_shader.end();
 	}
 
-	public void renderWater(Camera camera, Environment environment)
+	public void renderImproveWater(Camera camera, Environment environment)
 	{
 		_waterMoveFactor += WATER_WAVE_SPEED * Main.deltaTime;
 		_waterMoveFactor %= 1;
@@ -127,10 +128,10 @@ public class Terrain
 		prepareWaterShader(camera, environment, _shaderWater);
 
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
-		_waterFrameBuffers.getReflectionFrameBuffer().getColorBufferTexture().bind();
+		_render.getWaterFrameBuffers().getReflectionFrameBuffer().getColorBufferTexture().bind();
 
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE1);
-		_waterFrameBuffers.getRefractionFrameBuffer().getColorBufferTexture().bind();
+		_render.getWaterFrameBuffers().getRefractionFrameBuffer().getColorBufferTexture().bind();
 
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE2);
 		_waterDuDv.bind();
@@ -139,20 +140,36 @@ public class Terrain
 		_waterNormalMap.bind();
 
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE4);
-		Gdx.gl.glBindTexture(GL11.GL_TEXTURE_2D, _waterFrameBuffers.getRefractionFrameBuffer().getDepthTexture());
+		Gdx.gl.glBindTexture(GL11.GL_TEXTURE_2D, _render.getWaterFrameBuffers().getRefractionFrameBuffer().getDepthTexture());
 
-		_chunksWaterRendered = 0;
-		for (Grid grid : grids)
-		{
-			_chunksWaterRendered += grid.render(_shaderWater, camera, true);
-		}
+		renderWaterChunks(camera);
 		_shaderWater.end();
 
 		Gdx.gl.glDisable(GL11.GL_BLEND);
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
 	}
 
-	protected void prepareShader(Camera camera, Environment environment, ShaderProgram shader)
+	public void renderSimpleWater(Camera camera, Environment environment)
+	{
+		_shaderWaterSimple.begin();
+		prepareTerrainShader(camera, environment, _shaderWaterSimple);
+		Gdx.gl.glEnable(GL11.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		renderWaterChunks(camera);
+		_shaderWaterSimple.end();
+		Gdx.gl.glDisable(GL11.GL_BLEND);
+	}
+
+	protected void renderWaterChunks(Camera camera)
+	{
+		_chunksWaterRendered = 0;
+		for (Grid grid : grids)
+		{
+			_chunksWaterRendered += grid.render(_shaderWater, camera, true);
+		}
+	}
+
+	protected void prepareTerrainShader(Camera camera, Environment environment, ShaderProgram shader)
 	{
 		shader.setUniformMatrix("u_projTrans", camera.projection);
 		shader.setUniformMatrix("u_viewTrans", camera.view);

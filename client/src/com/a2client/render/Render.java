@@ -32,10 +32,19 @@ public class Render
 {
 	private static final Logger _log = LoggerFactory.getLogger(Render.class.getName());
 
+	/**
+	 * версия шейдеров. прописывается ВО ВСЕ шейдеры в самом начале
+	 */
 	public static final String SHADER_VERSION = "#version 140";
 
-	public static final int GL_CLIP_DISTANCE0 = 0x3000;
+	/**
+	 * ну нету этого определения в libgdx, корявая поделка....
+	 */
+	private static final int GL_CLIP_DISTANCE0 = 0x3000;
 
+	/**
+	 * задаем плоскость отсечения (нужно для воды)
+	 */
 	public static Vector3 clipNormal = new Vector3(0, -1, 0);
 	public static float clipHeight = 1.5f;
 
@@ -56,10 +65,10 @@ public class Render
 	private float _selectedDist;
 	private int _renderedObjects;
 
-	FrameBuffer frameBuffer;
-	DepthShaderProvider _depthShaderProvider;
-	ModelBatch _depthModelBatch;
-	ModelBatch _simpleModelBatch;
+	private FrameBuffer frameBuffer;
+	private DepthShaderProvider _depthShaderProvider;
+	private ModelBatch _depthModelBatch;
+	private ModelBatch _simpleModelBatch;
 
 	private Mesh fullScreenQuad;
 	private Mesh testQuad1;
@@ -83,26 +92,20 @@ public class Render
 		_modelBatch = _depthModelBatch;
 
 		_skybox = new Skybox();
-		_waterFrameBuffers = new WaterFrameBuffers();
-		_terrain = new Terrain(_waterFrameBuffers);
+		_terrain = new Terrain(this);
 
 		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 
 		fullScreenQuad = createFullScreenQuad();
+		// for debug
 		testQuad1 = createTestQuad(0.7f, -1, 0.3f);
 		testQuad2 = createTestQuad(0.7f, 0, 0.3f);
-
-		// _modelInstance3.copy();
-
-		// test2.d
-		// System.out.println(test2.);
 
 		_testModel = ModelManager.getInstance().getModelByType(19);
 	}
 
 	public void render(Camera camera)
 	{
-		boolean water = true;
 		_skybox.updateDayNight();
 
 		if (Config._renderOutline)
@@ -127,8 +130,12 @@ public class Render
 		_terrain._shader = _terrain._shaderTerrain;
 
 		// WATER 1 REFLECTION ==========================================================================================
-		if (water)
+		if (Config._renderImproveWater)
 		{
+			if (_waterFrameBuffers == null)
+			{
+				_waterFrameBuffers = new WaterFrameBuffers();
+			}
 			float camDistance = 2 * (camera.position.y - WATER_LEVEL);
 			camera.position.y -= camDistance;
 			camera.direction.y = -camera.direction.y;
@@ -161,7 +168,6 @@ public class Render
 			clipHeight = WATER_LEVEL + 0.05f;
 			_waterFrameBuffers.getRefractionFrameBuffer().begin();
 
-//			Gdx.gl.glClearColor(0, 0.3f, 0.5f, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 			// под водой всяко не видать неба
@@ -231,15 +237,6 @@ public class Render
 			program.end();
 		}
 */
-
-		// GUIGDX.getSpriteBatch().setShader(_terrain._shader);
-		// _terrain._shader.begin();
-		// Gdx.gl.glBindTexture(GL20.GL_TEXTURE_2D,
-		// frameBuffer.getDepthBufferHandle());
-		// _terrain._shader.setUniformi("u_texture", 0);
-		// _terrain._shader.end();
-
-		// GUIGDX.getSpriteBatch().end();
 	}
 
 	protected void renderObjects(Camera camera, boolean findIntersect)
@@ -288,13 +285,19 @@ public class Render
 
 	protected void renderTerrain(Camera camera)
 	{
-//		_terrain._shader.setUniformf();
 		_terrain.render(camera, _environment);
 	}
 
 	protected void renderWater(Camera camera)
 	{
-		_terrain.renderWater(camera, _environment);
+		if (Config._renderImproveWater)
+		{
+			_terrain.renderImproveWater(camera, _environment);
+		}
+		else
+		{
+			_terrain.renderSimpleWater(camera, _environment);
+		}
 	}
 
 	public Mesh createFullScreenQuad()
@@ -379,6 +382,11 @@ public class Render
 	public int getRenderedObjects()
 	{
 		return _renderedObjects;
+	}
+
+	public WaterFrameBuffers getWaterFrameBuffers()
+	{
+		return _waterFrameBuffers;
 	}
 
 	public static ShaderProgram makeShader(String vertFile, String fragFile)

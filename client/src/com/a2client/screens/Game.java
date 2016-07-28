@@ -200,6 +200,12 @@ public class Game extends BaseScreen
 				{
 					Config._renderOutline = !Config._renderOutline;
 				}
+				else if (Input.KeyHit(Keys.P))
+				{
+					Config._renderImproveWater = !Config._renderImproveWater;
+				}
+
+
 				else if (Input.KeyDown(Keys.W))
 				{
 					_gameCamera.getOffset().add(0, 0, Main.deltaTime * GameCamera.OFFSET_SPEED);
