@@ -18,7 +18,7 @@ public class ModelManager
 {
 	private static final Logger _log = LoggerFactory.getLogger(ModelManager.class.getName());
 
-	private static long MODEL_TIMEOUT = 12000000; // 2min
+	private static long MODEL_TIMEOUT = 120000; // 2min
 
 	private static ModelManager _instance;
 
@@ -88,13 +88,13 @@ public class ModelManager
 		current_time = TimeUtils.millis();
 		long out_time = TimeUtils.millis() - MODEL_TIMEOUT;
 
-		for (ModelDesc meta : _modelList.values())
-		{
-			if (meta._loaded && meta._lastUsage < out_time)
-			{
-				unload(meta);
-			}
-		}
+//		for (ModelDesc meta : _modelList.values())
+//		{
+//			if (meta._loaded && meta._lastUsage < out_time)
+//			{
+//				unload(meta);
+//			}
+//		}
 	}
 
 	private void load(ModelDesc desc)

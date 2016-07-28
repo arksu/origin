@@ -6,8 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * простая игровая камера
@@ -15,8 +13,6 @@ import org.slf4j.LoggerFactory;
  */
 public class GameCamera extends PerspectiveCamera
 {
-	private static final Logger _log = LoggerFactory.getLogger(GameCamera.class.getName());
-
 	public static final float OFFSET_SPEED = 8f;
 
 	/**
@@ -35,13 +31,25 @@ public class GameCamera extends PerspectiveCamera
 	 */
 	private Vec2i _startDrag;
 
+	/**
+	 * углы поворота камеры на момент начала вращения
+	 */
 	private float _startAngleY;
 	private float _startAngleX;
 
+	/**
+	 * объект в который смотрим
+	 */
 	private GameObject _chaseObj = null;
 
+	/**
+	 * отступ от точки куда смотрим, можем сдвинуть точку куда смотрит камера в сторону
+	 */
 	private final Vector3 _offset = new Vector3(0, 0, 0);
 
+	/**
+	 * луч проецирования из координат мыши
+	 */
 	private Ray _ray;
 
 	private MousePicker _mousePicker;
@@ -62,8 +70,7 @@ public class GameCamera extends PerspectiveCamera
 	public void update()
 	{
 		_ray = getPickRay(Gdx.input.getX(), Gdx.input.getY());
-		_mousePicker.update(_ray, this);
-//		_log.debug("terrain point: " + _mousePicker.getCurrentTerrainPoint());
+		_mousePicker.update(_ray);
 
 		if (_chaseObj != null)
 		{
@@ -107,9 +114,6 @@ public class GameCamera extends PerspectiveCamera
 		}
 
 		direction.set(0, 0, -1);
-
-//		_current.set(position).sub(direction).nor();
-
 	}
 
 	public void onResize(int width, int height)
@@ -140,8 +144,6 @@ public class GameCamera extends PerspectiveCamera
 			// ограничим вертикальный угол
 			_angleX = Math.min(_angleX, 110f);
 			_angleX = Math.max(_angleX, 1f);
-
-//			_log.debug("ay: " + _angleY + " ax:" + _angleX);
 		}
 	}
 

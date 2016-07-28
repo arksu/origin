@@ -1,51 +1,49 @@
 package com.a2client.render;
 
 import com.a2client.Terrain;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
+ * получаем координаты на земле путем проецирования луча из камеры в землю
  * Created by arksu on 26.07.16.
  */
 public class MousePicker
 {
-	private static final Logger _log = LoggerFactory.getLogger(MousePicker.class.getName());
+	/**
+	 * сколько шагов рекурсии допускаем на этапе бинарного поиска
+	 */
+	private static final int RECURSION_COUNT = 200;
 
-	private static final int RECURSION_COUNT = 300;
+	/**
+	 * максимальная глубина поиска от точки камеры
+	 */
 	private static final float RAY_RANGE = 100;
 
+	/**
+	 * на сколько двигаемся за одну итерацию
+	 */
 	private static final float STEP_LEN = 1.3f;
 
+	/**
+	 * найденная точка на ландшафте
+	 */
 	private Vector3 _currentTerrainPoint;
 
-	public void update(Ray ray, Camera camera)
+	public void update(Ray ray)
 	{
-		long time = System.currentTimeMillis();
 		float len = 0;
 
 		_currentTerrainPoint = null;
-//		int steps = 0;
-//		float f1 = 0, f2 = 0;
 		while (len < RAY_RANGE)
 		{
 			if (intersectionInRange(len, len + STEP_LEN, ray))
 			{
-//				f1 = len;
-//				f2 = len + STEP_LEN;
 				_currentTerrainPoint = binarySearch(0, len, len + STEP_LEN, ray);
 				break;
 			}
 			len += STEP_LEN;
-//			steps++;
 		}
-//		_log.debug(
-//				"steps: " + steps +
-//				" " + (_currentTerrainPoint != null ? "Found" : "NULL") +
-//				" " + f1 + " " + f2 +
-//				" in " + (System.currentTimeMillis() - time) + " ms");
 	}
 
 	private Vector3 getPointOnRay(Ray ray, float distance)

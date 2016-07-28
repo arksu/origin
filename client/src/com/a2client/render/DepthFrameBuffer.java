@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import static com.badlogic.gdx.Gdx.gl;
 
 /**
+ * фрейм буфер с возможностью получения буфера глубины в текстуре
  * Created by arksu on 27.07.16.
  */
 public class DepthFrameBuffer extends FrameBuffer
@@ -32,23 +33,26 @@ public class DepthFrameBuffer extends FrameBuffer
 
 	public void createDepthTextre()
 	{
-//		Texture
-
+		// сначала биндим наш буфер
 		gl.glBindFramebuffer(GL20.GL_FRAMEBUFFER, getFramebufferHandle());
 
-
+		// создаем текстуру
 		_depthTexture = gl.glGenTexture();
+		// биндим ее
 		gl.glBindTexture(GL11.GL_TEXTURE_2D, _depthTexture);
 		gl.glTexImage2D(
 				GL11.GL_TEXTURE_2D, 0,
 				GL14.GL_DEPTH_COMPONENT16, width, height,
 				0, GL11.GL_DEPTH_COMPONENT, GL11.GL_FLOAT, null);
+		// сделаем сглаживание
 		gl.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		gl.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+		// связываем нашу текстуру с буфером
 		gl.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT,
 									  GL20.GL_TEXTURE_2D,
 									  _depthTexture, 0);
 
+		// а вот тут может случится ата-та. т.к. надо знать ид буфера экрана. см код libgdx
 		gl.glBindFramebuffer(GL20.GL_FRAMEBUFFER, 0);
 	}
 
