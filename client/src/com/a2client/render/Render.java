@@ -49,7 +49,7 @@ public class Render
 	public static Vector3 clipNormal = new Vector3(0, -1, 0);
 	public static float clipHeight = 1.5f;
 
-	public static Vector3 sunPosition = new Vector3(100, 100, 100);
+	public static Vector3 sunPosition = new Vector3(100000, 100000, 100000);
 
 	private Game _game;
 

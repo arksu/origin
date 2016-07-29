@@ -34,7 +34,7 @@ public class Shadow
 	private final ShadowBox _shadowBox;
 
 	private Matrix4f lightViewMatrix = new Matrix4f();
-	private Matrix4f projectionMatrix = new Matrix4f();
+	private Matrix4 projectionMatrix = new Matrix4();
 	private Matrix4f projectionViewMatrix = new Matrix4f();
 	private Matrix4f offset = createOffset();
 
@@ -67,17 +67,15 @@ public class Shadow
 
 	private void prepare(Vector3f lightDirection)
 	{
-		updateOrthoProjectionMatrix(_shadowBox.getWidth(), _shadowBox.getHeight(), _shadowBox.getLength());
-		updateLightViewMatrix(lightDirection, _shadowBox.getCenter());
-		Matrix4f.mul(projectionMatrix, lightViewMatrix, projectionViewMatrix);
-
-//		_camera.projection.set(projectionMatrix.toM4());
-//		_camera.view.set(lightViewMatrix.toM4());
+		updateOrthoProjectionMatrix();
+		Vector3f center = _shadowBox.getCenter();
+		updateLightViewMatrix(lightDirection, center);
+//		Matrix4f.mul(projectionMatrix, lightViewMatrix, projectionViewMatrix);
 
 		Matrix4 view = lightViewMatrix.toM4();
 //		Matrix4 view = _camera.view;
 
-		Matrix4 projection = projectionMatrix.toM4();
+		Matrix4 projection = projectionMatrix;
 //		Matrix4 projection = _camera.projection;
 
 
@@ -94,17 +92,19 @@ public class Shadow
 	 * Creates the orthographic projection matrix. This projection matrix
 	 * basically sets the width, length and height of the "view cuboid", based
 	 * on the values that were calculated in the {@link ShadowBox} class.
-	 * @param width - shadow box width.
-	 * @param height - shadow box height.
-	 * @param length - shadow box length.
 	 */
-	private void updateOrthoProjectionMatrix(float width, float height, float length)
+	private void updateOrthoProjectionMatrix()
 	{
-		projectionMatrix.setIdentity();
-		projectionMatrix.m00 = 2f / width;
-		projectionMatrix.m11 = 2f / height;
-		projectionMatrix.m22 = -2f / length;
-		projectionMatrix.m33 = 1;
+		projectionMatrix.idt();
+		projectionMatrix.setToOrtho(_shadowBox.getMinX(),_shadowBox.getMaxX(), _shadowBox.getMinY(), _shadowBox.getMaxY(),
+									_shadowBox.getMinZ(), _shadowBox.getMaxZ());
+
+
+
+//		projectionMatrix.m00 = 2f / width;
+//		projectionMatrix.m11 = 2f / height;
+//		projectionMatrix.m22 = -2f / length;
+//		projectionMatrix.m33 = 1;
 	}
 
 	private void updateLightViewMatrix(Vector3f direction, Vector3f center)
@@ -113,12 +113,13 @@ public class Shadow
 		center.negate();
 		lightViewMatrix.setIdentity();
 		float pitch = (float) Math.acos(new Vector2f(direction.x, direction.z).length());
-		Matrix4f.rotate(pitch, new Vector3f(1, 0, 0), lightViewMatrix, lightViewMatrix);
 		float yaw = (float) Math.toDegrees(((float) Math.atan(direction.x / direction.z)));
 		yaw = direction.z > 0 ? yaw - 180 : yaw;
-		Matrix4f.rotate((float) -Math.toRadians(yaw), new Vector3f(0, 1, 0), lightViewMatrix,
-						lightViewMatrix);
-		Matrix4f.translate(center, lightViewMatrix, lightViewMatrix);
+
+		Matrix4f.rotate(pitch, new Vector3f(1, 0, 0), lightViewMatrix, lightViewMatrix);
+		Matrix4f.rotate((float) -Math.toRadians(yaw), new Vector3f(0, 1, 0), lightViewMatrix, lightViewMatrix);
+
+//		Matrix4f.translate(center, lightViewMatrix, lightViewMatrix);
 	}
 
 	public Matrix4f getToShadowMapSpaceMatrix()

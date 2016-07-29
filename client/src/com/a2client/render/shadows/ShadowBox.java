@@ -20,10 +20,10 @@ public class ShadowBox
 {
 	private static final Logger _log = LoggerFactory.getLogger(ShadowBox.class.getName());
 
-	private static final float OFFSET = 10;
+	private static final float OFFSET = 5;
 	private static final Vector4f UP = new Vector4f(0, 1, 0, 0);
 	private static final Vector4f FORWARD = new Vector4f(0, 0, -1, 0);
-	private static final float SHADOW_DISTANCE = 100;
+	private static float SHADOW_DISTANCE = 10;
 
 	private float minX, maxX;
 	private float minY, maxY;
@@ -58,6 +58,9 @@ public class ShadowBox
 	 */
 	protected void update()
 	{
+		// TODO
+		SHADOW_DISTANCE = cam.getCameraDistance();
+
 		Matrix4f rotation = calculateCameraRotationMatrix();
 		Vector3f forwardVector = new Vector3f(Matrix4f.transform(rotation, FORWARD, null));
 
@@ -216,8 +219,11 @@ public class ShadowBox
 	private Matrix4f calculateCameraRotationMatrix()
 	{
 		Matrix4f rotation = new Matrix4f();
-		rotation.rotate((float) Math.toRadians(-cam.getAngleY()), new Vector3f(0, 1, 0));
-		rotation.rotate((float) Math.toRadians(-cam.getAngleX()), new Vector3f(1, 0, 0));
+		float ay = cam.getAngleY();
+		float ax = cam.getAngleX();
+
+		rotation.rotate((float) Math.toRadians(-ay), new Vector3f(0, 1, 0));
+		rotation.rotate((float) Math.toRadians(-ax), new Vector3f(1, 0, 0));
 		return rotation;
 	}
 
@@ -244,4 +250,33 @@ public class ShadowBox
 		return (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
 	}
 
+	public float getMinX()
+	{
+		return minX;
+	}
+
+	public float getMaxX()
+	{
+		return maxX;
+	}
+
+	public float getMinY()
+	{
+		return minY;
+	}
+
+	public float getMaxY()
+	{
+		return maxY;
+	}
+
+	public float getMinZ()
+	{
+		return minZ;
+	}
+
+	public float getMaxZ()
+	{
+		return maxZ;
+	}
 }
