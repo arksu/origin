@@ -64,7 +64,7 @@ public class Terrain
 	public ShaderProgram _shaderTerrain;
 	public ShaderProgram _shaderWater;
 	public ShaderProgram _shaderWaterSimple;
-	public ShaderProgram _shaderShadow;
+	public static  ShaderProgram _shaderShadow;
 
 	public ShaderProgram _shaderCel;
 	public ShaderProgram _shaderOutline;

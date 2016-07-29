@@ -161,6 +161,16 @@ public class GameCamera extends PerspectiveCamera
 		return _ray;
 	}
 
+	public float getAngleY()
+	{
+		return _angleY;
+	}
+
+	public float getAngleX()
+	{
+		return _angleX;
+	}
+
 	public MousePicker getMousePicker()
 	{
 		return _mousePicker;

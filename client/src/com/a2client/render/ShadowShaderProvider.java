@@ -1,5 +1,6 @@
 package com.a2client.render;
 
+import com.a2client.Terrain;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.Shader;
@@ -25,9 +26,9 @@ public class ShadowShaderProvider extends DepthShaderProvider
 	}
 
 	@Override
-	protected Shader createShader(final Renderable renderable)
+	protected Shader createShader(Renderable renderable)
 	{
-		return new DefaultShader(renderable, _config);
+//		return new DefaultShader(renderable, _config);
+		return new ShadowShader(renderable, Terrain._shaderShadow);
 	}
-
 }

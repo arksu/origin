@@ -49,6 +49,8 @@ public class Render
 	public static Vector3 clipNormal = new Vector3(0, -1, 0);
 	public static float clipHeight = 1.5f;
 
+	public static Vector3 sunPosition = new Vector3(100, 100, 100);
+
 	private Game _game;
 
 	private ModelBatch _modelBatch;
@@ -134,11 +136,12 @@ public class Render
 		{
 			if (_shadow == null)
 			{
-				_shadow = new Shadow(camera);
+				_shadow = new Shadow(_game.getCamera(), _terrain._shaderShadow);
 			}
 			_modelBatch = _shadow.getModelBatch();
 			_terrain._shader = _terrain._shaderShadow;
 
+			_shadow.update();
 			_shadow.getFrameBuffer().begin();
 
 			// TODO : убрать GL_COLOR_BUFFER_BIT
@@ -264,7 +267,8 @@ public class Render
 			_shadow.getFrameBuffer().bindDepthTexture();
 			testQuad1.render(program, GL20.GL_TRIANGLE_STRIP);
 
-			_waterFrameBuffers.getRefractionFrameBuffer().getColorBufferTexture().bind();
+//			_waterFrameBuffers.getRefractionFrameBuffer().bindDepthTexture();
+			_shadow.getFrameBuffer().getColorBufferTexture().bind();
 			testQuad2.render(program, GL20.GL_TRIANGLE_STRIP);
 			program.end();
 		}
