@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.a2client.render.Shadow.FRAGMENT;
-import static com.a2client.render.Shadow.VERTEX;
+import static com.a2client.render.shadows.Shadow.FRAGMENT;
+import static com.a2client.render.shadows.Shadow.VERTEX;
 
 /**
  * Created by arksu on 28.07.16.

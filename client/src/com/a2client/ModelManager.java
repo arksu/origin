@@ -71,6 +71,11 @@ public class ModelManager
 		return tmp;
 	}
 
+	public ModelDesc getDescByType(int typeId)
+	{
+		return _modelList.get(typeId);
+	}
+
 	public void updateModelTime(int typeId)
 	{
 		ModelDesc meta = _modelList.get(typeId);
@@ -103,7 +108,7 @@ public class ModelManager
 		{
 			_assets.load(desc._resource, Model.class);
 			_assets.finishLoadingAsset(desc._resource);
-			_log.debug("load model: " + desc._resource);
+			_log.debug("loaded model: " + desc._resource);
 		}
 		Model model = _assets.get(desc._resource, Model.class);
 		if (!_modelHitList.containsKey(model))

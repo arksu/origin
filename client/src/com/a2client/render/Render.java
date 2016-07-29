@@ -5,6 +5,7 @@ import com.a2client.ModelManager;
 import com.a2client.ObjectCache;
 import com.a2client.Terrain;
 import com.a2client.model.GameObject;
+import com.a2client.render.shadows.Shadow;
 import com.a2client.render.water.WaterFrameBuffers;
 import com.a2client.screens.Game;
 import com.badlogic.gdx.Gdx;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
+import org.lwjgl.opengl.GL11;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,12 +134,14 @@ public class Render
 		{
 			if (_shadow == null)
 			{
-				_shadow = new Shadow();
+				_shadow = new Shadow(camera);
 			}
 			_modelBatch = _shadow.getModelBatch();
 			_terrain._shader = _terrain._shaderShadow;
+
 			_shadow.getFrameBuffer().begin();
 
+			// TODO : убрать GL_COLOR_BUFFER_BIT
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 			Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 			Gdx.gl.glCullFace(GL20.GL_BACK);
@@ -147,6 +151,7 @@ public class Render
 
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 			renderTerrain(camera);
+
 			_shadow.getFrameBuffer().end();
 		}
 
@@ -215,11 +220,11 @@ public class Render
 		Gdx.gl.glCullFace(GL20.GL_BACK);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		_skybox.Render(camera, _environment);
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		renderTerrain(camera);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		renderObjects(camera, true);
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		_skybox.Render(camera, _environment);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		renderWater(camera);
@@ -271,6 +276,8 @@ public class Render
 		_renderedObjects = 0;
 		if (ObjectCache.getInstance() != null)
 		{
+			Gdx.gl.glEnable(GL11.GL_BLEND);
+			Gdx.gl.glBlendFunc(GL20.GL_EQUAL, GL20.GL_ONE);
 			_selected = null;
 			_selectedDist = 100500;
 			_modelBatch.begin(camera);
@@ -280,10 +287,6 @@ public class Render
 				// если объект попадает в поле зрения камеры
 				if (model != null && camera.frustum.boundsInFrustum(o.getBoundingBox()))
 				{
-//					if (o.getTypeId() == 1 && _game.getWorldMousePos() != null)
-//					{
-//						model.transform.setTranslation(_game.getWorldMousePos());
-//					}
 					_modelBatch.render(model, _environment);
 					_renderedObjects++;
 

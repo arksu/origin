@@ -15,6 +15,10 @@ public class GameCamera extends PerspectiveCamera
 {
 	public static final float OFFSET_SPEED = 8f;
 
+	public static final float NEAR = 1f;
+	public static final float FAR = 1000f;
+	public static final float FOV = 30f;
+
 	/**
 	 * дистанция от камеры до точки куда смотрим
 	 */
@@ -56,11 +60,11 @@ public class GameCamera extends PerspectiveCamera
 
 	public GameCamera()
 	{
-		fieldOfView = 30f;
+		fieldOfView = FOV;
 		viewportWidth = 800;
 		viewportHeight = 600;
-		near = 1f;
-		far = 1000f;
+		near = NEAR;
+		far = FAR;
 
 		_mousePicker = new MousePicker();
 

@@ -1,7 +1,9 @@
 package com.a2client.render;
 
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Attributes;
 import com.badlogic.gdx.graphics.g3d.Renderable;
+import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
 import com.badlogic.gdx.graphics.g3d.shaders.BaseShader;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import org.slf4j.Logger;
@@ -64,5 +66,30 @@ public class ModelShader extends DefaultShader
 		u_density = register(density, densitySetter);
 		u_gradient = register(gradient, gradientSetter);
 		u_clipPlane = register(clipPlane, clipPlanetSetter);
+	}
+
+	@Override
+	public void render(final Renderable renderable)
+	{
+		if (!renderable.material.has(BlendingAttribute.Type))
+		{
+			context.setBlending(false, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		}
+		else
+		{
+			context.setBlending(true, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		}
+
+		//		if (!renderable.material.has(BlendingAttribute.Type))
+//		{
+//			context.setDepthTest(GL20.GL_LEQUAL);
+//			context.setBlending(false, GL20.GL_ONE, GL20.GL_ONE);
+//		}
+//		else
+//		{
+//			context.setDepthTest(GL20.GL_EQUAL);
+//			context.setBlending(true, GL20.GL_ONE, GL20.GL_ONE);
+//		}
+		super.render(renderable);
 	}
 }

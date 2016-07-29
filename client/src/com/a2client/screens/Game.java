@@ -78,7 +78,7 @@ public class Game extends BaseScreen
 
 		int hc = 100;
 		int wc = 200;
-		int py = Config.getScreenHeight() - hc - 30;
+		int py = Gdx.graphics.getHeight() - hc - 30;
 		_chatMemo = new GUI_Memo(GUI.rootNormal());
 		_chatMemo.SetPos(5, py);
 		_chatMemo.SetSize(wc, hc);
@@ -102,8 +102,8 @@ public class Game extends BaseScreen
 				_chatEdit.SetText("");
 			}
 		};
-		_chatEdit.SetPos(5, py + _chatMemo.Height() + 5);
 		_chatEdit.SetSize(_chatMemo.Width(), 20);
+		_chatEdit.SetPos(5, py + _chatMemo.Height() + 5);
 
 		_actions = new GUI_StringList(GUI.rootNormal())
 		{
@@ -115,7 +115,7 @@ public class Game extends BaseScreen
 			}
 		};
 		_actions.SetSize(150, 100);
-		_actions.SetPos(Config.getScreenWidth() - _actions.size.x, Config.getScreenHeight() - _actions.size.y);
+		_actions.SetPos(Gdx.graphics.getWidth() - _actions.size.x, Gdx.graphics.getHeight() - _actions.size.y);
 
 		_gameCamera = new GameCamera();
 		_render = new Render(this);
@@ -136,6 +136,7 @@ public class Game extends BaseScreen
 	@Override
 	public void onUpdate()
 	{
+		_actions.SetPos(Gdx.graphics.getWidth() - _actions.size.x, Gdx.graphics.getHeight() - _actions.size.y);
 		if (_state == GameState.IN_GAME)
 		{
 			if (_worldMousePos != null)

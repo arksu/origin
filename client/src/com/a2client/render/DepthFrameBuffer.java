@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
@@ -29,6 +30,11 @@ public class DepthFrameBuffer extends FrameBuffer
 
 	public void createDepthTextre()
 	{
+		createDepthTextre(Texture.TextureFilter.Linear, Texture.TextureWrap.Repeat);
+	}
+
+	public void createDepthTextre(Texture.TextureFilter filter, Texture.TextureWrap wrap)
+	{
 		// сначала биндим наш буфер
 		gl.glBindFramebuffer(GL20.GL_FRAMEBUFFER, getFramebufferHandle());
 
@@ -41,10 +47,12 @@ public class DepthFrameBuffer extends FrameBuffer
 				GL14.GL_DEPTH_COMPONENT16, width, height,
 				0, GL11.GL_DEPTH_COMPONENT, GL11.GL_FLOAT, null);
 		// сделаем сглаживание
-		gl.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-		gl.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+		gl.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, filter.getGLEnum());
+		gl.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, filter.getGLEnum());
+		gl.glTexParameteri(GL11.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_S, wrap.getGLEnum());
+		gl.glTexParameteri(GL11.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, wrap.getGLEnum());
 		// связываем нашу текстуру с буфером
-		gl.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT,
+		gl.glFramebufferTexture2D(GL20.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT,
 								  GL20.GL_TEXTURE_2D,
 								  _depthTexture, 0);
 

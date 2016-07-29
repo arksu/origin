@@ -3,6 +3,7 @@ package com.a2client.model;
 import com.a2client.ModelManager;
 import com.a2client.Terrain;
 import com.a2client.network.game.serverpackets.ObjectAdd;
+import com.a2client.util.Utils;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -216,6 +217,12 @@ public class GameObject
 		updateWorldCoord();
 
 		_model.transform.setTranslation(_worldCoord);
+		_model.model.calculateBoundingBox(_modelBoundingBox);
+		ModelManager.ModelDesc desc = ModelManager.getInstance().getDescByType(_typeId);
+
+		_modelBoundingBox.min.scl(desc._scale);
+		_modelBoundingBox.max.scl(desc._scale);
+
 		_boundingBox.min.set(_worldCoord).add(_modelBoundingBox.min);
 		_boundingBox.max.set(_worldCoord).add(_modelBoundingBox.max);
 	}
@@ -223,6 +230,9 @@ public class GameObject
 	@Override
 	public String toString()
 	{
-		return "(" + _name + " " + _objectId + " type=" + _typeId + ")";
+		return "("
+			   + (!Utils.isEmpty(_name) ? "\"" + _name + "\" " : "")
+			   + "id=" + _objectId
+			   + " type=" + _typeId + ")";
 	}
 }
