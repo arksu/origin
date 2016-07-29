@@ -49,7 +49,7 @@ public class Render
 	public static Vector3 clipNormal = new Vector3(0, -1, 0);
 	public static float clipHeight = 1.5f;
 
-	public static Vector3 sunPosition = new Vector3(100000, 100000, 100000);
+	public static Vector3 sunPosition = new Vector3(10000, 10000, 10000);
 
 	private Game _game;
 
@@ -141,7 +141,7 @@ public class Render
 			_modelBatch = _shadow.getModelBatch();
 			_terrain._shader = _terrain._shaderShadow;
 
-			_shadow.update();
+			_shadow.update(camera);
 			_shadow.getFrameBuffer().begin();
 
 			// TODO : убрать GL_COLOR_BUFFER_BIT

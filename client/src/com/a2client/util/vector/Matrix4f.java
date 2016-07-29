@@ -65,26 +65,48 @@ public class Matrix4f extends Matrix implements Serializable {
 	public Matrix4 toM4() {
 		Matrix4 tmp = new Matrix4();
 		tmp.val[M00] = m00;
-		tmp.val[M01] = m01;
-		tmp.val[M02] = m02;
-		tmp.val[M03] = m03;
+		tmp.val[M01] = m10;
+		tmp.val[M02] = m20;
+		tmp.val[M03] = m30;
 
-		tmp.val[M10] = m10;
+		tmp.val[M10] = m01;
 		tmp.val[M11] = m11;
-		tmp.val[M12] = m12;
-		tmp.val[M13] = m13;
+		tmp.val[M12] = m21;
+		tmp.val[M13] = m31;
 
-		tmp.val[M20] = m20;
-		tmp.val[M21] = m21;
+		tmp.val[M20] = m02;
+		tmp.val[M21] = m12;
 		tmp.val[M22] = m22;
-		tmp.val[M23] = m23;
+		tmp.val[M23] = m32;
 
-		tmp.val[M30] = m30;
-		tmp.val[M31] = m31;
-		tmp.val[M32] = m32;
+		tmp.val[M30] = m03;
+		tmp.val[M31] = m13;
+		tmp.val[M32] = m23;
 		tmp.val[M33] = m33;
 
 		return tmp;
+	}
+
+	// by arksu
+	public static Matrix4f fromM4(Matrix4 tmp) {
+		Matrix4f matrix4f = new Matrix4f();
+		matrix4f.m00 = tmp.val[M00];
+		matrix4f.m01 = tmp.val[M10];
+		matrix4f.m02 = tmp.val[M20];
+		matrix4f.m03 = tmp.val[M30];
+		matrix4f.m10 = tmp.val[M01];
+		matrix4f.m11 = tmp.val[M11];
+		matrix4f.m12 = tmp.val[M21];
+		matrix4f.m13 = tmp.val[M31];
+		matrix4f.m20 = tmp.val[M02];
+		matrix4f.m21 = tmp.val[M12];
+		matrix4f.m22 = tmp.val[M22];
+		matrix4f.m23 = tmp.val[M32];
+		matrix4f.m30 = tmp.val[M03];
+		matrix4f.m31 = tmp.val[M13];
+		matrix4f.m32 = tmp.val[M23];
+		matrix4f.m33 = tmp.val[M33];
+		return matrix4f;
 	}
 
 	/**
@@ -92,10 +114,10 @@ public class Matrix4f extends Matrix implements Serializable {
 	 */
 	public String toString() {
 		StringBuilder buf = new StringBuilder();
-		buf.append(m00).append(' ').append(m10).append(' ').append(m20).append(' ').append(m30).append('\n');
-		buf.append(m01).append(' ').append(m11).append(' ').append(m21).append(' ').append(m31).append('\n');
-		buf.append(m02).append(' ').append(m12).append(' ').append(m22).append(' ').append(m32).append('\n');
-		buf.append(m03).append(' ').append(m13).append(' ').append(m23).append(' ').append(m33).append('\n');
+		buf.append(m00).append('|').append(m10).append('|').append(m20).append('|').append(m30).append('\n');
+		buf.append(m01).append('|').append(m11).append('|').append(m21).append('|').append(m31).append('\n');
+		buf.append(m02).append('|').append(m12).append('|').append(m22).append('|').append(m32).append('\n');
+		buf.append(m03).append('|').append(m13).append('|').append(m23).append('|').append(m33).append('\n');
 		return buf.toString();
 	}
 
@@ -602,6 +624,12 @@ public class Matrix4f extends Matrix implements Serializable {
 		dest.m12 = t12;
 		dest.m13 = t13;
 		return dest;
+	}
+
+	public void setTranslate(Vector3f vec) {
+		m30 = vec.x;
+		m31 = vec.y;
+		m32 = vec.z;
 	}
 
 	/**

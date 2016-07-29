@@ -90,10 +90,11 @@ public class GameCamera extends PerspectiveCamera
 			position.rotate(Vector3.Y, _angleY);
 
 			// и сместим до положения игрока
-			position.add(_chaseObj.getWorldCoord());
+//			position.add(_chaseObj.getWorldCoord());
 
 			// скажем смотреть на игрока
-			lookAt(_chaseObj.getWorldCoord());
+//			lookAt(_chaseObj.getWorldCoord());
+			lookAt(0,0,0);
 
 			position.add(_offset);
 		}

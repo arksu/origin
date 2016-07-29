@@ -5,6 +5,8 @@ import com.a2client.util.vector.Matrix4f;
 import com.a2client.util.vector.Vector3f;
 import com.a2client.util.vector.Vector4f;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +25,7 @@ public class ShadowBox
 	private static final float OFFSET = 5;
 	private static final Vector4f UP = new Vector4f(0, 1, 0, 0);
 	private static final Vector4f FORWARD = new Vector4f(0, 0, -1, 0);
-	private static float SHADOW_DISTANCE = 10;
+	private static float SHADOW_DISTANCE = 20;
 
 	private float minX, maxX;
 	private float minY, maxY;
@@ -59,10 +61,16 @@ public class ShadowBox
 	protected void update()
 	{
 		// TODO
-		SHADOW_DISTANCE = cam.getCameraDistance();
+		SHADOW_DISTANCE = cam.getCameraDistance() * 2;
+		calculateWidthsAndHeights();
 
-		Matrix4f rotation = calculateCameraRotationMatrix();
-		Vector3f forwardVector = new Vector3f(Matrix4f.transform(rotation, FORWARD, null));
+		Matrix4 rot = calculateCameraRotationMatrix();
+		Vector3 forw = new Vector3(0,0,-1);
+		forw.mul(rot);
+
+		Matrix4f rotation = Matrix4f.fromM4(rot);
+		Vector4f f = Matrix4f.transform(rotation, FORWARD, null);
+		Vector3f forwardVector = new Vector3f(f);
 
 		Vector3f toFar = new Vector3f(forwardVector);
 		toFar.scale(SHADOW_DISTANCE);
@@ -216,15 +224,16 @@ public class ShadowBox
 	/**
 	 * @return The rotation of the camera represented as a matrix.
 	 */
-	private Matrix4f calculateCameraRotationMatrix()
+	private Matrix4 calculateCameraRotationMatrix()
 	{
-		Matrix4f rotation = new Matrix4f();
+		Matrix4 tmp = new Matrix4();
 		float ay = cam.getAngleY();
 		float ax = cam.getAngleX();
 
-		rotation.rotate((float) Math.toRadians(-ay), new Vector3f(0, 1, 0));
-		rotation.rotate((float) Math.toRadians(-ax), new Vector3f(1, 0, 0));
-		return rotation;
+		tmp.rotate(Vector3.Y, ay);
+		tmp.rotate(Vector3.X, ax);
+
+		return tmp;
 	}
 
 	/**
@@ -238,8 +247,10 @@ public class ShadowBox
 	{
 		farWidth = (float) (SHADOW_DISTANCE * Math.tan(Math.toRadians(FOV)));
 		nearWidth = (float) (NEAR * Math.tan(Math.toRadians(FOV)));
-		farHeight = farWidth / getAspectRatio();
-		nearHeight = nearWidth / getAspectRatio();
+
+		final float aspectRatio = getAspectRatio();
+		farHeight = farWidth / aspectRatio;
+		nearHeight = nearWidth / aspectRatio;
 	}
 
 	/**
