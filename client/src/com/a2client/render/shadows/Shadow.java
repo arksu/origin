@@ -8,7 +8,6 @@ import com.a2client.util.vector.Matrix4f;
 import com.a2client.util.vector.Vector2f;
 import com.a2client.util.vector.Vector3f;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -37,99 +36,48 @@ public class Shadow
 	private final ModelBatch _modelBatch;
 
 	private final ShadowBox _shadowBox;
-	private final ShadowBox2 _shadowBox2;
 
 	private Matrix4f lightViewMatrix = new Matrix4f();
 	private Matrix4 projectionMatrix = new Matrix4();
-	private Matrix4f projectionViewMatrix = new Matrix4f();
-	private Matrix4f offset = createOffset();
+	private Matrix4 projectionViewMatrix = new Matrix4();
+	private Matrix4 offset = createOffset();
 
 	private GameCamera _camera;
-
-	private OrthographicCamera _ortoCamera;
-	protected float halfDepth;
-	protected float halfHeight;
-	protected final Vector3 tmpV = new Vector3();
-	protected final Vector3 direction = new Vector3(-10, -10, -10);
 
 	public Shadow(GameCamera camera, final ShaderProgram shader)
 	{
 		_camera = camera;
 
-		_ortoCamera = new OrthographicCamera(SHADOW_MAP_SIZE / 5f, SHADOW_MAP_SIZE / 5f);
-		_ortoCamera.near = 1f;
-		_ortoCamera.far = 1000f;
-		halfHeight = SHADOW_MAP_SIZE * 0.5f;
-		halfDepth = _ortoCamera.near + 0.5f * (_ortoCamera.far - _ortoCamera.near);
-
 		_frameBuffer = new DepthFrameBuffer(Pixmap.Format.RGBA8888, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, true);
 		_frameBuffer.createDepthTextre(Texture.TextureFilter.Nearest, Texture.TextureWrap.ClampToEdge);
 		ShadowShaderProvider shaderProvider = new ShadowShaderProvider();
 		_modelBatch = new ModelBatch(shaderProvider);
-//		_modelBatch = new ModelBatch(new DefaultShaderProvider() {
-//			@Override
-//			protected Shader createShader(Renderable renderable)
-//			{
-//				return new ShadowShader(renderable, shader);
-//			}
-//		});
-		_shadowBox = new ShadowBox(lightViewMatrix, camera);
-		_shadowBox2 = new ShadowBox2(camera);
+		_shadowBox = new ShadowBox(camera);
 	}
 
 	public void update(Camera camera)
 	{
 		_shadowBox.update();
-		_shadowBox2.update();
 
 		_log.debug("box: " + _shadowBox.getWidth() + " " + _shadowBox.getHeight() + " " + _shadowBox.getLength() + " cen: " + _shadowBox.getCenter());
-
-		updateCamera(tmpV.set(camera.direction).scl(halfHeight), camera.direction);
 
 		Vector3f sunPosition = new Vector3f(Render.sunPosition);
 		Vector3f lightDirection = new Vector3f(-sunPosition.x, -sunPosition.y, -sunPosition.z);
 		prepare(lightDirection);
 	}
 
-	public void updateCamera(final Vector3 center, final Vector3 forward)
-	{
-		_ortoCamera.zoom = 1;
-		_ortoCamera.viewportWidth = _shadowBox.getWidth();
-		_ortoCamera.viewportHeight = _shadowBox.getHeight();
-
-//		_ortoCamera.near = _shadowBox.getMinZ();
-//		_ortoCamera.far = _shadowBox.getMaxZ();
-
-		_ortoCamera.position.set(20, 20, 20);
-		Vector3 tmp = _ortoCamera.position.cpy();
-		tmp.nor();
-		_ortoCamera.direction.set(-tmp.x, -tmp.y, -tmp.z);
-//		_ortoCamera.position.set(direction);
-//		_ortoCamera.direction.set(0,0,0).nor();
-
-		// cam.position.set(10,10,10);
-//		_ortoCamera.position.set(direction).scl(-halfDepth).add(center);
-//		_ortoCamera.direction.set(direction).nor();
-		// cam.up.set(forward).nor();
-		_ortoCamera.normalizeUp();
-		_ortoCamera.update();
-	}
-
 	private void prepare(Vector3f lightDirection)
 	{
 		updateOrthoProjectionMatrix();
-		Vector3f center = _shadowBox.getCenter();
-		Matrix4 view;
-		updateLightViewMatrix(lightDirection, center);
+		Vector3 center = _shadowBox.getCenter();
+		Matrix4 view = updateLightViewMatrix(lightDirection, center);
 //		Matrix4f.mul(projectionMatrix, lightViewMatrix, projectionViewMatrix);
 
-		view = lightViewMatrix.toM4();
+//		view = lightViewMatrix.toM4();
 //		view = _camera.view;
-//		view = _ortoCamera.view;
 
 		Matrix4 projection = projectionMatrix;
 //		Matrix4 projection = _camera.projection;
-//		Matrix4 projection = _ortoCamera.projection;
 
 		_camera.projection.set(projection);
 		_camera.view.set(view);
@@ -157,39 +105,36 @@ public class Shadow
 		projectionMatrix.val[M33] = 1;
 	}
 
-	private Matrix4 updateLightViewMatrix(Vector3f direction, Vector3f center)
+	private Matrix4 updateLightViewMatrix(Vector3f direction, Vector3 center)
 	{
 		direction.normalise();
-		center.negate();
-		lightViewMatrix.setIdentity();
-		float pitch = (float) Math.acos(new Vector2f(direction.x, direction.z).length());
+		center.x = -center.x;
+		center.y = -center.y;
+		center.z = -center.z;
+
+		float pitch = (float) Math.toDegrees(Math.acos(new Vector2f(direction.x, direction.z).length()));
 		float yaw = (float) Math.toDegrees(((float) Math.atan(direction.x / direction.z)));
 		yaw = direction.z > 0 ? yaw - 180 : yaw;
 
 		Matrix4f.rotate(pitch, new Vector3f(1, 0, 0), lightViewMatrix, lightViewMatrix);
 		Matrix4f.rotate((float) -Math.toRadians(yaw), new Vector3f(0, 1, 0), lightViewMatrix, lightViewMatrix);
 
-		Matrix4 tmp = lightViewMatrix.toM4();
+		Matrix4 view = _shadowBox.getLightViewMatrix();
+		view.idt();
+		view.rotate(1,0,0, pitch);
+		view.rotate(0,1,0, -yaw);
 
-		Vector3 vec = new Vector3(center.x, 0, center.z);
-//		Vector3 vec = new Vector3(-_camera.position.x, 0, -_camera.position.z);
-//		vec.mul(tmp);
-//		tmp.setTranslation(vec);
-//		lightViewMatrix = Matrix4f.fromM4(tmp);
+		Matrix4 t = new Matrix4().setTranslation(new Vector3(center.x, center.y, center.z));
 
-//		_log.debug("center: " + vec);
+		view.mul(t);
 
-		center = new Vector3f(center.x, 0, center.z);
-		Matrix4f.translate(center, lightViewMatrix, lightViewMatrix);
-//		lightViewMatrix.setTranslate(center);
-
-		tmp = lightViewMatrix.toM4();
-		return tmp;
+		lightViewMatrix= Matrix4f.fromM4(view);
+		return view;
 	}
 
-	public Matrix4f getToShadowMapSpaceMatrix()
+	public Matrix4 getToShadowMapSpaceMatrix()
 	{
-		return Matrix4f.mul(offset, projectionViewMatrix, null);
+		return offset.cpy().mul(projectionMatrix);
 	}
 
 	/**
@@ -198,12 +143,13 @@ public class Shadow
 	 * coordinate system that we can use to sample to shadow map.
 	 * @return The offset as a matrix (so that it's easy to apply to other matrices).
 	 */
-	private static Matrix4f createOffset()
+	private static Matrix4 createOffset()
 	{
-		Matrix4f offset = new Matrix4f();
-		offset.translate(new Vector3f(0.5f, 0.5f, 0.5f));
-		offset.scale(new Vector3f(0.5f, 0.5f, 0.5f));
-		return offset;
+		Matrix4 offset = new Matrix4();
+
+		offset.setTranslation(0.5f, 0.5f, 0.5f);
+		offset.scale(0.5f, 0.5f, 0.5f);
+		return null;
 	}
 
 	public DepthFrameBuffer getFrameBuffer()

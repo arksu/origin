@@ -30,7 +30,7 @@ public class ShadowBox2
 	private float minX, maxX;
 	private float minY, maxY;
 	private float minZ, maxZ;
-	private Matrix4 lightViewMatrix;
+	private Matrix4f lightViewMatrix;
 	private GameCamera cam;
 
 	private float farHeight, farWidth, nearHeight, nearWidth;
@@ -45,9 +45,9 @@ public class ShadowBox2
 	 * world's axis to being in terms of the light's local axis).
 	 * @param camera - the in-game camera.
 	 */
-	protected ShadowBox2(GameCamera camera)
+	protected ShadowBox2(Matrix4f lightViewMatrix, GameCamera camera)
 	{
-		lightViewMatrix = new Matrix4();
+		this.lightViewMatrix = lightViewMatrix;
 		this.cam = camera;
 		calculateWidthsAndHeights();
 	}
@@ -137,7 +137,7 @@ public class ShadowBox2
 		float z = (minZ + maxZ) / 2f;
 		Vector4f cen = new Vector4f(x, y, z, 1);
 		Matrix4f invertedLight = new Matrix4f();
-//		Matrix4f.invert(lightViewMatrix, invertedLight);
+		Matrix4f.invert(lightViewMatrix, invertedLight);
 		return new Vector3f(Matrix4f.transform(invertedLight, cen, null));
 	}
 
@@ -217,7 +217,7 @@ public class ShadowBox2
 		Vector3f point = Vector3f.add(startPoint,
 									  new Vector3f(direction.x * width, direction.y * width, direction.z * width), null);
 		Vector4f point4f = new Vector4f(point.x, point.y, point.z, 1f);
-//		Matrix4f.transform(lightViewMatrix, point4f, point4f);
+		Matrix4f.transform(lightViewMatrix, point4f, point4f);
 		return point4f;
 	}
 

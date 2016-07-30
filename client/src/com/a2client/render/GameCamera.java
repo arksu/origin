@@ -27,8 +27,8 @@ public class GameCamera extends PerspectiveCamera
 	/**
 	 * углы поворота камеры
 	 */
-	private float _angleY = 45f;
-	private float _angleX = 72f;
+	private float _angleY = 0f;
+	private float _angleX = 45f;
 
 	/**
 	 * координаты мыши в которых начали вращение камеры
@@ -96,11 +96,13 @@ public class GameCamera extends PerspectiveCamera
 			position.rotate(Vector3.Y, _angleY);
 
 			// и сместим до положения игрока
-//			position.add(_chaseObj.getWorldCoord());
+			position.add(_chaseObj.getWorldCoord());
 
 			// скажем смотреть на игрока
-//			lookAt(_chaseObj.getWorldCoord());
-			lookAt(0,0,0);
+			lookAt(_chaseObj.getWorldCoord());
+//			lookAt(0,0,0);
+
+			normalizeUp();
 
 			position.add(_offset);
 		}
