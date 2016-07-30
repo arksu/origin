@@ -64,7 +64,7 @@ public class Terrain
 	public ShaderProgram _shaderTerrain;
 	public ShaderProgram _shaderWater;
 	public ShaderProgram _shaderWaterSimple;
-	public static  ShaderProgram _shaderShadow;
+	public static ShaderProgram _shaderShadow;
 
 	public ShaderProgram _shaderCel;
 	public ShaderProgram _shaderOutline;
@@ -107,10 +107,10 @@ public class Terrain
 		_waterNormalMap.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 	}
 
-	public void render(Camera camera, Environment environment)
+	public void render(Camera camera, Environment environment, Matrix4 toShadowMapSpace)
 	{
 		_shader.begin();
-		prepareTerrainShader(camera, environment, _shader);
+		prepareTerrainShader(camera, environment, _shader, toShadowMapSpace);
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
 		_tileAtlas.bind();
 
@@ -154,7 +154,7 @@ public class Terrain
 	public void renderSimpleWater(Camera camera, Environment environment)
 	{
 		_shaderWaterSimple.begin();
-		prepareTerrainShader(camera, environment, _shaderWaterSimple);
+		prepareTerrainShader(camera, environment, _shaderWaterSimple, null);
 		Gdx.gl.glEnable(GL11.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		renderWaterChunks(camera);
@@ -171,7 +171,9 @@ public class Terrain
 		}
 	}
 
-	protected void prepareTerrainShader(Camera camera, Environment environment, ShaderProgram shader)
+	protected void prepareTerrainShader(Camera camera, Environment environment,
+										ShaderProgram shader,
+										Matrix4 toShadowMapSpace)
 	{
 		shader.setUniformMatrix("u_projTrans", camera.projection);
 		shader.setUniformMatrix("u_viewTrans", camera.view);
@@ -194,6 +196,12 @@ public class Terrain
 		shader.setUniformf("u_gradient", Fog.gradient);
 
 		shader.setUniformf("u_clipPlane", Render.clipNormal.x, Render.clipNormal.y, Render.clipNormal.z, Render.clipHeight);
+
+		if (toShadowMapSpace != null)
+		{
+			shader.setUniformMatrix("u_toShadowMapSpace", toShadowMapSpace);
+			shader.setUniformi("u_shadowMap", 6);
+		}
 
 		shader.setUniformi("u_texture", 0);
 

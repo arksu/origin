@@ -28,7 +28,7 @@ public class ShadowShaderProvider extends DepthShaderProvider
 	@Override
 	protected Shader createShader(Renderable renderable)
 	{
-//		return new DefaultShader(renderable, _config);
+//		return new ShadowShader(renderable, _config);
 		return new ShadowShader(renderable, Terrain._shaderShadow);
 	}
 }

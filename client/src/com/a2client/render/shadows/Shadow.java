@@ -4,7 +4,6 @@ import com.a2client.render.DepthFrameBuffer;
 import com.a2client.render.GameCamera;
 import com.a2client.render.Render;
 import com.a2client.render.ShadowShaderProvider;
-import com.a2client.util.vector.Matrix4f;
 import com.a2client.util.vector.Vector2f;
 import com.a2client.util.vector.Vector3f;
 import com.badlogic.gdx.graphics.Camera;
@@ -26,7 +25,7 @@ public class Shadow
 {
 	private static final Logger _log = LoggerFactory.getLogger(Shadow.class.getName());
 
-	public static final int SHADOW_MAP_SIZE = 1024;
+	public static final int SHADOW_MAP_SIZE = 2048;
 
 	public static final String VERTEX = "assets/shaders/shadowVertex.glsl";
 	public static final String FRAGMENT = "assets/shaders/shadowFragment.glsl";
@@ -37,9 +36,9 @@ public class Shadow
 
 	private final ShadowBox _shadowBox;
 
-	private Matrix4f lightViewMatrix = new Matrix4f();
+//	private Matrix4f lightViewMatrix = new Matrix4f();
 	private Matrix4 projectionMatrix = new Matrix4();
-	private Matrix4 projectionViewMatrix = new Matrix4();
+	private Matrix4 combined = new Matrix4();
 	private Matrix4 offset = createOffset();
 
 	private GameCamera _camera;
@@ -58,8 +57,6 @@ public class Shadow
 	public void update(Camera camera)
 	{
 		_shadowBox.update();
-
-		_log.debug("box: " + _shadowBox.getWidth() + " " + _shadowBox.getHeight() + " " + _shadowBox.getLength() + " cen: " + _shadowBox.getCenter());
 
 		Vector3f sunPosition = new Vector3f(Render.sunPosition);
 		Vector3f lightDirection = new Vector3f(-sunPosition.x, -sunPosition.y, -sunPosition.z);
@@ -81,7 +78,7 @@ public class Shadow
 
 		_camera.projection.set(projection);
 		_camera.view.set(view);
-		Matrix4 combined = new Matrix4();
+		combined = new Matrix4();
 		combined.set(projection);
 		Matrix4.mul(combined.val, view.val);
 		_camera.combined.set(combined);
@@ -96,8 +93,6 @@ public class Shadow
 	private void updateOrthoProjectionMatrix()
 	{
 		projectionMatrix.idt();
-//		projectionMatrix.setToOrtho(_shadowBox.getMinX(), _shadowBox.getMaxX(), _shadowBox.getMinY(), _shadowBox.getMaxY(),
-//									_shadowBox.getMinZ(), _shadowBox.getMaxZ());
 
 		projectionMatrix.val[M00] = 2f / _shadowBox.getWidth();
 		projectionMatrix.val[M11] = 2f / _shadowBox.getHeight();
@@ -116,8 +111,8 @@ public class Shadow
 		float yaw = (float) Math.toDegrees(((float) Math.atan(direction.x / direction.z)));
 		yaw = direction.z > 0 ? yaw - 180 : yaw;
 
-		Matrix4f.rotate(pitch, new Vector3f(1, 0, 0), lightViewMatrix, lightViewMatrix);
-		Matrix4f.rotate((float) -Math.toRadians(yaw), new Vector3f(0, 1, 0), lightViewMatrix, lightViewMatrix);
+//		Matrix4f.rotate(pitch, new Vector3f(1, 0, 0), lightViewMatrix, lightViewMatrix);
+//		Matrix4f.rotate((float) -Math.toRadians(yaw), new Vector3f(0, 1, 0), lightViewMatrix, lightViewMatrix);
 
 		Matrix4 view = _shadowBox.getLightViewMatrix();
 		view.idt();
@@ -128,13 +123,13 @@ public class Shadow
 
 		view.mul(t);
 
-		lightViewMatrix= Matrix4f.fromM4(view);
+//		lightViewMatrix= Matrix4f.fromM4(view);
 		return view;
 	}
 
 	public Matrix4 getToShadowMapSpaceMatrix()
 	{
-		return offset.cpy().mul(projectionMatrix);
+		return offset.cpy().mul(combined);
 	}
 
 	/**
@@ -149,7 +144,7 @@ public class Shadow
 
 		offset.setTranslation(0.5f, 0.5f, 0.5f);
 		offset.scale(0.5f, 0.5f, 0.5f);
-		return null;
+		return offset;
 	}
 
 	public DepthFrameBuffer getFrameBuffer()

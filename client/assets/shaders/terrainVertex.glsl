@@ -11,8 +11,10 @@ uniform vec4 u_cameraPosition;
 uniform vec3 u_cameraDirection;
 
 uniform vec4 u_clipPlane;
+uniform mat4 u_toShadowMapSpace;
 
 out vec2 texCoords;
+out vec4 shadowCoords;
 out vec4 v_diffuse;
 out float visibility;
 
@@ -27,6 +29,7 @@ uniform float u_gradient;
 
 void main() {
 	vec4 worldPosition = u_worldTrans * a_position;
+	shadowCoords = u_toShadowMapSpace * worldPosition;
 
 	gl_ClipDistance[0] = dot(worldPosition, u_clipPlane);
 

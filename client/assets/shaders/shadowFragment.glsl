@@ -1,14 +1,18 @@
 
 out vec4 out_colour;
 
-uniform sampler2D u_texture;//will use this next week
+uniform sampler2D u_diffuseTexture;
 
-in vec2 texCoords;
+in vec2 textureCoords;
 
 void main(void){
-	out_colour = texture(u_texture, texCoords);
+	float alpha = texture(u_diffuseTexture, textureCoords).a;
+	if (alpha < 0.5) {
+		discard;
+	}
+	out_colour = texture(u_diffuseTexture, textureCoords);
 
 //	float d= gl_FragCoord.z;
-//	out_colour = vec4(d, d, d, 1.0);
+//	out_colour = vec4(1.0);
 
 }

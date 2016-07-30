@@ -3,16 +3,24 @@ out vec4 outColor;
 uniform sampler2D u_texture;
 uniform vec4 u_ambient;
 uniform vec3 u_skyColor;
+uniform sampler2D u_shadowMap;
 
 in vec2 texCoords;
 in vec4 v_diffuse;
 in float visibility;
+in vec4 shadowCoords;
 
 in float NdotL;
 
 const float numShades = 7.0;
 
 void main() {
+	float objectNearestLihgt = texture(u_shadowMap, shadowCoords.xy).r;
+	float lightFactor = 1.0;
+	if (shadowCoords.z > objectNearestLihgt) {
+		lightFactor = 1.0 - 0.4;
+	}
+
     outColor = u_ambient * v_diffuse * texture(u_texture, texCoords);
 //    gl_FragColor = texture2D(u_texture, texCoords);
 
@@ -20,6 +28,9 @@ void main() {
 	float shadeIntensity = ceil(intensity * numShades)/numShades;
 
 	outColor.xyz = outColor.xyz * shadeIntensity;
+
+	outColor.xyz = outColor.xyz * lightFactor;
+
 	outColor = mix(vec4(u_skyColor, 1.0), outColor, visibility);
 
 }

@@ -1,25 +1,26 @@
 package com.a2client.render;
 
-import com.a2client.Config;
-import com.a2client.ModelManager;
-import com.a2client.ObjectCache;
-import com.a2client.Terrain;
+import com.a2client.*;
 import com.a2client.model.GameObject;
 import com.a2client.render.shadows.Shadow;
 import com.a2client.render.water.WaterFrameBuffers;
 import com.a2client.screens.Game;
+import com.a2client.util.Keys;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.DirectionalLightsAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,8 +112,11 @@ public class Render
 
 	public void render(Camera camera)
 	{
+		updateSunPos();
 		_skybox.updateDayNight();
 
+		Matrix4 toShadowMapSpace = null;
+/*
 		if (Config._renderOutline)
 		{
 			_modelBatch = _depthModelBatch;
@@ -126,10 +130,11 @@ public class Render
 			// Gdx.gl.glDepthFunc(GL20.GL_LEQUAL);
 			// Gdx.gl.glDepthMask(true);
 
-			renderTerrain(camera);
+			renderTerrain(camera, null);
 			renderObjects(camera, false);
 			frameBuffer.end();
 		}
+*/
 
 		// SHADOWS =====================================================================================================
 		if (Config._renderShadows)
@@ -142,6 +147,7 @@ public class Render
 			_terrain._shader = _terrain._shaderShadow;
 
 			_shadow.update(camera);
+			toShadowMapSpace = _shadow.getToShadowMapSpaceMatrix();
 			_shadow.getFrameBuffer().begin();
 
 			// TODO : убрать GL_COLOR_BUFFER_BIT
@@ -152,10 +158,13 @@ public class Render
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 			renderObjects(camera, false);
 
-			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-			renderTerrain(camera);
+//			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+//			renderTerrain(camera, null);
 
 			_shadow.getFrameBuffer().end();
+
+			Gdx.gl.glActiveTexture(GL13.GL_TEXTURE6);
+			_shadow.getFrameBuffer().bindDepthTexture();
 		}
 
 		_modelBatch = _simpleModelBatch;
@@ -186,7 +195,7 @@ public class Render
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 			_skybox.Render(camera, _environment);
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-			renderTerrain(camera);
+			renderTerrain(camera, toShadowMapSpace);
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 			renderObjects(camera, false);
 
@@ -208,7 +217,7 @@ public class Render
 			// под водой всяко не видать неба
 //		_skybox.Render(camera, _environment);
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-			renderTerrain(camera);
+			renderTerrain(camera, toShadowMapSpace);
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 			renderObjects(camera, false);
 
@@ -225,7 +234,7 @@ public class Render
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		_skybox.Render(camera, _environment);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		renderTerrain(camera);
+		renderTerrain(camera, toShadowMapSpace);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		renderObjects(camera, true);
 
@@ -253,7 +262,6 @@ public class Render
 			fullScreenQuad.render(program, GL20.GL_TRIANGLE_STRIP);
 			program.end();
 		}*/
-
 
 		if (Config._renderOutline)
 		{
@@ -317,9 +325,9 @@ public class Render
 		}
 	}
 
-	protected void renderTerrain(Camera camera)
+	protected void renderTerrain(Camera camera, Matrix4 toShadowMapSpace)
 	{
-		_terrain.render(camera, _environment);
+		_terrain.render(camera, _environment, toShadowMapSpace);
 	}
 
 	protected void renderWater(Camera camera)
@@ -421,6 +429,28 @@ public class Render
 	public WaterFrameBuffers getWaterFrameBuffers()
 	{
 		return _waterFrameBuffers;
+	}
+
+	float sunDistance = 1000;
+	float sunAngle = 0f;
+	boolean sunMoving = true;
+
+	public void updateSunPos()
+	{
+		if (Input.KeyHit(Keys.M)) sunMoving = !sunMoving;
+		if (sunMoving)
+		{
+			sunAngle -= Main.deltaTime * 30.9f;
+		}
+
+		Vector3 pos = new Vector3(0, sunDistance, 0);
+		pos.rotate(60f, 1, 0, 0);
+		pos.rotate(sunAngle, 0, 1, 0);
+
+		sunPosition.set(pos);
+
+		DirectionalLightsAttribute lights = ((DirectionalLightsAttribute) _environment.get(DirectionalLightsAttribute.Type));
+		lights.lights.get(0).set(0.8f, 0.8f, 0.8f, -sunPosition.x, -sunPosition.y, -sunPosition.z);
 	}
 
 	public static ShaderProgram makeShader(String vertFile, String fragFile)
