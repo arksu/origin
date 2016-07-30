@@ -99,6 +99,12 @@ public class Config
 	 */
 	public static boolean _renderShadows = true;
 
+	/**
+	 * MSAA сглаживание. сколько samples использовать?
+	 * 0, 4, 8 и тд
+	 */
+	public static int _MSAASamples = 0;
+
 	// режим дебага
 	public static boolean _debug = false;
 	// показывать детальную расшифровку пакетов

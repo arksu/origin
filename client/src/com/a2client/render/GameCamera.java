@@ -102,7 +102,7 @@ public class GameCamera extends PerspectiveCamera
 			position.add(_chaseObj.getWorldCoord());
 
 			float h = Terrain.getHeight(position.x, position.z);
-			h = Math.max(Terrain.WATER_LEVEL, h) + 1f;
+			h = Math.max(Terrain.WATER_LEVEL, h) + 0.5f;
 			position.y = Math.max(h, position.y);
 
 			// скажем смотреть на игрока

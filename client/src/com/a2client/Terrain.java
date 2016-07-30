@@ -238,7 +238,7 @@ public class Terrain
 
 		shader.setUniformf("u_moveFactor", _waterMoveFactor);
 		shader.setUniformf("u_lightColor", new Vector3(1, 1, 1));
-		shader.setUniformf("u_lightPosition", new Vector3(10, 10, 10));
+		shader.setUniformf("u_lightPosition", Render.sunPosition);
 
 		shader.setUniformi("u_reflectionTexture", 0);
 		shader.setUniformi("u_refractionTexture", 1);

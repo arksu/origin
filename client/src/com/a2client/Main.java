@@ -100,6 +100,7 @@ public class Main extends com.badlogic.gdx.Game
 //		ShaderProgram.prependFragmentCode = "#version 140\n#define varying in\n#define texture2D texture\n#define gl_FragColor fragColor\nout vec4 fragColor;\n";
 		cfg.vSyncEnabled = Config._vSync;
 		cfg.foregroundFPS = Config._framePerSecond;
+		cfg.samples = Config._MSAASamples;
 		if (Config._reduceInBackground)
 		{
 			cfg.backgroundFPS = 7;
