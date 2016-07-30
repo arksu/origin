@@ -37,6 +37,7 @@ public class Shadow
 	private final ModelBatch _modelBatch;
 
 	private final ShadowBox _shadowBox;
+	private final ShadowBox2 _shadowBox2;
 
 	private Matrix4f lightViewMatrix = new Matrix4f();
 	private Matrix4 projectionMatrix = new Matrix4();
@@ -73,11 +74,13 @@ public class Shadow
 //			}
 //		});
 		_shadowBox = new ShadowBox(lightViewMatrix, camera);
+		_shadowBox2 = new ShadowBox2(camera);
 	}
 
 	public void update(Camera camera)
 	{
 		_shadowBox.update();
+		_shadowBox2.update();
 
 		_log.debug("box: " + _shadowBox.getWidth() + " " + _shadowBox.getHeight() + " " + _shadowBox.getLength() + " cen: " + _shadowBox.getCenter());
 

@@ -1,10 +1,8 @@
-#define varying out
-#define attribute in
 
-attribute vec4 a_position;
-attribute vec3 a_normal;
-attribute vec2 a_texCoord0;
-attribute vec4 a_color;
+in vec4 a_position;
+in vec3 a_normal;
+in vec2 a_texCoord0;
+in vec4 a_color;
 
 uniform mat4 u_projViewTrans;
 uniform mat4 u_worldTrans;
@@ -14,11 +12,11 @@ uniform vec3 u_cameraDirection;
 
 uniform vec4 u_clipPlane;
 
-varying vec2 texCoords;
-varying vec4 v_diffuse;
-varying float visibility;
+out vec2 texCoords;
+out vec4 v_diffuse;
+out float visibility;
 
-varying float NdotL;
+out float NdotL;
 
 
 vec3 lightPosition = vec3(10, 10, 10);

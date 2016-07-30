@@ -76,6 +76,12 @@ public class GameCamera extends PerspectiveCamera
 		_ray = getPickRay(Gdx.input.getX(), Gdx.input.getY());
 		_mousePicker.update(_ray);
 
+		if (com.a2client.Input.isWheelUpdated())
+		{
+			_cameraDistance += (_cameraDistance / 15f) * com.a2client.Input.MouseWheel;
+			com.a2client.Input.MouseWheel = 0;
+		}
+
 		if (_chaseObj != null)
 		{
 			// установим верх
@@ -99,14 +105,7 @@ public class GameCamera extends PerspectiveCamera
 			position.add(_offset);
 		}
 
-		if (com.a2client.Input.isWheelUpdated())
-		{
-			_cameraDistance += (_cameraDistance / 15f) * com.a2client.Input.MouseWheel;
-			com.a2client.Input.MouseWheel = 0;
-		}
-
 		super.update();
-
 	}
 
 	public void setChaseObject(GameObject obj)
