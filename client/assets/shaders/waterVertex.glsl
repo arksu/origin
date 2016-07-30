@@ -21,8 +21,11 @@ uniform float u_gradient;
 
 const float tiling = 3;
 
+out vec4 vCoord;
+
 void main() {
 	vec4 worldPosition = u_worldTrans * a_position;
+	vCoord = worldPosition;
 
 	textureCoords = vec2(a_texCoord.x, a_texCoord.y) * tiling;
 

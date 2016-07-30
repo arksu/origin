@@ -160,7 +160,7 @@ public class Grid
 			{
 				double tx = _tc.x + x;
 				double ty = _tc.y + y;
-				float h = ((float) noise.eval(tx / div, ty / div)) * 3.8f + 1;
+				float h = ((float) noise.eval(tx / div, ty / div)) * 5.8f + 1;
 				h += ((float) noise.eval(tx / 5, ty / 5)) * 1f;
 				h += ((float) noise.eval(tx / 1, ty / 1)) * 0.3f;
 				_heights[y][x] = h;
