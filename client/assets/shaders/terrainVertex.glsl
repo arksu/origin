@@ -23,7 +23,7 @@ out float visibility;
 out float NdotL;
 
 
-vec3 lightPosition = vec3(10, 10, 10);
+uniform vec3 u_lightPosition;
 vec4 diffuse = vec4(2,2,2,1);
 
 uniform float u_density;
@@ -37,8 +37,8 @@ void main() {
 
 	gl_ClipDistance[0] = dot(worldPosition, u_clipPlane);
 
-    vec3 normal = normalize( a_normal);
-    vec3 lightDir = normalize(lightPosition);
+    vec3 normal = normalize(a_normal);
+    vec3 lightDir = normalize(u_lightPosition);
     NdotL = max(dot(normal, lightDir), 0.0);
 
 //    v_diffuse = u_ambient * NdotL;
@@ -47,13 +47,14 @@ void main() {
     texCoords = a_texCoord0;
 
 //    surfaceNormal = (u_worldTrans * vec4(normal, 0.0)).xyz;
-//    toLightVector = lightPosition - worldPosition.xyz;
+//    toLightVector = u_lightPosition - worldPosition.xyz;
 
     float distance = length(u_cameraPosition.xyz - worldPosition.xyz);
     visibility = exp(-pow((distance * u_density), u_gradient));
 
     gl_Position = u_projViewTrans * a_position;
 
+	// shadow
     distance = distance - (u_shadowDistance - transitionDistance);
     distance = distance / transitionDistance;
     shadowCoords.w = clamp(1.0 - distance, 0.0, 1.0);

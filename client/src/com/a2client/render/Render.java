@@ -82,6 +82,8 @@ public class Render
 
 	ModelInstance _testModel;
 
+	public static Matrix4 toShadowMapSpace;
+
 	public Render(Game game)
 	{
 		ShaderProgram.pedantic = false;
@@ -115,7 +117,8 @@ public class Render
 		updateSunPos();
 		_skybox.updateDayNight();
 
-		Matrix4 toShadowMapSpace = null;
+//		Matrix4 toShadowMapSpace = null;
+		toShadowMapSpace = null;
 /*
 		if (Config._renderOutline)
 		{
@@ -437,7 +440,7 @@ public class Render
 
 	public void updateSunPos()
 	{
-		if (Input.KeyHit(Keys.M)) sunMoving = !sunMoving;
+		if (Input.KeyHit(Keys.SPACE)) sunMoving = !sunMoving;
 		if (sunMoving)
 		{
 			sunAngle -= Main.deltaTime * 30.9f;

@@ -190,7 +190,11 @@ uniform float u_gradient;
 uniform vec4 u_clipPlane;
 varying float visibility;
 varying float NdotL;
+out vec4 shadowCoords;
+uniform mat4 u_toShadowMapSpace;
+uniform float u_shadowDistance;
 
+const float transitionDistance = 10.0;
 
 void main() {
 	#ifdef diffuseTextureFlag
@@ -346,4 +350,12 @@ void main() {
 
 	float distance = length(u_cameraPosition.xyz - pos.xyz);
 	visibility = exp(-pow((distance * u_density), u_gradient));
+
+	// shadow
+	vec4 worldPosition = u_worldTrans * vec4(a_position, 1.0);
+	shadowCoords = u_toShadowMapSpace * worldPosition;
+	distance = distance - (u_shadowDistance - transitionDistance);
+	distance = distance / transitionDistance;
+	shadowCoords.w = clamp(1.0 - distance, 0.0, 1.0);
+
 }

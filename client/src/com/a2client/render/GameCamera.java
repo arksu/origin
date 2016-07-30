@@ -1,5 +1,6 @@
 package com.a2client.render;
 
+import com.a2client.Terrain;
 import com.a2client.model.GameObject;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
@@ -79,6 +80,8 @@ public class GameCamera extends PerspectiveCamera
 		if (com.a2client.Input.isWheelUpdated())
 		{
 			_cameraDistance += (_cameraDistance / 15f) * com.a2client.Input.MouseWheel;
+			_cameraDistance = Math.min(_cameraDistance, 90);
+			_cameraDistance = Math.max(_cameraDistance, 1.4f);
 			com.a2client.Input.MouseWheel = 0;
 		}
 
@@ -97,6 +100,10 @@ public class GameCamera extends PerspectiveCamera
 
 			// и сместим до положения игрока
 			position.add(_chaseObj.getWorldCoord());
+
+			float h = Terrain.getHeight(position.x, position.z);
+			h = Math.max(Terrain.WATER_LEVEL, h) + 1f;
+			position.y = Math.max(h, position.y);
 
 			// скажем смотреть на игрока
 			lookAt(_chaseObj.getWorldCoord());

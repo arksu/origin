@@ -14,7 +14,7 @@ in float NdotL;
 
 const float numShades = 7.0;
 
-const int pcfCount = 2;
+const int pcfCount = 1;
 const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
 
 void main() {
@@ -40,8 +40,7 @@ void main() {
 
 	float intensity = max(NdotL, 0.0);
 	float shadeIntensity = ceil(intensity * numShades)/numShades;
-
-	outColor.xyz = outColor.xyz * shadeIntensity;
+//	outColor.xyz = outColor.xyz * shadeIntensity;
 
 	outColor.xyz = outColor.xyz * lightFactor;
 

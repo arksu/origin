@@ -250,7 +250,9 @@ public class Game extends BaseScreen
 				" " + _statusText +
 				" chunks: " + _render.getChunksRendered() + " / " + _render.getWaterChunksRendered() +
 				" selected: " + (_render.getSelected() != null ? "" + _render.getSelected() : "null") +
-				" objects: " + _render.getRenderedObjects();
+				" objects: " + _render.getRenderedObjects()+
+				" cam: "+_gameCamera.getCameraDistance()
+		;
 	}
 
 	protected void UpdateMouseButtons()
@@ -289,16 +291,19 @@ public class Game extends BaseScreen
 			// узнаем на какую кнопку нажали
 			else if (click)
 			{
-				if ((_mouseBtns[i] && GUI.getInstance().mouse_in_control == null) || (!_mouseBtns[i]))
+				if (!_mouseBtns[i] || GUI.getInstance().mouse_in_control == null)
 				{
 					GUI.getInstance().focused_control = null;
-					new MouseClick(
-							_mouseBtns[i],
-							i,
-							Math.round(_worldMousePos.x * Terrain.TILE_SIZE),
-							Math.round(_worldMousePos.z * Terrain.TILE_SIZE),
-							(_render.getSelected() != null ? _render.getSelected().getObjectId() : 0)
-					).Send();
+					if (_worldMousePos != null)
+					{
+						new MouseClick(
+								_mouseBtns[i],
+								i,
+								Math.round(_worldMousePos.x * Terrain.TILE_SIZE),
+								Math.round(_worldMousePos.z * Terrain.TILE_SIZE),
+								(_render.getSelected() != null ? _render.getSelected().getObjectId() : 0)
+						).Send();
+					}
 				}
 			}
 		}

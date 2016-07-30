@@ -17,7 +17,6 @@ in vec3 toCameraVector;
 in vec3 fromLightVector;
 
 in vec4 clipSpace;
-in vec4 vCoord;
 uniform vec4 u_cameraPosition;
 
 
@@ -71,10 +70,10 @@ void main() {
     outColor = mix(reflectColor, refractColor, refractiveFactor);
 	outColor = mix(outColor, vec4(0.0, 0.3, 0.5, 1.0), 0.2) + vec4(specularHighlights, 0.0);
 
+	// fog
 	float waterLevel = 0;
 //	vec4 waterColor = vec4(0.0, 0.4, 0.6, 1.0);
 	vec4 waterColor = vec4(0.1, 0.4, 0.5, 1.0);
-	vec3 viewDir = normalize(u_cameraPosition.xyz - vCoord.xyz);
 
     float k = waterDepth * 0.08;
 //    float fog = clamp(exp(-pow(k, 0.6)), 0.0, 1.0);

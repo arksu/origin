@@ -195,6 +195,7 @@ public class Terrain
 		shader.setUniformf("u_skyColor", Fog.skyColor.r, Fog.skyColor.g, Fog.skyColor.b);
 		shader.setUniformf("u_density", Fog.enabled ? Fog.density : 0f);
 		shader.setUniformf("u_gradient", Fog.gradient);
+		shader.setUniformf("u_lightPosition", Render.sunPosition);
 
 		shader.setUniformf("u_clipPlane", Render.clipNormal.x, Render.clipNormal.y, Render.clipNormal.z, Render.clipHeight);
 

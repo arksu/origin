@@ -300,10 +300,10 @@ public class GridChunk
 		public NormalHeight(int tx, int ty, GridChunk chunk)
 		{
 			// получаем высоты соседних тайлов
-			float h1 = chunk.getHeight(tx, ty);
-			float h2 = chunk.getHeight(tx - 1, ty - 1);
-			float h3 = chunk.getHeight(tx - 1, ty);
-			float h4 = chunk.getHeight(tx, ty - 1);
+			float h1 = chunk.getHeight(tx, ty); // right
+			float h2 = chunk.getHeight(tx - 1, ty - 1); // left
+			float h3 = chunk.getHeight(tx - 1, ty);// down
+			float h4 = chunk.getHeight(tx, ty - 1);// up
 
 			// если хоть один из соседних тайлов не определен поставим признак того что это граница чанка
 			isBorder = h1 <= Terrain.FAKE_HEIGHT || h2 <= Terrain.FAKE_HEIGHT || h3 <= Terrain.FAKE_HEIGHT || h4 <= Terrain.FAKE_HEIGHT;
@@ -318,7 +318,8 @@ public class GridChunk
 			h = (h1 + h2 + h3 + h4) / 4f;
 
 			// посчитаем нормаль
-			normal = new Vector3(h1 - h2, h3 - h4, 2.0f).nor();
+			normal = new Vector3(h1 - h2, 2.0f, h3 - h4).nor();
+			normal.rotate(90f+45f, 0, 1, 0);
 		}
 	}
 

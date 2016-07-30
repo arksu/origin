@@ -19,13 +19,10 @@ out vec3 fromLightVector;
 uniform float u_density;
 uniform float u_gradient;
 
-const float tiling = 3;
-
-out vec4 vCoord;
+const float tiling = 2;
 
 void main() {
 	vec4 worldPosition = u_worldTrans * a_position;
-	vCoord = worldPosition;
 
 	textureCoords = vec2(a_texCoord.x, a_texCoord.y) * tiling;
 

@@ -1,5 +1,6 @@
 package com.a2client.render;
 
+import com.a2client.render.shadows.ShadowBox;
 import com.badlogic.gdx.graphics.g3d.Attributes;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.shaders.BaseShader;
@@ -18,11 +19,17 @@ public class ModelShader extends DefaultShader
 	public final int u_density;
 	public final int u_gradient;
 	public final int u_clipPlane;
+	public final int u_shadowMap;
+	public final int u_toShadowMapSpace;
+	public final int u_shadowDistance;
 
 	public final static Uniform skyColor = new Uniform("u_skyColor");
 	public final static Uniform density = new Uniform("u_density");
 	public final static Uniform gradient = new Uniform("u_gradient");
 	public final static Uniform clipPlane = new Uniform("u_clipPlane");
+	public final static Uniform shadowMap = new Uniform("u_shadowMap");
+	public final static Uniform toShadowMapSpace = new Uniform("u_toShadowMapSpace");
+	public final static Uniform shadowDistance = new Uniform("u_shadowDistance");
 
 	public final static Setter skyColorSetter = new GlobalSetter()
 	{
@@ -56,6 +63,30 @@ public class ModelShader extends DefaultShader
 			shader.set(inputID, Render.clipNormal.x, Render.clipNormal.y, Render.clipNormal.z, Render.clipHeight);
 		}
 	};
+	public final static Setter shadowMapSetter = new GlobalSetter()
+	{
+		@Override
+		public void set(BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes)
+		{
+			shader.set(inputID, 6);
+		}
+	};
+	public final static Setter toShadowMapSpaceSetter = new GlobalSetter()
+	{
+		@Override
+		public void set(BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes)
+		{
+			shader.set(inputID, Render.toShadowMapSpace);
+		}
+	};
+	public final static Setter shadowDistanceSetter = new GlobalSetter()
+	{
+		@Override
+		public void set(BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes)
+		{
+			shader.set(inputID, ShadowBox.SHADOW_DISTANCE);
+		}
+	};
 
 	public ModelShader(Renderable renderable, Config config)
 	{
@@ -64,6 +95,9 @@ public class ModelShader extends DefaultShader
 		u_density = register(density, densitySetter);
 		u_gradient = register(gradient, gradientSetter);
 		u_clipPlane = register(clipPlane, clipPlanetSetter);
+		u_shadowMap = register(shadowMap, shadowMapSetter);
+		u_toShadowMapSpace = register(toShadowMapSpace, toShadowMapSpaceSetter);
+		u_shadowDistance = register(shadowDistance, shadowDistanceSetter);
 	}
 
 	@Override
