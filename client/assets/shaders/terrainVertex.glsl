@@ -13,6 +13,8 @@ uniform vec3 u_cameraDirection;
 uniform vec4 u_clipPlane;
 uniform mat4 u_toShadowMapSpace;
 
+uniform float u_shadowDistance;
+
 out vec2 texCoords;
 out vec4 shadowCoords;
 out vec4 v_diffuse;
@@ -26,6 +28,8 @@ vec4 diffuse = vec4(2,2,2,1);
 
 uniform float u_density;
 uniform float u_gradient;
+
+const float transitionDistance = 10.0;
 
 void main() {
 	vec4 worldPosition = u_worldTrans * a_position;
@@ -49,4 +53,8 @@ void main() {
     visibility = exp(-pow((distance * u_density), u_gradient));
 
     gl_Position = u_projViewTrans * a_position;
+
+    distance = distance - (u_shadowDistance - transitionDistance);
+    distance = distance / transitionDistance;
+    shadowCoords.w = clamp(1.0 - distance, 0.0, 1.0);
 }

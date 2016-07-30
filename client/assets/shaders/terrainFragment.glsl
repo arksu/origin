@@ -14,12 +14,26 @@ in float NdotL;
 
 const float numShades = 7.0;
 
+const int pcfCount = 2;
+const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
+
 void main() {
-	float objectNearestLihgt = texture(u_shadowMap, shadowCoords.xy).r;
-	float lightFactor = 1.0;
-	if (shadowCoords.z > objectNearestLihgt) {
-		lightFactor = 1.0 - 0.4;
+	float mapSize = 2048.0;
+	float texelSize = 1.0 / mapSize;
+	float totalShadowWeight = 0.0;
+
+	for (int x = -pcfCount; x <= pcfCount; x++) {
+		for (int y = -pcfCount; y <= pcfCount; y++) {
+			float objectNearestLihgt = texture(u_shadowMap, shadowCoords.xy + vec2(x, y) * texelSize).r;
+			if (shadowCoords.z > objectNearestLihgt + 0.002) {
+				totalShadowWeight += 1.0;
+			}
+		}
 	}
+	totalShadowWeight /= totalTexels;
+
+	float lightFactor = 1.0 - (totalShadowWeight * shadowCoords.w);
+	lightFactor = lightFactor * 0.5 + 0.5;
 
     outColor = u_ambient * v_diffuse * texture(u_texture, texCoords);
 //    gl_FragColor = texture2D(u_texture, texCoords);

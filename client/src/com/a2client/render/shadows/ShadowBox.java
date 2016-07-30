@@ -20,7 +20,7 @@ public class ShadowBox
 	private static final Logger _log = LoggerFactory.getLogger(ShadowBox.class.getName());
 
 	private static final float OFFSET = 5;
-	private static float SHADOW_DISTANCE = 30;
+	public static float SHADOW_DISTANCE = 30;
 
 	private float minX, maxX;
 	private float minY, maxY;

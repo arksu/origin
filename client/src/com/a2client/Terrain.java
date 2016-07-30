@@ -4,6 +4,7 @@ import com.a2client.model.Grid;
 import com.a2client.model.GridChunk;
 import com.a2client.render.Fog;
 import com.a2client.render.Render;
+import com.a2client.render.shadows.ShadowBox;
 import com.a2client.util.Utils;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
@@ -201,6 +202,7 @@ public class Terrain
 		{
 			shader.setUniformMatrix("u_toShadowMapSpace", toShadowMapSpace);
 			shader.setUniformi("u_shadowMap", 6);
+			shader.setUniformf("u_shadowDistance", ShadowBox.SHADOW_DISTANCE);
 		}
 
 		shader.setUniformi("u_texture", 0);
