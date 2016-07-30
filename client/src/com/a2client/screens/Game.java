@@ -205,6 +205,10 @@ public class Game extends BaseScreen
 				{
 					Config._renderImproveWater = !Config._renderImproveWater;
 				}
+				else if (Input.KeyHit(Keys.K))
+				{
+					Config._renderShadows = !Config._renderShadows;
+				}
 
 
 				else if (Input.KeyDown(Keys.W))

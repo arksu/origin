@@ -76,7 +76,10 @@ public class ModelShader extends DefaultShader
 		@Override
 		public void set(BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes)
 		{
-			shader.set(inputID, Render.toShadowMapSpace);
+			if (com.a2client.Config._renderShadows)
+			{
+				shader.set(inputID, Render.toShadowMapSpace);
+			}
 		}
 	};
 	public final static Setter shadowDistanceSetter = new GlobalSetter()
@@ -84,7 +87,7 @@ public class ModelShader extends DefaultShader
 		@Override
 		public void set(BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes)
 		{
-			shader.set(inputID, ShadowBox.SHADOW_DISTANCE);
+			shader.set(inputID, com.a2client.Config._renderShadows ? ShadowBox.SHADOW_DISTANCE : -1f);
 		}
 	};
 

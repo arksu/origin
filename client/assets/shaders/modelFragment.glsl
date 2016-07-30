@@ -94,21 +94,6 @@ uniform sampler2D u_shadowMap;
 in vec4 shadowCoords;
 
 void main() {
-	float mapSize = 2048.0;
-	float texelSize = 1.0 / mapSize;
-	float totalShadowWeight = 0.0;
-
-	for (int x = -pcfCount; x <= pcfCount; x++) {
-		for (int y = -pcfCount; y <= pcfCount; y++) {
-			float objectNearestLihgt = texture(u_shadowMap, shadowCoords.xy + vec2(x, y) * texelSize).r;
-			if (shadowCoords.z > objectNearestLihgt + 0.002) {
-				totalShadowWeight += 1.0;
-			}
-		}
-	}
-	totalShadowWeight /= totalTexels;
-	float lightFactor = 1.0 - (totalShadowWeight * shadowCoords.w);
-	lightFactor = lightFactor * 0.5 + 0.5;
 
 	#if defined(normalFlag)
 		vec3 normal = v_normal;
@@ -176,7 +161,26 @@ void main() {
 //	float shadeIntensity = ceil(intensity * numShades)/numShades;
 //	gl_FragColor.xyz = gl_FragColor.xyz * shadeIntensity;
 
-	gl_FragColor.xyz = gl_FragColor.xyz * lightFactor;
+	// shadows
+	if (shadowCoords.w > 0) {
+	float mapSize = 2048.0;
+	float texelSize = 1.0 / mapSize;
+	float totalShadowWeight = 0.0;
+
+	for (int x = -pcfCount; x <= pcfCount; x++) {
+		for (int y = -pcfCount; y <= pcfCount; y++) {
+			float objectNearestLihgt = texture(u_shadowMap, shadowCoords.xy + vec2(x, y) * texelSize).r;
+			if (shadowCoords.z > objectNearestLihgt + 0.002) {
+				totalShadowWeight += 1.0;
+			}
+		}
+	}
+	totalShadowWeight /= totalTexels;
+	float lightFactor = 1.0 - (totalShadowWeight * shadowCoords.w);
+	lightFactor = lightFactor * 0.5 + 0.5;
+
+		gl_FragColor.xyz = gl_FragColor.xyz * lightFactor;
+	}
 
 	gl_FragColor = mix(vec4(u_skyColor, 1.0), gl_FragColor, visibility);
 }

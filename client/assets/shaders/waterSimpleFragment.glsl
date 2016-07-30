@@ -1,6 +1,5 @@
 out vec4 outColor;
 
-uniform sampler2D u_texture;
 uniform vec4 u_ambient;
 uniform vec3 u_skyColor;
 

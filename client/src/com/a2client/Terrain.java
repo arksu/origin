@@ -199,11 +199,15 @@ public class Terrain
 
 		shader.setUniformf("u_clipPlane", Render.clipNormal.x, Render.clipNormal.y, Render.clipNormal.z, Render.clipHeight);
 
-		if (toShadowMapSpace != null)
+		if (toShadowMapSpace != null && Config._renderShadows)
 		{
 			shader.setUniformMatrix("u_toShadowMapSpace", toShadowMapSpace);
 			shader.setUniformi("u_shadowMap", 6);
 			shader.setUniformf("u_shadowDistance", ShadowBox.SHADOW_DISTANCE);
+		}
+		else
+		{
+			shader.setUniformf("u_shadowDistance", -1);
 		}
 
 		shader.setUniformi("u_texture", 0);

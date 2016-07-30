@@ -10,9 +10,5 @@ void main(void){
 	if (alpha < 0.5) {
 		discard;
 	}
-	out_colour = texture(u_diffuseTexture, textureCoords);
-
-//	float d= gl_FragCoord.z;
-//	out_colour = vec4(1.0);
-
+	out_colour = vec4(1.0);
 }

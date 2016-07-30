@@ -33,7 +33,6 @@ const float transitionDistance = 10.0;
 
 void main() {
 	vec4 worldPosition = u_worldTrans * a_position;
-	shadowCoords = u_toShadowMapSpace * worldPosition;
 
 	gl_ClipDistance[0] = dot(worldPosition, u_clipPlane);
 
@@ -55,7 +54,12 @@ void main() {
     gl_Position = u_projViewTrans * a_position;
 
 	// shadow
-    distance = distance - (u_shadowDistance - transitionDistance);
-    distance = distance / transitionDistance;
-    shadowCoords.w = clamp(1.0 - distance, 0.0, 1.0);
+	if (u_shadowDistance > 0) {
+		shadowCoords = u_toShadowMapSpace * worldPosition;
+		distance = distance - (u_shadowDistance - transitionDistance);
+		distance = distance / transitionDistance;
+		shadowCoords.w = clamp(1.0 - distance, 0.0, 1.0);
+    } else {
+    	shadowCoords.w = -1.0;
+    }
 }

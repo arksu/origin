@@ -154,20 +154,22 @@ public class Render
 			_shadow.getFrameBuffer().begin();
 
 			// TODO : убрать GL_COLOR_BUFFER_BIT
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+			Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
 			Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 			Gdx.gl.glCullFace(GL20.GL_BACK);
 
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 			renderObjects(camera, false);
 
-//			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-//			renderTerrain(camera, null);
-
 			_shadow.getFrameBuffer().end();
 
 			Gdx.gl.glActiveTexture(GL13.GL_TEXTURE6);
 			_shadow.getFrameBuffer().bindDepthTexture();
+		}
+		else
+		{
+			Gdx.gl.glActiveTexture(GL13.GL_TEXTURE6);
+			Gdx.gl.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		}
 
 		_modelBatch = _simpleModelBatch;
@@ -226,6 +228,10 @@ public class Render
 
 			_waterFrameBuffers.getRefractionFrameBuffer().end();
 		}
+		else
+		{
+			camera.update(false);
+		}
 
 		// MAIN RENDER =================================================================================================
 		Gdx.gl.glDisable(GL_CLIP_DISTANCE0);
@@ -273,13 +279,13 @@ public class Render
 			ShaderProgram program = _terrain._shaderCel;
 
 			program.begin();
-//			_waterFrameBuffers.getReflectionFrameBuffer().getColorBufferTexture().bind();
+			_waterFrameBuffers.getReflectionFrameBuffer().getColorBufferTexture().bind();
 //			_shadow.getFrameBuffer().getColorBufferTexture().bind();
-			_shadow.getFrameBuffer().bindDepthTexture();
+//			_shadow.getFrameBuffer().bindDepthTexture();
 			testQuad1.render(program, GL20.GL_TRIANGLE_STRIP);
 
-//			_waterFrameBuffers.getRefractionFrameBuffer().bindDepthTexture();
-			_shadow.getFrameBuffer().getColorBufferTexture().bind();
+			_waterFrameBuffers.getRefractionFrameBuffer().bindDepthTexture();
+//			_shadow.getFrameBuffer().getColorBufferTexture().bind();
 			testQuad2.render(program, GL20.GL_TRIANGLE_STRIP);
 			program.end();
 		}

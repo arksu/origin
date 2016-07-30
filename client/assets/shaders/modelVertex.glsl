@@ -352,10 +352,14 @@ void main() {
 	visibility = exp(-pow((distance * u_density), u_gradient));
 
 	// shadow
-	vec4 worldPosition = u_worldTrans * vec4(a_position, 1.0);
-	shadowCoords = u_toShadowMapSpace * worldPosition;
-	distance = distance - (u_shadowDistance - transitionDistance);
-	distance = distance / transitionDistance;
-	shadowCoords.w = clamp(1.0 - distance, 0.0, 1.0);
+	if (u_shadowDistance > 0) {
+		vec4 worldPosition = u_worldTrans * vec4(a_position, 1.0);
+		shadowCoords = u_toShadowMapSpace * worldPosition;
+		distance = distance - (u_shadowDistance - transitionDistance);
+		distance = distance / transitionDistance;
+		shadowCoords.w = clamp(1.0 - distance, 0.0, 1.0);
+    } else {
+    	shadowCoords.w = -1.0;
+    }
 
 }

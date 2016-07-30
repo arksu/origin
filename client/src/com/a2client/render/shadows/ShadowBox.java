@@ -19,15 +19,32 @@ public class ShadowBox
 {
 	private static final Logger _log = LoggerFactory.getLogger(ShadowBox.class.getName());
 
+	/**
+	 * отступ от края области до объектов. чем больше - тем больше вероятность
+	 * что в куоид попадет объект которого не видно, но тень от него должна быть в области камеры
+	 */
 	private static final float OFFSET = 5;
+
+	/**
+	 * максимальная дистанция на которой будут видны тени
+	 * рассчитываем автоматически на основе отдаления камеры
+	 */
 	public static float SHADOW_DISTANCE = 30;
 
 	private float minX, maxX;
 	private float minY, maxY;
 	private float minZ, maxZ;
+
+	/**
+	 * видовая матрица
+	 */
 	private final Matrix4 lightViewMatrix = new Matrix4();
+
 	private GameCamera cam;
 
+	/**
+	 * размеры плоскостей отсечения в системе координат основной камеры
+	 */
 	private float farHeight, farWidth, nearHeight, nearWidth;
 
 	/**
@@ -228,36 +245,6 @@ public class ShadowBox
 	private float getAspectRatio()
 	{
 		return (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
-	}
-
-	public float getMinX()
-	{
-		return minX;
-	}
-
-	public float getMaxX()
-	{
-		return maxX;
-	}
-
-	public float getMinY()
-	{
-		return minY;
-	}
-
-	public float getMaxY()
-	{
-		return maxY;
-	}
-
-	public float getMinZ()
-	{
-		return minZ;
-	}
-
-	public float getMaxZ()
-	{
-		return maxZ;
 	}
 
 	public Matrix4 getLightViewMatrix()
