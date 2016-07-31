@@ -3,7 +3,9 @@ package com.a2client.render;
 import com.a2client.*;
 import com.a2client.model.GameObject;
 import com.a2client.render.framebuffer.DepthFrameBuffer;
-import com.a2client.render.postprocess.*;
+import com.a2client.render.postprocess.DepthOfFieldEffect;
+import com.a2client.render.postprocess.EmptyEffect;
+import com.a2client.render.postprocess.PostProcessing;
 import com.a2client.render.shadows.Shadow;
 import com.a2client.render.water.WaterFrameBuffers;
 import com.a2client.screens.Game;
@@ -111,11 +113,11 @@ public class Render
 		_terrain = new Terrain(this);
 
 		_postProcessing = new PostProcessing();
-		_postProcessing.addEffect(new ContrastEffect());
-		_postProcessing.addEffect(new HorizontalBlurEffect(1f / 2f));
-		_postProcessing.addEffect(new VerticalBlurEffect(1f / 2f));
-		_postProcessing.addEffect(new HorizontalBlurEffect(1f / 8f));
-		_postProcessing.addEffect(new VerticalBlurEffect(1f / 8f));
+		_postProcessing.addEffect(new DepthOfFieldEffect());
+//		_postProcessing.addEffect(new HorizontalBlurEffect(1f / 2f));
+//		_postProcessing.addEffect(new VerticalBlurEffect(1f / 2f));
+//		_postProcessing.addEffect(new HorizontalBlurEffect(1f / 8f));
+//		_postProcessing.addEffect(new VerticalBlurEffect(1f / 8f));
 		_postProcessing.addEffect(new EmptyEffect(true));
 
 		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
@@ -254,6 +256,7 @@ public class Render
 			if (_postProcessingFBO == null)
 			{
 				_postProcessingFBO = new DepthFrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+				_postProcessingFBO.createDepthTextre();
 			}
 			_postProcessingFBO.begin();
 		}
@@ -524,6 +527,7 @@ public class Render
 			_postProcessingFBO.dispose();
 		}
 		_postProcessingFBO = new DepthFrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		_postProcessingFBO.createDepthTextre();
 	}
 
 	public void dispose()

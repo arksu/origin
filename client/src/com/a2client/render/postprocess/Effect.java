@@ -4,6 +4,7 @@ import com.a2client.render.framebuffer.DepthFrameBuffer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import org.lwjgl.opengl.GL13;
 
 /**
  * эффект для пост процессинга
@@ -71,5 +72,13 @@ public class Effect
 	public boolean isFinal()
 	{
 		return _isFinal;
+	}
+
+	public void bindTextures(DepthFrameBuffer frameBuffer)
+	{
+		getShaderProgram().setUniformf("u_texture", 0);
+		// биндим и указываем текстуру которую выводим на экран / обрабатываем текущим эффектом
+		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
+		frameBuffer.getColorBufferTexture().bind();
 	}
 }

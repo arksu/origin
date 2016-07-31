@@ -1,12 +1,10 @@
 package com.a2client.render.postprocess;
 
-import com.a2client.render.framebuffer.DepthFrameBuffer;
 import com.a2client.render.Render;
-import com.badlogic.gdx.Gdx;
+import com.a2client.render.framebuffer.DepthFrameBuffer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.math.Vector2;
-import org.lwjgl.opengl.GL13;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,16 +50,11 @@ public class PostProcessing
 
 			// включим шейдер
 			effect.getShaderProgram().begin();
+
 			// укажем размер экрана в шейдере
-			effect.getShaderProgram().setUniformf(
-					"u_size",
-//					new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())
-					new Vector2(frameBuffer.getWidth(), frameBuffer.getHeight())
-			);
-			effect.getShaderProgram().setUniformf("u_texture", 0);
-			// биндим и указываем текстуру которую выводим на экран / обрабатываем текущим эффектом
-			Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
-			frameBuffer.getColorBufferTexture().bind();
+			effect.getShaderProgram().setUniformf("u_size", new Vector2(frameBuffer.getWidth(), frameBuffer.getHeight()));
+
+			effect.bindTextures(frameBuffer);
 
 			// выведем квад
 			_fullScreenQuad.render(effect.getShaderProgram(), GL20.GL_TRIANGLE_STRIP);
