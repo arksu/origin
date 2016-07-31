@@ -125,6 +125,7 @@ public class Game extends BaseScreen
 	@Override
 	public void dispose()
 	{
+		_render.dispose();
 		Player.getInstance().dispose();
 		ObjectCache.getInstance().clear();
 		InventoryCache.getInstance().clear();
@@ -208,6 +209,10 @@ public class Game extends BaseScreen
 				else if (Input.KeyHit(Keys.K))
 				{
 					Config._renderShadows = !Config._renderShadows;
+				}
+				else if (Input.KeyHit(Keys.J))
+				{
+					Config._renderPostProcessing = !Config._renderPostProcessing;
 				}
 
 
@@ -324,6 +329,7 @@ public class Game extends BaseScreen
 	{
 		super.resize(width, height);
 		_gameCamera.onResize(width, height);
+		_render.onResize(width, height);
 	}
 
 	public void setState(GameState state)

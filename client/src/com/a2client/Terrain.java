@@ -87,14 +87,14 @@ public class Terrain
 	public Terrain(Render render)
 	{
 		_render = render;
-		_shaderTerrain = makeShader("assets/shaders/terrainVertex.glsl", "assets/shaders/terrainFragment.glsl");
-		_shaderWater = makeShader("assets/shaders/waterVertex.glsl", "assets/shaders/waterFragment.glsl");
-		_shaderWaterSimple = makeShader("assets/shaders/waterSimpleVertex.glsl", "assets/shaders/waterSimpleFragment.glsl");
-		_shaderShadow = makeShader("assets/shaders/shadowVertex.glsl", "assets/shaders/shadowFragment.glsl");
+		_shaderTerrain = makeShader("terrainVertex.glsl", "terrainFragment.glsl");
+		_shaderWater = makeShader("waterVertex.glsl", "waterFragment.glsl");
+		_shaderWaterSimple = makeShader("waterSimpleVertex.glsl", "waterSimpleFragment.glsl");
+		_shaderShadow = makeShader("shadowVertex.glsl", "shadowFragment.glsl");
 
-		_shaderCel = makeShader("assets/shaders/celVertex.glsl", "assets/shaders/celFragment.glsl");
-		_shaderOutline = makeShader("assets/shaders/outlineVertex.glsl", "assets/shaders/outlineFragment.glsl");
-		_shaderDepth = makeShader("assets/shaders/depthVertex.glsl", "assets/shaders/depthFragment.glsl");
+		_shaderCel = makeShader("celVertex.glsl", "celFragment.glsl");
+		_shaderOutline = makeShader("outlineVertex.glsl", "outlineFragment.glsl");
+		_shaderDepth = makeShader("depthVertex.glsl", "depthFragment.glsl");
 
 		_tileAtlas = Main.getAssetManager().get(Config.RESOURCE_DIR + "tiles_atlas.png", Texture.class);
 		_waterDuDv = Main.getAssetManager().get(Config.RESOURCE_DIR + "water/waterdudv.png", Texture.class);

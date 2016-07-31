@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.a2client.render.Render.SHADER_DIR;
 import static com.a2client.render.Render.SHADER_VERSION;
 
 /**
@@ -19,14 +20,16 @@ public class ModelShaderProvider extends BaseShaderProvider
 {
 	private static final Logger _log = LoggerFactory.getLogger(ModelShaderProvider.class.getName());
 
-	public static final String VERTEX = "assets/shaders/modelVertex.glsl";
-	public static final String FRAGMENT = "assets/shaders/modelFragment.glsl";
+	public static final String VERTEX = "modelVertex.glsl";
+	public static final String FRAGMENT = "modelFragment.glsl";
 
 	private DefaultShader.Config _config;
 
 	public ModelShaderProvider()
 	{
-		_config = new DefaultShader.Config(Gdx.files.internal(VERTEX).readString(), Gdx.files.internal(FRAGMENT).readString());
+		_config = new DefaultShader.Config(
+				Gdx.files.internal(SHADER_DIR + VERTEX).readString(),
+				Gdx.files.internal(SHADER_DIR + FRAGMENT).readString());
 	}
 
 	@Override

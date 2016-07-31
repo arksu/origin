@@ -24,8 +24,6 @@ public class GUIGDX
 	 */
 	private static SpriteBatch _spriteBatch;
 
-	private static ShaderProgram _shader;
-
 	/**
 	 * пустая белая текстура 1x1 пиксель, для вывода прямоугольников различных
 	 */
@@ -33,8 +31,7 @@ public class GUIGDX
 
 	public static void init()
 	{
-		_shader = makeShader();
-		_spriteBatch = new SpriteBatch(1000, _shader);
+		_spriteBatch = new SpriteBatch(1000, makeShader());
 		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
 		pixmap.setColor(Color.WHITE);
 		pixmap.fill();
@@ -146,15 +143,13 @@ public class GUIGDX
 	{
 		String vertexShader =
 				"#version 140\n"
-				+ "#define varying out\n"
-				+ "#define attribute in\n"
 
-				+ "attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
-				+ "attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
-				+ "attribute vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
+				+ "in vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
+				+ "in vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
+				+ "in vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
 				+ "uniform mat4 u_projTrans;\n" //
-				+ "varying vec4 v_color;\n" //
-				+ "varying vec2 v_texCoords;\n" //
+				+ "out vec4 v_color;\n" //
+				+ "out vec2 v_texCoords;\n" //
 				+ "\n" //
 				+ "void main()\n" //
 				+ "{\n" //
@@ -165,9 +160,6 @@ public class GUIGDX
 				+ "}\n";
 		String fragmentShader =
 				"#version 140\n"
-				+ "#define varying in\n"
-				+ "#define texture2D texture\n"
-				+ "#define gl_FragColor fragColor\n"
 				+ "out vec4 fragColor;\n"
 
 				+ "#ifdef GL_ES\n" //
@@ -176,12 +168,12 @@ public class GUIGDX
 				+ "#else\n" //
 				+ "#define LOWP \n" //
 				+ "#endif\n" //
-				+ "varying LOWP vec4 v_color;\n" //
-				+ "varying vec2 v_texCoords;\n" //
+				+ "in LOWP vec4 v_color;\n" //
+				+ "in vec2 v_texCoords;\n" //
 				+ "uniform sampler2D u_texture;\n" //
 				+ "void main()\n"//
 				+ "{\n" //
-				+ "  gl_FragColor = v_color * texture2D(u_texture, v_texCoords);\n" //
+				+ "  fragColor = v_color * texture(u_texture, v_texCoords);\n" //
 				+ "}";
 
 		ShaderProgram shader = new ShaderProgram(vertexShader, fragmentShader);

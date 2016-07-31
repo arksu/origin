@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 
+import static com.a2client.render.Render.SHADER_DIR;
+
 /**
  * Created by arksu on 24.09.15.
  */
@@ -30,7 +32,7 @@ public class DepthShader extends DefaultShader
 	{
 		if (defaultVertexShader == null)
 		{
-			defaultVertexShader = Gdx.files.internal("assets/shaders/depthVertex.glsl").readString();
+			defaultVertexShader = Gdx.files.internal(SHADER_DIR+"depthVertex.glsl").readString();
 		}
 		return defaultVertexShader;
 	}
@@ -41,7 +43,7 @@ public class DepthShader extends DefaultShader
 	{
 		if (defaultFragmentShader == null)
 		{
-			defaultFragmentShader = Gdx.files.internal("assets/shaders/depthFragment.glsl").readString();
+			defaultFragmentShader = Gdx.files.internal(SHADER_DIR+"depthFragment.glsl").readString();
 		}
 		return defaultFragmentShader;
 	}

@@ -101,7 +101,7 @@ public class Skybox
 		);
 		_cubemapNight.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-		_shader = Render.makeShader("assets/shaders/skyboxVertex.glsl", "assets/shaders/skyboxFragment.glsl");
+		_shader = Render.makeShader("skyboxVertex.glsl", "skyboxFragment.glsl");
 
 		makeMesh();
 

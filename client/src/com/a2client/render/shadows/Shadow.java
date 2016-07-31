@@ -27,8 +27,8 @@ public class Shadow
 
 	public static final int SHADOW_MAP_SIZE = 2048;
 
-	public static final String VERTEX = "assets/shaders/shadowVertex.glsl";
-	public static final String FRAGMENT = "assets/shaders/shadowFragment.glsl";
+	public static final String VERTEX = "shadowVertex.glsl";
+	public static final String FRAGMENT = "shadowFragment.glsl";
 
 	private final DepthFrameBuffer _frameBuffer;
 

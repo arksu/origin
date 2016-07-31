@@ -100,10 +100,16 @@ public class Config
 	public static boolean _renderShadows = true;
 
 	/**
+	 * пост процессинг финального кадра
+	 */
+	public static boolean _renderPostProcessing = true;
+
+	/**
 	 * MSAA сглаживание. сколько samples использовать?
 	 * 0, 4, 8 и тд
 	 */
 	public static int _MSAASamples = 0;
+
 
 	// режим дебага
 	public static boolean _debug = false;

@@ -2,6 +2,8 @@ package com.a2client.render;
 
 import com.a2client.*;
 import com.a2client.model.GameObject;
+import com.a2client.render.postprocess.ContrastEffect;
+import com.a2client.render.postprocess.PostProcessing;
 import com.a2client.render.shadows.Shadow;
 import com.a2client.render.water.WaterFrameBuffers;
 import com.a2client.screens.Game;
@@ -39,6 +41,8 @@ public class Render
 	 */
 	public static final String SHADER_VERSION = "#version 140";
 
+	public static final String SHADER_DIR = "assets/shaders/";
+
 	/**
 	 * ну нету этого определения в libgdx, корявая поделка....
 	 */
@@ -64,6 +68,8 @@ public class Render
 
 	private Shadow _shadow;
 
+	private PostProcessing _postProcessing;
+
 	private Environment _environment;
 
 	private GameObject _selected;
@@ -72,6 +78,7 @@ public class Render
 	private int _renderedObjects;
 
 	private FrameBuffer frameBuffer;
+	private DepthFrameBuffer _postProcessingFBO;
 	private DepthShaderProvider _depthShaderProvider;
 	private ModelBatch _depthModelBatch;
 	private ModelBatch _simpleModelBatch;
@@ -101,6 +108,9 @@ public class Render
 
 		_skybox = new Skybox();
 		_terrain = new Terrain(this);
+
+		_postProcessing = new PostProcessing();
+		_postProcessing.addEffect(new ContrastEffect(true));
 
 		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 
@@ -233,6 +243,16 @@ public class Render
 			camera.update(false);
 		}
 
+		// POST PROCESSING
+		if (Config._renderPostProcessing)
+		{
+			if (_postProcessingFBO == null)
+			{
+				_postProcessingFBO = new DepthFrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+			}
+			_postProcessingFBO.begin();
+		}
+
 		// MAIN RENDER =================================================================================================
 		Gdx.gl.glDisable(GL_CLIP_DISTANCE0);
 		clipNormal = new Vector3(0, 0, 0);
@@ -257,6 +277,17 @@ public class Render
 			_modelBatch.render(_testModel, _environment);
 			_modelBatch.end();
 		}
+
+		// END MAIN RENDER =============================================================================================
+
+		// POST PROCESSING
+		if (Config._renderPostProcessing)
+		{
+			_postProcessingFBO.end();
+			_postProcessing.doPostProcessing(_postProcessingFBO);
+		}
+
+		// END POST PROCESSING
 
 		/*if (Config._renderOutline)
 		{
@@ -351,7 +382,7 @@ public class Render
 		}
 	}
 
-	public Mesh createFullScreenQuad()
+	public static Mesh createFullScreenQuad()
 	{
 		float[] verts = new float[16];
 		int i = 0;
@@ -464,8 +495,8 @@ public class Render
 
 	public static ShaderProgram makeShader(String vertFile, String fragFile)
 	{
-		String vertSource = Gdx.files.internal(vertFile).readString();
-		String fragSource = Gdx.files.internal(fragFile).readString();
+		String vertSource = Gdx.files.internal(SHADER_DIR + vertFile).readString();
+		String fragSource = Gdx.files.internal(SHADER_DIR + fragFile).readString();
 
 		vertSource = SHADER_VERSION + "\n" + vertSource;
 		fragSource = SHADER_VERSION + "\n" + fragSource;
@@ -479,5 +510,20 @@ public class Render
 			_log.warn("shader F " + program.getFragmentShaderSource());
 		}
 		return program;
+	}
+
+	public void onResize(int width, int height)
+	{
+		if (_postProcessingFBO != null)
+		{
+			_postProcessingFBO.dispose();
+		}
+		_postProcessingFBO = new DepthFrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+	}
+
+	public void dispose()
+	{
+		if (_postProcessingFBO != null) _postProcessingFBO.dispose();
+		if (frameBuffer != null) frameBuffer.dispose();
 	}
 }

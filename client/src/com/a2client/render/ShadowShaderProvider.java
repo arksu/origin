@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.a2client.render.Render.SHADER_DIR;
 import static com.a2client.render.shadows.Shadow.FRAGMENT;
 import static com.a2client.render.shadows.Shadow.VERTEX;
 
@@ -22,7 +23,9 @@ public class ShadowShaderProvider extends DepthShaderProvider
 
 	public ShadowShaderProvider()
 	{
-		_config = new DefaultShader.Config(Gdx.files.internal(VERTEX).readString(), Gdx.files.internal(FRAGMENT).readString());
+		_config = new DefaultShader.Config(
+				Gdx.files.internal(SHADER_DIR + VERTEX).readString(),
+				Gdx.files.internal(SHADER_DIR + FRAGMENT).readString());
 	}
 
 	@Override
