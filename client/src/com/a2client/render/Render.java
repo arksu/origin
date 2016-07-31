@@ -2,8 +2,7 @@ package com.a2client.render;
 
 import com.a2client.*;
 import com.a2client.model.GameObject;
-import com.a2client.render.postprocess.ContrastEffect;
-import com.a2client.render.postprocess.PostProcessing;
+import com.a2client.render.postprocess.*;
 import com.a2client.render.shadows.Shadow;
 import com.a2client.render.water.WaterFrameBuffers;
 import com.a2client.screens.Game;
@@ -29,8 +28,8 @@ import org.slf4j.LoggerFactory;
 import static com.a2client.Terrain.WATER_LEVEL;
 
 /**
- * примитивный рендер, пока один. может еще добавим других Created by arksu on
- * 25.02.15.
+ * примитивный рендер, пока один. может еще добавим других
+ * Created by arksu on 25.02.15.
  */
 public class Render
 {
@@ -41,6 +40,9 @@ public class Render
 	 */
 	public static final String SHADER_VERSION = "#version 140";
 
+	/**
+	 * где лежат все шейдеры
+	 */
 	public static final String SHADER_DIR = "assets/shaders/";
 
 	/**
@@ -54,23 +56,21 @@ public class Render
 	public static Vector3 clipNormal = new Vector3(0, -1, 0);
 	public static float clipHeight = 1.5f;
 
+	/**
+	 * позиция солнца, учитывается при всем освещении
+	 */
 	public static Vector3 sunPosition = new Vector3(10000, 10000, 10000);
 
 	private Game _game;
+	private Environment _environment;
 
 	private ModelBatch _modelBatch;
 
 	private Terrain _terrain;
-
 	private Skybox _skybox;
-
 	private WaterFrameBuffers _waterFrameBuffers;
-
 	private Shadow _shadow;
-
 	private PostProcessing _postProcessing;
-
-	private Environment _environment;
 
 	private GameObject _selected;
 
@@ -110,7 +110,12 @@ public class Render
 		_terrain = new Terrain(this);
 
 		_postProcessing = new PostProcessing();
-		_postProcessing.addEffect(new ContrastEffect(true));
+		_postProcessing.addEffect(new ContrastEffect());
+		_postProcessing.addEffect(new HorizontalBlurEffect(1f / 2f));
+		_postProcessing.addEffect(new VerticalBlurEffect(1f / 2f));
+		_postProcessing.addEffect(new HorizontalBlurEffect(1f / 8f));
+		_postProcessing.addEffect(new VerticalBlurEffect(1f / 8f));
+		_postProcessing.addEffect(new EmptyEffect(true));
 
 		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 
@@ -163,7 +168,6 @@ public class Render
 			toShadowMapSpace = _shadow.getToShadowMapSpaceMatrix();
 			_shadow.getFrameBuffer().begin();
 
-			// TODO : убрать GL_COLOR_BUFFER_BIT
 			Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
 			Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 			Gdx.gl.glCullFace(GL20.GL_BACK);
@@ -495,8 +499,8 @@ public class Render
 
 	public static ShaderProgram makeShader(String vertFile, String fragFile)
 	{
-		String vertSource = Gdx.files.internal(SHADER_DIR + vertFile).readString();
-		String fragSource = Gdx.files.internal(SHADER_DIR + fragFile).readString();
+		String vertSource = Gdx.files.internal(SHADER_DIR + vertFile + "Vertex.glsl").readString();
+		String fragSource = Gdx.files.internal(SHADER_DIR + fragFile + "Fragment.glsl").readString();
 
 		vertSource = SHADER_VERSION + "\n" + vertSource;
 		fragSource = SHADER_VERSION + "\n" + fragSource;
@@ -505,7 +509,7 @@ public class Render
 
 		if (!program.isCompiled())
 		{
-			_log.warn("shader ERROR " + program.getLog());
+			_log.warn("shader FAILED: " + program.getLog());
 			_log.warn("shader V " + program.getVertexShaderSource());
 			_log.warn("shader F " + program.getFragmentShaderSource());
 		}

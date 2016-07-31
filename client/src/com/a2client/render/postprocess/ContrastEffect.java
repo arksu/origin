@@ -12,9 +12,14 @@ public class ContrastEffect extends Effect
 {
 	private static final Logger _log = LoggerFactory.getLogger(ContrastEffect.class.getName());
 
+	public ContrastEffect()
+	{
+		this(false);
+	}
+
 	public ContrastEffect(boolean isFinal)
 	{
 		super(isFinal);
-		_shaderProgram  = makeShader("postprocess/contrastVertex.glsl", "postprocess/contrastFragment.glsl");
+		_shaderProgram  = makeShader("postprocess/contrast", "postprocess/contrast");
 	}
 }

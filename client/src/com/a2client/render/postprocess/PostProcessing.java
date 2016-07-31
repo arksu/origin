@@ -21,8 +21,14 @@ public class PostProcessing
 {
 	private static final Logger _log = LoggerFactory.getLogger(PostProcessing.class.getName());
 
+	/**
+	 * квад для вывода на экран
+	 */
 	private final Mesh _fullScreenQuad;
 
+	/**
+	 * цепочка эффектов
+	 */
 	private final List<Effect> _effects = new ArrayList<>();
 
 	public PostProcessing()
@@ -32,26 +38,54 @@ public class PostProcessing
 
 	public void doPostProcessing(DepthFrameBuffer initialFBO)
 	{
-		boolean first = true;
+		// текущий буфер который обрабатываем
+		DepthFrameBuffer frameBuffer = initialFBO;
+
+		// пройдем по всем эффектам
 		for (Effect effect : _effects)
 		{
-			effect.getShaderProgram().begin();
-			effect.getShaderProgram().setUniformf("u_size", new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-
-			if (first)
+			// включим буфер эффекта если надо
+			if (!effect.isFinal())
 			{
-				Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
-				initialFBO.getColorBufferTexture().bind();
-				effect.getShaderProgram().setUniformf("u_texture", 0);
+				effect.getFrameBuffer().begin();
 			}
 
+			// включим шейдер
+			effect.getShaderProgram().begin();
+			// укажем размер экрана в шейдере
+			effect.getShaderProgram().setUniformf(
+					"u_size",
+//					new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())
+					new Vector2(frameBuffer.getWidth(), frameBuffer.getHeight())
+			);
+			effect.getShaderProgram().setUniformf("u_texture", 0);
+			// биндим и указываем текстуру которую выводим на экран / обрабатываем текущим эффектом
+			Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
+			frameBuffer.getColorBufferTexture().bind();
+
+			// выведем квад
 			_fullScreenQuad.render(effect.getShaderProgram(), GL20.GL_TRIANGLE_STRIP);
 
+			// выключим шейдер
 			effect.getShaderProgram().end();
+
+			if (!effect.isFinal())
+			{
+				effect.getFrameBuffer().end();
+				frameBuffer = effect.getFrameBuffer();
+			}
+			else
+			{
+				// последний эффект прерывает цикл
+				break;
+			}
 		}
 
 	}
 
+	/**
+	 * добавить эффект в цепочку
+	 */
 	public void addEffect(Effect effect)
 	{
 		_effects.add(effect);
