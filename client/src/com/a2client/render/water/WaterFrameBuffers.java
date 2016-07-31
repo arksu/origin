@@ -1,6 +1,6 @@
 package com.a2client.render.water;
 
-import com.a2client.render.DepthFrameBuffer;
+import com.a2client.render.framebuffer.DepthFrameBuffer;
 import com.badlogic.gdx.graphics.Pixmap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

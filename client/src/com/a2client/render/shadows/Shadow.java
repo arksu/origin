@@ -1,6 +1,6 @@
 package com.a2client.render.shadows;
 
-import com.a2client.render.DepthFrameBuffer;
+import com.a2client.render.framebuffer.DepthFrameBuffer;
 import com.a2client.render.GameCamera;
 import com.a2client.render.Render;
 import com.a2client.render.ShadowShaderProvider;

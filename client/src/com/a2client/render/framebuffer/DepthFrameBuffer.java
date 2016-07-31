@@ -1,11 +1,10 @@
-package com.a2client.render;
+package com.a2client.render.framebuffer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 import org.slf4j.Logger;
@@ -17,7 +16,7 @@ import static com.badlogic.gdx.Gdx.gl;
  * фрейм буфер с возможностью получения буфера глубины в текстуре
  * Created by arksu on 27.07.16.
  */
-public class DepthFrameBuffer extends FrameBuffer
+public class DepthFrameBuffer extends CustomFrameBuffer
 {
 	private static final Logger _log = LoggerFactory.getLogger(DepthFrameBuffer.class.getName());
 

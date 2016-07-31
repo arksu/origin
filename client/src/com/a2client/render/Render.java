@@ -2,6 +2,7 @@ package com.a2client.render;
 
 import com.a2client.*;
 import com.a2client.model.GameObject;
+import com.a2client.render.framebuffer.DepthFrameBuffer;
 import com.a2client.render.postprocess.*;
 import com.a2client.render.shadows.Shadow;
 import com.a2client.render.water.WaterFrameBuffers;

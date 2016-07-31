@@ -1,6 +1,6 @@
 package com.a2client.render.postprocess;
 
-import com.a2client.render.DepthFrameBuffer;
+import com.a2client.render.framebuffer.DepthFrameBuffer;
 import com.a2client.render.Render;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
