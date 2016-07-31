@@ -4,7 +4,6 @@ import com.a2client.*;
 import com.a2client.model.GameObject;
 import com.a2client.render.framebuffer.DepthFrameBuffer;
 import com.a2client.render.postprocess.DepthOfFieldEffect;
-import com.a2client.render.postprocess.EmptyEffect;
 import com.a2client.render.postprocess.PostProcessing;
 import com.a2client.render.shadows.Shadow;
 import com.a2client.render.water.WaterFrameBuffers;
@@ -113,12 +112,12 @@ public class Render
 		_terrain = new Terrain(this);
 
 		_postProcessing = new PostProcessing();
-		_postProcessing.addEffect(new DepthOfFieldEffect());
+		_postProcessing.addEffect(new DepthOfFieldEffect(true));
 //		_postProcessing.addEffect(new HorizontalBlurEffect(1f / 2f));
 //		_postProcessing.addEffect(new VerticalBlurEffect(1f / 2f));
 //		_postProcessing.addEffect(new HorizontalBlurEffect(1f / 8f));
 //		_postProcessing.addEffect(new VerticalBlurEffect(1f / 8f));
-		_postProcessing.addEffect(new EmptyEffect(true));
+//		_postProcessing.addEffect(new EmptyEffect(true));
 
 		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 
@@ -270,21 +269,23 @@ public class Render
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		_skybox.Render(camera, _environment);
+
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		renderTerrain(camera, toShadowMapSpace);
+
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		renderObjects(camera, true);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		renderWater(camera);
 
-		if (_game.getWorldMousePos() != null)
-		{
-			_modelBatch.begin(camera);
-			_testModel.transform.setTranslation(_game.getWorldMousePos());
-			_modelBatch.render(_testModel, _environment);
-			_modelBatch.end();
-		}
+//		if (_game.getWorldMousePos() != null)
+//		{
+//			_modelBatch.begin(camera);
+//			_testModel.transform.setTranslation(_game.getWorldMousePos());
+//			_modelBatch.render(_testModel, _environment);
+//			_modelBatch.end();
+//		}
 
 		// END MAIN RENDER =============================================================================================
 
@@ -313,14 +314,14 @@ public class Render
 
 		if (Config._renderOutline)
 		{
-			// выводим содержимое буфера
+			// выводим содержимое буфера9
 
 			ShaderProgram program = _terrain._shaderCel;
 
 			program.begin();
-			_waterFrameBuffers.getReflectionFrameBuffer().getColorBufferTexture().bind();
+//			_waterFrameBuffers.getReflectionFrameBuffer().getColorBufferTexture().bind();
 //			_shadow.getFrameBuffer().getColorBufferTexture().bind();
-//			_shadow.getFrameBuffer().bindDepthTexture();
+			_postProcessingFBO.bindDepthTexture();
 			testQuad1.render(program, GL20.GL_TRIANGLE_STRIP);
 
 			_waterFrameBuffers.getRefractionFrameBuffer().bindDepthTexture();

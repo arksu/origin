@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 import org.slf4j.Logger;
@@ -16,11 +17,11 @@ import static com.badlogic.gdx.Gdx.gl;
  * фрейм буфер с возможностью получения буфера глубины в текстуре
  * Created by arksu on 27.07.16.
  */
-public class DepthFrameBuffer extends CustomFrameBuffer
+public class DepthFrameBuffer extends FrameBuffer
 {
 	private static final Logger _log = LoggerFactory.getLogger(DepthFrameBuffer.class.getName());
 
-	private int _depthTexture;
+	private int _depthTexture = -1;
 
 	public DepthFrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth)
 	{
@@ -61,6 +62,9 @@ public class DepthFrameBuffer extends CustomFrameBuffer
 
 	public void bindDepthTexture()
 	{
-		Gdx.gl.glBindTexture(GL11.GL_TEXTURE_2D, _depthTexture);
+		if (_depthTexture >= 0)
+		{
+			Gdx.gl.glBindTexture(GL11.GL_TEXTURE_2D, _depthTexture);
+		}
 	}
 }
