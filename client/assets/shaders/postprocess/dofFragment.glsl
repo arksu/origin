@@ -33,7 +33,7 @@ float gain = 10.0; //highlight gain;
 float bias = 0.4; //bokeh edge bias
 float fringe = 0.5; //bokeh chromatic aberration/fringing
 
-bool noise = true; //use noise instead of pattern for sample dithering
+bool noise = false; //use noise instead of pattern for sample dithering
 float namount = 0.0001; //dither amount
 
 bool depthblur = false; //blur the depth buffer?
