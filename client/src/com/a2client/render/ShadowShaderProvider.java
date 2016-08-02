@@ -1,37 +1,24 @@
 package com.a2client.render;
 
-import com.a2client.Terrain;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.Shader;
-import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static com.a2client.render.Render.SHADER_DIR;
-import static com.a2client.render.shadows.Shadow.FRAGMENT;
-import static com.a2client.render.shadows.Shadow.VERTEX;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
  * Created by arksu on 28.07.16.
  */
 public class ShadowShaderProvider extends DepthShaderProvider
 {
-	private static final Logger _log = LoggerFactory.getLogger(ShadowShaderProvider.class.getName());
+	private final ShaderProgram _shaderProgram;
 
-	private DefaultShader.Config _config;
-
-	public ShadowShaderProvider()
+	public ShadowShaderProvider(ShaderProgram shaderProgram)
 	{
-		_config = new DefaultShader.Config(
-				Gdx.files.internal(SHADER_DIR + VERTEX).readString(),
-				Gdx.files.internal(SHADER_DIR + FRAGMENT).readString());
+		_shaderProgram = shaderProgram;
 	}
 
 	@Override
 	protected Shader createShader(Renderable renderable)
 	{
-//		return new ShadowShader(renderable, _config);
-		return new ShadowShader(renderable, Terrain._shaderShadow);
+		return new ShadowShader(renderable, _shaderProgram);
 	}
 }

@@ -1,16 +1,15 @@
 package com.a2client.render.shadows;
 
-import com.a2client.render.framebuffer.DepthFrameBuffer;
 import com.a2client.render.GameCamera;
 import com.a2client.render.Render;
 import com.a2client.render.ShadowShaderProvider;
+import com.a2client.render.framebuffer.DepthFrameBuffer;
 import com.a2client.util.vector.Vector2f;
 import com.a2client.util.vector.Vector3f;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import org.slf4j.Logger;
@@ -27,8 +26,8 @@ public class Shadow
 
 	public static final int SHADOW_MAP_SIZE = 2048;
 
-	public static final String VERTEX = "shadowVertex.glsl";
-	public static final String FRAGMENT = "shadowFragment.glsl";
+	public static final String VERTEX = "shadow";
+	public static final String FRAGMENT = "shadow";
 
 	private final DepthFrameBuffer _frameBuffer;
 
@@ -36,21 +35,19 @@ public class Shadow
 
 	private final ShadowBox _shadowBox;
 
-//	private Matrix4f lightViewMatrix = new Matrix4f();
-	private Matrix4 projectionMatrix = new Matrix4();
-	private Matrix4 combined = new Matrix4();
-	private Matrix4 offset = createOffset();
+	private Matrix4 _projectionMatrix = new Matrix4();
+	private Matrix4 _combined = new Matrix4();
+	private final Matrix4 offset = createOffset();
 
 	private GameCamera _camera;
 
-	public Shadow(GameCamera camera, final ShaderProgram shader)
+	public Shadow(GameCamera camera, Render render)
 	{
 		_camera = camera;
 
 		_frameBuffer = new DepthFrameBuffer(Pixmap.Format.RGBA8888, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, true);
 		_frameBuffer.createDepthTextre(Texture.TextureFilter.Nearest, Texture.TextureWrap.ClampToEdge);
-		ShadowShaderProvider shaderProvider = new ShadowShaderProvider();
-		_modelBatch = new ModelBatch(shaderProvider);
+		_modelBatch = new ModelBatch(new ShadowShaderProvider(render.getShadowShader()));
 		_shadowBox = new ShadowBox(camera);
 	}
 
@@ -68,20 +65,13 @@ public class Shadow
 		updateOrthoProjectionMatrix();
 		Vector3 center = _shadowBox.getCenter();
 		Matrix4 view = updateLightViewMatrix(lightDirection, center);
-//		Matrix4f.mul(projectionMatrix, lightViewMatrix, projectionViewMatrix);
 
-//		view = lightViewMatrix.toM4();
-//		view = _camera.view;
-
-		Matrix4 projection = projectionMatrix;
-//		Matrix4 projection = _camera.projection;
-
-		_camera.projection.set(projection);
+		_camera.projection.set(_projectionMatrix);
 		_camera.view.set(view);
-		combined = new Matrix4();
-		combined.set(projection);
-		Matrix4.mul(combined.val, view.val);
-		_camera.combined.set(combined);
+		_combined = new Matrix4();
+		_combined.set(_projectionMatrix);
+		Matrix4.mul(_combined.val, view.val);
+		_camera.combined.set(_combined);
 
 	}
 
@@ -92,12 +82,12 @@ public class Shadow
 	 */
 	private void updateOrthoProjectionMatrix()
 	{
-		projectionMatrix.idt();
+		_projectionMatrix.idt();
 
-		projectionMatrix.val[M00] = 2f / _shadowBox.getWidth();
-		projectionMatrix.val[M11] = 2f / _shadowBox.getHeight();
-		projectionMatrix.val[M22] = -2f / _shadowBox.getLength();
-		projectionMatrix.val[M33] = 1;
+		_projectionMatrix.val[M00] = 2f / _shadowBox.getWidth();
+		_projectionMatrix.val[M11] = 2f / _shadowBox.getHeight();
+		_projectionMatrix.val[M22] = -2f / _shadowBox.getLength();
+		_projectionMatrix.val[M33] = 1;
 	}
 
 	private Matrix4 updateLightViewMatrix(Vector3f direction, Vector3 center)
@@ -116,8 +106,8 @@ public class Shadow
 
 		Matrix4 view = _shadowBox.getLightViewMatrix();
 		view.idt();
-		view.rotate(1,0,0, pitch);
-		view.rotate(0,1,0, -yaw);
+		view.rotate(1, 0, 0, pitch);
+		view.rotate(0, 1, 0, -yaw);
 
 		Matrix4 t = new Matrix4().setTranslation(new Vector3(center.x, center.y, center.z));
 
@@ -129,7 +119,7 @@ public class Shadow
 
 	public Matrix4 getToShadowMapSpaceMatrix()
 	{
-		return offset.cpy().mul(combined);
+		return offset.cpy().mul(_combined);
 	}
 
 	/**

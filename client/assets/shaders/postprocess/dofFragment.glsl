@@ -19,13 +19,13 @@ const float focalDepth = 0.1;  //external focal point value, but you may use aut
 //------------------------------------------
 //user variables
 
-int samples = 4; //samples on the first ring
+int samples = 2; //samples on the first ring
 int rings = 2; //ring count
 
 bool autofocus = true; //use autofocus in shader? disable if you use external focalDepth value
 vec2 focus = vec2(0.5,0.5); // autofocus point on screen (0.0,0.0 - left lower corner, 1.0,1.0 - upper right)
-float range = 6.0; //focal range
-float maxblur = 1.25; //clamp value of max blur
+float range = 8.0; //focal range
+float maxblur = 1.05; //clamp value of max blur
 
 float threshold = 0.8; //highlight threshold;
 float gain = 10.0; //highlight gain;

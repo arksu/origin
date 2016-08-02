@@ -34,7 +34,7 @@ void main() {
 		for (int x = -pcfCount; x <= pcfCount; x++) {
 			for (int y = -pcfCount; y <= pcfCount; y++) {
 				float objectNearestLihgt = texture(u_shadowMap, shadowCoords.xy + vec2(x, y) * texelSize).r;
-				if (shadowCoords.z > objectNearestLihgt + 0.002) {
+				if (shadowCoords.z > objectNearestLihgt + 0.004) {
 					totalShadowWeight += 1.0;
 				}
 			}

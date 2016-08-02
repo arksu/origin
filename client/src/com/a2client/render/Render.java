@@ -84,6 +84,7 @@ public class Render
 	private DepthShaderProvider _depthShaderProvider;
 	private ModelBatch _depthModelBatch;
 	private ModelBatch _simpleModelBatch;
+	private ShaderProgram _shadowShader;
 
 	private Mesh fullScreenQuad;
 	private Mesh testQuad1;
@@ -161,10 +162,10 @@ public class Render
 		{
 			if (_shadow == null)
 			{
-				_shadow = new Shadow(_game.getCamera(), _terrain._shaderShadow);
+				_shadow = new Shadow(_game.getCamera(), this);
 			}
 			_modelBatch = _shadow.getModelBatch();
-			_terrain._shader = _terrain._shaderShadow;
+			_terrain._shader = getShadowShader();
 
 			_shadow.update(camera);
 			toShadowMapSpace = _shadow.getToShadowMapSpaceMatrix();
@@ -389,6 +390,15 @@ public class Render
 		{
 			_terrain.renderSimpleWater(camera, _environment);
 		}
+	}
+
+	public ShaderProgram getShadowShader()
+	{
+		if (_shadowShader == null)
+		{
+			_shadowShader = makeShader(Shadow.VERTEX, Shadow.FRAGMENT);
+		}
+		return _shadowShader;
 	}
 
 	public static Mesh createFullScreenQuad()

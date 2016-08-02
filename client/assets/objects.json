@@ -7,7 +7,7 @@
 //		"res": "assets/models/Rabbit.obj",
 		"res": "assets/models/trex.obj",
 //		"res": "assets/models/rabbit.g3dj",
-		"scale": 1
+		"scale": 0.4
 	},
 	{
 		"typeId": 2,

@@ -65,7 +65,6 @@ public class Terrain
 	public ShaderProgram _shaderTerrain;
 	public ShaderProgram _shaderWater;
 	public ShaderProgram _shaderWaterSimple;
-	public static ShaderProgram _shaderShadow;
 
 	public ShaderProgram _shaderCel;
 	public ShaderProgram _shaderOutline;
@@ -90,7 +89,6 @@ public class Terrain
 		_shaderTerrain = makeShader("terrain", "terrain");
 		_shaderWater = makeShader("water", "water");
 		_shaderWaterSimple = makeShader("waterSimple", "waterSimple");
-		_shaderShadow = makeShader("shadow", "shadow");
 
 		_shaderCel = makeShader("cel", "cel");
 		_shaderOutline = makeShader("outline", "outline");
