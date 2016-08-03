@@ -91,7 +91,7 @@ public class Main extends com.badlogic.gdx.Game
 
 		// запускаем приложение
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-		cfg.title = "Origin v2.0";
+		cfg.title = "Origin " + buildVersion();
 		cfg.addIcon("assets/a1_16.png", Files.FileType.Internal);
 		cfg.addIcon("assets/a1_32.png", Files.FileType.Internal);
 		cfg.addIcon("assets/a1_128.png", Files.FileType.Internal);
@@ -122,7 +122,7 @@ public class Main extends com.badlogic.gdx.Game
 
 	public static String buildVersion()
 	{
-		return "ver " + (Config.CLIENT_VERSION / 100) + "." + (Config.CLIENT_VERSION % 100);
+		return "v" + (Config.CLIENT_VERSION / 100) + "." + (Config.CLIENT_VERSION % 100);
 	}
 
 	@Override
