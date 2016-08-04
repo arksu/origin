@@ -102,6 +102,46 @@ public class CustomFrameBuffer extends CustomGLFrameBuffer<Texture>
 		}
 	}
 
+	public TextureFilter getColorTextureFilter()
+	{
+		return colorTextureFilter;
+	}
+
+	public void setColorTextureFilter(TextureFilter colorTextureFilter)
+	{
+		this.colorTextureFilter = colorTextureFilter;
+	}
+
+	public TextureWrap getColorTextureWrap()
+	{
+		return colorTextureWrap;
+	}
+
+	public void setColorTextureWrap(TextureWrap colorTextureWrap)
+	{
+		this.colorTextureWrap = colorTextureWrap;
+	}
+
+	public TextureFilter getDepthTextureFilter()
+	{
+		return depthTextureFilter;
+	}
+
+	public void setDepthTextureFilter(TextureFilter depthTextureFilter)
+	{
+		this.depthTextureFilter = depthTextureFilter;
+	}
+
+	public TextureWrap getDepthTextureWrap()
+	{
+		return depthTextureWrap;
+	}
+
+	public void setDepthTextureWrap(TextureWrap depthTextureWrap)
+	{
+		this.depthTextureWrap = depthTextureWrap;
+	}
+
 	/**
 	 * See {@link GLFrameBuffer#unbind()}
 	 */

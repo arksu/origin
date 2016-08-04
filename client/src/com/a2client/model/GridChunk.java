@@ -78,6 +78,7 @@ public class GridChunk
 		_index = new short[CHUNK_SIZE * CHUNK_SIZE * 6];
 		_cx = gx;
 		_cy = gy;
+		_waterMesh = null;
 		makeMesh();
 	}
 
@@ -133,7 +134,7 @@ public class GridChunk
 //		}
 
 		_maxHeight = 0;
-		_minHeight = 0;
+		_minHeight = WATER_LEVEL;
 
 		for (int x = _cx; x < _cx + CHUNK_SIZE; x++)
 		{
@@ -319,7 +320,7 @@ public class GridChunk
 
 			// посчитаем нормаль
 			normal = new Vector3(h1 - h2, 2.0f, h3 - h4).nor();
-			normal.rotate(90f+45f, 0, 1, 0);
+			normal.rotate(90f + 45f, 0, 1, 0);
 		}
 	}
 
@@ -345,6 +346,11 @@ public class GridChunk
 	public Mesh getWaterMesh()
 	{
 		return _waterMesh;
+	}
+
+	public boolean isHaveWater()
+	{
+		return _waterMesh != null;
 	}
 
 	public BoundingBox getBoundingBox()

@@ -167,7 +167,7 @@ public class Render
 			_modelBatch = _shadow.getModelBatch();
 			_terrain._shader = getShadowShader();
 
-			_shadow.update(camera);
+			_shadow.update();
 			toShadowMapSpace = _shadow.getToShadowMapSpaceMatrix();
 			_shadow.getFrameBuffer().begin();
 

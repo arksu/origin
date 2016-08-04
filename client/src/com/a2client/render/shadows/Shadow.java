@@ -6,8 +6,8 @@ import com.a2client.render.ShadowShaderProvider;
 import com.a2client.render.framebuffer.DepthFrameBuffer;
 import com.a2client.util.vector.Vector2f;
 import com.a2client.util.vector.Vector3f;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -47,13 +47,15 @@ public class Shadow
 
 		_frameBuffer = new DepthFrameBuffer(Pixmap.Format.RGBA8888, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, true, false, true);
 		_frameBuffer.setHasDepthTexture(true);
-		_frameBuffer.setDepthBufferSize(GL14.GL_DEPTH_COMPONENT32);
+		_frameBuffer.setDepthBufferSize(GL14.GL_DEPTH_COMPONENT16);
+		_frameBuffer.setDepthTextureFilter(Texture.TextureFilter.Nearest);
+		_frameBuffer.setDepthTextureWrap(Texture.TextureWrap.ClampToEdge);
 		_frameBuffer.build();
 		_modelBatch = new ModelBatch(new ShadowShaderProvider(render.getShadowShader()));
 		_shadowBox = new ShadowBox(camera);
 	}
 
-	public void update(Camera camera)
+	public void update()
 	{
 		_shadowBox.update();
 
