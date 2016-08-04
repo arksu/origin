@@ -26,10 +26,14 @@ public class WaterFrameBuffers
 
 	public WaterFrameBuffers()
 	{
-		_reflectionFrameBuffer = new DepthFrameBuffer(Pixmap.Format.RGBA8888, REFLECTION_WIDTH, REFLECTION_HEIGHT, true);
-		_refractionFrameBuffer = new DepthFrameBuffer(Pixmap.Format.RGBA8888, REFRACTION_WIDTH, REFRACTION_HEIGHT, true);
+		_reflectionFrameBuffer = new DepthFrameBuffer(Pixmap.Format.RGBA8888, REFLECTION_WIDTH, REFLECTION_HEIGHT,
+													  true, false, true);
+		_reflectionFrameBuffer.build();
 
-		_refractionFrameBuffer.createDepthTextre();
+		_refractionFrameBuffer = new DepthFrameBuffer(Pixmap.Format.RGBA8888, REFRACTION_WIDTH, REFRACTION_HEIGHT,
+													  true, false, true);
+		_refractionFrameBuffer.setHasDepthTexture(true);
+		_refractionFrameBuffer.build();
 	}
 
 	public DepthFrameBuffer getReflectionFrameBuffer()

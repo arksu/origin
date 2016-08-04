@@ -49,7 +49,9 @@ public class Effect
 					Pixmap.Format.RGBA8888,
 					Math.round(Gdx.graphics.getWidth() * _scale),
 					Math.round(Gdx.graphics.getHeight() * _scale),
-					true);
+					true, false, true);
+			_frameBuffer.setHasDepthTexture(true);
+			_frameBuffer.build();
 		}
 		_shaderProgram = null;
 	}

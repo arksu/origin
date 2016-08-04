@@ -255,8 +255,7 @@ public class Render
 		{
 			if (_postProcessingFBO == null)
 			{
-				_postProcessingFBO = new DepthFrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-				_postProcessingFBO.createDepthTextre();
+				createPostProcessingFBO();
 			}
 			_postProcessingFBO.begin();
 		}
@@ -537,8 +536,16 @@ public class Render
 		{
 			_postProcessingFBO.dispose();
 		}
-		_postProcessingFBO = new DepthFrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-		_postProcessingFBO.createDepthTextre();
+		createPostProcessingFBO();
+	}
+
+	protected void createPostProcessingFBO()
+	{
+		_postProcessingFBO = new DepthFrameBuffer(
+				Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
+				true, false, true);
+		_postProcessingFBO.setHasDepthTexture(true);
+		_postProcessingFBO.build();
 	}
 
 	public void dispose()

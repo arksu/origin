@@ -1,14 +1,11 @@
 package com.a2client.render.framebuffer;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static com.badlogic.gdx.Gdx.gl;
 
@@ -18,20 +15,17 @@ import static com.badlogic.gdx.Gdx.gl;
  */
 public class DepthFrameBuffer extends CustomFrameBuffer
 {
-	private static final Logger _log = LoggerFactory.getLogger(DepthFrameBuffer.class.getName());
-
 	private int _depthTexture = -1;
 
-	public DepthFrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth)
+	public DepthFrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth,
+							boolean hasStencil, boolean hasColor)
 	{
-		super(format, width, height, hasDepth);
+		super(format, width, height, hasDepth, hasStencil, hasColor);
 	}
 
-	public void createDepthTextre()
-	{
-		createDepthTextre(Texture.TextureFilter.Linear, Texture.TextureWrap.Repeat);
-	}
-
+	/**
+	 * старый но! рабочий код) создания текстуры для буфера глубины. оставлен для истории
+	 */
 	public void createDepthTextre(Texture.TextureFilter filter, Texture.TextureWrap wrap)
 	{
 		// сначала биндим наш буфер
@@ -57,13 +51,5 @@ public class DepthFrameBuffer extends CustomFrameBuffer
 
 		// а вот тут может случится ата-та. т.к. надо знать ид буфера экрана. см код libgdx
 		gl.glBindFramebuffer(GL20.GL_FRAMEBUFFER, 0);
-	}
-
-	public void bindDepthTexture()
-	{
-		if (_depthTexture >= 0)
-		{
-			Gdx.gl.glBindTexture(GL11.GL_TEXTURE_2D, _depthTexture);
-		}
 	}
 }
