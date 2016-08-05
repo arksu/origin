@@ -5,9 +5,10 @@
 //		"res": "assets/untitled.g3db",
 //		"res": "assets/debug/cube_test.obj",
 //		"res": "assets/models/Rabbit.obj",
-		"res": "assets/models/trex.obj",
+//		"res": "assets/models/trex.obj",
+		"res": "assets/models/apple.obj",
 //		"res": "assets/models/rabbit.g3dj",
-		"scale": 0.4
+		"scale": 0.3
 	},
 	{
 		"typeId": 2,

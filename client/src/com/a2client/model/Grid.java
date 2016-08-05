@@ -4,7 +4,6 @@ import com.a2client.Config;
 import com.a2client.util.OpenSimplexNoise;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import org.slf4j.Logger;
@@ -124,23 +123,6 @@ public class Grid
 			}
 		}
 		return chunksRendered;
-	}
-
-	public static Color getTileColor(byte tile)
-	{
-		switch (tile)
-		{
-			case 30:
-				return new Color(0.5f, 0.8f, 0, 1);
-			case 35:
-				return new Color(0, 0.8f, 0.1f, 1);
-			case 1:
-				return new Color(0.2f, 0, 1f, 1);
-			case 2:
-				return Color.BLUE;
-			default:
-				return Color.WHITE;
-		}
 	}
 
 	private void fillTiles(byte[] data)
