@@ -215,7 +215,6 @@ public class Game extends BaseScreen
 					Config._renderPostProcessing = !Config._renderPostProcessing;
 				}
 
-
 				else if (Input.KeyDown(Keys.W))
 				{
 					_gameCamera.getOffset().add(0, 0, Main.deltaTime * GameCamera.OFFSET_SPEED);
@@ -259,8 +258,8 @@ public class Game extends BaseScreen
 				" " + _statusText +
 				" chunks: " + _render.getChunksRendered() + " / " + _render.getWaterChunksRendered() +
 				" selected: " + (_render.getSelected() != null ? "" + _render.getSelected() : "null") +
-				" objects: " + _render.getRenderedObjects()+
-				" cam: "+_gameCamera.getCameraDistance()
+				" objects: " + _render.getRenderedObjects() +
+				" cam: " + _gameCamera.getCameraDistance()
 		;
 	}
 
@@ -275,7 +274,7 @@ public class Game extends BaseScreen
 			_mouseBtns[i] = Input.MouseBtns[i];
 			boolean click = _mouseBtns[i] != old_btns[i];
 			// вращаем камеру
-			if (i == Hotkey.CAMERA_BUTTON)
+			if (i == Hotkey.BUTTON_CAMERA)
 			{
 				// если кнопка нажата
 				if (_mouseBtns[i])
@@ -305,9 +304,12 @@ public class Game extends BaseScreen
 					GUI.getInstance().focused_control = null;
 					if (_worldMousePos != null)
 					{
+						int action = -1;
+						if (i == Hotkey.BUTTON_MOVE) action = 0;
+						if (i == Hotkey.BUTTON_ACTION) action = 1;
 						new MouseClick(
 								_mouseBtns[i],
-								i,
+								action,
 								Math.round(_worldMousePos.x * Terrain.TILE_SIZE),
 								Math.round(_worldMousePos.z * Terrain.TILE_SIZE),
 								(_render.getSelected() != null ? _render.getSelected().getObjectId() : 0)

@@ -15,22 +15,26 @@
 		"res": "assets/debug/invader.obj"
 	},
 	{
+		// appleTree
 		"typeId": 11,
 		"scale": 0.2,
 		"res": "assets/models/pine.obj"
 	},
 	{
+		// stoneAxe
 		"typeId": 16,
 		"scale": 0.2,
-		"res": "assets/models/pine.obj"
+		"res": "assets/debug/ship.obj"
 	},
 	{
-		"typeId": 19,
-		"scale": 0.1,
-		"res": "assets/models/fern.obj"
-	},
-	{
+		// stoneKnife
 		"typeId": 17,
 		"res": "assets/debug/ship.obj"
+	},
+	{
+		// apple
+		"typeId": 19,
+		"scale": 0.3,
+		"res": "assets/models/apple.obj"
 	}
 ]

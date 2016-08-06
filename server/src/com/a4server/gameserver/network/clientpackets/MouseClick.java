@@ -18,8 +18,8 @@ public class MouseClick extends GameClientPacket
 {
 	private static final Logger _log = LoggerFactory.getLogger(MouseClick.class.getName());
 
-	private static final int BUTTON_LEFT = 0;
-	private static final int BUTTON_RIGHT = 1;
+	private static final int BUTTON_MOVE = 0;
+	private static final int BUTTON_ACTION = 1;
 
 	/**
 	 * какая кнопка была нажата
@@ -62,7 +62,7 @@ public class MouseClick extends GameClientPacket
 				{
 					switch (_button)
 					{
-						case BUTTON_LEFT:
+						case BUTTON_MOVE:
 							// в руке что-то держим?
 							if (player.getHand() != null)
 							{
@@ -111,7 +111,7 @@ public class MouseClick extends GameClientPacket
 							}
 							break;
 
-						case BUTTON_RIGHT:
+						case BUTTON_ACTION:
 							// клик по объекту?
 							GameObject object = player.isKnownObject(_objectId);
 							if (object != null)
