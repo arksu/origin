@@ -114,6 +114,7 @@ public class Render
 
 		_postProcessing = new PostProcessing();
 		_postProcessing.addEffect(new DepthOfFieldEffect(true));
+//		_postProcessing.addEffect(new MotionBlurEffect(true));
 //		_postProcessing.addEffect(new HorizontalBlurEffect(1f / 2f));
 //		_postProcessing.addEffect(new VerticalBlurEffect(1f / 2f));
 //		_postProcessing.addEffect(new HorizontalBlurEffect(1f / 8f));
