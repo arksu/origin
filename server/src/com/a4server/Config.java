@@ -41,10 +41,12 @@ public class Config
 	public static int SCRYPT_N = 2048;
 	public static int SCRYPT_R = 8;
 	public static int SCRYPT_P = 1;
+
 	/**
 	 * размер пула потоков для general заданий
 	 */
 	public static int THREAD_P_GENERAL;
+
 	/**
 	 * размеры мира
 	 */

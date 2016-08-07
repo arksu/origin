@@ -8,8 +8,6 @@ import com.a4server.gameserver.model.position.MoveToPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.a4server.gameserver.model.collision.CollisionResult.CollisionType.COLLISION_OBJECT;
-
 /**
  * поведение для движения к объекту и взаимодействия с ним
  * Created by arksu on 28.02.15.
@@ -29,16 +27,34 @@ public class MindMoveAction extends PlayerMind
 	@Override
 	public void onArrived(CollisionResult moveResult)
 	{
+		GameObject object;
 		// наша цель совпадает с тем куда пришли?
-		if (moveResult.getResultType() == COLLISION_OBJECT)
+		switch (moveResult.getResultType())
 		{
-			GameObject object = moveResult.getObject();
-			if (object != null && object.getObjectId() == _targetObjectId && !object.isDeleteing())
-			{
-				_log.debug("interact with object " + object.toString());
-				// надо провести взаимодействие с этим объектом
-				_player.beginInteract(object);
-			}
+			case COLLISION_OBJECT:
+				object = moveResult.getObject();
+				if (object != null && object.getObjectId() == _targetObjectId && !object.isDeleteing())
+				{
+					_log.debug("interact with object " + object.toString());
+					// надо провести взаимодействие с этим объектом
+					_player.beginInteract(object);
+				}
+				break;
+
+			case COLLISION_NONE:
+				// коллизии нет. мы знаем этот объект?
+				object = _player.isKnownObject(_targetObjectId);
+				// если мы находимся точно в его позиции
+				if (object.getPos().equals(_player.getPos()))
+				{
+					// этот объект вещь? т.е. вещь валяется на земле
+					if (object.getTemplate().getItem() != null)
+					{
+						// поднимем его
+						object.pickUp(_player);
+					}
+				}
+				break;
 		}
 	}
 

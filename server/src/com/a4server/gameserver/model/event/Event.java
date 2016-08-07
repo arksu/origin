@@ -83,6 +83,9 @@ public class Event
 	@Override
 	public String toString()
 	{
-		return "(event " + _object + " type=" + _type + " extra=" + _extraInfo + ")";
+		return "(event " + _object +
+			   " type=" + _type +
+			   (_extraInfo != null ? " extra=" + _extraInfo : "") +
+			   ")";
 	}
 }

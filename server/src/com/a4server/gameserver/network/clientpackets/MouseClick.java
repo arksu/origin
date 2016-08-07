@@ -103,7 +103,7 @@ public class MouseClick extends GameClientPacket
 							}
 							else
 							{
-								_log.debug("MoveToPoint to (" + _x + ", " + _y + ")");
+								_log.debug("MoveToPoint (" + _x + ", " + _y + ")");
 								// для простого передвижения не требуется мозг) не надо ни о чем думать
 								player.setMind(null);
 								// запустим движение. создадим контроллер для этого
@@ -117,7 +117,8 @@ public class MouseClick extends GameClientPacket
 							if (object != null)
 							{
 								// пкм по объекту - посмотрим что сделает объект
-
+								_log.debug("actionClick on object: " + object);
+								object.actionClick(player);
 							}
 							break;
 					}

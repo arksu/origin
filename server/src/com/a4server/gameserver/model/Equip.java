@@ -23,17 +23,18 @@ public class Equip
 	/**
 	 * грузим эквип из основной таблицы с вещами, x=200
 	 * y - определяет номер слота в котором находится вещь
+	 * x = 200, y = 200 это рука
 	 */
 	public static final String LOAD_EQUIP = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal FROM items WHERE inventoryId=? AND x = 200 AND del=0";
 
-	final Player _player;
+	protected final Player _player;
 
 	/**
 	 * ид игрока
 	 */
-	final int _objectId;
+	protected final int _objectId;
 
-	final Map<EquipSlot.Slot, EquipSlot> _items = new HashMap<>();
+	protected final Map<EquipSlot.Slot, EquipSlot> _items = new HashMap<>();
 
 	public Equip(Player player)
 	{

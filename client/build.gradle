@@ -60,5 +60,5 @@ task makeDist(type: Copy) {
 task "rc" (type:JavaExec, dependsOn:[classes]) {
     main = 'com.a2client.Main'
     classpath = sourceSets.main.runtimeClasspath
-    args = ['-s', 'localhost', '-p', '2040', '-q']
+    args = ['-s', 'localhost', '-p', '2040', '-q', '-g', '127.0.0.1']
 }

@@ -234,7 +234,7 @@ public class AbstractItem
 		}
 		catch (Exception e)
 		{
-			_log.warn("failed update xy item pos " + toString(), e);
+			_log.warn("failed mark delete item " + toString(), e);
 		}
 		return false;
 	}

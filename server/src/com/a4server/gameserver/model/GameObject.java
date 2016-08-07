@@ -34,6 +34,8 @@ public class GameObject
 
 	public static final String STORE = "REPLACE INTO sg_0_obj (id, grid, x, y, type, create_tick) VALUES (?, ?, ?, ?, ?, ?)";
 
+	public static final String MARK_DELETED = "UPDATE sg_0_obj SET del=1 WHERE id=?";
+
 	/**
 	 * ид объекта, задается лишь единожды
 	 */
@@ -133,9 +135,12 @@ public class GameObject
 	 */
 	public boolean store()
 	{
+		String query = STORE;
+		query = query.replaceFirst("sg_0", "sg_" + Integer.toString(getPos().getGrid().getSg()));
+
 		// query queue
 		try (Connection con = Database.getInstance().getConnection();
-			 PreparedStatement statement = con.prepareStatement(STORE))
+			 PreparedStatement statement = con.prepareStatement(query))
 		{
 			statement.setInt(1, getObjectId());
 			statement.setInt(2, getPos().getGrid().getId());
@@ -150,6 +155,30 @@ public class GameObject
 		catch (Exception e)
 		{
 			_log.warn("failed update xy item pos " + toString(), e);
+		}
+		return false;
+	}
+
+	/**
+	 * пометить вещь в базе как удаленную
+	 */
+	public boolean markDeleted()
+	{
+		String query = MARK_DELETED;
+		query = query.replaceFirst("sg_0", "sg_" + Integer.toString(getPos().getGrid().getSg()));
+
+		// query queue
+		try (Connection con = Database.getInstance().getConnection();
+			 PreparedStatement statement = con.prepareStatement(query))
+		{
+			statement.setInt(1, _objectId);
+			statement.executeUpdate();
+			con.close();
+			return true;
+		}
+		catch (Exception e)
+		{
+			_log.warn("failed mark delete object " + toString(), e);
 		}
 		return false;
 	}
@@ -184,6 +213,29 @@ public class GameObject
 		return _pos;
 	}
 
+	public Inventory getInventory()
+	{
+		return _inventory;
+	}
+
+	/**
+	 * получить грид в котором находится объект
+	 */
+	public Grid getGrid()
+	{
+		return _pos.getGrid();
+	}
+
+	public Rect getBoundRect()
+	{
+		return _boundRect;
+	}
+
+	public boolean isDeleteing()
+	{
+		return _isDeleteing;
+	}
+
 	/**
 	 * установить позицию объекту. можем сделать это только 1 раз когда объект еще не инициализирован (при создании)
 	 * @param pos позиция
@@ -198,16 +250,6 @@ public class GameObject
 		{
 			throw new RuntimeException("try set pos, when != null");
 		}
-	}
-
-	public Rect getBoundRect()
-	{
-		return _boundRect;
-	}
-
-	public boolean isDeleteing()
-	{
-		return _isDeleteing;
 	}
 
 	/**
@@ -348,7 +390,6 @@ public class GameObject
 	 * что я должен сделать если другой (игрок) начал взаимодействие со мной
 	 * @param other другой объект который взаимодействует со мной
 	 */
-	@SuppressWarnings({"UnusedParameters", "StatementWithEmptyBody"})
 	protected void interactImpl(GameObject other)
 	{
 		// если у нас есть инвентарь
@@ -397,11 +438,6 @@ public class GameObject
 		_interactWith.clear();
 	}
 
-	public Inventory getInventory()
-	{
-		return _inventory;
-	}
-
 	/**
 	 * отправить пакет всем объектам с кем я взаимодействую
 	 * @param pkt пакет
@@ -422,10 +458,25 @@ public class GameObject
 	}
 
 	/**
-	 * получить грид в котором находится объект
+	 * клик мышкой по объекту для совершения действия (пкм на объекте)
 	 */
-	public Grid getGrid()
+	public void actionClick(Player player)
 	{
-		return _pos.getGrid();
+		// TODO: пкм по объекту для вызова меню взаимодействия с объектом
+	}
+
+	/**
+	 * объект поднимает игрок
+	 */
+	public void pickUp(Player player)
+	{
+		// сначала пометим объект в базе как удаленный
+		if (markDeleted())
+		{
+			// разошлем всем пакет с удалением объекта из мира
+
+			// найдем связанную вещь
+
+		}
 	}
 }

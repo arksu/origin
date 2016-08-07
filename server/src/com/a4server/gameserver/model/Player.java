@@ -406,7 +406,10 @@ public class Player extends Human
 		}
 	}
 
-	public void UpdateLastChar()
+	/**
+	 * обновим в базе последнего использованого перса
+	 */
+	public void updateLastChar()
 	{
 		try
 		{
@@ -420,7 +423,7 @@ public class Player extends Human
 		}
 		catch (SQLException e)
 		{
-			_log.warn("failed: UpdateLastChar " + e.getMessage());
+			_log.warn("failed: updateLastChar " + e.getMessage());
 		}
 	}
 
