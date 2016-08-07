@@ -101,20 +101,20 @@ public class GameClient extends NetClient
 
 	public Player loadCharacter(int charId)
 	{
-		Player character;
+		Player player;
 
 		// проверим есть ли такой персонаж уже в игре?
-		character = World.getInstance().getPlayer(charId);
-		if (character != null)
+		player = World.getInstance().getPlayer(charId);
+		if (player != null)
 		{
-			_log.error("Attempt of double login: " + character.getName() + "(" + charId + ") " + getAccount());
+			_log.error("Attempt of double login: " + player.getName() + "(" + charId + ") " + getAccount());
 			// кикнем того кто в игре
-			character.kick();
+			player.kick();
 			return null;
 		}
 
-		character = Player.load(charId);
-		if (character != null)
+		player = Player.load(charId);
+		if (player != null)
 		{
 			// установим параметры перса
 			// скорость бега и тд...
@@ -124,7 +124,7 @@ public class GameClient extends NetClient
 			_log.warn("failed load player character");
 		}
 
-		return character;
+		return player;
 	}
 
 	public GameClientState getState()

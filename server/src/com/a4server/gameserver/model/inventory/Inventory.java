@@ -49,7 +49,7 @@ public class Inventory
 	/**
 	 * список вещей которые находятся внутри
 	 */
-	FastList<InventoryItem> _items = new FastList<>();
+	protected final FastList<InventoryItem> _items = new FastList<>();
 
 	/**
 	 * это инвентарь непосредственно объекта

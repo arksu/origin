@@ -20,7 +20,6 @@ public class EnterWorld extends GameClientPacket
 	@Override
 	public void readImpl()
 	{
-
 	}
 
 	@Override

@@ -10,8 +10,14 @@ import io.netty.handler.codec.MessageToByteEncoder;
 public class PacketEncoder extends MessageToByteEncoder<BaseSendPacket>
 {
 	@Override
-	protected void encode(ChannelHandlerContext ctx, BaseSendPacket msg, ByteBuf out) throws Exception
+	protected void encode(ChannelHandlerContext ctx, BaseSendPacket pkt, ByteBuf out) throws Exception
 	{
-		msg.EncodePacket(out);
+		// ищем первый пакет в цепочке
+		BaseSendPacket first = pkt;
+		while (first._prev != null)
+		{
+			first = first._prev;
+		}
+		first.EncodePacket(out);
 	}
 }

@@ -52,6 +52,7 @@ public class CharacterSelect extends GameClientPacket
 
 					// грузим перса из базы
 					final Player cha = client.loadCharacter(_charId);
+					// загрузить не удалось. закроем соединение
 					if (cha == null)
 					{
 						client.close(ServerClose.STATIC_PACKET);
@@ -107,6 +108,8 @@ public class CharacterSelect extends GameClientPacket
 
 						// говорим клиенту показать экран загрузки мира
 						client.sendPacket(new CharSelected(cha));
+
+						client.sendPacket(cha.makeInitClientPacket());
 
 						client.setState(GameClient.GameClientState.IN_GAME);
 					}

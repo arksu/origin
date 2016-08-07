@@ -3,6 +3,7 @@ package com.a4server.gameserver.model;
 import com.google.gson.annotations.SerializedName;
 
 /**
+ * действие доступное игроку. передается в виде json клиенту
  * Created by arksu on 13.10.15.
  */
 public class Action

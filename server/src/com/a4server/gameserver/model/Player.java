@@ -240,7 +240,8 @@ public class Player extends Human
 	}
 
 	/**
-	 * создать пакет для отсылки другим игрокам
+	 * создает пакет при добавлении игрока в мир, его основные параметры
+	 * пакет остылается всем окружающим, поэтому тут должно быть все что связано с отображением игрока в мире
 	 * @return пакет
 	 */
 	public GameServerPacket makeAddToWorldPacket()
@@ -249,14 +250,18 @@ public class Player extends Human
 		BaseSendPacket next = pkt
 				// раз это персонаж, отправим его представление, то как он должен выглядеть
 				.addNext(new PlayerAppearance(_appearance))
-				.addNext(new InventoryUpdate(_inventory))
-				.addNext(new EquipUpdate(_equip))
-				.addNext(new ActionsList(getActions()));
+				.addNext(new EquipUpdate(_equip));
 		if (_hand != null)
 		{
 			next.addNext(new PlayerHand(_hand));
 		}
 		return pkt;
+	}
+
+	public BaseSendPacket makeInitClientPacket()
+	{
+		return new InventoryUpdate(_inventory)
+				.addNext(new ActionsList(getActions()));
 	}
 
 	/**

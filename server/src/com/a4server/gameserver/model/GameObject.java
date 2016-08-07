@@ -121,10 +121,10 @@ public class GameObject
 							  _template.getWidth() / 2,
 							  _template.getHeight() / 2);
 		// есть ли у объекта инвентарь?
-		InventoryTemplate inventory = _template.getInventory();
-		if (inventory != null)
+		InventoryTemplate inventoryTemplate = _template.getInventory();
+		if (inventoryTemplate != null)
 		{
-			_inventory = new Inventory(this, inventory.getWidth(), inventory.getHeight());
+			_inventory = new Inventory(this, inventoryTemplate.getWidth(), inventoryTemplate.getHeight());
 		}
 	}
 

@@ -21,9 +21,10 @@ public abstract class BaseSendPacket
 
 	/**
 	 * следующий пакет, можно объединять в цепочку
-	 * односвязный список
+	 * двусвязный список
 	 */
 	protected BaseSendPacket _next;
+	protected BaseSendPacket _prev;
 
 	/**
 	 * пакет записал себя в буфер
@@ -75,6 +76,7 @@ public abstract class BaseSendPacket
 	public BaseSendPacket addNext(BaseSendPacket pkt)
 	{
 		_next = pkt;
+		pkt._prev = this;
 		return pkt;
 	}
 

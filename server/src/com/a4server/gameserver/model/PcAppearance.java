@@ -4,14 +4,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * представление игрока в мире. то как он выглядит
  * Created by arksu on 05.01.2015.
  */
 public class PcAppearance
 {
 	/**
-	 * представление игрока в мире. то как он выглядит
+	 * пол. мужской / женский
 	 */
-
 	private boolean _sex = false; // true = female; male = false;
 
 	private byte _hairColor = 0;

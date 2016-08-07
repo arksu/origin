@@ -117,10 +117,12 @@ public class Grid
 	 * лок на все операции по гриду
 	 */
 	private final ReentrantLock _mainLock = new ReentrantLock();
+
 	/**
 	 * список игроков которые поддерживают этот грид активным
 	 */
 	private FastList<Player> _activePlayers = new FastList<Player>().shared();
+
 	/**
 	 * список объектов в гриде
 	 */
@@ -172,9 +174,9 @@ public class Grid
 			// надо проинформировать всех о добавлении объекта
 			if (isActive())
 			{
-				for (Player pl : _activePlayers)
+				for (Player player : _activePlayers)
 				{
-					pl.onGridObjectAdded(object);
+					player.onGridObjectAdded(object);
 				}
 			}
 		}
@@ -200,9 +202,9 @@ public class Grid
 			// надо проинформировать всех о добавлении объекта
 			if (isActive())
 			{
-				for (Player pl : _activePlayers)
+				for (Player player : _activePlayers)
 				{
-					pl.onGridObjectRemoved(object);
+					player.onGridObjectRemoved(object);
 				}
 			}
 		}
