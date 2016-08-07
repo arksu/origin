@@ -14,6 +14,10 @@ public class Event
 {
 	public enum EventType
 	{
+		/**
+		 * тип события по умолчанию. прикрепленный пакет шлется всем у кого он в known списке
+		 */
+		DEFAULT,
 		MOVE,
 		STOP_MOVE,
 		CHAT_GENERAL_MESSAGE,

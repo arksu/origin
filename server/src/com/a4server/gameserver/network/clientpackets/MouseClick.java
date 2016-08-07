@@ -54,7 +54,7 @@ public class MouseClick extends GameClientPacket
 		// восстановим кнопку
 		_button = _button >= 10 ? _button - 10 : _button;
 		Player player = client.getActiveChar();
-		if (player != null)
+		if (player != null && !player.isDeleteing())
 		{
 			if (isDown)
 			{

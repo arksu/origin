@@ -204,6 +204,7 @@ public abstract class Human extends MoveObject
 
 			case CHAT_GENERAL_MESSAGE:
 				return onChatMessage(event);
+
 			case INTERACT:
 				// если мы знаем такой объект - пошлем пакет клиенту
 				return isKnownObject(event.getObject());

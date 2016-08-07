@@ -511,13 +511,14 @@ public class Player extends Human
 							while (count > 0)
 							{
 								int id = IdFactory.getInstance().getNextId();
-								_log.debug("сreate item: " + template.getName() + " count: " + count + " id: " + id);
+								_log.info("сreate item: " + template.getName() + " count: " + count + " id: " + id);
 								InventoryItem item = new InventoryItem(this, typeId, 10);
 								// пробуем закинуть вещь в инвентарь
-								if (getInventory().putItem(item, -1, -1))
+								InventoryItem puttedItem = getInventory().putItem(item);
+								if (puttedItem != null)
 								{
 									sendInteractPacket(new InventoryUpdate(getInventory()));
-									item.store();
+									puttedItem.store();
 								}
 								else
 								{

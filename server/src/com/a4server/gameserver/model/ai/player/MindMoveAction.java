@@ -4,6 +4,7 @@ import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.event.Event;
+import com.a4server.gameserver.model.inventory.AbstractItem;
 import com.a4server.gameserver.model.position.MoveToPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +51,13 @@ public class MindMoveAction extends PlayerMind
 					// этот объект вещь? т.е. вещь валяется на земле
 					if (object.getTemplate().getItem() != null)
 					{
-						// поднимем его
-						object.pickUp(_player);
+						// найдем вещь в базе
+						AbstractItem item = AbstractItem.load(_player, _targetObjectId);
+						if (item != null)
+						{
+							// поднимем его
+							object.pickUp(_player, item);
+						}
 					}
 				}
 				break;

@@ -175,7 +175,8 @@ public class InventoryClick extends GameClientPacket
 			{
 				try
 				{
-					if (to.putItem(item, x, y))
+					InventoryItem putItem = to.putItem(item, x, y);
+					if (putItem != null)
 					{
 						to.getObject().sendInteractPacket(new InventoryUpdate(to));
 						return true;

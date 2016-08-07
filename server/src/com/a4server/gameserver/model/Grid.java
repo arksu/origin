@@ -35,12 +35,10 @@ import java.util.concurrent.locks.ReentrantLock;
  * участок карты 1 грид (100 на 100 тайлов)
  * хранит в себе объекты этого грида
  */
-@SuppressWarnings("unused")
 public class Grid
 {
 	private static final Logger _log = LoggerFactory.getLogger(Grid.class.getName());
 
-	private static final String LOAD_OBJECTS = "SELECT id, x, y, type, hp, data, create_tick, last_tick FROM sg_0_obj WHERE del=0 AND grid = ?";
 	private static final String LOAD_GRID = "SELECT data, last_tick FROM sg_0 WHERE id = ?";
 
 	/**
@@ -411,7 +409,7 @@ public class Grid
 		}
 
 		// загрузить объекты
-		query = LOAD_OBJECTS;
+		query = GameObject.LOAD_OBJECTS;
 		query = query.replaceFirst("sg_0", "sg_" + Integer.toString(_sg));
 
 		int objLoaded = 0;

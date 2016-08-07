@@ -25,7 +25,7 @@ public class Equip
 	 * y - определяет номер слота в котором находится вещь
 	 * x = 200, y = 200 это рука
 	 */
-	public static final String LOAD_EQUIP = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal FROM items WHERE inventoryId=? AND x = 200 AND del=0";
+	public static final String LOAD_EQUIP = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal, del FROM items WHERE inventoryId=? AND x = 200 AND del=0";
 
 	protected final Player _player;
 

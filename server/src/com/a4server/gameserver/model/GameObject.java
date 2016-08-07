@@ -3,15 +3,14 @@ package com.a4server.gameserver.model;
 import com.a4server.Database;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.event.Event;
+import com.a4server.gameserver.model.inventory.AbstractItem;
 import com.a4server.gameserver.model.inventory.Inventory;
+import com.a4server.gameserver.model.inventory.InventoryItem;
 import com.a4server.gameserver.model.objects.InventoryTemplate;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
 import com.a4server.gameserver.model.position.ObjectPosition;
-import com.a4server.gameserver.network.serverpackets.GameServerPacket;
-import com.a4server.gameserver.network.serverpackets.ObjectAdd;
-import com.a4server.gameserver.network.serverpackets.ObjectInteractive;
-import com.a4server.gameserver.network.serverpackets.ObjectRemove;
+import com.a4server.gameserver.network.serverpackets.*;
 import com.a4server.util.Rect;
 import com.a4server.util.network.BaseSendPacket;
 import javolution.util.FastSet;
@@ -32,9 +31,11 @@ public class GameObject
 {
 	private static final Logger _log = LoggerFactory.getLogger(GameObject.class.getName());
 
+	public static final String LOAD_OBJECTS = "SELECT id, x, y, type, hp, data, create_tick, last_tick FROM sg_0_obj WHERE del=0 AND grid = ?";
+
 	public static final String STORE = "REPLACE INTO sg_0_obj (id, grid, x, y, type, create_tick) VALUES (?, ?, ?, ?, ?, ?)";
 
-	public static final String MARK_DELETED = "UPDATE sg_0_obj SET del=1 WHERE id=?";
+	public static final String MARK_DELETED = "UPDATE sg_0_obj SET del=? WHERE id=?";
 
 	/**
 	 * ид объекта, задается лишь единожды
@@ -160,9 +161,14 @@ public class GameObject
 	}
 
 	/**
-	 * пометить вещь в базе как удаленную
+	 * пометить объект в базе как удаленный
 	 */
 	public boolean markDeleted()
+	{
+		return markDeleted(true);
+	}
+
+	public boolean markDeleted(boolean value)
 	{
 		String query = MARK_DELETED;
 		query = query.replaceFirst("sg_0", "sg_" + Integer.toString(getPos().getGrid().getSg()));
@@ -171,7 +177,8 @@ public class GameObject
 		try (Connection con = Database.getInstance().getConnection();
 			 PreparedStatement statement = con.prepareStatement(query))
 		{
-			statement.setInt(1, _objectId);
+			statement.setInt(1, value ? 1 : 0);
+			statement.setInt(2, _objectId);
 			statement.executeUpdate();
 			con.close();
 			return true;
@@ -468,15 +475,29 @@ public class GameObject
 	/**
 	 * объект поднимает игрок
 	 */
-	public void pickUp(Player player)
+	public void pickUp(Player player, AbstractItem item)
 	{
-		// сначала пометим объект в базе как удаленный
-		if (markDeleted())
+		// сначала пометим объект в базе как удаленный, а с вещи наоборот снимем пометку
+		InventoryItem putItem = player.getInventory().putItem(item);
+		if (putItem != null && this.markDeleted(true) && putItem.markDeleted(false))
 		{
+			putItem.store();
+
 			// разошлем всем пакет с удалением объекта из мира
+			Grid grid = player.getGrid();
+			if (grid.tryLock())
+			{
+				try
+				{
+					grid.removeObject(this);
+				}
+				finally
+				{
+					grid.unlock();
+				}
+			}
 
-			// найдем связанную вещь
-
+			player.sendInteractPacket(new InventoryUpdate(player.getInventory()));
 		}
 	}
 }

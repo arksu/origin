@@ -24,7 +24,6 @@ public class ObjectPosition
 	 */
 	public volatile int _x;
 	public volatile int _y;
-//    private volatile int _z;
 
 	/**
 	 * уровень земли
@@ -48,7 +47,6 @@ public class ObjectPosition
 	{
 		_x = x;
 		_y = y;
-//        _z = 0;
 		_level = level;
 		_grid = grid;
 		_activeObject = null;
@@ -61,7 +59,6 @@ public class ObjectPosition
 	{
 		_x = x;
 		_y = y;
-//        _z = 0;
 		_level = level;
 		_grid = null;
 		_activeObject = activeObject;
@@ -75,7 +72,6 @@ public class ObjectPosition
 	{
 		_x = pos.getX();
 		_y = pos.getY();
-//        _z = 0;
 		_level = pos.getLevel();
 		_grid = null;
 		_activeObject = activeObject;

@@ -23,7 +23,7 @@ public class Inventory
 	/**
 	 * грузим список вещей из базы где строго x < 200, начиная с x>=200 храним особые
 	 */
-	public static final String LOAD_INVENTORY = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal FROM items WHERE inventoryId=? AND x < 200 AND del=0";
+	public static final String LOAD_INVENTORY = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal, del FROM items WHERE inventoryId=? AND x < 200 AND del=0";
 
 	/**
 	 * объект родитель, к которому относится инвентарь и все его вложенные
@@ -186,15 +186,20 @@ public class Inventory
 		return _items.remove(item);
 	}
 
+	public InventoryItem putItem(AbstractItem itemPut)
+	{
+		return putItem(itemPut, -1, -1);
+	}
+
 	/**
 	 * положить вещь в инвентарь
 	 * @param x координаты куда положить вещь в инвентаре
 	 * @param y координаты куда положить вещь в инвентаре
 	 */
-	public boolean putItem(AbstractItem itemPut, int x, int y)
+	public InventoryItem putItem(AbstractItem itemPut, int x, int y)
 	{
 		// проверить можем ли мы вообще положить такую вещь в этот инвентарь?
-		if (!_template.isAccept(itemPut)) return false;
+		if (!_template.isAccept(itemPut)) return null;
 
 		// приведем к типу
 		InventoryItem item = itemPut instanceof InventoryItem ? ((InventoryItem) itemPut) : new InventoryItem(itemPut);
@@ -202,20 +207,20 @@ public class Inventory
 		// знаем куда положить?
 		if (x >= 0 && y >= 0)
 		{
-			return tryPut(item, x, y);
+			return tryPut(item, x, y) ? item : null;
 		}
 		else
 		{
 			// мы не знаем куда положить. ищем свободное место
-			for (int ix = 0; ix < _width; ix++)
+			for (int iy = 0; iy < _height; iy++)
 			{
-				for (int iy = 0; iy < _height; iy++)
+				for (int ix = 0; ix < _width; ix++)
 				{
-					if (tryPut(item, ix, iy)) return true;
+					if (tryPut(item, ix, iy)) return item;
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 
 	/**
