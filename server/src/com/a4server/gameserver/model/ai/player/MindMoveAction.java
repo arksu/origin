@@ -1,11 +1,14 @@
 package com.a4server.gameserver.model.ai.player;
 
 import com.a4server.gameserver.model.GameObject;
+import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.model.inventory.AbstractItem;
+import com.a4server.gameserver.model.inventory.InventoryItem;
 import com.a4server.gameserver.model.position.MoveToPoint;
+import com.a4server.gameserver.network.serverpackets.InventoryUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,8 +58,33 @@ public class MindMoveAction extends PlayerMind
 						AbstractItem item = AbstractItem.load(_player, _targetObjectId);
 						if (item != null)
 						{
-							// поднимем его
-							object.pickUp(_player, item);
+							// вещь обязательно должна быть помечена как удаленная
+							if (!item.isDeleted()) throw new RuntimeException("pickup item is not deleted! " + item);
+
+							// положим вещь в инвентарь игрока
+							InventoryItem putItem = _player.getInventory().putItem(item);
+							// сначала пометим объект в базе как удаленный, а с вещи наоборот снимем пометку
+							if (putItem != null && object.markDeleted(true) && putItem.markDeleted(false))
+							{
+								// сохраним в базе
+								putItem.store();
+
+								// разошлем всем пакет с удалением объекта из мира
+								Grid grid = _player.getGrid();
+								if (grid.tryLock())
+								{
+									try
+									{
+										grid.removeObject(object);
+									}
+									finally
+									{
+										grid.unlock();
+									}
+								}
+
+								_player.sendInteractPacket(new InventoryUpdate(_player.getInventory()));
+							}
 						}
 					}
 				}

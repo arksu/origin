@@ -3,14 +3,15 @@ package com.a4server.gameserver.model;
 import com.a4server.Database;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.event.Event;
-import com.a4server.gameserver.model.inventory.AbstractItem;
 import com.a4server.gameserver.model.inventory.Inventory;
-import com.a4server.gameserver.model.inventory.InventoryItem;
 import com.a4server.gameserver.model.objects.InventoryTemplate;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
 import com.a4server.gameserver.model.position.ObjectPosition;
-import com.a4server.gameserver.network.serverpackets.*;
+import com.a4server.gameserver.network.serverpackets.GameServerPacket;
+import com.a4server.gameserver.network.serverpackets.ObjectAdd;
+import com.a4server.gameserver.network.serverpackets.ObjectInteractive;
+import com.a4server.gameserver.network.serverpackets.ObjectRemove;
 import com.a4server.util.Rect;
 import com.a4server.util.network.BaseSendPacket;
 import javolution.util.FastSet;
@@ -470,34 +471,5 @@ public class GameObject
 	public void actionClick(Player player)
 	{
 		// TODO: пкм по объекту для вызова меню взаимодействия с объектом
-	}
-
-	/**
-	 * объект поднимает игрок
-	 */
-	public void pickUp(Player player, AbstractItem item)
-	{
-		// сначала пометим объект в базе как удаленный, а с вещи наоборот снимем пометку
-		InventoryItem putItem = player.getInventory().putItem(item);
-		if (putItem != null && this.markDeleted(true) && putItem.markDeleted(false))
-		{
-			putItem.store();
-
-			// разошлем всем пакет с удалением объекта из мира
-			Grid grid = player.getGrid();
-			if (grid.tryLock())
-			{
-				try
-				{
-					grid.removeObject(this);
-				}
-				finally
-				{
-					grid.unlock();
-				}
-			}
-
-			player.sendInteractPacket(new InventoryUpdate(player.getInventory()));
-		}
 	}
 }

@@ -1,5 +1,5 @@
 # Origin
-Origin is survival MMO game
+Origin is a survival MMO game
 
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/origin/localized.png)](https://crowdin.com/project/origin)
 
