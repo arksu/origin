@@ -19,6 +19,7 @@ package com.a2client;
 
 import com.a2client.util.Utils;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 
 public class Cursor
@@ -40,10 +41,15 @@ public class Cursor
 	{
 		if (Utils.isEmpty(name)) name = "arrow";
 
-		Pixmap pm = new Pixmap(Gdx.files.internal(CURSORS_DIR + name + ".png"));
+		FileHandle file = Gdx.files.internal(CURSORS_DIR + name + ".png");
+		if (!file.file().exists())
+		{
+			setCursor("");
+			return;
+		}
+		Pixmap pm = new Pixmap(file);
 		com.badlogic.gdx.graphics.Cursor cursor = Gdx.graphics.newCursor(pm, 0, 0);
 		Gdx.graphics.setCursor(cursor);
-
 		pm.dispose();
 	}
 

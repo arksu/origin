@@ -63,6 +63,8 @@ public class Player extends Human
 
 	private final Equip _equip;
 
+	private final Cursor _cursor;
+
 	public Player(int objectId, ResultSet rset, PlayerTemplate template)
 	{
 		super(objectId, template);
@@ -93,6 +95,9 @@ public class Player extends Human
 		_equip = new Equip(this);
 
 		_inventory = new Inventory(this, getInventoryWidth(), getInventoryHeight());
+
+		_cursor = new Cursor(this);
+
 		_isLoaded = true;
 	}
 
@@ -572,6 +577,16 @@ public class Player extends Human
 	public int getInventoryHeight()
 	{
 		return 4;
+	}
+
+	public Cursor.CursorName getCursor()
+	{
+		return _cursor.get();
+	}
+
+	public void setCursor(Cursor.CursorName value)
+	{
+		_cursor.set(value);
 	}
 
 	public Hand getHand()

@@ -1,9 +1,11 @@
 package com.a4server.gameserver.network.clientpackets;
 
 import com.a4server.gameserver.model.Player;
-import com.a4server.gameserver.network.serverpackets.CursorSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.a4server.gameserver.model.Cursor.CursorName.TileDown;
+import static com.a4server.gameserver.model.Cursor.CursorName.TileUp;
 
 /**
  * игрок выбрал некое действие
@@ -29,9 +31,17 @@ public class ActionSelect extends GameClientPacket
 		Player player = client.getPlayer();
 		if (player != null)
 		{
-			if ("tile_up".equals(_name))
+			if ("online".equals(_name))
 			{
-				client.sendPacket(new CursorSet("tile_up"));
+
+			}
+			else if ("tile_up".equals(_name))
+			{
+				player.setCursor(TileUp);
+			}
+			else if ("tile_down".equals(_name))
+			{
+				player.setCursor(TileDown);
 			}
 		}
 	}
