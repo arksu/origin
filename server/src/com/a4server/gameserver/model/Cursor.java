@@ -42,7 +42,10 @@ public class Cursor
 
 	public void set(CursorName current)
 	{
-		_current = current;
-		_player.getClient().sendPacket(new CursorSet(_current._name));
+		if (_current != current)
+		{
+			_current = current;
+			_player.getClient().sendPacket(new CursorSet(_current._name));
+		}
 	}
 }

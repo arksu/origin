@@ -584,6 +584,10 @@ public class Player extends Human
 		return _cursor.get();
 	}
 
+	/**
+	 * сменить текущий курсор у игрока. имзенится только если реально отличается от текущего
+	 * пошлет пакет на клиент
+	 */
 	public void setCursor(Cursor.CursorName value)
 	{
 		_cursor.set(value);

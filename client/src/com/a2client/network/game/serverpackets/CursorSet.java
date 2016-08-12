@@ -28,6 +28,7 @@ public class CursorSet extends GameServerPacket
 	@Override
 	public void run()
 	{
+		_log.debug("cursor set: " + _name);
 		Cursor.getInstance().setCursor(_name);
 	}
 }

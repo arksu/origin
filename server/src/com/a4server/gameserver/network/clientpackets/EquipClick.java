@@ -16,17 +16,17 @@ public class EquipClick extends GameClientPacket
 {
 	private static final Logger _log = LoggerFactory.getLogger(EquipClick.class.getName());
 
-	int _objectId;
-	int _btn;
-	int _mod;
+	private int _objectId;
+	private int _btn;
+	private int _mod;
 
 	/**
 	 * отступ в пикселах внутри вещи где произошел клик
 	 */
-	int _offsetX;
-	int _offsetY;
+	private int _offsetX;
+	private int _offsetY;
 
-	int _slotCode;
+	private int _slotCode;
 
 	@Override
 	public void readImpl()
