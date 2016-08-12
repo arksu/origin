@@ -29,7 +29,11 @@ public class Importer
 	public static final String CLEAR_SUPERGRID = "TRUNCATE sg_0";
 	public static final String SET_GRID_DATA = "INSERT INTO sg_0 (id,data,last_tick) VALUES (?,?,?)";
 
+	public static final int HEIGHT_OFFSET = GRID_SIZE * GRID_SIZE;
+
 	public static Map<Integer, Integer> tiles = new HashMap<>();
+
+	public static OpenSimplexNoise noise = new OpenSimplexNoise();
 
 	public static void main(String[] args)
 	{
@@ -54,15 +58,15 @@ public class Importer
 
 		if (!Utils.isEmpty(mapFile) && sg >= 0)
 		{
-			_log.debug("file: " + mapFile + " sg: " + sg);
+			_log.debug("map file: " + mapFile + ", sg: " + sg);
 			_log.debug("start db...");
 			Database.getInstance();
 
 			try
 			{
-				_log.debug("load image");
+				_log.debug("load image...");
 				BufferedImage image = ImageIO.read(new File(mapFile));
-				_log.debug("image " + image.getWidth() + " x " + image.getHeight());
+				_log.debug("image loaded: " + image.getWidth() + " x " + image.getHeight());
 
 				final int sgSize = GRID_SIZE * SUPERGRID_SIZE;
 				if (image.getHeight() == sgSize && image.getWidth() == sgSize)
@@ -89,6 +93,7 @@ public class Importer
 							for (int y = 0; y < GRID_SIZE; y++)
 							{
 								int rgb = image.getRGB(ox + x, oy + y);
+								int h = generateHeight(ox + x, oy + y);
 								int color = rgb & 0x00ffffff;
 								byte tile = (byte) (getTile(color) & 0xff);
 								if (tile == 0)
@@ -99,7 +104,9 @@ public class Importer
 									_log.error("unknown tile [" + red + ", " + green + ", " + blue + "]");
 									System.exit(-1);
 								}
+								byte hb = (byte) (h & 0xff);
 								data[x + y * GRID_SIZE] = tile;
+								data[x + y * GRID_SIZE + HEIGHT_OFFSET] = hb;
 							}
 						}
 
@@ -118,6 +125,18 @@ public class Importer
 				_log.error("sql error: " + e.getMessage());
 			}
 		}
+	}
+
+	public static int generateHeight(int x, int y)
+	{
+		final double div = 20d;
+		float tx = x;
+		float ty = y;
+		float h = ((float) noise.eval(tx / div, ty / div)) * 5.8f + 1;
+		h += ((float) noise.eval(tx / 5, ty / 5)) * 1f;
+		h += ((float) noise.eval(tx / 1, ty / 1)) * 0.3f;
+		int hi = (int) (h * 3f);
+		return hi;
 	}
 
 	public static void clearSupergrid(int sg) throws SQLException

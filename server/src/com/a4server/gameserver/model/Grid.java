@@ -45,22 +45,27 @@ public class Grid
 	 * размер одного тайла в игровых единицах длины
 	 */
 	public static final int TILE_SIZE = 12;
+
 	/**
 	 * количество тайлов в стороне грида
 	 */
 	public static final int GRID_SIZE = 100;
+
 	/**
 	 * количество гридов в супергриде
 	 */
 	public static final int SUPERGRID_SIZE = 50;
+
 	/**
 	 * длина стороны грида в игровых единицах
 	 */
 	public static final int GRID_FULL_SIZE = GRID_SIZE * TILE_SIZE;
+
 	/**
 	 * полная длина супергрида
 	 */
 	public static final int SUPERGRID_FULL_SIZE = GRID_FULL_SIZE * SUPERGRID_SIZE;
+
 	/**
 	 * размер блоба для хранения массива тайлов
 	 */
@@ -452,17 +457,24 @@ public class Grid
 	private void loadTiles()
 	{
 		_log.debug("grid " + toString() + " load tiles...");
-		_tiles = new Tile[GRID_SIZE * GRID_SIZE];
+		// площадь грида
+		final int GRID_SQUARE = GRID_SIZE * GRID_SIZE;
+		_tiles = new Tile[GRID_SQUARE];
 		int n = 0;
+		int minH = 0;
+		int maxH = 0;
 		for (int x = 0; x < GRID_SIZE; x++)
 		{
 			for (int y = 0; y < GRID_SIZE; y++)
 			{
-				_tiles[n] = new Tile(_blob[n]);
+				_tiles[n] = new Tile(_blob[n], _blob[n + GRID_SQUARE]);
+				minH = Math.min(_tiles[n].getHeight(), minH);
+				maxH = Math.max(_tiles[n].getHeight(), maxH);
 				n++;
 			}
 		}
 		_log.debug("grid " + toString() + " tiles loaded");
+		_log.debug("min: " + minH + " max: " + maxH);
 	}
 
 	public CollisionResult trySpawn(GameObject object) throws Exception
@@ -489,7 +501,7 @@ public class Grid
 		int x = object.getPos()._x;
 		int y = object.getPos()._y;
 		if (x < (_x * GRID_FULL_SIZE) || x >= ((_x + 1) * GRID_FULL_SIZE) ||
-				y < (_y * GRID_FULL_SIZE) || y >= ((_y + 1) * GRID_FULL_SIZE))
+			y < (_y * GRID_FULL_SIZE) || y >= ((_y + 1) * GRID_FULL_SIZE))
 		{
 			_log.warn("trySpawn: player coord not in grid! " + object + " " + this.toString());
 			return null;

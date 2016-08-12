@@ -61,7 +61,7 @@ public class Grid
 		_gc = c;
 		_tc = _gc.div(TILE_SIZE);
 		fillTiles(data);
-		fillHeights();
+		fillHeights(data);
 		makeTerrainObjects();
 	}
 
@@ -133,19 +133,23 @@ public class Grid
 		}
 	}
 
-	private void fillHeights()
+	private void fillHeights(byte[] data)
 	{
+		final int GRID_SQUARE = GRID_SIZE * GRID_SIZE;
 		double div = 20d;
+		int n = 0;
 		for (int x = 0; x < GRID_SIZE; x++)
 		{
 			for (int y = 0; y < GRID_SIZE; y++)
 			{
-				double tx = _tc.x + x;
-				double ty = _tc.y + y;
-				float h = ((float) noise.eval(tx / div, ty / div)) * 5.8f + 1;
-				h += ((float) noise.eval(tx / 5, ty / 5)) * 1f;
-				h += ((float) noise.eval(tx / 1, ty / 1)) * 0.3f;
-				_heights[y][x] = h;
+				float h = data[GRID_SQUARE + n];
+//				double tx = _tc.x + x;
+//				double ty = _tc.y + y;
+//				float h = ((float) noise.eval(tx / div, ty / div)) * 5.8f + 1;
+//				h += ((float) noise.eval(tx / 5, ty / 5)) * 1f;
+//				h += ((float) noise.eval(tx / 1, ty / 1)) * 0.3f;
+				_heights[x][y] = h / 3f;
+				n++;
 			}
 		}
 	}
@@ -163,7 +167,7 @@ public class Grid
 	public void setData(byte[] data)
 	{
 		fillTiles(data);
-		fillHeights();
+		fillHeights(data);
 	}
 
 	public GridChunk getChunk(int x, int y)

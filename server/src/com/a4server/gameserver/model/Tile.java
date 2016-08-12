@@ -85,15 +85,30 @@ public class Tile
 		}
 	}
 
+	/**
+	 * тип тайла
+	 */
 	private TileType _type;
 
-	public Tile(int t)
+	/**
+	 * высота тайла
+	 * принимаем 0 за уровень воды, все отрицательные - под водой, 0 - еще берег и не покрыт водой
+	 */
+	private int _height;
+
+	public Tile(int type, byte height)
 	{
-		_type = getType(t);
+		_type = getType(type);
+		_height = height;
 	}
 
 	public TileType getType()
 	{
 		return _type;
+	}
+
+	public int getHeight()
+	{
+		return _height;
 	}
 }
