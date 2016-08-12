@@ -81,7 +81,8 @@ public class Main extends com.badlogic.gdx.Game
 		// прочтем аргументы командной строки
 		Config.parseCMD(args);
 		Config.loadOptions();
-		Lang.LoadTranslate();
+		Lang.setLocale(Config._currentLang);
+		Lang.loadTranslate();
 
 		// загрузим нативные либы
 		LoadNativeLibs();

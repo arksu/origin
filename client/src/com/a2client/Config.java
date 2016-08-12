@@ -220,7 +220,7 @@ public class Config
 		_isFullscreen = p.getBoolean("start_fullscreen", false);
 		//        SoundEnabled = AppSettings.getBool("sound_enabled", true);
 		//        DebugEngine = AppSettings.getBool("debug_engine", false);
-		_currentLang = p.getString("language", "en");
+		_currentLang = p.getString("language", "en_US");
 
 		//        count_objs = AppSettings.getBool("count_objs", true);
 		//        hide_overlapped = AppSettings.getBool("hide_overlapped", true);

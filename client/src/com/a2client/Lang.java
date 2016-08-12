@@ -1,26 +1,10 @@
-/*
- * This file is part of the Origin-World game client.
- * Copyright (C) 2013 Arkadiy Fattakhov <ark@ark.su>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, version 3 of the License.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.a2client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -28,18 +12,20 @@ import java.util.Set;
 public class Lang
 {
 	private static final Logger _log = LoggerFactory.getLogger(Lang.class.getName());
-	static private Set<Properties> _props = new HashSet<>();
-	static private String _locale = "ru_RU";
 
-	static public void setLocale(String locale)
+	static private Set<Properties> _properties = new HashSet<>();
+
+	static private String _locale = "en_US";
+
+	static void setLocale(String locale)
 	{
 		_locale = locale;
 	}
 
-	static public String getTranslate(String key)
+	public static String getTranslate(String key)
 	{
 		String msg = "";
-		for (Properties p : _props)
+		for (Properties p : _properties)
 		{
 			msg = p.getProperty(key);
 			if (msg != null && !msg.isEmpty())
@@ -54,21 +40,32 @@ public class Lang
 		return msg;
 	}
 
-	static public void LoadTranslate()
+	static void loadTranslate()
 	{
 		try
 		{
 			Properties p = new Properties();
-			p.load(Main.class.getResourceAsStream("/translate/ru/login." + _locale + ".properties"));
-			_props.add(p);
+			p.load(getStream("login"));
+			_properties.add(p);
+
 			p = new Properties();
-			p.load(Main.class.getResourceAsStream("/translate/ru/game." + _locale + ".properties"));
-			_props.add(p);
+			p.load(getStream("game"));
+			_properties.add(p);
 		}
 		catch (IOException e)
 		{
-			_log.warn("LoadTranslate error " + e.getMessage());
+			_log.warn("loadTranslate error " + e.getMessage());
 			e.printStackTrace();
 		}
+	}
+
+	private static InputStream getStream(String type)
+	{
+		InputStream is = Main.class.getResourceAsStream("/translate/" + type + "." + _locale + ".properties");
+		if (is != null) return is;
+		String[] split = _locale.split("_");
+		is = Main.class.getResourceAsStream("/translate/" + split[0] + "/" + type + "." + _locale + ".properties");
+
+		return is;
 	}
 }

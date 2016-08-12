@@ -95,7 +95,7 @@ public class Player
 		Game.getInstance()._actions.Clear();
 		for (Action action : _rootAction.list)
 		{
-			Game.getInstance()._actions.Add(action.name);
+			Game.getInstance()._actions.Add(Lang.getTranslate("Game.action." + action.name));
 		}
 	}
 }
