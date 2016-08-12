@@ -80,7 +80,7 @@ public class GameObject
 	protected final FastSet<GameObject> _interactWith = new FastSet<GameObject>().shared();
 
 	/**
-	 * объект в процессе удаления и ни на какие события больше не должен реагировать
+	 * объект в процессе удаления из мира и ни на какие события больше не должен реагировать
 	 */
 	protected boolean _isDeleteing = false;
 

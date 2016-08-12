@@ -44,7 +44,7 @@ public class EquipClick extends GameClientPacket
 	{
 		EquipSlot.Slot slot = EquipSlot.getSlotType(_slotCode);
 		_log.debug("obj=" + _objectId + " slot=" + slot + " offset=" + _offsetX + ", " + _offsetY + " mod=" + _mod);
-		Player player = client.getActiveChar();
+		Player player = client.getPlayer();
 		if (player != null && _btn == 0)
 		{
 			try (GameLock ignored = player.tryLock())

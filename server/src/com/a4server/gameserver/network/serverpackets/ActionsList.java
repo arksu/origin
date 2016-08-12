@@ -9,7 +9,7 @@ import com.google.gson.GsonBuilder;
  */
 public class ActionsList extends GameServerPacket
 {
-	private static Gson _gson = new GsonBuilder().create();
+	private final static Gson _gson = new GsonBuilder().create();
 
 	/**
 	 * список действий в json

@@ -1,5 +1,7 @@
 package com.a4server.gameserver.network.clientpackets;
 
+import com.a4server.gameserver.model.Player;
+import com.a4server.gameserver.network.serverpackets.CursorSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,5 +25,14 @@ public class ActionSelect extends GameClientPacket
 	public void run()
 	{
 		_log.debug("action: " + _name);
+
+		Player player = client.getPlayer();
+		if (player != null)
+		{
+			if ("tile_up".equals(_name))
+			{
+				client.sendPacket(new CursorSet("tile_up"));
+			}
+		}
 	}
 }

@@ -25,7 +25,7 @@ public class HotkeyAction extends GameClientPacket
 		switch (_hotkey)
 		{
 			case 1:
-				sendPacket(new InventoryUpdate(getClient().getActiveChar().getInventory()));
+				sendPacket(new InventoryUpdate(getClient().getPlayer().getInventory()));
 				break;
 		}
 	}

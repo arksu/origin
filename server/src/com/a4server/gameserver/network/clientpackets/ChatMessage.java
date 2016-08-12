@@ -1,5 +1,6 @@
 package com.a4server.gameserver.network.clientpackets;
 
+import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.network.serverpackets.CreatureSay;
 import org.slf4j.Logger;
@@ -26,17 +27,18 @@ public class ChatMessage extends GameClientPacket
 	@Override
 	public void run()
 	{
-		if (client.getActiveChar() != null)
+		Player player = client.getPlayer();
+		if (player != null)
 		{
-			_log.debug("chat " + client.getActiveChar() + ": " + _message);
+			_log.debug("chat " + player + ": " + _message);
 			// смотрим в каком канале отправили сообщение
 			switch (_channelId)
 			{
 				// основной канал - общий чат вокруг объекта
 				case 0:
-					Event event = new Event(client.getActiveChar(), Event.EventType.CHAT_GENERAL_MESSAGE, _message);
-					event.setPacket(new CreatureSay(client.getActiveChar().getObjectId(), _message));
-					client.getActiveChar().getPos().getGrid().broadcastEvent(event);
+					Event event = new Event(player, Event.EventType.CHAT_GENERAL_MESSAGE, _message);
+					event.setPacket(new CreatureSay(player.getObjectId(), _message));
+					player.getPos().getGrid().broadcastEvent(event);
 					break;
 			}
 		}

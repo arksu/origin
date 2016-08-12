@@ -34,7 +34,8 @@ public class GamePacketHandler
 			PlayerHand.class,
 			EquipUpdate.class,
 			ObjectState.class,
-			ActionsList.class
+			ActionsList.class,
+			CursorSet.class
 	};
 
 	static public void InitPackets()

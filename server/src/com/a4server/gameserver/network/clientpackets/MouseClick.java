@@ -53,8 +53,8 @@ public class MouseClick extends GameClientPacket
 		boolean isDown = _button < 10;
 		// восстановим кнопку
 		_button = _button >= 10 ? _button - 10 : _button;
-		Player player = client.getActiveChar();
-		if (player != null && !player.isDeleteing())
+		Player player = client.getPlayer();
+		if (player != null)
 		{
 			if (isDown)
 			{

@@ -17,12 +17,15 @@
 
 package com.a2client;
 
+import com.a2client.util.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 
 public class Cursor
 {
 	static private Cursor _instance;
+
+	private static final String CURSORS_DIR = "assets/cursors/";
 
 	static public Cursor getInstance()
 	{
@@ -35,9 +38,9 @@ public class Cursor
 
 	public void setCursor(String name)
 	{
-		name = "arrow";
-		// TODO : установить курсор
-		Pixmap pm = new Pixmap(Gdx.files.internal("assets/cursor1.png"));
+		if (Utils.isEmpty(name)) name = "arrow";
+
+		Pixmap pm = new Pixmap(Gdx.files.internal(CURSORS_DIR + name + ".png"));
 		com.badlogic.gdx.graphics.Cursor cursor = Gdx.graphics.newCursor(pm, 0, 0);
 		Gdx.graphics.setCursor(cursor);
 

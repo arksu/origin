@@ -167,6 +167,15 @@ public class GameClient extends NetClient
 		return _activeChar;
 	}
 
+	/**
+	 * получить игрок для игровой логики. учитываем все возможные состояния (удаление, бан, кик)
+	 * @return если все ок вернет игрока, иначе null
+	 */
+	public Player getPlayer()
+	{
+		return _activeChar != null ? (!_activeChar.isDeleteing() ? _activeChar : null) : null;
+	}
+
 	public void setActiveChar(Player pActiveChar)
 	{
 		_activeChar = pActiveChar;

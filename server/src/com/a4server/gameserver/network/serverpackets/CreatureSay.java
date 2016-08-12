@@ -10,8 +10,8 @@ public class CreatureSay extends GameServerPacket
 {
 	private static final Logger _log = LoggerFactory.getLogger(CreatureSay.class.getName());
 
-	private int _objectId;
-	private String _message;
+	private final int _objectId;
+	private final String _message;
 
 	public CreatureSay(int objectId, String message)
 	{
