@@ -1,6 +1,7 @@
 package com.a2client.screens;
 
 import com.a2client.*;
+import com.a2client.gamegui.GUI_ActionsList;
 import com.a2client.gui.*;
 import com.a2client.model.GameObject;
 import com.a2client.model.Inventory;
@@ -37,7 +38,7 @@ public class Game extends BaseScreen
 	private GUI_Button _btnExit;
 	public GUI_Memo _chatMemo;
 	private GUI_Edit _chatEdit;
-	public GUI_StringList _actions;
+	public GUI_ActionsList _actions;
 
 	private static Game _instance;
 	private GameState _state = GameState.ENTERING;
@@ -105,12 +106,12 @@ public class Game extends BaseScreen
 		_chatEdit.SetSize(_chatMemo.Width(), 20);
 		_chatEdit.SetPos(5, py + _chatMemo.Height() + 5);
 
-		_actions = new GUI_StringList(GUI.rootNormal())
+		_actions = new GUI_ActionsList(GUI.rootNormal())
 		{
 			@Override
 			public void DoClick()
 			{
-				String item = GetItem(GetSelected());
+				String item = getItemTag(GetSelected());
 				new ActionSelect(item).Send();
 			}
 		};

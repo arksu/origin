@@ -92,10 +92,10 @@ public class Player
 	public void setActions(Action rootAction)
 	{
 		_rootAction = rootAction;
-		Game.getInstance()._actions.Clear();
+		Game.getInstance()._actions.clear();
 		for (Action action : _rootAction.list)
 		{
-			Game.getInstance()._actions.Add(Lang.getTranslate("Game.action." + action.name));
+			Game.getInstance()._actions.add(action.name, Lang.getTranslate("Game.action." + action.name));
 		}
 	}
 }

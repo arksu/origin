@@ -1,5 +1,6 @@
 package com.a4server.gameserver.network.clientpackets;
 
+import com.a4server.gameserver.model.Cursor;
 import com.a4server.gameserver.model.GameLock;
 import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Player;
@@ -9,6 +10,8 @@ import com.a4server.gameserver.model.position.MoveToPoint;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.a4server.gameserver.model.Cursor.CursorName.Arrow;
 
 /**
  * клик по карте (тайлы, объекты)
@@ -25,6 +28,8 @@ public class MouseClick extends GameClientPacket
 	 * какая кнопка была нажата
 	 */
 	private int _button;
+
+	private boolean _isDown;
 
 	/**
 	 * куда тыкнули на картне в абсолютных мировых координатах
@@ -44,57 +49,65 @@ public class MouseClick extends GameClientPacket
 		_x = readD();
 		_y = readD();
 		_objectId = readD();
+
+		// нажатость передаем отриацательным числом
+		_isDown = _button < 10;
+		// восстановим кнопку
+		_button = _button >= 10 ? _button - 10 : _button;
 	}
 
 	@Override
 	public void run()
 	{
-		// нажатость передаем отриацательным числом
-		boolean isDown = _button < 10;
-		// восстановим кнопку
-		_button = _button >= 10 ? _button - 10 : _button;
 		Player player = client.getPlayer();
 		if (player != null)
 		{
-			if (isDown)
+			if (_isDown)
 			{
 				try (GameLock ignored = player.tryLock())
 				{
-					switch (_button)
+					if (player.getCursor() == Arrow)
 					{
-						case BUTTON_MOVE:
-							// в руке что-то держим?
-							if (player.getHand() != null)
-							{
-								// chpok
-								itemDrop(player);
-							}
-							// кликнули в объект?
-							else if (_objectId != 0 && _objectId != player.getObjectId())
-							{
-								// клик по объекту. бежим к нему и делаем действие над ним
-								player.setMind(new MindMoveAction(player, _objectId));
-							}
-							else
-							{
-								_log.debug("MoveToPoint (" + _x + ", " + _y + ")");
-								// для простого передвижения не требуется мозг) не надо ни о чем думать
-								player.setMind(null);
-								// запустим движение. создадим контроллер для этого
-								player.StartMove(new MoveToPoint(_x, _y));
-							}
-							break;
+						switch (_button)
+						{
+							case BUTTON_MOVE:
+								// в руке что-то держим?
+								if (player.getHand() != null)
+								{
+									// chpok
+									itemDrop(player);
+								}
+								// кликнули в объект?
+								else if (_objectId != 0 && _objectId != player.getObjectId())
+								{
+									// клик по объекту. бежим к нему и делаем действие над ним
+									player.setMind(new MindMoveAction(player, _objectId));
+								}
+								else
+								{
+									_log.debug("MoveToPoint (" + _x + ", " + _y + ")");
+									// для простого передвижения не требуется мозг) не надо ни о чем думать
+									player.setMind(null);
+									// запустим движение. создадим контроллер для этого
+									player.StartMove(new MoveToPoint(_x, _y));
+								}
+								break;
 
-						case BUTTON_ACTION:
-							// клик по объекту?
-							GameObject object = player.isKnownObject(_objectId);
-							if (object != null)
-							{
-								// пкм по объекту - посмотрим что сделает объект
-								_log.debug("actionClick on object: " + object);
-								object.actionClick(player);
-							}
-							break;
+							case BUTTON_ACTION:
+								// клик по объекту?
+								GameObject object = player.isKnownObject(_objectId);
+								if (object != null)
+								{
+									// пкм по объекту - посмотрим что сделает объект
+									_log.debug("actionClick on object: " + object);
+									object.actionClick(player);
+								}
+								break;
+						}
+					}
+					else
+					{
+						cursorClick(player);
 					}
 				}
 				catch (Exception e)
@@ -105,8 +118,8 @@ public class MouseClick extends GameClientPacket
 		}
 	}
 
-	private void itemDrop(Player player) {
-
+	private void itemDrop(Player player)
+	{
 		// берем вещь из руки
 		AbstractItem item = player.getHand().getItem();
 		// создаем новый игровой объект на основании шаблона взятой вещи
@@ -133,6 +146,19 @@ public class MouseClick extends GameClientPacket
 		else
 		{
 			_log.debug("cant drop: " + item);
+		}
+	}
+
+	private void cursorClick(Player player)
+	{
+		Cursor.CursorName cursor = player.getCursor();
+		_log.debug("mouse click with cursor: " + cursor);
+		switch (cursor)
+		{
+			case TileUp:
+				break;
+			case TileDown:
+				break;
 		}
 	}
 }
