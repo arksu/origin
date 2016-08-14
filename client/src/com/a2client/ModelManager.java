@@ -151,7 +151,7 @@ public class ModelManager
 		}
 		catch (FileNotFoundException e)
 		{
-			e.printStackTrace();
+			_log.error("objects config not found", e);
 		}
 
 	}

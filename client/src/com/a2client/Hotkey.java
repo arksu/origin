@@ -7,6 +7,7 @@ import com.a2client.util.Keys;
  */
 public class Hotkey
 {
+	public static int CANCEL = Keys.ESCAPE;
 	public static int INVENTORY = Keys.TAB;
 	public static int EQUIP = Keys.E;
 	public static int CHAT_ENTER = Keys.ENTER;

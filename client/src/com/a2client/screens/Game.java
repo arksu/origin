@@ -19,12 +19,15 @@ import com.badlogic.gdx.math.Vector3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.a2client.Terrain.TILE_SIZE;
+
 /**
  * основной игровой экран. тут выводим все объекты и всю информацию по ним
  */
 public class Game extends BaseScreen
 {
 	private static final Logger _log = LoggerFactory.getLogger(Game.class.getName());
+	private Vector3 _terrainMousePoint;
 
 	public enum GameState
 	{
@@ -43,7 +46,10 @@ public class Game extends BaseScreen
 	private static Game _instance;
 	private GameState _state = GameState.ENTERING;
 
-	private Vector3 _worldMousePos;
+	/**
+	 * координаты куда указывает мышь. пересечение с ладншафтом.
+	 */
+	private Vec2i _worldMousePos;
 	private boolean[] _mouseBtns = new boolean[3];
 
 	private Render _render;
@@ -143,8 +149,10 @@ public class Game extends BaseScreen
 		{
 			if (_worldMousePos != null)
 			{
-				_statusText = "mouse coord: " + Math.round(_worldMousePos.x * Terrain.TILE_SIZE) + ", " +
-							  Math.round(_worldMousePos.z * Terrain.TILE_SIZE);
+				_statusText = "mouse coord: " +
+							  _worldMousePos.x + ", " + _worldMousePos.y + " : " +
+							  Terrain.getTileHeight(_worldMousePos.x / TILE_SIZE, _worldMousePos.y / TILE_SIZE)
+				;
 
 			}
 			else
@@ -250,8 +258,17 @@ public class Game extends BaseScreen
 				}
 			}
 
+			// обновить камеру и позицию куда проецируется мышь
 			_gameCamera.update();
-			_worldMousePos = _gameCamera.getMousePicker().getCurrentTerrainPoint();
+			_terrainMousePoint = _gameCamera.getMousePicker().getCurrentTerrainPoint();
+			if (_terrainMousePoint != null)
+			{
+				_worldMousePos = new Vec2i(Math.round(_terrainMousePoint.x * TILE_SIZE), Math.round(_terrainMousePoint.z * TILE_SIZE));
+			}
+			else
+			{
+				_worldMousePos = null;
+			}
 			UpdateMouseButtons();
 		}
 		_lblStatus.caption =
@@ -311,8 +328,8 @@ public class Game extends BaseScreen
 						new MouseClick(
 								_mouseBtns[i],
 								action,
-								Math.round(_worldMousePos.x * Terrain.TILE_SIZE),
-								Math.round(_worldMousePos.z * Terrain.TILE_SIZE),
+								_worldMousePos.x,
+								_worldMousePos.y,
 								(_render.getSelected() != null ? _render.getSelected().getObjectId() : 0)
 						).Send();
 					}
@@ -365,10 +382,5 @@ public class Game extends BaseScreen
 	public GameCamera getCamera()
 	{
 		return _gameCamera;
-	}
-
-	public Vector3 getWorldMousePos()
-	{
-		return _worldMousePos;
 	}
 }

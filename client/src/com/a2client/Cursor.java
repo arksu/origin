@@ -21,12 +21,24 @@ import com.a2client.util.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 public class Cursor
 {
+	private static final Logger _log = LoggerFactory.getLogger(Cursor.class.getName());
+
 	static private Cursor _instance;
 
 	private static final String CURSORS_DIR = "assets/cursors/";
+
+	private CursorData[] _cursors;
 
 	static public Cursor getInstance()
 	{
@@ -35,6 +47,20 @@ public class Cursor
 			_instance = new Cursor();
 		}
 		return _instance;
+	}
+
+	private Cursor()
+	{
+		File file = Gdx.files.internal("assets/cursors/cursors.json").file();
+		try
+		{
+			Gson gson = new Gson();
+			_cursors = gson.fromJson(new FileReader(file), CursorData[].class);
+		}
+		catch (FileNotFoundException e)
+		{
+			_log.error("cursors config not found", e);
+		}
 	}
 
 	public void setCursor(String name)
@@ -47,8 +73,21 @@ public class Cursor
 			setCursor("");
 			return;
 		}
+
+		CursorData fd = null;
+		for (CursorData data : _cursors)
+		{
+			if (data.name.equalsIgnoreCase(name))
+			{
+				fd = data;
+			}
+		}
+
 		Pixmap pm = new Pixmap(file);
-		com.badlogic.gdx.graphics.Cursor cursor = Gdx.graphics.newCursor(pm, 0, 0);
+		com.badlogic.gdx.graphics.Cursor cursor = Gdx.graphics.newCursor(
+				pm,
+				fd != null ? fd.x : 0,
+				fd != null ? fd.y : 0);
 		Gdx.graphics.setCursor(cursor);
 		pm.dispose();
 	}
@@ -56,5 +95,17 @@ public class Cursor
 	public void render()
 	{
 
+	}
+
+	public class CursorData
+	{
+		@SerializedName("x")
+		int x;
+
+		@SerializedName("y")
+		int y;
+
+		@SerializedName("name")
+		String name;
 	}
 }

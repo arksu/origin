@@ -37,7 +37,7 @@ public class Terrain
 	/**
 	 * уровень воды в мире
 	 */
-	public static final float WATER_LEVEL = 0;
+	public static final float WATER_LEVEL = -0.2f;
 
 	public static final float WATER_WAVE_SPEED = 0.03f;
 
@@ -311,7 +311,7 @@ public class Terrain
 	}
 
 	/**
-	 * получить грид по абсолютным координатам тайла
+	 * получить грид по координатам тайла
 	 */
 	public static Grid getGrid(int tx, int ty)
 	{
@@ -328,7 +328,7 @@ public class Terrain
 	}
 
 	/**
-	 * получить высоту указанного тайла. абсолютные координаты тайла
+	 * получить высоту указанного тайла. координаты тайла
 	 */
 	public static float getTileHeight(int tx, int ty)
 	{
@@ -369,8 +369,6 @@ public class Terrain
 				float yCoord = y - oy;
 
 				float height;
-//				ox;
-//				oy;
 				if (xCoord <= (1 - yCoord))
 				{
 					GridChunk.NormalHeight h = chunk.getNormalHeight(ox, oy);
@@ -400,5 +398,4 @@ public class Terrain
 
 		return FAKE_HEIGHT;
 	}
-
 }
