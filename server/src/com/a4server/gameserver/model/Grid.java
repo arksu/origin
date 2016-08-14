@@ -15,12 +15,14 @@ import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
 import com.a4server.gameserver.model.collision.VirtualObject;
 import com.a4server.gameserver.model.event.Event;
+import com.a4server.gameserver.network.serverpackets.MapGrid;
 import com.a4server.util.Rect;
 import com.a4server.util.Rnd;
 import javolution.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,6 +42,8 @@ public class Grid
 	private static final Logger _log = LoggerFactory.getLogger(Grid.class.getName());
 
 	private static final String LOAD_GRID = "SELECT data, last_tick FROM sg_0 WHERE id = ?";
+
+	private static final String UPDATE_DATA = "UPDATE sg_0 SET data=? WHERE id=?";
 
 	/**
 	 * размер одного тайла в игровых единицах длины
@@ -66,10 +70,12 @@ public class Grid
 	 */
 	public static final int SUPERGRID_FULL_SIZE = GRID_FULL_SIZE * SUPERGRID_SIZE;
 
+	public static final int GRID_SQUARE = GRID_SIZE * GRID_SIZE;
+
 	/**
 	 * размер блоба для хранения массива тайлов
 	 */
-	public static final int GRID_BLOB_SIZE = GRID_SIZE * GRID_SIZE * 2;
+	public static final int GRID_BLOB_SIZE = GRID_SQUARE * 2;
 
 	public static final int MAX_WAIT_LOCK = 1000;
 
@@ -221,6 +227,11 @@ public class Grid
 	public Tile getTile(int index)
 	{
 		return _tiles[index];
+	}
+
+	public Tile getTile(int x, int y)
+	{
+		return _tiles[World.getTileIndex(x, y)];
 	}
 
 	/**
@@ -458,23 +469,55 @@ public class Grid
 	{
 		_log.debug("grid " + toString() + " load tiles...");
 		// площадь грида
-		final int GRID_SQUARE = GRID_SIZE * GRID_SIZE;
 		_tiles = new Tile[GRID_SQUARE];
-		int n = 0;
-		int minH = 0;
-		int maxH = 0;
-		for (int x = 0; x < GRID_SIZE; x++)
+//		int minH = 0;
+//		int maxH = 0;
+		for (int n = 0; n < GRID_SQUARE; n++)
 		{
-			for (int y = 0; y < GRID_SIZE; y++)
-			{
-				_tiles[n] = new Tile(_blob[n], _blob[n + GRID_SQUARE]);
-				minH = Math.min(_tiles[n].getHeight(), minH);
-				maxH = Math.max(_tiles[n].getHeight(), maxH);
-				n++;
-			}
+			_tiles[n] = new Tile(_blob, n);
+//			minH = Math.min(_tiles[n].getHeight(), minH);
+//			maxH = Math.max(_tiles[n].getHeight(), maxH);
 		}
 		_log.debug("grid " + toString() + " tiles loaded");
-		_log.debug("min: " + minH + " max: " + maxH);
+//		_log.debug("min: " + minH + " max: " + maxH);
+	}
+
+	public void updateTiles()
+	{
+		String query = UPDATE_DATA;
+		query = query.replaceFirst("sg_0", "sg_" + Integer.toString(_sg));
+
+		for (int n = 0; n < GRID_SQUARE; n++)
+		{
+			_tiles[n].fillBlob(_blob, n);
+		}
+
+		try
+		{
+			try (Connection con = Database.getInstance().getConnection();
+				 PreparedStatement ps = con.prepareStatement(query))
+			{
+				ps.setBlob(1, new ByteArrayInputStream(_blob));
+				ps.setInt(2, _grid);
+				ps.executeUpdate();
+				con.close();
+			}
+		}
+		catch (SQLException e)
+		{
+			_log.warn("failed update tiles data " + toString());
+			throw new RuntimeException("Cant load grid " + toString());
+		}
+	}
+
+	public void setTile(Tile tile, int index, boolean update)
+	{
+		_tiles[index] = tile;
+		if (update)
+		{
+			updateTiles();
+			broadcastEvent(new Event(null, Event.EventType.DEFAULT, new MapGrid(this, -1, -1)));
+		}
 	}
 
 	public CollisionResult trySpawn(GameObject object) throws Exception

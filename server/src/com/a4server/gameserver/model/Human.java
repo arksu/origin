@@ -202,6 +202,9 @@ public abstract class Human extends MoveObject
 				}
 				break;
 
+			case DEFAULT:
+				return event.getObject() == null || isKnownObject(event.getObject());
+
 			case CHAT_GENERAL_MESSAGE:
 				return onChatMessage(event);
 

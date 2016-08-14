@@ -1,9 +1,6 @@
 package com.a4server.gameserver.network.clientpackets;
 
-import com.a4server.gameserver.model.Cursor;
-import com.a4server.gameserver.model.GameLock;
-import com.a4server.gameserver.model.GameObject;
-import com.a4server.gameserver.model.Player;
+import com.a4server.gameserver.model.*;
 import com.a4server.gameserver.model.ai.player.MindMoveAction;
 import com.a4server.gameserver.model.inventory.AbstractItem;
 import com.a4server.gameserver.model.position.MoveToPoint;
@@ -21,7 +18,7 @@ public class MouseClick extends GameClientPacket
 {
 	private static final Logger _log = LoggerFactory.getLogger(MouseClick.class.getName());
 
-	private static final int BUTTON_MOVE = 0;
+	private static final int BUTTON_PRIMARY = 0;
 	private static final int BUTTON_ACTION = 1;
 
 	/**
@@ -70,7 +67,7 @@ public class MouseClick extends GameClientPacket
 					{
 						switch (_button)
 						{
-							case BUTTON_MOVE:
+							case BUTTON_PRIMARY:
 								// в руке что-то держим?
 								if (player.getHand() != null)
 								{
@@ -107,7 +104,7 @@ public class MouseClick extends GameClientPacket
 					}
 					else
 					{
-						cursorClick(player);
+						cursorClick(player, _x, _y);
 					}
 				}
 				catch (Exception e)
@@ -149,15 +146,33 @@ public class MouseClick extends GameClientPacket
 		}
 	}
 
-	private void cursorClick(Player player)
+	private void cursorClick(Player player, int x, int y)
 	{
 		Cursor.CursorName cursor = player.getCursor();
 		_log.debug("mouse click with cursor: " + cursor);
+		Grid grid;
+		int n;
+		Tile tile;
 		switch (cursor)
 		{
 			case TileUp:
+				grid = World.getInstance().getGridInWorldCoord(x, y, player.getPos()._level);
+				n = World.getTileIndex(x, y);
+				tile = grid.getTile(n);
+
+				tile.setHeight(tile.getHeight() + 1);
+
+				grid.setTile(tile, n, true);
 				break;
+
 			case TileDown:
+				grid = World.getInstance().getGridInWorldCoord(x, y, player.getPos()._level);
+				n = World.getTileIndex(x, y);
+				tile = grid.getTile(n);
+
+				tile.setHeight(tile.getHeight() - 1);
+
+				grid.setTile(tile, n, true);
 				break;
 		}
 	}

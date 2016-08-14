@@ -3,6 +3,8 @@ package com.a4server.gameserver.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.a4server.gameserver.model.Grid.GRID_SQUARE;
+
 /**
  * Created by arksu on 04.01.2015.
  */
@@ -96,10 +98,16 @@ public class Tile
 	 */
 	private int _height;
 
-	public Tile(int type, byte height)
+	public Tile(byte[] blob, int n)
 	{
-		_type = getType(type);
-		_height = height;
+		_type = getType(blob[n]);
+		_height = blob[GRID_SQUARE + n];
+	}
+
+	public void fillBlob(byte[] blob, int n)
+	{
+		blob[n] = ((byte) (_type.getCode() & 0xff));
+		blob[GRID_SQUARE + n] = ((byte) (_height & 0xff));
 	}
 
 	public TileType getType()
@@ -107,8 +115,18 @@ public class Tile
 		return _type;
 	}
 
+	public void setType(TileType type)
+	{
+		_type = type;
+	}
+
 	public int getHeight()
 	{
 		return _height;
+	}
+
+	public void setHeight(int height)
+	{
+		_height = height;
 	}
 }

@@ -29,7 +29,10 @@ public class MapGrid extends GameServerPacket
 	public void run()
 	{
 		// удалим лишные гриды
-		Terrain.removeOutsideGrids(_px, _py);
+		if (_px != -1 && _py != -1)
+		{
+			Terrain.removeOutsideGrids(_px, _py);
+		}
 
 		Grid fg = null;
 		// ищем грид в списке

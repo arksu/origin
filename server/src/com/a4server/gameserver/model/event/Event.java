@@ -52,6 +52,13 @@ public class Event
 		_type = type;
 	}
 
+	public Event(GameObject object, EventType type, GameServerPacket pkt)
+	{
+		_object = object;
+		_type = type;
+		_packet = pkt;
+	}
+
 	public Event(GameObject object, EventType type, Object extraInfo)
 	{
 		_object = object;

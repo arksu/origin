@@ -102,8 +102,7 @@ public abstract class MoveObject extends GameObject
 		getPos().setXY(x, y);
 		storeInDb();
 		// расскажем всем что мы остановились
-		Event event = new Event(this, Event.EventType.STOP_MOVE);
-		event.setPacket(new ObjectPos(getObjectId(), getPos()._x, getPos()._y));
+		Event event = new Event(this, Event.EventType.STOP_MOVE, new ObjectPos(getObjectId(), getPos()._x, getPos()._y));
 		getPos().getGrid().broadcastEvent(event);
 	}
 
