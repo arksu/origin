@@ -114,6 +114,12 @@ task "rgi"(type: JavaExec, dependsOn: [classes]) {
     args = ['-initdb']
 }
 
+task "rg_map"(type: JavaExec, dependsOn: [classes]) {
+    main = 'com.a4server.map.Importer'
+    classpath = sourceSets.main.runtimeClasspath
+    args = ['-m', 'etc/map.bmp', '-sg', '0']
+}
+
 task "rl"(type: JavaExec, dependsOn: [classes]) {
     main = 'com.a4server.loginserver.LoginServer'
     classpath = sourceSets.main.runtimeClasspath

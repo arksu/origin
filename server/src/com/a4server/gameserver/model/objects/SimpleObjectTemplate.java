@@ -23,6 +23,7 @@ public class SimpleObjectTemplate implements ObjectTemplate
 	private ItemTemplate _item = null;
 
 	private static final Logger _log = LoggerFactory.getLogger(SimpleObjectTemplate.class.getName());
+	private static final Gson _gson = new Gson();
 
 	public SimpleObjectTemplate(String name)
 	{
@@ -70,13 +71,11 @@ public class SimpleObjectTemplate implements ObjectTemplate
 		}
 		else if ("collision".equalsIgnoreCase(paramName))
 		{
-			Gson gson = new Gson();
-			_collision = gson.fromJson(in, CollisionTemplate.class);
+			_collision = _gson.fromJson(in, CollisionTemplate.class);
 		}
 		else if ("inventory".equalsIgnoreCase(paramName))
 		{
-			Gson gson = new Gson();
-			_inventory = gson.fromJson(in, InventoryTemplate.class);
+			_inventory = _gson.fromJson(in, InventoryTemplate.class);
 		}
 		else if ("item".equalsIgnoreCase(paramName))
 		{

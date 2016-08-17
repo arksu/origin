@@ -29,6 +29,6 @@ after it you will have 2 jar files for login and game server in dir: build/dist/
 
 7. ...PROFIT
 
-```gradle rl``` - starts login server
+```gradle rl``` - start login server
 
 ```gradle rg``` - start game server
