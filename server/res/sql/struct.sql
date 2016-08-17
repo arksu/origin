@@ -69,7 +69,7 @@ CREATE TABLE `characters` (
   `lastAccess` int(10) unsigned NOT NULL,
   `createDate` int(10) unsigned NOT NULL,
   `onlineTime` int(10) unsigned NOT NULL,
-  `del` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `del` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'deleted?',
   PRIMARY KEY (`charId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -144,7 +144,7 @@ CREATE TABLE `sg_0_obj` (
   `data` text COMMENT 'json',
   `create_tick` int(10) unsigned NOT NULL COMMENT 'время создания, тик',
   `last_tick` int(10) unsigned DEFAULT '0' COMMENT 'время последнего апдейта, тик',
-  `del` tinyint(3) unsigned DEFAULT '0',
+  `del` tinyint(3) unsigned DEFAULT '0' COMMENT 'deleted?',
   PRIMARY KEY (`id`),
   KEY `grid` (`grid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -163,4 +163,4 @@ CREATE TABLE `sg_0_obj` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-07-24 22:53:44
+-- Dump completed on 2016-08-17 21:20:26

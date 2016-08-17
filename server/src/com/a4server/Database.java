@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
@@ -19,8 +18,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 /**
  * работа с базой данных
@@ -220,11 +217,6 @@ public class Database
 		{
 			executeQueryQuite(q);
 		}
-
-		if (needSg)
-		{
-			fillSG0();
-		}
 	}
 
 	/**
@@ -257,55 +249,5 @@ public class Database
 			result.add(query);
 		}
 		return result;
-	}
-
-	/**
-	 * сугубо дебаг фича нужная для быстрой отладки
-	 */
-	private void fillSG0()
-	{
-		try
-		{
-			ZipInputStream zis =
-					new ZipInputStream(new FileInputStream("./sg0.zip"));
-			//get the zipped file list entry
-			ZipEntry ze = zis.getNextEntry();
-			while (ze != null)
-			{
-				_log.debug("load zip entry " + ze.getName());
-				BufferedReader reader = new BufferedReader(new InputStreamReader(zis));
-
-				String query = "";
-				String line = reader.readLine();
-				while (line != null)
-				{
-					if (line.matches("^\\s*--.*"))
-					{
-						continue;
-					}
-					query += " " + line;
-					if (query.matches(".*;\\s*-?-?.*"))
-					{
-						_log.debug("query: " + query.substring(0, query.length() > 70 ? 70 : query.length()));
-						executeQueryQuite(query);
-						query = "";
-					}
-					line = reader.readLine();
-				}
-				if (!query.trim().isEmpty())
-				{
-					executeQueryQuite(query);
-				}
-
-				ze = zis.getNextEntry();
-			}
-			zis.closeEntry();
-			zis.close();
-
-		}
-		catch (IOException e)
-		{
-			_log.warn("cant load sg0.zip");
-		}
 	}
 }
