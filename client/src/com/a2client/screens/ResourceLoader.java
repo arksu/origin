@@ -8,11 +8,15 @@ import com.a2client.gui.Skin;
 import com.a2client.gui.Skin_MyGUI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileReader;
@@ -22,7 +26,9 @@ import static com.a2client.Config.RESOURCE_DIR;
 
 public class ResourceLoader implements Screen
 {
-	static private BitmapFont _system_font;
+	private static final Logger _log = LoggerFactory.getLogger(ResourceLoader.class.getName());
+
+	public static BitmapFont systemFont;
 	private State _state;
 	private int _state_timer;
 
@@ -35,8 +41,7 @@ public class ResourceLoader implements Screen
 
 	public ResourceLoader()
 	{
-		LoadSystemFont();
-		LoadAll();
+		loadAll();
 		_state = State.FADEIN;
 		_state_timer = 0;
 	}
@@ -105,14 +110,14 @@ public class ResourceLoader implements Screen
 		float progress = Main.getAssetManager().getProgress();
 		int percent = (int) (progress * 100f);
 		//        if (_state == State.LOADING || _state == State.FADEIN) {
-		GUIGDX.Text("system", (Gdx.graphics.getWidth() - 100) / 2, (Gdx.graphics.getHeight() / 2) - 50,
+		GUIGDX.Text(null, (Gdx.graphics.getWidth() - 100) / 2, (Gdx.graphics.getHeight() / 2) - 50,
 					Lang.getTranslate("LoadingScreen.loading") + " " + percent,
 					new Color(t * 2.5f, t * 2.5f, t * 2.5f, 1f));
 		//        }
 		GUIGDX.getSpriteBatch().end();
 	}
 
-	protected void LoadAll()
+	protected void loadAll()
 	{
 		try
 		{
@@ -152,25 +157,47 @@ public class ResourceLoader implements Screen
 	/**
 	 * загрузить системный фонт. ждем пока не загрузится
 	 */
-	protected void LoadSystemFont()
+	public static void loadSystemFont()
 	{
 		// если фонт уже загружен - выйдем
-		if (_system_font != null)
+		if (systemFont != null)
 		{
 			return;
 		}
-		// только если есть файл и можем его прочесть
-		File f = new File(RESOURCE_DIR + "system.fnt");
-		if (f.exists() && f.canRead())
+
+		systemFont = null;
+
+		try
 		{
-			Main.getAssetManager().load(RESOURCE_DIR + "system.fnt", BitmapFont.class);
-			// ждем окончания загрузки
-			while (true)
+			// системный шрифт генерим
+			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(new FileHandle(new File(RESOURCE_DIR + "dejavu.ttf")));
+			FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+			parameter.size = 12;
+			parameter.color = Color.WHITE;
+			parameter.hinting = FreeTypeFontGenerator.Hinting.Full;
+			parameter.renderCount = 4;
+			systemFont = generator.generateFont(parameter);
+		}
+		catch (Exception e)
+		{
+			_log.warn("failed generate system font with freetype lib");
+		}
+
+		if (systemFont == null)
+		{
+			// только если есть файл и можем его прочесть
+			File f = new File(RESOURCE_DIR + "system.fnt");
+			if (f.exists() && f.canRead())
 			{
-				if (Main.getAssetManager().update(100))
+				Main.getAssetManager().load(RESOURCE_DIR + "system.fnt", BitmapFont.class);
+				// ждем окончания загрузки
+				while (true)
 				{
-					_system_font = Main.getAssetManager().get(RESOURCE_DIR + "system.fnt");
-					break;
+					if (Main.getAssetManager().update(100))
+					{
+						systemFont = Main.getAssetManager().get(RESOURCE_DIR + "system.fnt");
+						break;
+					}
 				}
 			}
 		}

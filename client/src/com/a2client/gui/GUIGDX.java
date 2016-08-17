@@ -1,7 +1,9 @@
 package com.a2client.gui;
 
 import com.a2client.Main;
+import com.a2client.screens.ResourceLoader;
 import com.a2client.util.Rect;
+import com.a2client.util.Utils;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -40,13 +42,13 @@ public class GUIGDX
 
 	static public BitmapFont getFont(String name)
 	{
-		if (name.isEmpty())
+		if (Utils.isEmpty(name))
 		{
-			return Main.getAssetManager().get(RESOURCE_DIR + "system.fnt");
+			return ResourceLoader.systemFont;
 		}
 		else if (name.equals("default"))
 		{
-			return Main.getAssetManager().get(RESOURCE_DIR + "system.fnt");
+			return ResourceLoader.systemFont;
 		}
 		else
 		{

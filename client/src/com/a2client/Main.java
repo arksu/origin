@@ -64,6 +64,7 @@ public class Main extends com.badlogic.gdx.Game
 		_log.debug("gl vendor: " + Gdx.gl.glGetString(GL20.GL_VENDOR));
 		_log.debug("gl ver: " + Gdx.gl.glGetString(GL20.GL_VERSION));
 
+		ResourceLoader.loadSystemFont();
 		GUIGDX.init();
 
 		// экран загрузки ресурсов
