@@ -47,6 +47,14 @@ public class ActionSelect extends GameClientPacket
 				{
 					cursor = TileDown;
 				}
+				else if ("tile_sand".equals(_name))
+				{
+					cursor = TileSand;
+				}
+				else if ("tile_grass".equals(_name))
+				{
+					cursor = TileGrass;
+				}
 				player.setCursor(cursor);
 			}
 			catch (Exception e)

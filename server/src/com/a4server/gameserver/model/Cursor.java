@@ -15,8 +15,11 @@ public class Cursor
 	public enum CursorName
 	{
 		Arrow("arrow"),
+
 		TileUp("tile_up"),
-		TileDown("tile_down");
+		TileDown("tile_down"),
+		TileSand("tile_sand"),
+		TileGrass("tile_grass");
 
 		private final String _name;
 

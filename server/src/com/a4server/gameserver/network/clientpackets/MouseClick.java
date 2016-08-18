@@ -174,6 +174,22 @@ public class MouseClick extends GameClientPacket
 
 				grid.setTile(tile, n, true);
 				break;
+
+			case TileSand:
+				grid = World.getInstance().getGridInWorldCoord(x, y, player.getPos()._level);
+				n = World.getTileIndex(x, y);
+				tile = grid.getTile(n);
+				tile.setType(Tile.TileType.TILE_SAND);
+				grid.setTile(tile, n, true);
+				break;
+
+			case TileGrass:
+				grid = World.getInstance().getGridInWorldCoord(x, y, player.getPos()._level);
+				n = World.getTileIndex(x, y);
+				tile = grid.getTile(n);
+				tile.setType(Tile.TileType.TILE_GRASS);
+				grid.setTile(tile, n, true);
+				break;
 		}
 	}
 }

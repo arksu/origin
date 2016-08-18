@@ -620,13 +620,17 @@ public class Player extends Human
 	public Action[] getActions()
 	{
 		// todo: actions
-		Action[] list = new Action[4];
+		Action[] list = new Action[8];
 		int idx = 0;
 		list[idx++] = new Action("craft");
 		list[idx++] = new Action("online");
 
 		list[idx++] = new Action("tile_up");
 		list[idx++] = new Action("tile_down");
+		list[idx++] = new Action("tile_sand");
+		list[idx++] = new Action("tile_grass");
+		list[idx++] = new Action("tile_leaf");
+		list[idx++] = new Action("tile_fir");
 		return list;
 	}
 }
