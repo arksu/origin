@@ -205,23 +205,23 @@ public class Game extends BaseScreen
 				}
 				else if (Input.KeyHit(Hotkey.TERRAIN_WIREFRAME))
 				{
-					Config._renderTerrainWireframe = !Config._renderTerrainWireframe;
+					Config.getInstance()._renderTerrainWireframe = !Config.getInstance()._renderTerrainWireframe;
 				}
 				else if (Input.KeyHit(Hotkey.RENDER_OUTLINE))
 				{
-					Config._renderOutline = !Config._renderOutline;
+					Config.getInstance()._renderOutline = !Config.getInstance()._renderOutline;
 				}
 				else if (Input.KeyHit(Keys.P))
 				{
-					Config._renderImproveWater = !Config._renderImproveWater;
+					Config.getInstance()._renderImproveWater = !Config.getInstance()._renderImproveWater;
 				}
 				else if (Input.KeyHit(Keys.K))
 				{
-					Config._renderShadows = !Config._renderShadows;
+					Config.getInstance()._renderShadows = !Config.getInstance()._renderShadows;
 				}
 				else if (Input.KeyHit(Keys.J))
 				{
-					Config._renderPostProcessing = !Config._renderPostProcessing;
+					Config.getInstance()._renderPostProcessing = !Config.getInstance()._renderPostProcessing;
 				}
 
 				else if (Input.KeyDown(Keys.W))

@@ -80,9 +80,10 @@ public class Main extends com.badlogic.gdx.Game
 		_log.info("Build: " + buildVersion());
 
 		// прочтем аргументы командной строки
-		Config.parseCMD(args);
-		Config.loadOptions();
-		Lang.setLocale(Config._currentLang);
+		Config config = Config.getInstance();
+		config.parseArgs(args);
+		config.loadOptions();
+		Lang.setLocale(config._currentLang);
 		Lang.loadTranslate();
 
 		// загрузим нативные либы
@@ -100,12 +101,12 @@ public class Main extends com.badlogic.gdx.Game
 		cfg.useGL30 = true;
 //		ShaderProgram.prependVertexCode="#version 140\n#define varying out\n#define attribute in\n";
 //		ShaderProgram.prependFragmentCode = "#version 140\n#define varying in\n#define texture2D texture\n#define gl_FragColor fragColor\nout vec4 fragColor;\n";
-		cfg.vSyncEnabled = Config._vSync;
-		cfg.foregroundFPS = Config._framePerSecond;
-		cfg.backgroundFPS = Config._reduceInBackground ? 5 : Config._framePerSecond;
-		cfg.samples = Config._MSAASamples;
-		cfg.width = Config.getScreenWidth();
-		cfg.height = Config.getScreenHeight();
+		cfg.vSyncEnabled = config._vSync;
+		cfg.foregroundFPS = config._framePerSecond;
+		cfg.backgroundFPS = config._reduceInBackground ? 5 : config._framePerSecond;
+		cfg.samples = config._MSAASamples;
+		cfg.width = config.getScreenWidth();
+		cfg.height = config.getScreenHeight();
 
 		new LwjglApplication(new Main(), cfg);
 	}
@@ -117,7 +118,7 @@ public class Main extends com.badlogic.gdx.Game
 
 	public static String buildVersion()
 	{
-		return "v" + (Config.CLIENT_VERSION / 100) + "." + (Config.CLIENT_VERSION % 100);
+		return "v" + (Config.getInstance().CLIENT_VERSION / 100) + "." + (Config.getInstance().CLIENT_VERSION % 100);
 	}
 
 	@Override
@@ -182,7 +183,7 @@ public class Main extends com.badlogic.gdx.Game
 
 	static public void ReleaseAll()
 	{
-		Config.saveOptions();
+		Config.getInstance().getInstance().saveOptions();
 		Dialog.HideAll();
 		ChatHistory.clear();
 

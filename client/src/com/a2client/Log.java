@@ -15,7 +15,7 @@ public class Log
 
 	public static void debug(String msg)
 	{
-		if (!Config._debug) return;
+		if (!Config.getInstance()._debug) return;
 		_log.debug(msg);
 	}
 

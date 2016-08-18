@@ -187,8 +187,8 @@ public class Utils
 	public static void MakeScreenshot()
 	{
 		// Set screen size
-		int width = Config.getScreenWidth();
-		int height = Config.getScreenHeight();
+		int width = Config.getInstance().getScreenWidth();
+		int height = Config.getInstance().getScreenHeight();
 		// allocate space for RBG pixels
 		ByteBuffer framebytes = allocBytes(width * height * 3);
 		int[] pixels = new int[width * height];

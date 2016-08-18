@@ -107,7 +107,7 @@ public class Grid
 							{
 								chunk.getWaterMesh().render(
 										shaderProgram,
-										Config._renderTerrainWireframe ? GL20.GL_LINE_STRIP : GL20.GL_TRIANGLES);
+										Config.getInstance()._renderTerrainWireframe ? GL20.GL_LINE_STRIP : GL20.GL_TRIANGLES);
 								chunksRendered++;
 							}
 						}
@@ -115,7 +115,7 @@ public class Grid
 						{
 							chunk.getMesh().render(
 									shaderProgram,
-									Config._renderTerrainWireframe ? GL20.GL_LINE_STRIP : GL20.GL_TRIANGLES);
+									Config.getInstance()._renderTerrainWireframe ? GL20.GL_LINE_STRIP : GL20.GL_TRIANGLES);
 							chunksRendered++;
 						}
 					}

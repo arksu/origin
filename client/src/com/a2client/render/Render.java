@@ -159,7 +159,7 @@ public class Render
 */
 
 		// SHADOWS =====================================================================================================
-		if (Config._renderShadows)
+		if (Config.getInstance()._renderShadows)
 		{
 			if (_shadow == null)
 			{
@@ -194,7 +194,7 @@ public class Render
 		_terrain._shader = _terrain._shaderTerrain;
 
 		// WATER 1 REFLECTION ==========================================================================================
-		if (Config._renderImproveWater)
+		if (Config.getInstance()._renderImproveWater)
 		{
 			if (_waterFrameBuffers == null)
 			{
@@ -252,7 +252,7 @@ public class Render
 		}
 
 		// POST PROCESSING
-		if (Config._renderPostProcessing)
+		if (Config.getInstance()._renderPostProcessing)
 		{
 			if (_postProcessingFBO == null)
 			{
@@ -291,7 +291,7 @@ public class Render
 		// END MAIN RENDER =============================================================================================
 
 		// POST PROCESSING
-		if (Config._renderPostProcessing)
+		if (Config.getInstance()._renderPostProcessing)
 		{
 			_postProcessingFBO.end();
 			_postProcessing.doPostProcessing(_postProcessingFBO);
@@ -313,7 +313,7 @@ public class Render
 			program.end();
 		}*/
 
-		if (Config._renderOutline)
+		if (Config.getInstance()._renderOutline)
 		{
 			// выводим содержимое буфера9
 
@@ -382,7 +382,7 @@ public class Render
 
 	protected void renderWater(Camera camera)
 	{
-		if (Config._renderImproveWater)
+		if (Config.getInstance()._renderImproveWater)
 		{
 			_terrain.renderImproveWater(camera, _environment);
 		}

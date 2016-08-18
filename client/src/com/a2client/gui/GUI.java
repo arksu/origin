@@ -66,7 +66,7 @@ public class GUI
     public GUI()
     {
         root = new GUI_Control(this);
-        root.SetSize(Config.getScreenWidth(), Config.getScreenHeight());
+        root.SetSize(Config.getInstance().getScreenWidth(), Config.getInstance().getScreenHeight());
         custom = new GUI_Control(root);
         normal = new GUI_Control(root);
         modal = new GUI_Control(root);
@@ -155,11 +155,11 @@ public class GUI
         int y = mouse_pos.y;
 
         // ищем куда вывести хинт
-        if (x + HINT_OFFSET + w > Config.getScreenWidth())
-            x = Config.getScreenWidth() - w;
+        if (x + HINT_OFFSET + w > Config.getInstance().getScreenWidth())
+            x = Config.getInstance().getScreenWidth() - w;
         else
             x += HINT_OFFSET;
-        if (y + HINT_OFFSET + h > Config.getScreenHeight())
+        if (y + HINT_OFFSET + h > Config.getInstance().getScreenHeight())
             y -= (h + 5);
         else
             y += HINT_OFFSET;
@@ -465,11 +465,12 @@ public class GUI
 
     public void ResolutionChanged()
     {
-        root.SetSize(Config.getScreenWidth(), Config.getScreenHeight());
-        normal.SetSize(Config.getScreenWidth(), Config.getScreenHeight());
-        popup.SetSize(Config.getScreenWidth(), Config.getScreenHeight());
-        modal.SetSize(Config.getScreenWidth(), Config.getScreenHeight());
-        custom.SetSize(Config.getScreenWidth(), Config.getScreenHeight());
+        Config config = Config.getInstance();
+        root.SetSize(config.getScreenWidth(), config.getScreenHeight());
+        normal.SetSize(config.getScreenWidth(), config.getScreenHeight());
+        popup.SetSize(config.getScreenWidth(), config.getScreenHeight());
+        modal.SetSize(config.getScreenWidth(), config.getScreenHeight());
+        custom.SetSize(config.getScreenWidth(), config.getScreenHeight());
     }
 
 }

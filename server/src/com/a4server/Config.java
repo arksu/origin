@@ -54,7 +54,7 @@ public class Config
 	public static int WORLD_SG_HEIGHT;
 	public static int WORLD_LEVELS;
 
-	public static void loadGameServer()
+	public static void loadGameServerConfig()
 	{
 		DATABASE_CONNECTION_CLOSE_TIME = 1000;
 
@@ -67,7 +67,7 @@ public class Config
 		WORLD_LEVELS = 5;
 	}
 
-	public static void loadLoginServer()
+	public static void loadLoginServerConfig()
 	{
 		LOGIN_BIND_ADDRESS = "*";
 		PORT_LOGIN = 2040;
@@ -87,11 +87,11 @@ public class Config
 
 		if (Server.serverMode == Server.MODE_GAMESERVER)
 		{
-			loadGameServer();
+			loadGameServerConfig();
 		}
 		if (Server.serverMode == Server.MODE_LOGINSERVER)
 		{
-			loadLoginServer();
+			loadLoginServerConfig();
 		}
 	}
 }

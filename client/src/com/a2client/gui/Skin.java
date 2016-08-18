@@ -17,11 +17,11 @@
 
 package com.a2client.gui;
 
-import com.a2client.Config;
 import com.a2client.Main;
 import com.a2client.util.Align;
 import com.a2client.util.Rect;
 import com.a2client.util.Vec2i;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -163,14 +163,14 @@ public class Skin
 				GUIGDX.getSpriteBatch().setColor(color);
 				GUIGDX.getSpriteBatch()
 						// переворачиваем по y
-						.draw(_tex, (float) x, (float) (Config.getScreenHeight() - y), (float) w, (float) (-h), tx, ty,
-								tw, th, false, true);
+						.draw(_tex, (float) x, (float) (Gdx.graphics.getHeight() - y), (float) w, (float) (-h), tx, ty,
+							  tw, th, false, true);
 			}
 			else
 			{
 				GUIGDX.getSpriteBatch().setColor(color);
 				GUIGDX.getSpriteBatch()
-						.draw(_reg, (float) x, (float) (Config.getScreenHeight() - y - h), (float) w, (float) (h));
+						.draw(_reg, (float) x, (float) (Gdx.graphics.getHeight() - y - h), (float) w, (float) (h));
 
 			}
 		}

@@ -197,7 +197,7 @@ public class Terrain
 
 		shader.setUniformf("u_clipPlane", Render.clipNormal.x, Render.clipNormal.y, Render.clipNormal.z, Render.clipHeight);
 
-		if (toShadowMapSpace != null && Config._renderShadows)
+		if (toShadowMapSpace != null && Config.getInstance()._renderShadows)
 		{
 			shader.setUniformMatrix("u_toShadowMapSpace", toShadowMapSpace);
 			shader.setUniformi("u_shadowMap", 6);

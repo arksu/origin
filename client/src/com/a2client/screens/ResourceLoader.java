@@ -177,6 +177,7 @@ public class ResourceLoader implements Screen
 			parameter.hinting = FreeTypeFontGenerator.Hinting.Full;
 			parameter.renderCount = 4;
 			systemFont = generator.generateFont(parameter);
+			return;
 		}
 		catch (Exception e)
 		{
@@ -200,6 +201,10 @@ public class ResourceLoader implements Screen
 					}
 				}
 			}
+		}
+		else
+		{
+			throw new RuntimeException("error on generate system font");
 		}
 	}
 

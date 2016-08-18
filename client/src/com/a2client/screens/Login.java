@@ -60,7 +60,7 @@ public class Login extends BaseScreen
 		edit_login.SetSize(150, 25);
 		edit_login.SetPos(lbl_login.pos.add(0, 15));
 		edit_login.CenterX();
-		edit_login.text = Config._account;
+		edit_login.text = Config.getInstance()._account;
 
 		lbl_password = new GUI_Label(GUI.rootNormal());
 		lbl_password.caption = Lang.getTranslate("LoginScreen.password");
@@ -74,7 +74,7 @@ public class Login extends BaseScreen
 		edit_password.CenterX();
 		edit_password.secret_symbol = "*";
 		edit_password.allow_copy = false;
-		edit_password.text = Config._password;
+		edit_password.text = Config.getInstance()._password;
 
 		btn_login = new GUI_Button(GUI.rootNormal())
 		{
@@ -117,7 +117,7 @@ public class Login extends BaseScreen
 			edit_password.SelectAll();
 		}
 
-		if (Config._quickLoginMode)
+		if (Config.getInstance()._quickLoginMode)
 		{
 			doLogin();
 		}
@@ -138,8 +138,8 @@ public class Login extends BaseScreen
 
 		_account = edit_login.text;
 		_password = edit_password.text;
-		Config._account = _account;
-		Config._password = _password;
+		Config.getInstance()._account = _account;
+		Config.getInstance()._password = _password;
 		_status = "login";
 
 		btn_login.enabled = false;
@@ -150,7 +150,7 @@ public class Login extends BaseScreen
 		{
 			Net.getConnection().Close();
 		}
-		Net.NewConnection(Config._loginServer, Config._loginServerPort, NettyConnection.ConnectionType.LOGIN_SERVER);
+		Net.NewConnection(Config.getInstance()._loginServer, Config.getInstance()._loginServerPort, NettyConnection.ConnectionType.LOGIN_SERVER);
 
 	}
 
@@ -168,7 +168,7 @@ public class Login extends BaseScreen
 	{
 		_status = _login_error;
 		_login_error = null;
-		Config._quickLoginMode = false;
+		Config.getInstance()._quickLoginMode = false;
 		Main.ReleaseAll();
 	}
 

@@ -16,13 +16,13 @@ public class Init extends LoginServerPacket
 		Crypt.SCRYPT_N = readD();
 		Crypt.SCRYPT_P = readD();
 		Crypt.SCRYPT_R = readD();
-		Config.saveOptions();
+		Config.getInstance().saveOptions();
 	}
 
 	@Override
 	public void run()
 	{
-		if (Config.PROTO_VERSION == server_proto_version)
+		if (Config.PROTOCOL_VERSION == server_proto_version)
 		{
 			getConnect().sendPacket(
 					new Login(com.a2client.screens.Login._account, com.a2client.screens.Login._password));

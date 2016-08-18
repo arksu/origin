@@ -51,11 +51,11 @@ public class BaseScreen implements Screen
 	@Override
 	public void resize(int width, int height)
 	{
-		Config.WindowWidth = width;
-		Config.WindowHeight = height;
+		Config.getInstance()._windowWidth = width;
+		Config.getInstance()._windowHeight = height;
 
 		OrthographicCamera camera = new OrthographicCamera();
-		camera.setToOrtho(false, Config.getScreenWidth(), Config.getScreenHeight());
+		camera.setToOrtho(false, Config.getInstance().getScreenWidth(), Config.getInstance().getScreenHeight());
 		GUIGDX.getSpriteBatch().setProjectionMatrix(camera.combined);
 
 		GUI.getInstance().ResolutionChanged();

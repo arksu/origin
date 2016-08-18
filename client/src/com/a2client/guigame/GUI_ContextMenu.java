@@ -17,11 +17,11 @@
 
 package com.a2client.guigame;
 
-import com.a2client.Config;
 import com.a2client.gui.GUI;
 import com.a2client.gui.GUIGDX;
 import com.a2client.gui.GUI_Control;
 import com.a2client.gui.GUI_StringList;
+import com.badlogic.gdx.Gdx;
 
 import static com.a2client.util.Utils.max;
 
@@ -74,15 +74,15 @@ public class GUI_ContextMenu extends GUI_StringList
 		int y = gui.mouse_pos.y;
 
 		// ищем куда вывести хинт
-		if (x + OFFSET + w > Config.getScreenWidth())
+		if (x + OFFSET + w > Gdx.graphics.getWidth())
 		{
-			x = Config.getScreenWidth() - w;
+			x = Gdx.graphics.getWidth() - w;
 		}
 		else
 		{
 			x += OFFSET;
 		}
-		if (y + OFFSET + h > Config.getScreenHeight())
+		if (y + OFFSET + h > Gdx.graphics.getHeight())
 		{
 			y -= (h + 5);
 		}

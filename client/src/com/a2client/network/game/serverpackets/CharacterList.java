@@ -48,13 +48,13 @@ public class CharacterList extends GameServerPacket
 	public void run()
 	{
 		CharacterSelect.Show();
-		if (Config._quickLoginMode)
+		if (Config.getInstance()._quickLoginMode)
 		{
 			if (Main.getInstance().getScreen() instanceof CharacterSelect)
 			{
 				((CharacterSelect) Main.getInstance().getScreen()).charSelected(_last_char);
 			}
 		}
-		Config._quickLoginMode = false;
+		Config.getInstance()._quickLoginMode = false;
 	}
 }

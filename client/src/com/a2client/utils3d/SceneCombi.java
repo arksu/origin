@@ -18,8 +18,8 @@
 package com.a2client.utils3d;
 
 
-import com.a2client.Config;
 import com.a2client.corex.*;
+import com.badlogic.gdx.Gdx;
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.GL11;
 
@@ -100,7 +100,7 @@ public class SceneCombi
     {
         if (forced || !is_2d_switched)
         {
-            Render.set2D(Config.getScreenWidth(), Config.getScreenHeight());
+            Render.set2D(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             GL11.glLoadIdentity();
             if (need_rescale)
                 GL11.glScalef(scale, scale, 1f);

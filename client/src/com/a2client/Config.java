@@ -22,6 +22,9 @@ import com.a2client.util.scrypt.SCryptUtil;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.lwjgl.LwjglPreferences;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,154 +32,160 @@ public class Config
 {
 	private static final Logger _log = LoggerFactory.getLogger(Config.class.getName());
 
-	static
-	{
-		_isFullscreen = false;
-		WindowWidth = 640;
-		WindowHeight = 480;
-	}
-
 	static public final String RESOURCE_DIR = "assets/";
 
-	// имя конфиг файла в каталоге с клиентом
+	/**
+	 * имя конфиг файла в каталоге с клиентом
+	 */
 	public static final String CONFIG_FILE = "origin-world.prefs";
-	// адрес логин сервера
-	public static String _loginServer = "origin-world.com";
 
-	public static String _gameServer;
-
-	// порт логин сервера
-	public static int _loginServerPort = 2040;
-	// раземры экрана
-	public static int ScreenWidth;
-	public static int ScreenHeight;
-	// раземры окна
-	public static int WindowWidth;
-	public static int WindowHeight;
-	// желаемое значение фпс
-	public static int _framePerSecond;
-	// включать ли вертикальную синхронизацию
-	public static boolean _vSync;
-	// Снижение фоновой активности окна
-	public static boolean _reduceInBackground;
-	// запускать в полноэкранном режиме
-	public static boolean _isFullscreen;
-	// размеры экрана для сохранения в конфиг файле (применятся при следующем запуске)
-	public static int _screenWidthToSave;
-	public static int _screenHeightToSave;
-	// юзер агент для http запросов
-	public static String user_agent = "origin_client";
-	// текущий язык
-	public static String _currentLang;
-	// логин и пароль под которым заходит юзер на сервер
-	public static String _account;
-	public static transient String _password;
-	// сохранять ли пароль
-	public static boolean _savePassword;
-
-	public static final int PROTO_VERSION = 3;
+	public static final int PROTOCOL_VERSION = 3;
 	public static final int CLIENT_VERSION = 200;
 
 	public static final int ICON_SIZE = 32;
 
 	/**
+	 * юзер агент для http запросов
+	 */
+	public static String USER_AGENT = "origin_client";
+
+	/**
+	 * адрес логин сервера
+	 */
+	@Option(name = "-s", usage = "login server address")
+	public String _loginServer = "origin-world.com";
+
+	@Option(name = "-g", usage = "game server address")
+	public String _gameServer;
+
+	/**
+	 * порт логин сервера
+	 */
+	@Option(name = "-p", usage = "login server port")
+	public int _loginServerPort = 2040;
+
+	@Option(name = "-d", usage = "debug mode")
+	public boolean _debug = false;
+
+	/**
+	 * показывать детальную расшифровку пакетов
+	 */
+	@Option(name = "-pkt", usage = "debug packets info")
+	public boolean _debugPackets = false;
+
+	/**
+	 * режим быстрого входа с последним вырбарным чаром
+	 */
+	@Option(name = "-q", usage = "quick login")
+	public boolean _quickLoginMode = false;
+
+	/**
+	 * раземры экрана в полноэкранном режиме
+	 */
+	public int _screenWidth;
+	public int _screenHeight;
+
+	/**
+	 * раземры окна в оконном режиме
+	 */
+	public int _windowWidth;
+	public int _windowHeight;
+
+	/**
+	 * желаемое значение фпс
+	 */
+	public int _framePerSecond;
+
+	/**
+	 * включать ли вертикальную синхронизацию
+	 */
+	public boolean _vSync;
+
+	/**
+	 * Снижение фоновой активности окна
+	 */
+	public boolean _reduceInBackground;
+
+	/**
+	 * запускать в полноэкранном режиме
+	 */
+	public boolean _isFullscreen;
+	/**
+	 * размеры экрана для сохранения в конфиг файле (применятся при следующем запуске)
+	 */
+	public int _screenWidthToSave;
+	public int _screenHeightToSave;
+
+	/**
+	 * текущий язык
+	 */
+	public String _currentLang;
+
+	/**
+	 * логин и пароль под которым заходит юзер на сервер
+	 */
+	public String _account;
+	public transient String _password;
+
+	/**
+	 * сохранять ли пароль
+	 */
+	public boolean _savePassword;
+
+	/**
 	 * cell shading?
 	 */
-	public static boolean _renderOutline = false;
+	public boolean _renderOutline = false;
 
 	/**
 	 * сетку ладншафта выводить?
 	 */
-	public static boolean _renderTerrainWireframe = false;
+	public boolean _renderTerrainWireframe = false;
 
 	/**
 	 * рисовать красивую "продвинутую" воду
 	 */
-	public static boolean _renderImproveWater = true;
+	public boolean _renderImproveWater = true;
 
 	/**
 	 * отрисовывать тени?
 	 */
-	public static boolean _renderShadows = true;
+	public boolean _renderShadows = true;
 
 	/**
 	 * пост процессинг финального кадра
 	 */
-	public static boolean _renderPostProcessing = true;
+	public boolean _renderPostProcessing = false;
 
 	/**
 	 * MSAA сглаживание. сколько samples использовать?
 	 * 0, 4, 8 и тд
 	 */
-	public static int _MSAASamples = 0;
+	public int _MSAASamples = 0;
 
+	private static Config _instance;
 
-	// режим дебага
-	public static boolean _debug = false;
-	// показывать детальную расшифровку пакетов
-	public static boolean _debugPackets = false;
-	// режим быстрого входа с последним вырбарным чаром
-	public static boolean _quickLoginMode = false;
-
-	public static void parseCMD(String[] args)
+	public static Config getInstance()
 	{
-		try
+		if (_instance == null)
 		{
-			int i = 0;
-			while (i < args.length)
-			{
-				String arg = args[i];
-				if (arg.equals("-d"))
-				{ // Debug mode. Format: "-d"
-					_debug = true;
-				}
-				if (arg.equals("-r"))
-				{ // Debug pkt mode. Format: "-r"
-					_debugPackets = true;
-				}
-				if (arg.equals("-s"))
-				{ // Change server. Format: "-s servername"
-					i++;
-					_loginServer = args[i];
-				}
-				if (arg.equals("-g"))
-				{ // Change server. Format: "-s servername"
-					i++;
-					_gameServer = args[i];
-				}
-				if (arg.equals("-p"))
-				{ // Change server. Format: "-p port"
-					i++;
-					_loginServerPort = Integer.parseInt(args[i]);
-				}
-				if (arg.equals("-q"))
-				{ // Quick login mode. Format: "-q"
-					_quickLoginMode = true;
-				}
-				//                if (arg.equals("-dev_tile"))
-				//                { // Format: -dev_tile <filename tiles.xml>
-				//                    dev_tile_mode = true;
-				//                    i++;
-				//                    TilesDebug.dev_tiles_xml = args[i];
-				//                }
-				i++;
-			}
+			_instance = new Config();
 		}
-		catch (Exception e)
-		{
-			_log.warn("parse_cmd Error: " + e.getMessage());
-		}
+		return _instance;
 	}
 
-	public static void PrintHelpCommads()
+	public void parseArgs(String[] args)
 	{
-		_log.info("Use commands:");
-		_log.info("    Debug mode. Format: -d");
-		_log.info("    Debug pkt mode. Format: -r");
-		_log.info("    Change login server. Format: -s <servername>");
-		_log.info("    Change login server port. Format: -p <port>");
-		_log.info("    Quick login mode. Format: -q");
-//        _log.info("    Developer mode: tiles debug. Format: -dev_tile <filename tiles.xml>");
+		CmdLineParser parser = new CmdLineParser(this);
+		try
+		{
+			parser.parseArgument(args);
+		}
+		catch (CmdLineException e)
+		{
+			_log.error(e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	public static void apply()
@@ -188,14 +197,14 @@ public class Config
 		//        SoundStore.get().setMusicVolume(val / 100);
 	}
 
-	public static int getScreenWidth()
+	public int getScreenWidth()
 	{
-		return _isFullscreen ? ScreenWidth : WindowWidth;
+		return _isFullscreen ? _screenWidth : _windowWidth;
 	}
 
-	public static int getScreenHeight()
+	public int getScreenHeight()
 	{
-		return _isFullscreen ? ScreenHeight : WindowHeight;
+		return _isFullscreen ? _screenHeight : _windowHeight;
 	}
 
 	static protected Preferences getPrefs()
@@ -203,20 +212,20 @@ public class Config
 		return new LwjglPreferences(CONFIG_FILE, ".prefs/");
 	}
 
-	public static void loadOptions()
+	public void loadOptions()
 	{
 		Preferences p = getPrefs();
-		WindowWidth = p.getInteger("window_width", 1024);
-		WindowHeight = p.getInteger("window_height", 650);
-		ScreenWidth = p.getInteger("screen_width", 1024);
-		ScreenHeight = p.getInteger("screen_height", 768);
+		_windowWidth = p.getInteger("window_width", 1024);
+		_windowHeight = p.getInteger("window_height", 650);
+		_screenWidth = p.getInteger("screen_width", 1024);
+		_screenHeight = p.getInteger("screen_height", 768);
 		_framePerSecond = p.getInteger("frame_rate", 60);
 		_vSync = p.getBoolean("use_vsync", true);
 		_reduceInBackground = p.getBoolean("reduce_bg", true);
 		//        SoundVolume = AppSettings.getInt("sound_vol", 50);
 		//        MusicVolume = AppSettings.getInt("music_vol", 50);
-		//        _screenWidthToSave = ScreenWidth;
-		//        _screenHeightToSave = ScreenHeight;
+		//        _screenWidthToSave = _screenWidth;
+		//        _screenHeightToSave = _screenHeight;
 		_isFullscreen = p.getBoolean("start_fullscreen", false);
 		//        SoundEnabled = AppSettings.getBool("sound_enabled", true);
 		//        DebugEngine = AppSettings.getBool("debug_engine", false);
@@ -235,11 +244,11 @@ public class Config
 		_savePassword = p.getBoolean("save_pass", true);
 	}
 
-	public static void saveOptions()
+	public void saveOptions()
 	{
 		Preferences p = Gdx.app.getPreferences(CONFIG_FILE);
-		p.putInteger("window_width", WindowWidth);
-		p.putInteger("window_height", WindowHeight);
+		p.putInteger("window_width", _windowWidth);
+		p.putInteger("window_height", _windowHeight);
 		p.putInteger("screen_width", _screenWidthToSave);
 		p.putInteger("screen_height", _screenHeightToSave);
 		p.putInteger("frame_rate", _framePerSecond);

@@ -38,9 +38,9 @@ public class GameServerAuth extends LoginServerPacket
 		try
 		{
 			InetAddress adr = InetAddress.getByAddress(_host);
-			if (!Utils.isEmpty(Config._gameServer))
+			if (!Utils.isEmpty(Config.getInstance()._gameServer))
 			{
-				Login._gameserver_host = Config._gameServer;
+				Login._gameserver_host = Config.getInstance()._gameServer;
 			}
 			else
 			{
