@@ -4,6 +4,8 @@ import com.a2client.*;
 import com.a2client.gamegui.GUI_ActionsList;
 import com.a2client.gui.*;
 import com.a2client.model.GameObject;
+import com.a2client.model.Grid;
+import com.a2client.model.GridChunk;
 import com.a2client.model.Inventory;
 import com.a2client.network.game.clientpackets.ActionSelect;
 import com.a2client.network.game.clientpackets.ChatMessage;
@@ -20,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.a2client.Terrain.TILE_SIZE;
+import static com.a2client.Terrain.getGrid;
+import static com.a2client.model.Grid.CHUNK_SIZE;
 
 /**
  * основной игровой экран. тут выводим все объекты и всю информацию по ним
@@ -27,7 +31,6 @@ import static com.a2client.Terrain.TILE_SIZE;
 public class Game extends BaseScreen
 {
 	private static final Logger _log = LoggerFactory.getLogger(Game.class.getName());
-	private Vector3 _terrainMousePoint;
 
 	public enum GameState
 	{
@@ -147,18 +150,6 @@ public class Game extends BaseScreen
 		_actions.SetPos(Gdx.graphics.getWidth() - _actions.size.x, Gdx.graphics.getHeight() - _actions.size.y);
 		if (_state == GameState.IN_GAME)
 		{
-			if (_worldMousePos != null)
-			{
-				_statusText = "mouse coord: " +
-							  _worldMousePos.x + ", " + _worldMousePos.y + " : " +
-							  Terrain.getTileHeight(_worldMousePos.x / TILE_SIZE, _worldMousePos.y / TILE_SIZE)
-				;
-
-			}
-			else
-			{
-				_statusText = "mouse coord: NULL";
-			}
 			if (GUI.getInstance().focused_control == _chatEdit)
 			{
 				String h = "";
@@ -260,14 +251,37 @@ public class Game extends BaseScreen
 
 			// обновить камеру и позицию куда проецируется мышь
 			_gameCamera.update();
-			_terrainMousePoint = _gameCamera.getMousePicker().getCurrentTerrainPoint();
-			if (_terrainMousePoint != null)
+			Vector3 terrainPoint = _gameCamera.getMousePicker().getCurrentTerrainPoint();
+			if (terrainPoint != null)
 			{
-				_worldMousePos = new Vec2i(Math.round(_terrainMousePoint.x * TILE_SIZE), Math.round(_terrainMousePoint.z * TILE_SIZE));
+				_worldMousePos = new Vec2i(Math.round(terrainPoint.x * TILE_SIZE), Math.round(terrainPoint.z * TILE_SIZE));
+				_statusText = "mouse coord: " +
+							  _worldMousePos.x + ", " + _worldMousePos.y + " : " +
+							  Terrain.getTileHeight(_worldMousePos.x / TILE_SIZE, _worldMousePos.y / TILE_SIZE);
+
+				int wx = _worldMousePos.x;
+				int wy = _worldMousePos.y;
+				int tx = _worldMousePos.x / TILE_SIZE;
+				int ty = _worldMousePos.y / TILE_SIZE;
+				Grid grid = getGrid(tx, ty);
+				if (grid != null)
+				{
+					tx -= grid.getTc().x;
+					ty -= grid.getTc().y;
+					tx /= CHUNK_SIZE;
+					ty /= CHUNK_SIZE;
+					GridChunk chunk = grid.getChunk(tx, ty);
+					if (chunk != null)
+					{
+//						_log.debug(chunk.toString());
+					}
+				}
+
 			}
 			else
 			{
 				_worldMousePos = null;
+				_statusText = "mouse coord: NULL";
 			}
 			UpdateMouseButtons();
 		}
@@ -361,7 +375,7 @@ public class Game extends BaseScreen
 	{
 		if (_instance == null)
 		{
-			_log.error("Game instance is NULL!");
+			throw new RuntimeException("Game instance is NULL");
 		}
 		return _instance;
 	}

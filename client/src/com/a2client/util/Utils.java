@@ -17,21 +17,14 @@
 
 package com.a2client.util;
 
-import com.a2client.Config;
-import com.a2client.Log;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import org.lwjgl.opengl.GL11;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 public class Utils
 {
+/*
 	public static byte signed_byte(int b)
 	{
 		if (b > 127)
@@ -120,6 +113,7 @@ public class Utils
 				(unsigned_byte(buf[off + 1]) * 65536) +
 				(unsigned_byte(buf[off + 0]) * 16777216));
 	}
+*/
 
 	//    public static String strd(byte[] buf, int[] off) {
 	//    	int i;
@@ -160,80 +154,6 @@ public class Utils
 		m = e < m ? e : m;
 		return d < m ? d : m;
 	}
-
-	// ******** Screenshot Section Begin ********//
-	private static ByteBuffer allocBytes(int howmany)
-	{
-		return ByteBuffer.allocateDirect(howmany * 1).order(ByteOrder.nativeOrder());
-	}
-
-	private static int[] flipPixels(int[] imgPixels, int imgw, int imgh)
-	{
-		int[] flippedPixels = null;
-		if (imgPixels != null)
-		{
-			flippedPixels = new int[imgw * imgh];
-			for (int y = 0; y < imgh; y++)
-			{
-				for (int x = 0; x < imgw; x++)
-				{
-					flippedPixels[((imgh - y - 1) * imgw) + x] = imgPixels[(y * imgw) + x];
-				}
-			}
-		}
-		return flippedPixels;
-	}
-
-	public static void MakeScreenshot()
-	{
-		// Set screen size
-		int width = Config.getInstance().getScreenWidth();
-		int height = Config.getInstance().getScreenHeight();
-		// allocate space for RBG pixels
-		ByteBuffer framebytes = allocBytes(width * height * 3);
-		int[] pixels = new int[width * height];
-		int bindex;
-		// grab a copy of the current frame contents as RGB (has to be UNSIGNED_BYTE or colors come out too dark)
-		GL11.glReadPixels(0, 0, width, height, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, framebytes);
-		// copy RGB data from ByteBuffer to integer array
-		for (int i = 0; i < pixels.length; i++)
-		{
-			bindex = i * 3;
-			pixels[i] = 0xFF000000                                          // A
-						| ((framebytes.get(bindex) & 0x000000FF) << 16)     // R
-						| ((framebytes.get(bindex + 1) & 0x000000FF) << 8)    // G
-						| ((framebytes.get(bindex + 2) & 0x000000FF) << 0);   // B
-		}
-		// free up this memory
-		framebytes = null;
-		// flip the pixels vertically (opengl has 0,0 at lower left, java is upper left)
-		pixels = flipPixels(pixels, width, height);
-		try
-		{
-			// Create a BufferedImage with the RGB pixels then save as PNG
-			BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-			image.setRGB(0, 0, width, height, pixels, 0, width);
-
-			// Generate filename
-			Calendar cal = Calendar.getInstance();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-			String filename = sdf.format(cal.getTime());
-			// Check directory
-			File dir = new File("screenshots");
-			if (!dir.exists())
-			{
-				dir.mkdir();
-			}
-
-			javax.imageio.ImageIO.write(image, "png", new File("screenshots" + File.separator + filename + ".png"));
-		}
-		catch (Exception e)
-		{
-			Log.info("GLApp.screenShot(): exception " + e);
-		}
-	}
-
-	// ******** Screenshot Section End ********//
 
 	public static String data2string(long data)
 	{
@@ -288,8 +208,7 @@ public class Utils
 		return "Working memory: " + percent1 + "% (" + used + "/" + total + ")" + "  VM Max: " + percent2 + "% (" + used + "/" + max + ")";
 	}
 
-	// подготовить и удалить лишние лог файлы
-	public static void RotateLog()
+	public static void rotateLog()
 	{
 		int maxLogs = 2;
 

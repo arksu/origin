@@ -1,7 +1,6 @@
 package com.a2client.model;
 
 import com.a2client.Config;
-import com.a2client.util.OpenSimplexNoise;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
@@ -18,8 +17,6 @@ import static com.a2client.Terrain.TILE_SIZE;
 public class Grid
 {
 	private static final Logger _log = LoggerFactory.getLogger(Grid.class.getName());
-
-	private static OpenSimplexNoise noise = new OpenSimplexNoise();
 
 	/**
 	 * размер чанка в тайлах
@@ -67,7 +64,6 @@ public class Grid
 
 	public void fillChunks(boolean force)
 	{
-		int bordered = 0;
 		for (int x = 0; x < CHUNKS_COUNT; x++)
 		{
 			for (int y = 0; y < CHUNKS_COUNT; y++)
@@ -77,7 +73,6 @@ public class Grid
 				{
 					_chunks[x][y].clear();
 					_chunks[x][y] = null;
-					bordered++;
 				}
 
 				if (_chunks[x][y] == null)
@@ -86,8 +81,6 @@ public class Grid
 				}
 			}
 		}
-//		_log.debug("bordered : " + bordered);
-//		_log.debug("fillChunks end");
 	}
 
 	public int render(ShaderProgram shaderProgram, Camera camera, boolean isWater)
@@ -99,10 +92,13 @@ public class Grid
 			{
 				for (GridChunk chunk : list)
 				{
+					// если чанк попадает в область видимости камеры
 					if (camera.frustum.boundsInFrustum(chunk.getBoundingBox()))
 					{
+						// в этом проходе рендерим воду?
 						if (isWater)
 						{
+							// только если в чанке реально есть вода
 							if (chunk.isHaveWater())
 							{
 								chunk.getWaterMesh().render(
@@ -136,18 +132,14 @@ public class Grid
 	private void fillHeights(byte[] data)
 	{
 		final int GRID_SQUARE = GRID_SIZE * GRID_SIZE;
-		double div = 20d;
 		int n = 0;
 		for (int x = 0; x < GRID_SIZE; x++)
 		{
 			for (int y = 0; y < GRID_SIZE; y++)
 			{
 				float h = data[GRID_SQUARE + n];
-//				double tx = _tc.x + x;
-//				double ty = _tc.y + y;
-//				float h = ((float) noise.eval(tx / div, ty / div)) * 5.8f + 1;
-//				h += ((float) noise.eval(tx / 5, ty / 5)) * 1f;
-//				h += ((float) noise.eval(tx / 1, ty / 1)) * 0.3f;
+				// делим чтобы сгладить передачу в виде int
+				// число брать из кода сервера
 				_heights[x][y] = h / 3f;
 				n++;
 			}

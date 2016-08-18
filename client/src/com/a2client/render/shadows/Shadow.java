@@ -59,8 +59,7 @@ public class Shadow
 	{
 		_shadowBox.update();
 
-		Vector3f sunPosition = new Vector3f(Render.sunPosition);
-		Vector3f lightDirection = new Vector3f(-sunPosition.x, -sunPosition.y, -sunPosition.z);
+		Vector3f lightDirection = new Vector3f(-Render.sunPosition.x, -Render.sunPosition.y, -Render.sunPosition.z);
 		prepare(lightDirection);
 	}
 

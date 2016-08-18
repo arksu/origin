@@ -76,7 +76,7 @@ public class Main extends com.badlogic.gdx.Game
 		// пока отключим аудио
 		LwjglApplicationConfiguration.disableAudio = true;
 
-		Utils.RotateLog();
+		Utils.rotateLog();
 		_log.info("Build: " + buildVersion());
 
 		// прочтем аргументы командной строки
@@ -99,8 +99,6 @@ public class Main extends com.badlogic.gdx.Game
 		cfg.addIcon("assets/a1_32.png", Files.FileType.Internal);
 		cfg.addIcon("assets/a1_128.png", Files.FileType.Internal);
 		cfg.useGL30 = true;
-//		ShaderProgram.prependVertexCode="#version 140\n#define varying out\n#define attribute in\n";
-//		ShaderProgram.prependFragmentCode = "#version 140\n#define varying in\n#define texture2D texture\n#define gl_FragColor fragColor\nout vec4 fragColor;\n";
 		cfg.vSyncEnabled = config._vSync;
 		cfg.foregroundFPS = config._framePerSecond;
 		cfg.backgroundFPS = config._reduceInBackground ? 5 : config._framePerSecond;

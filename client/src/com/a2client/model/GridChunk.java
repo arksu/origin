@@ -71,11 +71,16 @@ public class GridChunk
 	private float _maxHeight;
 	private float _minHeight;
 
+	private static int VERTEX_SIZE = 8;
+	private static int VERTEX_COUNT = 8;
+
 	public GridChunk(Grid grid, int gx, int gy)
 	{
 		_grid = grid;
-		_vertex = new float[CHUNK_SIZE * CHUNK_SIZE * 8 * 4];
-		_index = new short[CHUNK_SIZE * CHUNK_SIZE * 6];
+		// 8 = 3 coord + 3 normal + 2 uv; 4 = вершины для тайла
+		_vertex = new float[CHUNK_SIZE * CHUNK_SIZE * VERTEX_SIZE * VERTEX_COUNT];
+		// 6 = 3 + 3 два треугольника
+		_index = new short[CHUNK_SIZE * CHUNK_SIZE * 18];
 		_cx = gx;
 		_cy = gy;
 		_waterMesh = null;
@@ -88,7 +93,6 @@ public class GridChunk
 	 */
 	public NormalHeight getNormalHeight(int tx, int ty)
 	{
-//		_log.debug("tx="+tx+" ty="+ty);
 		NormalHeight normalHeight = _heights[tx - _gx - _cx + 1][ty - _gy - _cy + 1];
 		if (normalHeight != null)
 		{
@@ -99,11 +103,12 @@ public class GridChunk
 		return normalHeight;
 	}
 
+
 	protected void makeMesh()
 	{
 		_mesh = new Mesh(
 				true,
-				_vertex.length / 8,
+				_vertex.length / VERTEX_SIZE,
 				_index.length,
 				new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
 				new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
@@ -120,8 +125,6 @@ public class GridChunk
 		short vertex_count = 0;
 		NormalHeight nh;
 
-		// _isBorder запомним навсегда! т.к. это явно граничный чанк в гриде
-
 //		for (int x = _cx - 1; x <= _cx + CHUNK_SIZE; x++)
 //		{
 //			getNormalHeight(_gx + x, _gy + _cy - 1);
@@ -136,6 +139,7 @@ public class GridChunk
 		_maxHeight = 0;
 		_minHeight = WATER_LEVEL;
 
+		int nhi = 0;
 		for (int x = _cx; x < _cx + CHUNK_SIZE; x++)
 		{
 			for (int y = _cy; y < _cy + CHUNK_SIZE; y++)
@@ -166,6 +170,7 @@ public class GridChunk
 				uv = Tile.getTileUV(_grid._tiles[y][x]);
 				_vertex[idx++] = uv.x;
 				_vertex[idx++] = uv.y;
+				NormalHeight nh0 = nh.cpy();
 
 				// 1 =====
 				nh = getNormalHeight(tx + 1, ty);
@@ -182,6 +187,7 @@ public class GridChunk
 
 				_vertex[idx++] = uv.x + TILE_ATLAS_SIZE;
 				_vertex[idx++] = uv.y;
+				NormalHeight nh1 = nh.cpy();
 
 				// 2 =====
 				nh = getNormalHeight(tx, ty + 1);
@@ -198,6 +204,7 @@ public class GridChunk
 
 				_vertex[idx++] = uv.x;
 				_vertex[idx++] = uv.y + TILE_ATLAS_SIZE;
+				NormalHeight nh2 = nh.cpy();
 
 				// 3 =====
 				nh = getNormalHeight(tx + 1, ty + 1);
@@ -214,6 +221,48 @@ public class GridChunk
 
 				_vertex[idx++] = uv.x + TILE_ATLAS_SIZE;
 				_vertex[idx++] = uv.y + TILE_ATLAS_SIZE;
+				NormalHeight nh3 = nh.cpy();
+
+				// ===============
+				nh0.normal.scl(0.5f);
+				nh1.normal.scl(0.5f);
+				nh2.normal.scl(0.5f);
+				nh3.normal.scl(0.5f);
+				_vertex[idx++] = tx + nh0.normal.x;
+				_vertex[idx++] = nh0.h + nh0.normal.y;
+				_vertex[idx++] = ty + nh0.normal.z;
+				_vertex[idx++] = 0;
+				_vertex[idx++] = 1;
+				_vertex[idx++] = 0;
+				_vertex[idx++] = 0;
+				_vertex[idx++] = 0;
+
+				_vertex[idx++] = tx + 1 + nh1.normal.x;
+				_vertex[idx++] = nh1.h + nh1.normal.y;
+				_vertex[idx++] = ty + nh1.normal.z;
+				_vertex[idx++] = 0;
+				_vertex[idx++] = 1;
+				_vertex[idx++] = 0;
+				_vertex[idx++] = 0;
+				_vertex[idx++] = 0;
+
+				_vertex[idx++] = tx + nh2.normal.x;
+				_vertex[idx++] = nh2.h + nh2.normal.y;
+				_vertex[idx++] = ty + 1 + nh2.normal.z;
+				_vertex[idx++] = 0;
+				_vertex[idx++] = 1;
+				_vertex[idx++] = 0;
+				_vertex[idx++] = 0;
+				_vertex[idx++] = 0;
+
+				_vertex[idx++] = tx + 1 + nh3.normal.x;
+				_vertex[idx++] = nh3.h + nh3.normal.y;
+				_vertex[idx++] = ty + 1 + nh3.normal.z;
+				_vertex[idx++] = 0;
+				_vertex[idx++] = 1;
+				_vertex[idx++] = 0;
+				_vertex[idx++] = 0;
+				_vertex[idx++] = 0;
 
 				float rightDelta = Math.abs(h - hXY);
 				float leftDelta = Math.abs(hX - hY);
@@ -243,9 +292,26 @@ public class GridChunk
 					_index[idv++] = (short) (vertex_count + 3);
 				}
 
-				vertex_count += 4;
+				_index[idv++] = (short) (vertex_count + 4);
+				_index[idv++] = vertex_count;
+				_index[idv++] = vertex_count;
+
+				_index[idv++] = (short) (vertex_count + 5);
+				_index[idv++] = (short) (vertex_count + 1);
+				_index[idv++] = (short) (vertex_count + 1);
+
+				_index[idv++] = (short) (vertex_count + 6);
+				_index[idv++] = (short) (vertex_count + 2);
+				_index[idv++] = (short) (vertex_count + 2);
+
+				_index[idv++] = (short) (vertex_count + 7);
+				_index[idv++] = (short) (vertex_count + 3);
+				_index[idv++] = (short) (vertex_count + 3);
+
+				vertex_count += VERTEX_COUNT;
 			}
 		}
+
 		_mesh.setVertices(_vertex);
 		_mesh.setIndices(_index);
 
@@ -295,7 +361,7 @@ public class GridChunk
 	public class NormalHeight
 	{
 		public final float h;
-		public final Vector3 normal;
+		public Vector3 normal;
 		public final boolean isBorder;
 
 		public NormalHeight(int tx, int ty, GridChunk chunk)
@@ -316,11 +382,23 @@ public class GridChunk
 			h4 = h4 <= Terrain.FAKE_HEIGHT ? 0f : h4;
 
 			// посчитаем среднюю высоту вершины по четырем соседним тайлам
-			h = (h1 + h2 + h3 + h4) / 4f;
+			h = (h1 * 2 + h2 + h3 + h4) / 8f;
 
 			// посчитаем нормаль
 			normal = new Vector3(h1 - h2, 2.0f, h3 - h4).nor();
 			normal.rotate(90f + 45f, 0, 1, 0);
+		}
+
+		public NormalHeight(float h, Vector3 normal, boolean isBorder)
+		{
+			this.h = h;
+			this.normal = normal.cpy();
+			this.isBorder = isBorder;
+		}
+
+		public NormalHeight cpy()
+		{
+			return new NormalHeight(this.h, this.normal, this.isBorder);
 		}
 	}
 

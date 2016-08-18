@@ -54,12 +54,14 @@ public class Render
 
 	/**
 	 * задаем плоскость отсечения (нужно для воды)
+	 * и передаем в шейдеры
 	 */
 	public static Vector3 clipNormal = new Vector3(0, -1, 0);
 	public static float clipHeight = 1.5f;
 
 	/**
 	 * позиция солнца, учитывается при всем освещении
+	 * также передается в шейдеры
 	 */
 	public static Vector3 sunPosition = new Vector3(10000, 10000, 10000);
 
@@ -74,6 +76,9 @@ public class Render
 	private Shadow _shadow;
 	private PostProcessing _postProcessing;
 
+	/**
+	 * объект в который попадает луч из мыши (объект под мышью)
+	 */
 	private GameObject _selected;
 
 	private float _selectedDist;
@@ -251,7 +256,7 @@ public class Render
 			camera.update(false);
 		}
 
-		// POST PROCESSING
+		// POST PROCESSING (prepare)
 		if (Config.getInstance()._renderPostProcessing)
 		{
 			if (_postProcessingFBO == null)
@@ -287,7 +292,6 @@ public class Render
 //			_modelBatch.render(_testModel, _environment);
 //			_modelBatch.end();
 //		}
-
 		// END MAIN RENDER =============================================================================================
 
 		// POST PROCESSING
@@ -296,7 +300,6 @@ public class Render
 			_postProcessingFBO.end();
 			_postProcessing.doPostProcessing(_postProcessingFBO);
 		}
-
 		// END POST PROCESSING
 
 		/*if (Config._renderOutline)
@@ -338,10 +341,14 @@ public class Render
 		_renderedObjects = 0;
 		if (ObjectCache.getInstance() != null)
 		{
-			Gdx.gl.glEnable(GL11.GL_BLEND);
-			Gdx.gl.glBlendFunc(GL20.GL_EQUAL, GL20.GL_ONE);
-			_selected = null;
-			_selectedDist = 100500;
+			// ????
+//			Gdx.gl.glEnable(GL11.GL_BLEND);
+//			Gdx.gl.glBlendFunc(GL20.GL_EQUAL, GL20.GL_ONE);
+			if (findIntersect)
+			{
+				_selected = null;
+				_selectedDist = 100500;
+			}
 			_modelBatch.begin(camera);
 			for (GameObject o : ObjectCache.getInstance().getObjects())
 			{
@@ -401,6 +408,9 @@ public class Render
 		return _shadowShader;
 	}
 
+	/**
+	 * квад для вывода FBO на экран
+	 */
 	public static Mesh createFullScreenQuad()
 	{
 		float[] verts = new float[16];
