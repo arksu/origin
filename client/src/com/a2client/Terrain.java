@@ -371,9 +371,9 @@ public class Terrain
 				float height;
 				if (xCoord <= (1 - yCoord))
 				{
-					GridChunk.NormalHeight h = chunk.getNormalHeight(ox, oy);
-					GridChunk.NormalHeight hX = chunk.getNormalHeight(ox + 1, oy);
-					GridChunk.NormalHeight hY = chunk.getNormalHeight(ox, oy + 1);
+					GridChunk.HeightAverage h = new GridChunk.HeightAverage(ox, oy, chunk);
+					GridChunk.HeightAverage hX = new GridChunk.HeightAverage(ox + 1, oy, chunk);
+					GridChunk.HeightAverage hY = new GridChunk.HeightAverage(ox, oy + 1, chunk);
 
 					height = Utils.baryCentric(
 							new Vector3(0, h.h, 0),
@@ -383,9 +383,9 @@ public class Terrain
 				}
 				else
 				{
-					GridChunk.NormalHeight hX = chunk.getNormalHeight(ox + 1, oy);
-					GridChunk.NormalHeight hY = chunk.getNormalHeight(ox, oy + 1);
-					GridChunk.NormalHeight hXY = chunk.getNormalHeight(ox + 1, oy + 1);
+					GridChunk.HeightAverage hX = new GridChunk.HeightAverage(ox + 1, oy, chunk);
+					GridChunk.HeightAverage hY = new GridChunk.HeightAverage(ox, oy + 1, chunk);
+					GridChunk.HeightAverage hXY = new GridChunk.HeightAverage(ox + 1, oy + 1, chunk);
 					height = Utils.baryCentric(
 							new Vector3(1, hX.h, 0),
 							new Vector3(1, hXY.h, 1),
