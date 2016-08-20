@@ -35,21 +35,21 @@ public class DragInfo
     // состояние перетаскивания
     public int state = DRAG_STATE_NONE;
     // перетаскиваемый контрол
-    public GUI_DragControl drag_control = null;
+    public GUI_DragControl _dragControl = null;
     // смещение перетаскиваемого объекта относительно мыши
-    public Vec2i hotspot = new Vec2i(0, 0);
+    public Vec2i _hotspot = new Vec2i(0, 0);
 
-    public void Reset()
+    public void reset()
     {
         state = DRAG_STATE_NONE;
 
-        if (drag_control != null)
+        if (_dragControl != null)
         {
-            GUI_Control c = drag_control;
-            drag_control = null;
-            c.Unlink();
+            GUI_Control c = _dragControl;
+            _dragControl = null;
+            c.unlink();
         }
 
-        hotspot = new Vec2i(0, 0);
+        _hotspot = new Vec2i(0, 0);
     }
 }

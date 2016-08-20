@@ -42,7 +42,7 @@ public class dlg_SysMsg
 			if (sysmsg_timer <= 0)
 			{
 				// убираем контролы
-				sysmsg_panel.Unlink();
+				sysmsg_panel.unlink();
 				sysmsg_panel = null;
 				sysmsg_lbl = null;
 				sysmsg_timer = 0;
@@ -60,16 +60,16 @@ public class dlg_SysMsg
 		else
 		{
 			sysmsg_panel = new GUI_Panel(GUI.getInstance().popup);
-			sysmsg_panel.SetSize(500, 40);
-			sysmsg_panel.CenterX();
-			sysmsg_panel.SetY(100);
+			sysmsg_panel.setSize(500, 40);
+			sysmsg_panel.centerX();
+			sysmsg_panel.setY(100);
 			sysmsg_panel.render_mode = RenderMode.rmColor;
 			sysmsg_panel.bg_color = new Color(0f, 0f, 0f, 0.4f);
 
 			sysmsg_lbl = new GUI_Label(sysmsg_panel);
 			sysmsg_lbl.caption = msg;
-			sysmsg_lbl.SetPos(0, 0);
-			sysmsg_lbl.SetSize(sysmsg_panel.size);
+			sysmsg_lbl.setPos(0, 0);
+			sysmsg_lbl.setSize(sysmsg_panel.size);
 			sysmsg_lbl.align = Align.Align_Center;
 		}
 		sysmsg_timer = 5000;

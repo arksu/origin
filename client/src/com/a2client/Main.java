@@ -116,7 +116,7 @@ public class Main extends com.badlogic.gdx.Game
 
 	public static String buildVersion()
 	{
-		return "v" + (Config.getInstance().CLIENT_VERSION / 100) + "." + (Config.getInstance().CLIENT_VERSION % 100);
+		return "v" + (Config.CLIENT_VERSION / 100) + "." + (Config.CLIENT_VERSION % 100);
 	}
 
 	@Override
@@ -144,7 +144,7 @@ public class Main extends com.badlogic.gdx.Game
 		}
 
 		_input.Update();
-		GUI.getInstance().Update();
+		GUI.getInstance().update();
 	}
 
 	protected void onDisconnected()

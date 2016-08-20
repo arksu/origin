@@ -49,7 +49,7 @@ public class GUI_Button extends GUI_Control
         return false;
     }
 
-    public boolean DoMouseBtn(int btn, boolean down)
+    public boolean onMouseBtn(int btn, boolean down)
     {
         if (!enabled)
             return false;
@@ -57,7 +57,7 @@ public class GUI_Button extends GUI_Control
         if (btn == Input.MB_LEFT)
             if (down)
             {
-                if (MouseInMe())
+                if (isMouseInMe())
                 {
                     pressed = true;
                     return true;
@@ -65,7 +65,7 @@ public class GUI_Button extends GUI_Control
             }
             else
             {
-                if (pressed && MouseInMe())
+                if (pressed && isMouseInMe())
                 {
                     DoClick();
                     pressed = false;
@@ -76,12 +76,12 @@ public class GUI_Button extends GUI_Control
         return false;
     }
 
-    public void DoRender()
+    public void render()
     {
         int state;
         if (!enabled)
             state = StateDisable;
-        else if (MouseInMe())
+        else if (isMouseInMe())
             if (pressed)
                 state = StatePressed;
             else

@@ -29,7 +29,7 @@ public class GUI_IconButton extends GUI_Button
     public GUI_IconButton(GUI_Control parent)
     {
         super(parent);
-        SetSize(32, 32);
+        setSize(32, 32);
     }
 
     // ставим иконку по названию элемента скина
@@ -38,12 +38,12 @@ public class GUI_IconButton extends GUI_Button
         this.icon_name = icon_name;
     }
 
-    public void DoRender()
+    public void render()
     {
         Color col;
         if (!enabled)
             col = new Color(1, 1, 1, 0.6f);
-        else if (MouseInMe())
+        else if (isMouseInMe())
             if (pressed)
                 col = new Color(1, 1, 1, 0.8f);
             else

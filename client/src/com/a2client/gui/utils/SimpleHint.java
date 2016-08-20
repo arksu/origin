@@ -27,7 +27,7 @@ public class SimpleHint
 {
     static String hint_font = "default";
 
-    static public void Render(int x, int y, int w, int h, String s)
+    static public void render(int x, int y, int w, int h, String s)
     {
         int cy = 0;
         String[] sl = s.split("%n");

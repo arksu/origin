@@ -44,34 +44,34 @@ public class Login extends BaseScreen
 
 		logo = new GUI_Texture(GUI.rootNormal());
 		logo.setTexture(Main.getAssetManager().get(Config.RESOURCE_DIR + "origin_logo.png", Texture.class));
-		logo.SetPos(0, 10);
-		logo.CenterX();
+		logo.setPos(0, 10);
+		logo.centerX();
 
-		int ypos = logo.pos.y + logo.Height() + 20;
+		int ypos = logo.pos.y + logo.getHeight() + 20;
 		ypos = Math.max(ypos, (Gdx.graphics.getHeight() / 2) - 90);
 
 		lbl_login = new GUI_Label(GUI.rootNormal());
 		lbl_login.caption = Lang.getTranslate("LoginScreen.account");
-		lbl_login.SetPos(10, ypos);
+		lbl_login.setPos(10, ypos);
 		lbl_login.UpdateSize();
-		lbl_login.CenterX();
+		lbl_login.centerX();
 
 		edit_login = new GUI_Edit(GUI.rootNormal());
-		edit_login.SetSize(150, 25);
-		edit_login.SetPos(lbl_login.pos.add(0, 15));
-		edit_login.CenterX();
+		edit_login.setSize(150, 25);
+		edit_login.setPos(lbl_login.pos.add(0, 15));
+		edit_login.centerX();
 		edit_login.text = Config.getInstance()._account;
 
 		lbl_password = new GUI_Label(GUI.rootNormal());
 		lbl_password.caption = Lang.getTranslate("LoginScreen.password");
-		lbl_password.SetPos(edit_login.pos.add(0, 40));
+		lbl_password.setPos(edit_login.pos.add(0, 40));
 		lbl_password.UpdateSize();
-		lbl_password.CenterX();
+		lbl_password.centerX();
 
 		edit_password = new GUI_Edit(GUI.rootNormal());
-		edit_password.SetSize(150, 25);
-		edit_password.SetPos(lbl_password.pos.add(0, 15));
-		edit_password.CenterX();
+		edit_password.setSize(150, 25);
+		edit_password.setPos(lbl_password.pos.add(0, 15));
+		edit_password.centerX();
 		edit_password.secret_symbol = "*";
 		edit_password.allow_copy = false;
 		edit_password.text = Config.getInstance()._password;
@@ -85,13 +85,13 @@ public class Login extends BaseScreen
 			}
 		};
 		btn_login.caption = Lang.getTranslate("LoginScreen.login");
-		btn_login.SetPos(edit_password.pos.add(0, 40));
-		btn_login.SetSize(100, 25);
-		btn_login.CenterX();
+		btn_login.setPos(edit_password.pos.add(0, 40));
+		btn_login.setSize(100, 25);
+		btn_login.centerX();
 
 		lbl_status = new GUI_Label(GUI.rootNormal());
 		lbl_status.caption = "";
-		lbl_status.SetPos(btn_login.pos.add(0, 35));
+		lbl_status.setPos(btn_login.pos.add(0, 35));
 
 		btn_exit = new GUI_Button(GUI.rootNormal())
 		{
@@ -102,18 +102,18 @@ public class Login extends BaseScreen
 			}
 		};
 		btn_exit.caption = Lang.getTranslate("LoginScreen.quit");
-		btn_exit.SetSize(100, 25);
-		btn_exit.SetPos(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 35);
+		btn_exit.setSize(100, 25);
+		btn_exit.setPos(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 35);
 
 		btn_options = new GUI_Button(GUI.rootNormal());
 		btn_options.caption = Lang.getTranslate("LoginScreen.options");
-		btn_options.SetSize(100, 25);
-		btn_options.SetPos(btn_exit.pos.add(0, -35));
+		btn_options.setSize(100, 25);
+		btn_options.setPos(btn_exit.pos.add(0, -35));
 		btn_options.enabled = false;
 
 		if (!edit_login.text.isEmpty())
 		{
-			GUI.getInstance().SetFocus(edit_password);
+			GUI.getInstance().setFocus(edit_password);
 			edit_password.SelectAll();
 		}
 
@@ -179,11 +179,11 @@ public class Login extends BaseScreen
 		{
 			if (!edit_login.isFocused())
 			{
-				GUI.getInstance().SetFocus(edit_login);
+				GUI.getInstance().setFocus(edit_login);
 			}
 			else if (!edit_password.isFocused())
 			{
-				GUI.getInstance().SetFocus(edit_password);
+				GUI.getInstance().setFocus(edit_password);
 			}
 		}
 
@@ -213,7 +213,7 @@ public class Login extends BaseScreen
 	private void UpdateStatusLbl()
 	{
 		lbl_status.UpdateSize();
-		lbl_status.CenterX();
+		lbl_status.centerX();
 	}
 
 	public static void Show()

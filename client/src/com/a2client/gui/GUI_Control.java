@@ -47,13 +47,13 @@ public class GUI_Control
 	public boolean _renderChilds = true;
 	// уничтожен ли контрол. елси истина - любое использование контрола не допускается
 	// его необходимо исключить из всех обработок и навсегда о нем забыть.
-	public boolean terminated = false;
+	public boolean _terminated = false;
 
 	/**
 	 * простой ли хинт у контрола
 	 * если простой - выводится тупо текст. берется в getHint()
 	 * если хинт продвинутый - контрол сам выводит содержимое. Vec2i getHintSize() - должен вернуть размер области под хинт
-	 * RenderHint(int x, int y) - вывести сам хинт в этих координатах.
+	 * renderHint(int x, int y) - вывести сам хинт в этих координатах.
 	 * гуи сам ищет оптимальное расположение хинта, а также выводит подложку если стоит _needHintBg - иначе контрол должен вывести еще и подложку
 	 */
 	public boolean _isSimpleHint = true;
@@ -70,15 +70,15 @@ public class GUI_Control
 	public boolean visible = true;
 	public boolean focusable = false;
 	public boolean enabled = true;
-	public boolean is_window = false;
-	public boolean drag_enabled = false;
+	public boolean _isWindow = false;
+	public boolean _dragEnabled = false;
 
 	//--------------------------------------------------------------------------------------------
 
 	public GUI_Control(GUI gui)
 	{
 		this.gui = gui;
-		DoCreate();
+		afterCreate();
 	}
 
 	public GUI_Control(GUI_Control parent)
@@ -87,7 +87,7 @@ public class GUI_Control
 		{
 			this.gui = GUI.getInstance();
 			this.parent = gui.normal;
-			Link();
+			link();
 		}
 		else
 		{
@@ -95,13 +95,13 @@ public class GUI_Control
 			{
 				this.gui = parent.gui;
 				this.parent = parent;
-				Link();
+				link();
 			}
 		}
-		DoCreate();
+		afterCreate();
 	}
 
-	public void Link()
+	private void link()
 	{
 		synchronized (gui)
 		{
@@ -115,28 +115,28 @@ public class GUI_Control
 			}
 			this.prev = parent.last_child;
 			parent.last_child = this;
-			UpdateAbsPos();
+			updateAbsPos();
 		}
 	}
 
-	public void UnlinkChilds()
+	public void unlinkChilds()
 	{
 		while (child != null)
-			child.Unlink();
+			child.unlink();
 	}
 
-	public void Unlink()
+	public void unlink()
 	{
-		if (terminated)
+		if (_terminated)
 		{
 			return;
 		}
 
-		terminated = true;
-		DoDestroy();
+		_terminated = true;
+		destroy();
 		synchronized (gui)
 		{
-			gui.OnUnlink(this);
+			gui.onUnlink(this);
 			if (next != null)
 			{
 				next.prev = prev;
@@ -161,26 +161,26 @@ public class GUI_Control
 		}
 	}
 
-	public final void Update()
+	final void doUpdate()
 	{
-		if (!gui.game_gui_render && !((this == gui.root) || (this == gui.custom)))
-		{
-			return;
-		}
+//		if (!((this == gui.root) || (this == gui.custom)))
+//		{
+//			return;
+//		}
 
-		if (gui.drag_info.drag_control == this)
+		if (gui._dragInfo._dragControl == this)
 		{
-			SetX(gui.mouse_pos.x - gui.drag_info.hotspot.x);
-			SetY(gui.mouse_pos.y - gui.drag_info.hotspot.y);
+			setX(gui._mousePos.x - gui._dragInfo._hotspot.x);
+			setY(gui._mousePos.y - gui._dragInfo._hotspot.y);
 		}
-		DoUpdate();
+		update();
 		for (GUI_Control c = child; c != null; c = c.next)
 		{
-			c.Update();
+			c.doUpdate();
 		}
 	}
 
-	public int ChildsCount()
+	public int childsCount()
 	{
 		int r = 0;
 		for (GUI_Control c = child; c != null; c = c.next)
@@ -190,129 +190,129 @@ public class GUI_Control
 		return r;
 	}
 
-	public final void Render()
+	final void doRender()
 	{
 		// если не рендерим гуй. выходим если это руты
-		if (!gui.game_gui_render && !((this == gui.root) || (this == gui.custom)))
-		{
-			return;
-		}
+//		if (!((this == gui.root) || (this == gui.custom)))
+//		{
+//			return;
+//		}
 
 		if (visible)
 		{
-			DoRender();
+			render();
 			if (_renderChilds)
 			{
 				for (GUI_Control c = child; c != null; c = c.next)
 				{
-					c.Render();
+					c.doRender();
 				}
 			}
-			DoRenderAfterChilds();
+			afterRenderChilds();
 		}
 	}
 
-	public void SetPos(Vec2i pos)
+	public void setPos(Vec2i pos)
 	{
 		this.pos = new Vec2i(pos);
 		for (GUI_Control c = child; c != null; c = c.next)
 		{
-			c.SetPos(c.pos);
+			c.setPos(c.pos);
 		}
-		UpdateAbsPos();
+		updateAbsPos();
 	}
 
-	public void SetPos(int x, int y)
+	public void setPos(int x, int y)
 	{
 		this.pos = new Vec2i(x, y);
 		for (GUI_Control c = child; c != null; c = c.next)
 		{
-			c.SetPos(c.pos);
+			c.setPos(c.pos);
 		}
-		UpdateAbsPos();
+		updateAbsPos();
 	}
 
-	public void SetX(int x)
+	public void setX(int x)
 	{
 		this.pos = new Vec2i(x, pos.y);
 		for (GUI_Control c = child; c != null; c = c.next)
 		{
-			c.SetPos(c.pos);
+			c.setPos(c.pos);
 		}
-		UpdateAbsPos();
+		updateAbsPos();
 	}
 
-	public void SetY(int y)
+	public void setY(int y)
 	{
 		this.pos = new Vec2i(pos.x, y);
 		for (GUI_Control c = child; c != null; c = c.next)
 		{
-			c.SetPos(c.pos);
+			c.setPos(c.pos);
 		}
-		UpdateAbsPos();
+		updateAbsPos();
 	}
 
-	public void CenterX()
+	public void centerX()
 	{
 		if (parent != null)
 		{
-			SetX((parent.size.x - size.x) / 2);
+			setX((parent.size.x - size.x) / 2);
 		}
 	}
 
-	public void CenterY()
+	public void centerY()
 	{
 		if (parent != null)
 		{
-			SetY((parent.size.y - size.y) / 2);
+			setY((parent.size.y - size.y) / 2);
 		}
 	}
 
-	public void Center()
+	public void center()
 	{
-		CenterX();
-		CenterY();
+		centerX();
+		centerY();
 	}
 
-	public void SetWidth(int val)
+	public void setWidth(int val)
 	{
 		size = new Vec2i(max(val, min_size.x), size.y);
-		DoSetSize();
+		onSetSize();
 	}
 
-	public void SetHeight(int val)
+	public void setHeight(int val)
 	{
 		size = new Vec2i(size.x, max(val, min_size.y));
-		DoSetSize();
+		onSetSize();
 	}
 
-	public void SetSize(int w, int h)
+	public void setSize(int w, int h)
 	{
 		size = new Vec2i(max(w, min_size.x), max(h, min_size.y));
-		DoSetSize();
+		onSetSize();
 	}
 
-	public void SetSize(GUI_Control c)
+	public void setSize(GUI_Control c)
 	{
-		SetSize(c.size.x, c.size.y);
+		setSize(c.size.x, c.size.y);
 	}
 
-	public void SetSize(Vec2i c)
+	public void setSize(Vec2i c)
 	{
-		SetSize(c.x, c.y);
+		setSize(c.x, c.y);
 	}
 
-	public int Height()
+	public int getHeight()
 	{
 		return size.y;
 	}
 
-	public int Width()
+	public int getWidth()
 	{
 		return size.x;
 	}
 
-	public void UpdateAbsPos()
+	public void updateAbsPos()
 	{
 		abs_pos = new Vec2i(pos);
 		GUI_Control ctrl = parent;
@@ -321,28 +321,28 @@ public class GUI_Control
 			abs_pos = abs_pos.add(ctrl.pos);
 			ctrl = ctrl.parent;
 		}
-		DoSetPos();
+		onSetPos();
 	}
 
-	public void Show()
+	public void show()
 	{
 		visible = true;
 	}
 
-	public void Hide()
+	public void hide()
 	{
 		visible = false;
 	}
 
-	public boolean ToggleVisible()
+	public boolean toggleVisible()
 	{
 		if (visible)
 		{
-			Hide();
+			hide();
 		}
 		else
 		{
-			Show();
+			show();
 		}
 		return visible;
 	}
@@ -369,16 +369,16 @@ public class GUI_Control
 		size.add(margins);
 	}
 
-	public final boolean HandleKey(char c, int code, boolean down)
+	public final boolean handleKey(char c, int code, boolean down)
 	{
-		boolean r = DoKey(c, code, down);
+		boolean r = onKey(c, code, down);
 		if (r)
 		{
 			return true;
 		}
 		for (GUI_Control ctrl = child; ctrl != null; ctrl = ctrl.next)
 		{
-			r = ctrl.DoKey(c, code, down);
+			r = ctrl.onKey(c, code, down);
 			if (r)
 			{
 				return true;
@@ -387,7 +387,7 @@ public class GUI_Control
 		return false;
 	}
 
-	public final boolean HandleMouseBtn(int btn, boolean down)
+	public final boolean handleMouseBtn(int btn, boolean down)
 	{
 		boolean r = false;
 		for (GUI_Control ctrl = child; ctrl != null; ctrl = ctrl.next)
@@ -396,7 +396,7 @@ public class GUI_Control
 			{
 				if (down)
 				{
-					r = ctrl.HandleMouseBtn(btn, down);
+					r = ctrl.handleMouseBtn(btn, down);
 					if (r)
 					{
 						break;
@@ -404,7 +404,7 @@ public class GUI_Control
 				}
 				else
 				{
-					ctrl.HandleMouseBtn(btn, down);
+					ctrl.handleMouseBtn(btn, down);
 				}
 			}
 		}
@@ -414,12 +414,12 @@ public class GUI_Control
 			{
 				if (!r)
 				{
-					r = DoMouseBtn(btn, down);
+					r = onMouseBtn(btn, down);
 				}
 			}
 			else
 			{
-				DoMouseBtn(btn, down);
+				onMouseBtn(btn, down);
 			}
 
 		}
@@ -428,9 +428,9 @@ public class GUI_Control
 			GUI_Control ctrl = parent;
 			while (ctrl != null)
 			{
-				if (ctrl.is_window)
+				if (ctrl._isWindow)
 				{
-					ctrl.BringToFront();
+					ctrl.bringToFront();
 				}
 				ctrl = ctrl.parent;
 			}
@@ -438,14 +438,14 @@ public class GUI_Control
 		return r;
 	}
 
-	public final boolean HandleMouseWheel(boolean isUp, int len)
+	public final boolean handleMouseWheel(boolean isUp, int len)
 	{
 		boolean r = false;
 		for (GUI_Control ctrl = child; ctrl != null; ctrl = ctrl.next)
 		{
 			if (ctrl.visible && ctrl.enabled)
 			{
-				r = ctrl.HandleMouseWheel(isUp, len);
+				r = ctrl.handleMouseWheel(isUp, len);
 			}
 			if (r)
 			{
@@ -454,32 +454,32 @@ public class GUI_Control
 		}
 		if (enabled && visible)
 		{
-			r = DoMouseWheel(isUp, len);
+			r = onMouseWheel(isUp, len);
 		}
 		return r;
 	}
 
-	public GUI_Control GetMouseInControl()
+	public GUI_Control getMouseInControl()
 	{
 		GUI_Control ret = null;
 		if (enabled)
 		{
 			for (GUI_Control ctrl = last_child; ctrl != null; ctrl = ctrl.prev)
 			{
-				if (gui.MouseInRect(ctrl.abs_pos, ctrl.size))
+				if (gui.isMouseInRect(ctrl.abs_pos, ctrl.size))
 				{
-					if (!ctrl.CheckMouseInControl())
+					if (!ctrl.checkMouseInControl())
 					{
 						continue;
 					}
 				}
-				ret = ctrl.GetMouseInControl();
+				ret = ctrl.getMouseInControl();
 				if (ret != null)
 				{
 					return ret;
 				}
 			}
-			if (CheckMouseInControl() && gui.MouseInRect(abs_pos, size))
+			if (checkMouseInControl() && gui.isMouseInRect(abs_pos, size))
 			{
 				ret = this;
 			}
@@ -487,7 +487,7 @@ public class GUI_Control
 		return ret;
 	}
 
-	public void BringToFront()
+	public void bringToFront()
 	{
 		if (gui.isRoot(this))
 		{
@@ -525,7 +525,7 @@ public class GUI_Control
 		parent.last_child = this;
 	}
 
-	public void SendToBack()
+	public void sendToBack()
 	{
 		if (gui.isRoot(this))
 		{
@@ -562,22 +562,22 @@ public class GUI_Control
 		parent.child = this;
 	}
 
-	public void BeginDragMove()
+	public void beginDragMove()
 	{
-		gui.drag_move_control = this;
+		gui._dragMoveControl = this;
 	}
 
-	public void EndDragMove()
+	public void endDragMove()
 	{
-		if (SelfDragged())
+		if (isSelfDragged())
 		{
-			gui.drag_move_control = null;
+			gui._dragMoveControl = null;
 		}
 	}
 
-	protected boolean SelfDragged()
+	protected boolean isSelfDragged()
 	{
-		return gui.drag_move_control == this;
+		return gui._dragMoveControl == this;
 	}
 
 	public Skin getSkin()
@@ -586,30 +586,30 @@ public class GUI_Control
 	}
 
 	// условие по котороу определяется мышь в контроле
-	public boolean CheckMouseInControl()
+	public boolean checkMouseInControl()
 	{
 		return visible;
 	}
 
 	public boolean isFocused()
 	{
-		return gui.focused_control == this;
+		return gui._focusedControl == this;
 	}
 
-	public boolean MouseInMe()
+	public boolean isMouseInMe()
 	{
-		return gui.mouse_in_control == this;
+		return gui._mouseInControl == this;
 	}
 
-	public boolean MouseInChilds()
+	public boolean mouseInChilds()
 	{
-		if (MouseInMe())
+		if (isMouseInMe())
 		{
 			return true;
 		}
 		for (GUI_Control ctrl = child; ctrl != null; ctrl = ctrl.next)
 		{
-			if (ctrl.MouseInChilds())
+			if (ctrl.mouseInChilds())
 			{
 				return true;
 			}
@@ -619,11 +619,11 @@ public class GUI_Control
 
 	public boolean isDragOver()
 	{
-		return (gui.HaveDrag() && MouseInMe());
+		return (gui.haveDrag() && isMouseInMe());
 	}
 
 	// запрос на возможность принять контрол
-	public boolean DoRequestDrop(DragInfo info)
+	public boolean doRequestDrop(DragInfo info)
 	{
 		return false;
 	}
@@ -641,7 +641,7 @@ public class GUI_Control
 	}
 
 	// вывести хинт
-	public void RenderHint(int x, int y, int w, int h)
+	public void renderHint(int x, int y, int w, int h)
 	{
 
 	}
@@ -649,23 +649,23 @@ public class GUI_Control
 	// ОБРАБОТЧИКИ СОБЫТИЙ --------------------------------------------------------------------------------------------------------
 
 	// обработчик получения фокуса
-	public void DoGetFocus()
+	public void onGetFocus()
 	{
 	}
 
 	// обработчик потери фокуса
-	public void DoLostFocus()
+	public void onLostFocus()
 	{
 	}
 
 	// обработчик нажатия клавиш
-	public boolean DoKey(char c, int code, boolean down)
+	public boolean onKey(char c, int code, boolean down)
 	{
 		return false;
 	}
 
 	// обработчик нажатия кнопок мыши
-	public boolean DoMouseBtn(int btn, boolean down)
+	public boolean onMouseBtn(int btn, boolean down)
 	{
 		return false;
 	}
@@ -676,53 +676,53 @@ public class GUI_Control
 	 * @param len сколько щелчков
 	 * @return обработали ли?
 	 */
-	public boolean DoMouseWheel(boolean isUp, int len)
+	public boolean onMouseWheel(boolean isUp, int len)
 	{
 		return false;
 	}
 
 	// обработчик апдейта
-	public void DoUpdate()
+	public void update()
 	{
 	}
 
 	// обработчик рендера
-	public void DoRender()
+	public void render()
 	{
 	}
 
 	// выполняется после рендера себя и всех детей
-	public void DoRenderAfterChilds()
+	public void afterRenderChilds()
 	{
 	}
 
 	// смена позиции
-	public void DoSetPos()
+	public void onSetPos()
 	{
 	}
 
 	// смена размера
-	public void DoSetSize()
+	public void onSetSize()
 	{
 		_clientRect = new Rect(3, 3, size.x - 6, size.y - 6);
 	}
 
 	// завершить перетаскивание
-	public void DoEndDrag(DragInfo info)
+	public void endDrag(DragInfo info)
 	{
 	}
 
-	public void DoUpdateDrag(DragInfo info)
+	public void updateDrag(DragInfo info)
 	{
 	}
 
 	// уничтожение контрола
-	public void DoDestroy()
+	public void destroy()
 	{
 	}
 
 	// создание контрола
-	public void DoCreate()
+	public void afterCreate()
 	{
 	}
 

@@ -79,7 +79,7 @@ public class GUI_Memo extends GUI_ScrollPage
         UpdateFullSize();
     }
 
-    public void DoRender()
+    public void render()
     {
         DrawBackground();
         Rect wr = WorkRect();
@@ -122,11 +122,11 @@ public class GUI_Memo extends GUI_ScrollPage
         UpdateFullSize();
     }
 
-    public void DoSetSize()
+    public void onSetSize()
     {
         _clientRect = new Rect(3, 3, size.x - 6, size.y - 6);
         UpdateLines();
-        super.DoSetSize();
+        super.onSetSize();
     }
 
 }

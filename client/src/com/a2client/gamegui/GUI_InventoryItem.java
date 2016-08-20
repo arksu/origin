@@ -31,8 +31,8 @@ public class GUI_InventoryItem extends GUI_Control
 	{
 		super(parent);
 
-		SetPos(item.getX() * WIDTH, item.getY() * HEIGHT);
-		SetSize(WIDTH * item.getWidth(), HEIGHT * item.getHeight());
+		setPos(item.getX() * WIDTH, item.getY() * HEIGHT);
+		setSize(WIDTH * item.getWidth(), HEIGHT * item.getHeight());
 		_item = item;
 		_x = _item.getX();
 		_y = _item.getY();
@@ -41,23 +41,23 @@ public class GUI_InventoryItem extends GUI_Control
 	public GUI_InventoryItem(GUI_Control parent, int x, int y)
 	{
 		super(parent);
-		SetPos(x * WIDTH, y * HEIGHT);
-		SetSize(WIDTH, HEIGHT);
+		setPos(x * WIDTH, y * HEIGHT);
+		setSize(WIDTH, HEIGHT);
 		_x = x;
 		_y = y;
 	}
 
 	@Override
-	public void DoRender()
+	public void render()
 	{
 		// выводим нужного размера рамку вокруг итема
-		getSkin().draw("listbox", abs_pos.x, abs_pos.y, Width(), Height());
+		getSkin().draw("listbox", abs_pos.x, abs_pos.y, getWidth(), getHeight());
 
 		// выводим иконку
 		if (_item != null)
 		{
 			// это не пустая ячейка, надо вывести иконку предмета
-			getSkin().draw("icon_" + _item.getIcon(), abs_pos.x, abs_pos.y, Width(), Height());
+			getSkin().draw("icon_" + _item.getIcon(), abs_pos.x, abs_pos.y, getWidth(), getHeight());
 		}
 
 		// различная информация (ку, прогресс и тд)
@@ -75,9 +75,9 @@ public class GUI_InventoryItem extends GUI_Control
 	 * обработчик нажатия кнопок мыши
 	 */
 	@Override
-	public boolean DoMouseBtn(int btn, boolean down)
+	public boolean onMouseBtn(int btn, boolean down)
 	{
-		if (MouseInMe() && down && parent != null)
+		if (isMouseInMe() && down && parent != null)
 		{
 			onClick(btn);
 			return true;
@@ -87,8 +87,8 @@ public class GUI_InventoryItem extends GUI_Control
 
 	protected void onClick(int btn)
 	{
-		int mx = gui.mouse_pos.x - abs_pos.x;
-		int my = gui.mouse_pos.y - abs_pos.y;
+		int mx = gui._mousePos.x - abs_pos.x;
+		int my = gui._mousePos.y - abs_pos.y;
 
 		// в какой слот тыкнули (если вещь большая и может занимать несколько слотов)
 		int ox = _x + mx / (WIDTH + MARGIN);

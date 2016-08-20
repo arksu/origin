@@ -36,7 +36,7 @@ public class GUI_Label extends GUI_Control
     }
 
 
-    public boolean DoMouseBtn(int btn, boolean down)
+    public boolean onMouseBtn(int btn, boolean down)
     {
         if (!enabled)
             return false;
@@ -44,7 +44,7 @@ public class GUI_Label extends GUI_Control
         if (btn == Input.MB_LEFT)
             if (down)
             {
-                if (MouseInMe())
+                if (isMouseInMe())
                 {
                     pressed = true;
                     return true;
@@ -52,7 +52,7 @@ public class GUI_Label extends GUI_Control
             }
             else
             {
-                if (pressed && MouseInMe())
+                if (pressed && isMouseInMe())
                 {
                     DoClick();
                     pressed = false;
@@ -67,7 +67,7 @@ public class GUI_Label extends GUI_Control
     {
     }
 
-    public void DoRender()
+    public void render()
     {
         if (caption.isEmpty())
             return;
@@ -88,7 +88,7 @@ public class GUI_Label extends GUI_Control
 
     public void UpdateSize()
     {
-        SetSize(GUIGDX.getfontMetrics(font, caption));
+        setSize(GUIGDX.getfontMetrics(font, caption));
     }
 
 }

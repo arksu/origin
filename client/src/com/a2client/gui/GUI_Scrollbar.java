@@ -54,13 +54,13 @@ public class GUI_Scrollbar extends GUI_Control
         {
             MinPageSize = s.y;
             s = getSkin().getElementSize(skin_element);
-            SetWidth(s.x);
+            setWidth(s.x);
         }
         else
         {
             MinPageSize = s.x;
             s = getSkin().getElementSize(skin_element);
-            SetHeight(s.y);
+            setHeight(s.y);
         }
         UpdateButtonsPos();
     }
@@ -193,10 +193,10 @@ public class GUI_Scrollbar extends GUI_Control
             {
 
                 if (BtnDec != null)
-                    BtnDec.Unlink();
+                    BtnDec.unlink();
                 BtnDec = null;
                 if (BtnInc != null)
-                    BtnInc.Unlink();
+                    BtnInc.unlink();
                 BtnInc = null;
 
                 BtnDec = new GUI_Button(this)
@@ -207,7 +207,7 @@ public class GUI_Scrollbar extends GUI_Control
                     }
                 };
                 BtnDec.skin_element = "button_up";
-                BtnDec.SetSize(getSkin().getElementSize("button_up"));
+                BtnDec.setSize(getSkin().getElementSize("button_up"));
 
                 BtnInc = new GUI_Button(this)
                 {
@@ -217,17 +217,17 @@ public class GUI_Scrollbar extends GUI_Control
                     }
                 };
                 BtnInc.skin_element = "button_down";
-                BtnInc.SetSize(getSkin().getElementSize("button_down"));
+                BtnInc.setSize(getSkin().getElementSize("button_down"));
                 skin_element = "vscroll";
             }
             else
             {
                 // горизонтально
                 if (BtnDec != null)
-                    BtnDec.Unlink();
+                    BtnDec.unlink();
                 BtnDec = null;
                 if (BtnInc != null)
-                    BtnInc.Unlink();
+                    BtnInc.unlink();
                 BtnInc = null;
 
                 BtnDec = new GUI_Button(this)
@@ -238,7 +238,7 @@ public class GUI_Scrollbar extends GUI_Control
                     }
                 };
                 BtnDec.skin_element = "button_left";
-                BtnDec.SetSize(getSkin().getElementSize("button_left"));
+                BtnDec.setSize(getSkin().getElementSize("button_left"));
 
                 BtnInc = new GUI_Button(this)
                 {
@@ -249,9 +249,9 @@ public class GUI_Scrollbar extends GUI_Control
                 };
                 BtnInc.skin_element = "button_right";
                 skin_element = "hscroll";
-                BtnInc.SetSize(getSkin().getElementSize("button_right"));
+                BtnInc.setSize(getSkin().getElementSize("button_right"));
             }
-            SetSize(getSkin().getElementSize(skin_element));
+            setSize(getSkin().getElementSize(skin_element));
             UpdateButtonsPos();
         }
     }
@@ -266,19 +266,19 @@ public class GUI_Scrollbar extends GUI_Control
         if (BtnDec == null || BtnInc == null)
             return;
 
-        BtnDec.SetPos(0, 0);
+        BtnDec.setPos(0, 0);
 
         if (Vertical)
-            BtnInc.SetPos(0, size.y - BtnInc.size.y);
+            BtnInc.setPos(0, size.y - BtnInc.size.y);
         else
-            BtnInc.SetPos(size.x - BtnInc.size.x, 0);
+            BtnInc.setPos(size.x - BtnInc.size.x, 0);
 
     }
 
     protected boolean MouseInPage()
     {
         boolean res = false;
-        if (!MouseInMe())
+        if (!isMouseInMe())
             return res;
 
         if (!HaveTrack())
@@ -292,11 +292,11 @@ public class GUI_Scrollbar extends GUI_Control
         int pos_pix = Math.round(((float) len_pix - page_size_pix) * (Pos - Min) / (Max - Min - PageSize));
 
         if (Vertical)
-            res = gui.MouseInRect(new Vec2i(abs_pos.x, abs_pos.y + BtnDec.size.y + pos_pix),
-                                  new Vec2i(size.x, page_size_pix));
+            res = gui.isMouseInRect(new Vec2i(abs_pos.x, abs_pos.y + BtnDec.size.y + pos_pix),
+                                    new Vec2i(size.x, page_size_pix));
         else
-            res = gui.MouseInRect(new Vec2i(abs_pos.x + BtnDec.size.x + pos_pix, abs_pos.y),
-                                  new Vec2i(page_size_pix, size.y));
+            res = gui.isMouseInRect(new Vec2i(abs_pos.x + BtnDec.size.x + pos_pix, abs_pos.y),
+                                    new Vec2i(page_size_pix, size.y));
         return res;
     }
 
@@ -313,12 +313,12 @@ public class GUI_Scrollbar extends GUI_Control
             return size.x - BtnDec.size.x - BtnInc.size.x;
     }
 
-    public void DoSetSize()
+    public void onSetSize()
     {
         UpdateButtonsPos();
     }
 
-    public void DoRender()
+    public void render()
     {
         if (BtnDec == null)
             return;
@@ -341,9 +341,9 @@ public class GUI_Scrollbar extends GUI_Control
             {
                 // если нажат слайдер
                 if (Vertical)
-                    pos_pix = PagePressedPos_pix + (gui.mouse_pos.y - PagePressedMousePos.y);
+                    pos_pix = PagePressedPos_pix + (gui._mousePos.y - PagePressedMousePos.y);
                 else
-                    pos_pix = PagePressedPos_pix + (gui.mouse_pos.x - PagePressedMousePos.x);
+                    pos_pix = PagePressedPos_pix + (gui._mousePos.x - PagePressedMousePos.x);
                 if (pos_pix < 0)
                     pos_pix = 0;
                 if (pos_pix > len_pix - page_size_pix)
@@ -372,9 +372,9 @@ public class GUI_Scrollbar extends GUI_Control
         }
     }
 
-    public void DoUpdate()
+    public void update()
     {
-        super.DoUpdate();
+        super.update();
 
         if (PagePressed && HaveTrack())
         {
@@ -386,9 +386,9 @@ public class GUI_Scrollbar extends GUI_Control
 
             int new_pos_pix;
             if (Vertical)
-                new_pos_pix = PagePressedPos_pix + (gui.mouse_pos.y - PagePressedMousePos.y);
+                new_pos_pix = PagePressedPos_pix + (gui._mousePos.y - PagePressedMousePos.y);
             else
-                new_pos_pix = PagePressedPos_pix + (gui.mouse_pos.x - PagePressedMousePos.x);
+                new_pos_pix = PagePressedPos_pix + (gui._mousePos.x - PagePressedMousePos.x);
             if (new_pos_pix < 0)
                 new_pos_pix = 0;
             if (new_pos_pix > len_pix - page_size_pix)
@@ -399,7 +399,7 @@ public class GUI_Scrollbar extends GUI_Control
 
     }
 
-    public boolean DoMouseBtn(int btn, boolean down)
+    public boolean onMouseBtn(int btn, boolean down)
     {
         boolean res = false;
         if (btn != Input.MB_LEFT)
@@ -407,10 +407,10 @@ public class GUI_Scrollbar extends GUI_Control
 
         if (down && HaveTrack())
         {
-            if (MouseInMe() && MouseInPage())
+            if (isMouseInMe() && MouseInPage())
             {
                 PagePressed = true;
-                PagePressedMousePos = new Vec2i(gui.mouse_pos);
+                PagePressedMousePos = new Vec2i(gui._mousePos);
                 PagePressedPos = Pos;
                 int len_pix = GetLenPixels();
                 int page_size_pix = Math.round((float) len_pix / (Max - Min) * PageSize);

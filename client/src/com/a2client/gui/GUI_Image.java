@@ -32,27 +32,27 @@ public class GUI_Image extends GUI_Control
 		super(parent);
 	}
 
-	public boolean DoMouseBtn(int btn, boolean down)
+	public boolean onMouseBtn(int btn, boolean down)
 	{
-		return !drag && MouseInMe() && down;
+		return !drag && isMouseInMe() && down;
 	}
 
-	public boolean CheckMouseInControl()
+	public boolean checkMouseInControl()
 	{
 		return !drag && visible;
 	}
 
-	public void DoUpdate()
+	public void update()
 	{
 		if (drag)
 		{
-			SetSize(getSkin().getElementSize(skin_element));
-			SetPos(gui.mouse_pos.sub(drag_offset));
-			BringToFront();
+			setSize(getSkin().getElementSize(skin_element));
+			setPos(gui._mousePos.sub(drag_offset));
+			bringToFront();
 		}
 	}
 
-	public void DoRender()
+	public void render()
 	{
 		Color c = drag ? (new Color(255, 255, 255, 200)) : Color.WHITE;
 		getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y, Skin.StateNormal, c);

@@ -42,7 +42,7 @@ public class GUI_Progressbar extends GUI_Control
 
     }
 
-    public void DoRender()
+    public void render()
     {
         float s = ((float) (value - min) / (float) (max - min)) * size.x;
         int w = Math.round(s);

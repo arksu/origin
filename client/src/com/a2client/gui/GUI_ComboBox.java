@@ -44,7 +44,7 @@ public class GUI_ComboBox extends GUI_Control
         {
             public void DoClick()
             {
-                if (drop_list != null && !drop_list.terminated)
+                if (drop_list != null && !drop_list._terminated)
                     DoCollapse();
                 else
                     DoDrop();
@@ -54,7 +54,7 @@ public class GUI_ComboBox extends GUI_Control
         };
         drop_button.skin_element = "button_down";
         Vec2i s = getSkin().getElementSize("button_down");
-        drop_button.SetSize(s);
+        drop_button.setSize(s);
         skin_element = "listbox";
     }
 
@@ -97,7 +97,7 @@ public class GUI_ComboBox extends GUI_Control
 
     protected void DoClick()
     {
-        if (drop_list != null && !drop_list.terminated)
+        if (drop_list != null && !drop_list._terminated)
             DoCollapse();
         else
             DoDrop();
@@ -110,7 +110,7 @@ public class GUI_ComboBox extends GUI_Control
 
         if (drop_list != null)
         {
-            drop_list.Unlink();
+            drop_list.unlink();
         }
 
         drop_list = new GUI_StringList(gui.popup)
@@ -124,57 +124,57 @@ public class GUI_ComboBox extends GUI_Control
         };
         for (int i = 0; i < GetCount(); i++)
             drop_list.Add(Items.get(i));
-        drop_list.SetPos(abs_pos.x, abs_pos.y + size.y);
-        drop_list.SetSize(size.x, Math.min(GetCount(), 8) * drop_list.GetItemHeight(0) + 6);
+        drop_list.setPos(abs_pos.x, abs_pos.y + size.y);
+        drop_list.setSize(size.x, Math.min(GetCount(), 8) * drop_list.GetItemHeight(0) + 6);
         drop_list.SetSelected(Selected, true);
     }
 
     protected void DoCollapse()
     {
-        if (drop_list != null && !drop_list.terminated)
+        if (drop_list != null && !drop_list._terminated)
         {
-            drop_list.Unlink();
+            drop_list.unlink();
             drop_list = null;
         }
     }
 
     protected void OnDropListClick()
     {
-        if (drop_list != null && !drop_list.terminated)
+        if (drop_list != null && !drop_list._terminated)
         {
             SetSelected(drop_list.GetSelected());
         }
         DoCollapse();
     }
 
-    public void DoSetSize()
+    public void onSetSize()
     {
-        super.DoSetSize();
-        if (drop_button != null && !drop_button.terminated)
+        super.onSetSize();
+        if (drop_button != null && !drop_button._terminated)
         {
-            drop_button.SetPos(_clientRect.x + _clientRect.w - drop_button.Width(),
-                               _clientRect.y + (_clientRect.h - drop_button.Height()) / 2);
+            drop_button.setPos(_clientRect.x + _clientRect.w - drop_button.getWidth(),
+                               _clientRect.y + (_clientRect.h - drop_button.getHeight()) / 2);
         }
     }
 
-    public void DoDestroy()
+    public void destroy()
     {
-        super.DoDestroy();
-        if (drop_list != null && !drop_list.terminated)
+        super.destroy();
+        if (drop_list != null && !drop_list._terminated)
         {
-            drop_list.Unlink();
+            drop_list.unlink();
             drop_list = null;
         }
         Items.clear();
     }
 
-    public void DoRender()
+    public void render()
     {
         getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
 
         // ставим скиссор до кнопки
         GUIGDX.pushScissor(
-                new Rect(abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, _clientRect.w - drop_button.Width(),
+                new Rect(abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, _clientRect.w - drop_button.getWidth(),
                          _clientRect.h));
 
         // выводим текст
@@ -183,18 +183,18 @@ public class GUI_ComboBox extends GUI_Control
         GUIGDX.popScissor();
     }
 
-    public boolean DoMouseBtn(int btn, boolean down)
+    public boolean onMouseBtn(int btn, boolean down)
     {
         boolean result = false;
 
         if (!enabled)
             return result;
 
-        if (drop_list != null && !drop_list.terminated)
+        if (drop_list != null && !drop_list._terminated)
         {
             if (down)
             {
-                GUI_Control c = gui.mouse_in_control;
+                GUI_Control c = gui._mouseInControl;
                 while (c != null)
                 {
                     if (c == drop_list)
@@ -209,7 +209,7 @@ public class GUI_ComboBox extends GUI_Control
         if (btn == Input.MB_LEFT)
             if (down)
             {
-                if (MouseInMe())
+                if (isMouseInMe())
                 {
                     pressed = true;
                     result = true;
@@ -217,7 +217,7 @@ public class GUI_ComboBox extends GUI_Control
             }
             else
             {
-                if (pressed && MouseInMe())
+                if (pressed && isMouseInMe())
                 {
                     DoClick();
                     result = true;

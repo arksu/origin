@@ -40,14 +40,14 @@ public class GUI_EquipWindow extends GUI_Window
 	public GUI_EquipWindow(GUI_Control parent)
 	{
 		super(parent);
-		SetSize(190, 290);
+		setSize(190, 290);
 	}
 
 	public void assign(Equip equip)
 	{
 		for (GUI_InventoryItem item : _items.values())
 		{
-			item.Unlink();
+			item.unlink();
 		}
 		_items.clear();
 
@@ -58,11 +58,11 @@ public class GUI_EquipWindow extends GUI_Window
 			// поставим слоту правильную позицию
 			if (item.getY() >= 0 && item.getY() < _slotPos.size())
 			{
-				ctrl.SetPos(_slotPos.get(item.getY()));
+				ctrl.setPos(_slotPos.get(item.getY()));
 			}
 			else
 			{
-				ctrl.SetPos(5, item.getY() * 40 + 40);
+				ctrl.setPos(5, item.getY() * 40 + 40);
 				_log.warn("equip slot invalid code");
 			}
 			_items.put(item.getY(), ctrl);
@@ -75,7 +75,7 @@ public class GUI_EquipWindow extends GUI_Window
 			{
 				GUI_InventoryItem ctrl = new GUI_InventoryItem(this, 200, i);
 				ctrl.tagi = 2;
-				ctrl.SetPos(_slotPos.get(i));
+				ctrl.setPos(_slotPos.get(i));
 			}
 		}
 	}

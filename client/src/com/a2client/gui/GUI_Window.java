@@ -72,20 +72,20 @@ public class GUI_Window extends GUI_Control
     public void close()
     {
         DoClose();
-        this.Unlink();
+        this.unlink();
     }
 
     protected void DoClose()
     {
     }
 
-    public boolean DoMouseBtn(int btn, boolean down)
+    public boolean onMouseBtn(int btn, boolean down)
     {
         if (!enabled)
             return false;
 
-        if (down && MouseInMe())
-            BringToFront();
+        if (down && isMouseInMe())
+            bringToFront();
 
         if (btn == Input.MB_LEFT && resizeable)
         {
@@ -94,7 +94,7 @@ public class GUI_Window extends GUI_Control
                 if (mouse_in_left_resize())
                 {
                     left_resize = true;
-                    resize_pos_begin = gui.mouse_pos;
+                    resize_pos_begin = gui._mousePos;
                     resize_size = size;
                     resizex = pos.x;
                     return true;
@@ -102,7 +102,7 @@ public class GUI_Window extends GUI_Control
                 if (mouse_in_right_resize())
                 {
                     right_resize = true;
-                    resize_pos_begin = gui.mouse_pos;
+                    resize_pos_begin = gui._mousePos;
                     resize_size = size;
                     resizex = pos.x;
                     return true;
@@ -119,15 +119,15 @@ public class GUI_Window extends GUI_Control
         {
             if (down)
             {
-                if (MouseInMe() && mouse_in_caption())
+                if (isMouseInMe() && mouse_in_caption())
                 {
-                    BeginDragMove();
+                    beginDragMove();
                     return true;
                 }
             }
             else
             {
-                EndDragMove();
+                endDragMove();
                 DoMoved();
             }
         }
@@ -141,31 +141,31 @@ public class GUI_Window extends GUI_Control
     public void DoMoved()
     {}
 
-    public void DoUpdate()
+    public void update()
     {
-        //		if (have_close_button && (close_btn == null || close_btn.terminated) ) {
+        //		if (have_close_button && (close_btn == null || close_btn._terminated) ) {
         //			close_btn = spawn_close_btn();
         //		}
         int dx, dy;
         if (left_resize)
         {
-            dx = gui.mouse_pos.x - resize_pos_begin.x;
-            dy = gui.mouse_pos.y - resize_pos_begin.y;
+            dx = gui._mousePos.x - resize_pos_begin.x;
+            dy = gui._mousePos.y - resize_pos_begin.y;
             int w = resize_size.x - dx;
-            SetX(resizex + resize_size.x - w);
-            SetSize(w, resize_size.y + dy);
+            setX(resizex + resize_size.x - w);
+            setSize(w, resize_size.y + dy);
             update_close_btn();
         }
         if (right_resize)
         {
-            dx = gui.mouse_pos.x - resize_pos_begin.x;
-            dy = gui.mouse_pos.y - resize_pos_begin.y;
-            SetSize(resize_size.x + dx, resize_size.y + dy);
+            dx = gui._mousePos.x - resize_pos_begin.x;
+            dy = gui._mousePos.y - resize_pos_begin.y;
+            setSize(resize_size.x + dx, resize_size.y + dy);
             update_close_btn();
         }
     }
 
-    public void DoRender()
+    public void render()
     {
         String e_name;
         int state;
@@ -205,7 +205,7 @@ public class GUI_Window extends GUI_Control
             GUIGDX.Text(font, abs_pos.x, abs_pos.y - 2, size.x, CAPTION_HEIGHT, caption_align, caption, caption_color);
     }
 
-    public void DoSetSize()
+    public void onSetSize()
     {
         update_close_btn();
     }
@@ -216,7 +216,7 @@ public class GUI_Window extends GUI_Control
         {
             if (have_close_button && close_btn != null)
             {
-                close_btn.Unlink();
+                close_btn.unlink();
                 close_btn = null;
             }
             if (!have_close_button)
@@ -231,29 +231,29 @@ public class GUI_Window extends GUI_Control
     protected boolean mouse_in_caption()
     {
         Rect rect = new Rect(abs_pos, new Vec2i(size.x, CAPTION_HEIGHT));
-        return (rect.PointInRect(gui.mouse_pos) && MouseInMe());
+        return (rect.PointInRect(gui._mousePos) && isMouseInMe());
     }
 
     protected boolean mouse_in_right_resize()
     {
         Vec2i sz = getSkin().getElementSize("window_resize_right");
         Rect rect = new Rect(abs_pos.x + size.x - sz.x, abs_pos.y + size.y - sz.y, sz);
-        return (rect.PointInRect(gui.mouse_pos) && MouseInMe());
+        return (rect.PointInRect(gui._mousePos) && isMouseInMe());
     }
 
     protected boolean mouse_in_left_resize()
     {
         Vec2i sz = getSkin().getElementSize("window_resize_left");
         Rect rect = new Rect(abs_pos.x, abs_pos.y + size.y - sz.y, sz);
-        return (rect.PointInRect(gui.mouse_pos) && MouseInMe());
+        return (rect.PointInRect(gui._mousePos) && isMouseInMe());
     }
 
     protected void update_close_btn()
     {
         if (close_btn == null)
             return;
-        close_btn.SetPos(size.x - CLOSE_BTN_W - 2, 3);
-        close_btn.SetSize(CLOSE_BTN_W, CLOSE_BTN_H);
+        close_btn.setPos(size.x - CLOSE_BTN_W - 2, 3);
+        close_btn.setSize(CLOSE_BTN_W, CLOSE_BTN_H);
         close_btn.icon_name = "button_close";
         close_btn.render_bg = false;
     }

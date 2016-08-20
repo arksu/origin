@@ -34,12 +34,12 @@ public class gui_drag_container extends GUI_Control
     public gui_drag_container(GUI_Control parent)
     {
         super(parent);
-        drag_enabled = true;
+        _dragEnabled = true;
     }
 
     boolean pressed = false;
 
-    public boolean DoMouseBtn(int btn, boolean down)
+    public boolean onMouseBtn(int btn, boolean down)
     {
         if (down)
         {
@@ -53,11 +53,11 @@ public class gui_drag_container extends GUI_Control
         else
             pressed = false;
         // в контейнере начинаем драг
-        if (down && btn == Input.MB_LEFT && MouseInMe() && have_some)
+        if (down && btn == Input.MB_LEFT && isMouseInMe() && have_some)
         {
             // если левой мышкой чото начинаем тащить
             //gui.BeginCheckDrag(this);
-            gui.BeginDrag(this, new gui_somedrag(), gui.mouse_pos.sub(abs_pos));
+            gui.beginDrag(this, new gui_somedrag(), gui._mousePos.sub(abs_pos));
             // при этом вещь не удаляется из контейнера.
             // удалить надо только когда закончится драг.
             return true;
@@ -71,31 +71,31 @@ public class gui_drag_container extends GUI_Control
     }
 
     // запрос на возможность принять контрол
-    public boolean DoRequestDrop(DragInfo info)
+    public boolean doRequestDrop(DragInfo info)
     {
         // тут по идее надо проверять что мы пытаемся дропнуть на контейнер.
         // и вернуть истину только если дроп возможен.
-        return (info.drag_control instanceof gui_somedrag);
+        return (info._dragControl instanceof gui_somedrag);
     }
 
-    public void DoEndDrag(DragInfo info)
+    public void endDrag(DragInfo info)
     {
         // закончили перетаскивание
         // тут момент бросания некой вещи на этот контейнер
         // (не с которого начали перетаскивание)
-        if (info.drag_control instanceof gui_somedrag)
+        if (info._dragControl instanceof gui_somedrag)
         {
-            ((gui_drag_container) info.drag_control.drag_parent).have_some = false;
+            ((gui_drag_container) info._dragControl.drag_parent).have_some = false;
             have_some = true;
         }
     }
 
-    public void DoUpdate()
+    public void update()
     {
-        drag_above_me = (MouseInMe() && gui.drag_info.state == DragInfo.DRAG_STATE_ACCEPT);
+        drag_above_me = (isMouseInMe() && gui._dragInfo.state == DragInfo.DRAG_STATE_ACCEPT);
     }
 
-    public void DoRender()
+    public void render()
     {
         if (drag_above_me)
             GUIGDX.fillRect(abs_pos, size, Color.YELLOW);

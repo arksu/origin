@@ -35,7 +35,7 @@ public class GUI_Texture extends GUI_Control
     {
         _texture = t;
         mode = "spr";
-        SetSize(t.getWidth(), t.getHeight());
+        setSize(t.getWidth(), t.getHeight());
     }
 
     public Texture getTexture()
@@ -43,7 +43,7 @@ public class GUI_Texture extends GUI_Control
         return _texture;
     }
 
-    public void DoRender()
+    public void render()
     {
         if (mode.equals("spr"))
             GUIGDX.getSpriteBatch()

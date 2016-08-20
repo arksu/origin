@@ -32,7 +32,7 @@ public class GUI_Debug
     {
         GUIGDX.Text("", 10, 300, "GUI DEBUG ON!");
         // подсветим нужный контрол
-        if (debug_ctrl != null && !debug_ctrl.terminated)
+        if (debug_ctrl != null && !debug_ctrl._terminated)
         {
             //            Render2D.Disable2D();
             //            Render2D.ChangeColor(Color.red);
@@ -46,12 +46,12 @@ public class GUI_Debug
     {
         // TODO : переделать на gdx коды клавиш
         // выбираем по ЛКМ
-        if (GUI.getInstance().mouse_in_control != null && Input.MouseBtns[0])
-            debug_ctrl = GUI.getInstance().mouse_in_control;
+        if (GUI.getInstance()._mouseInControl != null && Input.MouseBtns[0])
+            debug_ctrl = GUI.getInstance()._mouseInControl;
 
 
         // передвигаем стрелками
-        if (debug_ctrl != null && !debug_ctrl.terminated)
+        if (debug_ctrl != null && !debug_ctrl._terminated)
         {
             if (Input.KeyHit(Keyboard.KEY_H))
             {
@@ -70,7 +70,7 @@ public class GUI_Debug
             if (!Input.isShiftPressed() && Input.KeyHit(Keyboard.KEY_DOWN))
                 dd = new Vec2i(0, d);
 
-            debug_ctrl.SetPos(debug_ctrl.pos.add(dd));
+            debug_ctrl.setPos(debug_ctrl.pos.add(dd));
 
             dd = Vec2i.z;
             if (Input.isShiftPressed() && Input.KeyHit(Keyboard.KEY_LEFT))
@@ -82,7 +82,7 @@ public class GUI_Debug
             if (Input.isShiftPressed() && Input.KeyHit(Keyboard.KEY_DOWN))
                 dd = new Vec2i(0, d);
 
-            debug_ctrl.SetSize(debug_ctrl.size.add(dd));
+            debug_ctrl.setSize(debug_ctrl.size.add(dd));
         }
     }
 }

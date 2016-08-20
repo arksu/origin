@@ -50,16 +50,16 @@ public class GUI_ScrollPage extends GUI_Control
         AutoScrollH = true;
     }
 
-    public void DoSetSize()
+    public void onSetSize()
     {
-        super.DoSetSize();
+        super.onSetSize();
         UpdateScrollBars();
     }
 
-    public boolean DoMouseWheel(boolean isUp, int len)
+    public boolean onMouseWheel(boolean isUp, int len)
     {
         boolean result = false;
-        if (!MouseInMe())
+        if (!isMouseInMe())
             return result;
 
         if (HaveVerticalScrollbar)
@@ -90,7 +90,7 @@ public class GUI_ScrollPage extends GUI_Control
         {
             y = FVerticalScrollbar.Pos;
             if (HaveHorizontalScrollbar)
-                h = _clientRect.h - FHorizontalScrollbar.Height();
+                h = _clientRect.h - FHorizontalScrollbar.getHeight();
             else
                 h = _clientRect.h;
         }
@@ -98,7 +98,7 @@ public class GUI_ScrollPage extends GUI_Control
         {
             y = 0;
             if (HaveHorizontalScrollbar)
-                h = _clientRect.h - FHorizontalScrollbar.Height();
+                h = _clientRect.h - FHorizontalScrollbar.getHeight();
             else
                 h = _clientRect.h;
         }
@@ -107,7 +107,7 @@ public class GUI_ScrollPage extends GUI_Control
         {
             x = FHorizontalScrollbar.Pos;
             if (HaveVerticalScrollbar)
-                w = _clientRect.w - FVerticalScrollbar.Width();
+                w = _clientRect.w - FVerticalScrollbar.getWidth();
             else
                 w = _clientRect.w;
         }
@@ -115,7 +115,7 @@ public class GUI_ScrollPage extends GUI_Control
         {
             x = 0;
             if (HaveVerticalScrollbar)
-                w = _clientRect.w - FVerticalScrollbar.Width();
+                w = _clientRect.w - FVerticalScrollbar.getWidth();
             else
                 w = _clientRect.w;
         }
@@ -133,7 +133,7 @@ public class GUI_ScrollPage extends GUI_Control
 
         if (HaveVerticalScrollbar)
             if (!VScrollBarIsRight)
-                Result.x = Result.x + FVerticalScrollbar.Width();
+                Result.x = Result.x + FVerticalScrollbar.getWidth();
 
         return Result;
     }
@@ -144,16 +144,16 @@ public class GUI_ScrollPage extends GUI_Control
         if (HaveVerticalScrollbar)
         {
             if (ScrollbarsVisible)
-                FVerticalScrollbar.Show();
+                FVerticalScrollbar.show();
             else
-                FVerticalScrollbar.Hide();
+                FVerticalScrollbar.hide();
 
             if (VScrollBarIsRight)
-                FVerticalScrollbar.SetX(_clientRect.x + _clientRect.w - FVerticalScrollbar.Width());
+                FVerticalScrollbar.setX(_clientRect.x + _clientRect.w - FVerticalScrollbar.getWidth());
             else
-                FVerticalScrollbar.SetX(_clientRect.x);
+                FVerticalScrollbar.setX(_clientRect.x);
 
-            FVerticalScrollbar.SetY(_clientRect.y);
+            FVerticalScrollbar.setY(_clientRect.y);
             old_max = FVerticalScrollbar.Max;
             old_page_size = FVerticalScrollbar.PageSize;
             FVerticalScrollbar.Min = 0;
@@ -161,13 +161,13 @@ public class GUI_ScrollPage extends GUI_Control
 
             if (HaveHorizontalScrollbar)
             {
-                FVerticalScrollbar.SetHeight(_clientRect.h - FHorizontalScrollbar.Height());
+                FVerticalScrollbar.setHeight(_clientRect.h - FHorizontalScrollbar.getHeight());
             }
             else
             {
-                FVerticalScrollbar.SetHeight(_clientRect.h);
+                FVerticalScrollbar.setHeight(_clientRect.h);
             }
-            FVerticalScrollbar.PageSize = FVerticalScrollbar.Height();
+            FVerticalScrollbar.PageSize = FVerticalScrollbar.getHeight();
 
             if (AutoScrollV)
                 if (FVerticalScrollbar.Pos + old_page_size >= old_max)
@@ -177,15 +177,15 @@ public class GUI_ScrollPage extends GUI_Control
         if (HaveHorizontalScrollbar)
         {
             if (ScrollbarsVisible)
-                FHorizontalScrollbar.Show();
+                FHorizontalScrollbar.show();
             else
-                FHorizontalScrollbar.Hide();
+                FHorizontalScrollbar.hide();
 
-            FHorizontalScrollbar.SetX(_clientRect.x);
+            FHorizontalScrollbar.setX(_clientRect.x);
             if (HScrollBarIsBottom)
-                FHorizontalScrollbar.SetY(_clientRect.y + _clientRect.h - FHorizontalScrollbar.Height());
+                FHorizontalScrollbar.setY(_clientRect.y + _clientRect.h - FHorizontalScrollbar.getHeight());
             else
-                FHorizontalScrollbar.SetY(_clientRect.y);
+                FHorizontalScrollbar.setY(_clientRect.y);
 
             old_max = FHorizontalScrollbar.Max;
             old_page_size = FHorizontalScrollbar.PageSize;
@@ -193,13 +193,13 @@ public class GUI_ScrollPage extends GUI_Control
             FHorizontalScrollbar.Max = FullWidth;
             if (HaveVerticalScrollbar)
             {
-                FHorizontalScrollbar.SetWidth(_clientRect.w - FVerticalScrollbar.Width());
+                FHorizontalScrollbar.setWidth(_clientRect.w - FVerticalScrollbar.getWidth());
             }
             else
             {
-                FHorizontalScrollbar.SetWidth(_clientRect.w);
+                FHorizontalScrollbar.setWidth(_clientRect.w);
             }
-            FHorizontalScrollbar.PageSize = FHorizontalScrollbar.Width();
+            FHorizontalScrollbar.PageSize = FHorizontalScrollbar.getWidth();
 
             if (AutoScrollH)
                 if (FHorizontalScrollbar.Pos + old_page_size >= old_max)
@@ -231,7 +231,7 @@ public class GUI_ScrollPage extends GUI_Control
     public int GetVertScrollWidth()
     {
         if (HaveVerticalScrollbar)
-            return FVerticalScrollbar.Width();
+            return FVerticalScrollbar.getWidth();
         else
             return 0;
     }
@@ -239,7 +239,7 @@ public class GUI_ScrollPage extends GUI_Control
     public int GetHorizScrollHeight()
     {
         if (HaveHorizontalScrollbar)
-            return FHorizontalScrollbar.Height();
+            return FHorizontalScrollbar.getHeight();
         else
             return 0;
     }
@@ -262,7 +262,7 @@ public class GUI_ScrollPage extends GUI_Control
         if (v && !HaveVerticalScrollbar)
         {
             if (FVerticalScrollbar != null)
-                FVerticalScrollbar.Unlink();
+                FVerticalScrollbar.unlink();
             FVerticalScrollbar = CreateScrollbar(true);
             FVerticalScrollbar.SetVertical(true);
             FVerticalScrollbar.Min = 1;
@@ -274,7 +274,7 @@ public class GUI_ScrollPage extends GUI_Control
         {
             if (FVerticalScrollbar != null)
             {
-                FVerticalScrollbar.Unlink();
+                FVerticalScrollbar.unlink();
                 FVerticalScrollbar = null;
             }
             changed = true;
@@ -283,7 +283,7 @@ public class GUI_ScrollPage extends GUI_Control
         if (h && !HaveHorizontalScrollbar)
         {
             if (FHorizontalScrollbar != null)
-                FHorizontalScrollbar.Unlink();
+                FHorizontalScrollbar.unlink();
             FHorizontalScrollbar = CreateScrollbar(false);
             FHorizontalScrollbar.SetVertical(true);
             FHorizontalScrollbar.Min = 1;
@@ -295,7 +295,7 @@ public class GUI_ScrollPage extends GUI_Control
         {
             if (FHorizontalScrollbar != null)
             {
-                FHorizontalScrollbar.Unlink();
+                FHorizontalScrollbar.unlink();
                 FHorizontalScrollbar = null;
             }
             changed = true;

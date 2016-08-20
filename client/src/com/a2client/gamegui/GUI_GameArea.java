@@ -30,10 +30,10 @@ public class GUI_GameArea extends GUI_Control
 	}
 
 	@Override
-	public boolean DoMouseBtn(int btn, boolean down)
+	public boolean onMouseBtn(int btn, boolean down)
 	{
 		boolean cameraEndDrag = false;
-		if (MouseInMe())
+		if (isMouseInMe())
 		{
 			if (btn == BUTTON_CAMERA)
 			{
@@ -53,7 +53,7 @@ public class GUI_GameArea extends GUI_Control
 				}
 			}
 
-			GUI.getInstance().focused_control = null;
+			GUI.getInstance()._focusedControl = null;
 			if (_game.getWorldMousePos() != null)
 			{
 				int action = -1;
@@ -77,9 +77,9 @@ public class GUI_GameArea extends GUI_Control
 	}
 
 	@Override
-	public void DoUpdate()
+	public void update()
 	{
-		super.DoUpdate();
+		super.update();
 
 		if (_cameraDrag)
 		{

@@ -36,7 +36,7 @@ public class GUI_ListBox extends GUI_ScrollPage
         ResetSelected();
     }
 
-    public void DoRender()
+    public void render()
     {
         if (RenderBG)
         {
@@ -77,13 +77,13 @@ public class GUI_ListBox extends GUI_ScrollPage
             h += GetItemHeight(i);
         }
         SetFullHeight(h);
-        SetFullWidth(Width());
+        SetFullWidth(getWidth());
     }
 
-    public boolean DoMouseBtn(int btn, boolean down)
+    public boolean onMouseBtn(int btn, boolean down)
     {
         boolean result = false;
-        if (!MouseInMe())
+        if (!isMouseInMe())
         {
             pressed = false;
             return result;
@@ -93,7 +93,7 @@ public class GUI_ListBox extends GUI_ScrollPage
         {
             if (down)
             {
-                if (MouseInMe())
+                if (isMouseInMe())
                 {
                     pressed = true;
                 }
@@ -117,15 +117,15 @@ public class GUI_ListBox extends GUI_ScrollPage
             if ((ay + h >= abs_pos.y + _clientRect.y) && (ay < abs_pos.y + _clientRect.y + wr.h))
             {
                 boolean mouse_captured;
-                mouse_captured = gui.MouseInRect(new Vec2i(ax, ay), new Vec2i(wr.w, h));
+                mouse_captured = gui.isMouseInRect(new Vec2i(ax, ay), new Vec2i(wr.w, h));
 
                 if (mouse_captured)
                 {
                     result = OnItemClick(i, btn, down);
                     if (!result)
                     {
-                        int cx = gui.mouse_pos.x - ax;
-                        int cy = gui.mouse_pos.y - ay;
+                        int cx = gui._mousePos.x - ax;
+                        int cy = gui._mousePos.y - ay;
                         result = OnItemClick(i, cx, cy, btn, down);
                     }
                     return result;
@@ -176,14 +176,14 @@ public class GUI_ListBox extends GUI_ScrollPage
         int state;
         if (GetSelected() == index)
         {
-            if (gui.MouseInRect(new Vec2i(x, y), new Vec2i(w, h)) && MouseInMe())
+            if (gui.isMouseInRect(new Vec2i(x, y), new Vec2i(w, h)) && isMouseInMe())
                 state = Skin.StateHighlight_Checked;
             else
                 state = Skin.StateNormal_Checked;
         }
         else
         {
-            if (gui.MouseInRect(new Vec2i(x, y), new Vec2i(w, h)) && MouseInMe())
+            if (gui.isMouseInRect(new Vec2i(x, y), new Vec2i(w, h)) && isMouseInMe())
                 state = Skin.StateHighlight;
             else
                 state = Skin.StateNormal;
@@ -222,7 +222,7 @@ public class GUI_ListBox extends GUI_ScrollPage
     public int GetMouseItemIndex()
     {
         int result = -1;
-        if (!MouseInMe())
+        if (!isMouseInMe())
             return result;
 
         Rect wr = WorkRect();
@@ -238,7 +238,7 @@ public class GUI_ListBox extends GUI_ScrollPage
             if ((ay + h >= abs_pos.y + _clientRect.y) && (ay < abs_pos.y + _clientRect.y + wr.h))
             {
                 boolean mouse_captured;
-                mouse_captured = gui.MouseInRect(new Vec2i(ax, ay), new Vec2i(wr.w, h));
+                mouse_captured = gui.isMouseInRect(new Vec2i(ax, ay), new Vec2i(wr.w, h));
 
                 if (mouse_captured)
                 {

@@ -70,8 +70,8 @@ public class GUI_ContextMenu extends GUI_StringList
 		}
 		w += 25;
 
-		int x = gui.mouse_pos.x;
-		int y = gui.mouse_pos.y;
+		int x = gui._mousePos.x;
+		int y = gui._mousePos.y;
 
 		// ищем куда вывести хинт
 		if (x + OFFSET + w > Gdx.graphics.getWidth())
@@ -91,23 +91,23 @@ public class GUI_ContextMenu extends GUI_StringList
 			y += OFFSET;
 		}
 
-		SetSize(w, h);
-		SetPos(x, y);
+		setSize(w, h);
+		setPos(x, y);
 	}
 
 	public void DoClick()
 	{
-		this.Unlink();
+		this.unlink();
 		impl.OnContextClick(GetSelected());
 	}
 
 	@Override
-	public boolean DoMouseBtn(int btn, boolean down)
+	public boolean onMouseBtn(int btn, boolean down)
 	{
-		if (down && !MouseInMe())
+		if (down && !isMouseInMe())
 		{
-			Unlink();
+			unlink();
 		}
-		return super.DoMouseBtn(btn, down);
+		return super.onMouseBtn(btn, down);
 	}
 }

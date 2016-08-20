@@ -24,7 +24,7 @@ import com.badlogic.gdx.graphics.Color;
 
 public class gui_somedrag extends GUI_DragControl
 {
-    public void DoRender()
+    public void render()
     {
         GUIGDX.fillRect(abs_pos, new Vec2i(50, 50), Color.DARK_GRAY);
     }

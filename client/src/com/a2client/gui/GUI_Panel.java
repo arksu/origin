@@ -48,12 +48,12 @@ public class GUI_Panel extends GUI_Control
     {
     }
 
-    public boolean DoMouseBtn(int btn, boolean down)
+    public boolean onMouseBtn(int btn, boolean down)
     {
         if (!enabled)
             return false;
 
-        if (down && MouseInMe())
+        if (down && isMouseInMe())
         {
             DoClick();
             return true;
@@ -62,7 +62,7 @@ public class GUI_Panel extends GUI_Control
         return false;
     }
 
-    public void DoRender()
+    public void render()
     {
         switch (render_mode)
         {

@@ -108,7 +108,7 @@ public class Input implements InputProcessor
 	@Override
 	public boolean keyDown(int keycode)
 	{
-		GUI.getInstance().HandleKey((char) 0, keycode, true);
+		GUI.getInstance().handleKey((char) 0, keycode, true);
 		return true;
 	}
 
@@ -121,7 +121,7 @@ public class Input implements InputProcessor
 	@Override
 	public boolean keyTyped(char character)
 	{
-		GUI.getInstance().HandleKey(character, 0, true);
+		GUI.getInstance().handleKey(character, 0, true);
 		return true;
 	}
 

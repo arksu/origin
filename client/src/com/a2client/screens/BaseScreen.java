@@ -41,7 +41,7 @@ public class BaseScreen implements Screen
 
 		GUIGDX.getSpriteBatch().begin();
 		onRender();
-		GUI.getInstance().Render();
+		GUI.getInstance().render();
 
 		GUIGDX.getSpriteBatch().end();
 	}

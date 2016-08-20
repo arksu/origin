@@ -68,10 +68,10 @@ public class Game extends BaseScreen
 
 		GUI.reCreate();
 		_gameArea = new GUI_GameArea(GUI.getInstance().custom, this);
-		_gameArea.SetPos(0, 0);
-		_gameArea.SetSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		_gameArea.setPos(0, 0);
+		_gameArea.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		_lblStatus = new GUI_Label(GUI.rootNormal());
-		_lblStatus.SetPos(10, 10);
+		_lblStatus.setPos(10, 10);
 
 		_btnExit = new GUI_Button(GUI.rootNormal())
 		{
@@ -83,15 +83,15 @@ public class Game extends BaseScreen
 			}
 		};
 		_btnExit.caption = Lang.getTranslate("Game.quit");
-		_btnExit.SetSize(100, 25);
-		_btnExit.SetPos(Gdx.graphics.getWidth() - 100, 0);
+		_btnExit.setSize(100, 25);
+		_btnExit.setPos(Gdx.graphics.getWidth() - 100, 0);
 
 		int hc = 100;
 		int wc = 200;
 		int py = Gdx.graphics.getHeight() - hc - 30;
 		_chatMemo = new GUI_Memo(GUI.rootNormal());
-		_chatMemo.SetPos(5, py);
-		_chatMemo.SetSize(wc, hc);
+		_chatMemo.setPos(5, py);
+		_chatMemo.setSize(wc, hc);
 
 		_chatEdit = new GUI_Edit(GUI.rootNormal())
 		{
@@ -100,9 +100,9 @@ public class Game extends BaseScreen
 			{
 				if (Utils.isEmpty(_chatEdit.text))
 				{
-					if (GUI.getInstance().focused_control == _chatEdit)
+					if (GUI.getInstance()._focusedControl == _chatEdit)
 					{
-						GUI.getInstance().focused_control = null;
+						GUI.getInstance()._focusedControl = null;
 						_lostFocus = true;
 					}
 					return;
@@ -112,8 +112,8 @@ public class Game extends BaseScreen
 				_chatEdit.SetText("");
 			}
 		};
-		_chatEdit.SetSize(_chatMemo.Width(), 20);
-		_chatEdit.SetPos(5, py + _chatMemo.Height() + 5);
+		_chatEdit.setSize(_chatMemo.getWidth(), 20);
+		_chatEdit.setPos(5, py + _chatMemo.getHeight() + 5);
 
 		_actions = new GUI_ActionsList(GUI.rootNormal())
 		{
@@ -124,8 +124,8 @@ public class Game extends BaseScreen
 				new ActionSelect(item).send();
 			}
 		};
-		_actions.SetSize(150, 100);
-		_actions.SetPos(Gdx.graphics.getWidth() - _actions.size.x, Gdx.graphics.getHeight() - _actions.size.y);
+		_actions.setSize(150, 100);
+		_actions.setPos(Gdx.graphics.getWidth() - _actions.size.x, Gdx.graphics.getHeight() - _actions.size.y);
 
 		_gameCamera = new GameCamera();
 		_render = new Render(this);
@@ -147,10 +147,10 @@ public class Game extends BaseScreen
 	@Override
 	public void onUpdate()
 	{
-		_actions.SetPos(Gdx.graphics.getWidth() - _actions.size.x, Gdx.graphics.getHeight() - _actions.size.y);
+		_actions.setPos(Gdx.graphics.getWidth() - _actions.size.x, Gdx.graphics.getHeight() - _actions.size.y);
 		if (_state == GameState.IN_GAME)
 		{
-			if (GUI.getInstance().focused_control == _chatEdit)
+			if (GUI.getInstance()._focusedControl == _chatEdit)
 			{
 				String h = "";
 				if (Input.KeyHit(Keys.UP))
@@ -167,7 +167,7 @@ public class Game extends BaseScreen
 					_chatEdit.SetCursor(_chatEdit.text.length());
 				}
 			}
-			else if (GUI.getInstance().mouse_in_control == null)
+			else if (GUI.getInstance()._mouseInControl == null)
 			{
 				if (Input.KeyHit(Hotkey.INVENTORY))
 				{
@@ -184,9 +184,9 @@ public class Game extends BaseScreen
 				}
 				else if (Input.KeyHit(Hotkey.CHAT_ENTER))
 				{
-					if (GUI.getInstance().focused_control == null && !_lostFocus)
+					if (GUI.getInstance()._focusedControl == null && !_lostFocus)
 					{
-						GUI.getInstance().focused_control = _chatEdit;
+						GUI.getInstance()._focusedControl = _chatEdit;
 					}
 					_lostFocus = false;
 				}
@@ -273,7 +273,7 @@ public class Game extends BaseScreen
 				" selected: " + (_render.getSelected() != null ? "" + _render.getSelected() : "null") +
 				" objects: " + _render.getRenderedObjects() +
 //				" cam: " + _gameCamera.getCameraDistance()+
-				" gui: " + GUI.getInstance().mouse_in_control
+				" gui: " + GUI.getInstance()._mouseInControl
 		;
 	}
 
@@ -288,7 +288,7 @@ public class Game extends BaseScreen
 	{
 		super.resize(width, height);
 		_gameCamera.onResize(width, height);
-		_gameArea.SetSize(width, height);
+		_gameArea.setSize(width, height);
 		_render.onResize(width, height);
 	}
 

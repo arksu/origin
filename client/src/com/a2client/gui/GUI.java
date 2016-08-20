@@ -29,27 +29,25 @@ public class GUI
 {
 	private static GUI _instance = new GUI();
 
-	public static boolean game_gui_render = true;
-
 	// core
 	public GUI_Control root;
 	public GUI_Control normal;
 	public GUI_Control popup;
 	public GUI_Control modal;
 	public GUI_Control custom;
-	public Vec2i mouse_pos = Vec2i.z;
-	public GUI_Control mouse_in_control = null;
-	public GUI_Control focused_control = null;
-	public GUI_Control mouse_grabber = null;
-	public GUI_Control drag_move_control = null;
-	public DragInfo drag_info = new DragInfo();
-	private boolean active = true;
-
-	private long MbLeftPressTime = MOUSE_DBL_CLICK_TIME + 1;
-	private Vec2i MbLeftPressCoord = Vec2i.z;
-	private boolean[] mouse_btns = new boolean[3];
+	public Vec2i _mousePos = Vec2i.z;
+	public GUI_Control _mouseInControl = null;
+	public GUI_Control _focusedControl = null;
+	public GUI_Control _mouseGrabber = null;
+	public GUI_Control _dragMoveControl = null;
+	public DragInfo _dragInfo = new DragInfo();
+	private boolean _active = true;
 
 	private static final int MOUSE_DBL_CLICK_TIME = 250;
+	private long MbLeftPressTime = MOUSE_DBL_CLICK_TIME + 1;
+	private Vec2i MbLeftPressCoord = Vec2i.z;
+	private boolean[] _mouseBtns = new boolean[3];
+
 	// отступ от мыши для хинта
 	private static final int HINT_OFFSET = 15;
 
@@ -63,25 +61,25 @@ public class GUI
 	public GUI()
 	{
 		root = new GUI_Control(this);
-		root.SetSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		root.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		custom = new GUI_Control(root);
 		normal = new GUI_Control(root);
 		modal = new GUI_Control(root);
 		popup = new GUI_Control(root);
-		custom.SetSize(root);
-		normal.SetSize(root);
-		popup.SetSize(root);
-		modal.SetSize(root);
+		custom.setSize(root);
+		normal.setSize(root);
+		popup.setSize(root);
+		modal.setSize(root);
 	}
 
 	public void setActive(boolean val)
 	{
-		this.active = val;
+		this._active = val;
 	}
 
 	public boolean getActive()
 	{
-		return this.active;
+		return this._active;
 	}
 
 	public static GUI_Control rootNormal()
@@ -99,37 +97,37 @@ public class GUI
 		return getInstance().popup;
 	}
 
-	public void Update()
+	public void update()
 	{
-		if (!active)
+		if (!_active)
 		{
 			return;
 		}
 
-		UpdateMousePos();
+		updateMousePos();
 		if (!GUI_Debug.active)
 		{
-			UpdateMouseButtons();
+			updateMouseButtons();
 		}
 		UpdateMouseWheel();
-		UpdateDragState();
+		updateDragState();
 
-		root.Update();
+		root.doUpdate();
 	}
 
-	public void Render()
+	public void render()
 	{
-		if (!active)
+		if (!_active)
 		{
 			return;
 		}
-		root.Render();
-		RenderHint();
+		root.doRender();
+		renderHint();
 	}
 
-	public void RenderHint()
+	public void renderHint()
 	{
-		if (mouse_in_control == null)
+		if (_mouseInControl == null)
 		{
 			return;
 		}
@@ -138,9 +136,9 @@ public class GUI
 		String text = "";
 
 		// получаем размер
-		if (mouse_in_control._isSimpleHint)
+		if (_mouseInControl._isSimpleHint)
 		{
-			text = mouse_in_control.getHint();
+			text = _mouseInControl.getHint();
 			if (text == null || text.length() == 0)
 			{
 				return;
@@ -151,7 +149,7 @@ public class GUI
 		}
 		else
 		{
-			Vec2i sz = mouse_in_control.getHintSize();
+			Vec2i sz = _mouseInControl.getHintSize();
 			w = sz.x;
 			h = sz.y;
 		}
@@ -160,8 +158,8 @@ public class GUI
 			return;
 		}
 
-		int x = mouse_pos.x;
-		int y = mouse_pos.y;
+		int x = _mousePos.x;
+		int y = _mousePos.y;
 
 		// ищем куда вывести хинт
 		if (x + HINT_OFFSET + w > Config.getInstance().getScreenWidth())
@@ -182,17 +180,17 @@ public class GUI
 		}
 
 		// выводим хинт
-		if (mouse_in_control._needHintBg)
+		if (_mouseInControl._needHintBg)
 		{
 			Skin.getInstance().draw("hint", x, y, w, h);
 		}
-		if (mouse_in_control._isSimpleHint)
+		if (_mouseInControl._isSimpleHint)
 		{
-			SimpleHint.Render(x, y, w, h, text);
+			SimpleHint.render(x, y, w, h, text);
 		}
 		else
 		{
-			mouse_in_control.RenderHint(x, y, w, h);
+			_mouseInControl.renderHint(x, y, w, h);
 		}
 	}
 
@@ -201,17 +199,17 @@ public class GUI
 		return (c == root || c == normal || c == popup || c == modal || c == custom);
 	}
 
-	public void HandleKey(char c, int code, boolean down)
+	public void handleKey(char c, int code, boolean down)
 	{
-		if (!active)
+		if (!_active)
 		{
 			return;
 		}
 		boolean r = false;
 
-		if (focused_control != null)
+		if (_focusedControl != null)
 		{
-			r = focused_control.DoKey(c, code, down);
+			r = _focusedControl.onKey(c, code, down);
 		}
 		if (r)
 		{
@@ -220,7 +218,7 @@ public class GUI
 
 		for (GUI_Control ctrl = root.last_child; ctrl != null; ctrl = ctrl.prev)
 		{
-			r = ctrl.HandleKey(c, code, down);
+			r = ctrl.handleKey(c, code, down);
 			if (r)
 			{
 				return;
@@ -228,44 +226,44 @@ public class GUI
 		}
 	}
 
-	public void UpdateMousePos()
+	public void updateMousePos()
 	{
-		Vec2i old_pos = new Vec2i(mouse_pos);
-		mouse_pos = new Vec2i(Input.MouseX, Input.MouseY);
-		if ((mouse_pos.x - old_pos.x != 0) || (mouse_pos.y - old_pos.y != 0))
+		Vec2i oldPos = new Vec2i(_mousePos);
+		_mousePos = new Vec2i(Input.MouseX, Input.MouseY);
+		if ((_mousePos.x - oldPos.x != 0) || (_mousePos.y - oldPos.y != 0))
 		{
-			OnMouseMoved(new Vec2i(mouse_pos.x - old_pos.x, mouse_pos.y - old_pos.y));
+			onMouseMoved(new Vec2i(_mousePos.x - oldPos.x, _mousePos.y - oldPos.y));
 		}
-		if (drag_move_control != null)
+		if (_dragMoveControl != null)
 		{
-			mouse_in_control = drag_move_control;
+			_mouseInControl = _dragMoveControl;
 		}
 		else
 		{
-			mouse_in_control = GetMouseInControl();
+			_mouseInControl = getMouseInControl();
 		}
 	}
 
-	public void UpdateMouseButtons()
+	public void updateMouseButtons()
 	{
 		int btn = Input.MB_LEFT;
 		MbLeftPressTime += Main.DT;
-		boolean[] old_btns = new boolean[3];
-		old_btns[0] = mouse_btns[0];
-		old_btns[1] = mouse_btns[1];
-		old_btns[2] = mouse_btns[2];
+		boolean[] oldBtns = new boolean[3];
+		oldBtns[0] = _mouseBtns[0];
+		oldBtns[1] = _mouseBtns[1];
+		oldBtns[2] = _mouseBtns[2];
 		for (int i = 0; i < 3; i++)
 		{
-			mouse_btns[i] = Input.MouseBtns[i];
+			_mouseBtns[i] = Input.MouseBtns[i];
 			// узнаем на какую кнопку нажали
-			if (mouse_btns[i] != old_btns[i])
+			if (_mouseBtns[i] != oldBtns[i])
 			{
 				switch (i)
 				{
 					case Input.MB_LEFT:
-						if (mouse_btns[i])
+						if (_mouseBtns[i])
 						{
-							if (MbLeftPressTime < MOUSE_DBL_CLICK_TIME && MbLeftPressCoord.equals(mouse_pos))
+							if (MbLeftPressTime < MOUSE_DBL_CLICK_TIME && MbLeftPressCoord.equals(_mousePos))
 							{
 								btn = Input.MB_DOUBLE;
 								MbLeftPressTime = MOUSE_DBL_CLICK_TIME;
@@ -274,7 +272,7 @@ public class GUI
 							{
 								btn = Input.MB_LEFT;
 								MbLeftPressTime = 0;
-								MbLeftPressCoord = new Vec2i(mouse_pos);
+								MbLeftPressCoord = new Vec2i(_mousePos);
 							}
 						}
 						else
@@ -290,51 +288,51 @@ public class GUI
 						break;
 				}
 
-				if (mouse_in_control != null && mouse_in_control != focused_control)
+				if (_mouseInControl != null && _mouseInControl != _focusedControl)
 				{
-					if (mouse_btns[i])
+					if (_mouseBtns[i])
 					{
-						focused_control = null;
+						_focusedControl = null;
 					}
 				}
 
-				if (HaveDrag())
+				if (haveDrag())
 				{
-					if (!mouse_btns[i] && btn == Input.MB_LEFT)
+					if (!_mouseBtns[i] && btn == Input.MB_LEFT)
 					{
-						EndDrag(false);
+						endDrag(false);
 					}
 				}
 				else
 				{
-					if (mouse_grabber != null)
+					if (_mouseGrabber != null)
 					{
-						if (!mouse_grabber.DoMouseBtn(btn, mouse_btns[i]))
+						if (!_mouseGrabber.onMouseBtn(btn, _mouseBtns[i]))
 						{
-							if (!popup.HandleMouseBtn(btn, mouse_btns[i]))
+							if (!popup.handleMouseBtn(btn, _mouseBtns[i]))
 							{
-								if (!modal.HandleMouseBtn(btn, mouse_btns[i]))
+								if (!modal.handleMouseBtn(btn, _mouseBtns[i]))
 								{
-									if (modal.ChildsCount() == 0)
+									if (modal.childsCount() == 0)
 									{
-										if (!normal.HandleMouseBtn(btn, mouse_btns[i]))
+										if (!normal.handleMouseBtn(btn, _mouseBtns[i]))
 										{
-											custom.HandleMouseBtn(btn, mouse_btns[i]);
+											custom.handleMouseBtn(btn, _mouseBtns[i]);
 										}
 									}
 								}
 							}
 						}
 					}
-					else if (!popup.HandleMouseBtn(btn, mouse_btns[i]))
+					else if (!popup.handleMouseBtn(btn, _mouseBtns[i]))
 					{
-						if (!modal.HandleMouseBtn(btn, mouse_btns[i]))
+						if (!modal.handleMouseBtn(btn, _mouseBtns[i]))
 						{
-							if (modal.ChildsCount() == 0)
+							if (modal.childsCount() == 0)
 							{
-								if (!normal.HandleMouseBtn(btn, mouse_btns[i]))
+								if (!normal.handleMouseBtn(btn, _mouseBtns[i]))
 								{
-									custom.HandleMouseBtn(btn, mouse_btns[i]);
+									custom.handleMouseBtn(btn, _mouseBtns[i]);
 								}
 							}
 						}
@@ -349,15 +347,15 @@ public class GUI
 		int mw = Input.MouseWheel;
 		if (mw != 0)
 		{
-			if (!popup.HandleMouseWheel(mw > 0, Math.abs(mw)))
+			if (!popup.handleMouseWheel(mw > 0, Math.abs(mw)))
 			{
-				if (!modal.HandleMouseWheel(mw > 0, Math.abs(mw)))
+				if (!modal.handleMouseWheel(mw > 0, Math.abs(mw)))
 				{
-					if (modal.ChildsCount() == 0)
+					if (modal.childsCount() == 0)
 					{
-						if (!normal.HandleMouseWheel(mw > 0, Math.abs(mw)))
+						if (!normal.handleMouseWheel(mw > 0, Math.abs(mw)))
 						{
-							custom.HandleMouseWheel(mw > 0, Math.abs(mw));
+							custom.handleMouseWheel(mw > 0, Math.abs(mw));
 						}
 					}
 				}
@@ -365,20 +363,20 @@ public class GUI
 		}
 	}
 
-	public void OnMouseMoved(Vec2i c)
+	public void onMouseMoved(Vec2i c)
 	{
-		if (drag_move_control != null)
+		if (_dragMoveControl != null)
 		{
-			drag_move_control.SetPos(drag_move_control.pos.add(c));
+			_dragMoveControl.setPos(_dragMoveControl.pos.add(c));
 		}
 	}
 
-	public GUI_Control GetMouseInControl()
+	public GUI_Control getMouseInControl()
 	{
 		GUI_Control ret = null;
 		for (GUI_Control ctrl = popup.last_child; ctrl != null; ctrl = ctrl.prev)
 		{
-			ret = ctrl.GetMouseInControl();
+			ret = ctrl.getMouseInControl();
 			if (ret != null)
 			{
 				return ret;
@@ -386,7 +384,7 @@ public class GUI
 		}
 		for (GUI_Control ctrl = modal.last_child; ctrl != null; ctrl = ctrl.prev)
 		{
-			ret = ctrl.GetMouseInControl();
+			ret = ctrl.getMouseInControl();
 			if (ret != null)
 			{
 				return ret;
@@ -394,7 +392,7 @@ public class GUI
 		}
 		for (GUI_Control ctrl = normal.last_child; ctrl != null; ctrl = ctrl.prev)
 		{
-			ret = ctrl.GetMouseInControl();
+			ret = ctrl.getMouseInControl();
 			if (ret != null)
 			{
 				return ret;
@@ -402,7 +400,7 @@ public class GUI
 		}
 		for (GUI_Control ctrl = custom.last_child; ctrl != null; ctrl = ctrl.prev)
 		{
-			ret = ctrl.GetMouseInControl();
+			ret = ctrl.getMouseInControl();
 			if (ret != null)
 			{
 				return ret;
@@ -411,159 +409,159 @@ public class GUI
 		return ret;
 	}
 
-	public boolean MouseInRect(Vec2i c, Vec2i size)
+	public boolean isMouseInRect(Vec2i c, Vec2i size)
 	{
-		Vec2i cc = new Vec2i(mouse_pos.x, mouse_pos.y);
+		Vec2i cc = new Vec2i(_mousePos.x, _mousePos.y);
 		return cc.in_rect(c, size);
 	}
 
-	public void SetFocus(GUI_Control ctrl)
+	public void setFocus(GUI_Control ctrl)
 	{
 		if (ctrl != null && !ctrl.focusable)
 		{
 			return;
 		}
 
-		if (focused_control != null)
+		if (_focusedControl != null)
 		{
-			focused_control.DoLostFocus();
+			_focusedControl.onLostFocus();
 		}
 
-		focused_control = ctrl;
+		_focusedControl = ctrl;
 
-		if (focused_control != null)
+		if (_focusedControl != null)
 		{
-			focused_control.DoGetFocus();
+			_focusedControl.onGetFocus();
 		}
 	}
 
-	public void SetMouseGrab(GUI_Control ctrl)
+	public void setMouseGrab(GUI_Control ctrl)
 	{
-		mouse_grabber = ctrl;
+		_mouseGrabber = ctrl;
 	}
 
-	public void OnUnlink(GUI_Control c)
+	public void onUnlink(GUI_Control c)
 	{
-		if (drag_info.drag_control == c)
+		if (_dragInfo._dragControl == c)
 		{
-			EndDrag(true);
+			endDrag(true);
 		}
-		if (focused_control == c)
+		if (_focusedControl == c)
 		{
-			focused_control = null;
+			_focusedControl = null;
 		}
-		if (drag_move_control == c)
+		if (_dragMoveControl == c)
 		{
-			drag_move_control = null;
+			_dragMoveControl = null;
 		}
-		if (mouse_grabber == c)
+		if (_mouseGrabber == c)
 		{
-			mouse_grabber = null;
+			_mouseGrabber = null;
 		}
-		if (mouse_in_control == c)
+		if (_mouseInControl == c)
 		{
-			mouse_in_control = null;
+			_mouseInControl = null;
 		}
 	}
 
-	public boolean HaveDrag()
+	public boolean haveDrag()
 	{
-		return drag_info.state != DragInfo.DRAG_STATE_NONE;
+		return _dragInfo.state != DragInfo.DRAG_STATE_NONE;
 	}
 
-	public void BeginDrag(GUI_Control parent, GUI_DragControl drag, Vec2i hotspot)
+	public void beginDrag(GUI_Control parent, GUI_DragControl drag, Vec2i hotspot)
 	{
-		if (HaveDrag() || drag == null)
+		if (haveDrag() || drag == null)
 		{
 			return;
 		}
 
-		drag_info.Reset();
-		drag_info.hotspot = hotspot;
-		drag_info.drag_control = drag;
+		_dragInfo.reset();
+		_dragInfo._hotspot = hotspot;
+		_dragInfo._dragControl = drag;
 		// ставим контрол который создал драг
 		drag.drag_parent = parent;
 
 		// перестрахуемся - убъем перемещение контрола
-		drag_move_control = null;
+		_dragMoveControl = null;
 		// так как мы только начали драг - сразу апдейтим состояние драга
-		UpdateDragState();
+		updateDragState();
 	}
 
-	public void EndDrag(boolean reset)
+	public void endDrag(boolean reset)
 	{
 		if (!reset)
 		{
-			if (drag_info.drag_control != null)
+			if (_dragInfo._dragControl != null)
 			{
-				if (!drag_info.drag_control.terminated)
+				if (!_dragInfo._dragControl._terminated)
 				{
-					drag_info.drag_control.DoEndDrag(drag_info);
-					if (mouse_in_control != null)
+					_dragInfo._dragControl.endDrag(_dragInfo);
+					if (_mouseInControl != null)
 					{
-						if (!mouse_in_control.terminated)
+						if (!_mouseInControl._terminated)
 						{
-							mouse_in_control.DoEndDrag(drag_info);
+							_mouseInControl.endDrag(_dragInfo);
 						}
 					}
 				}
 			}
 		}
-		drag_info.Reset();
+		_dragInfo.reset();
 	}
 
-	public void UpdateDragState()
+	public void updateDragState()
 	{
 		// если драг контрол жив и будет жить =)
-		if (drag_info.drag_control != null)
+		if (_dragInfo._dragControl != null)
 		{
-			if (!drag_info.drag_control.terminated)
+			if (!_dragInfo._dragControl._terminated)
 			{
-				if (mouse_in_control == null)
+				if (_mouseInControl == null)
 				{
-					drag_info.state = DragInfo.DRAG_STATE_MISS;
+					_dragInfo.state = DragInfo.DRAG_STATE_MISS;
 				}
 				else
 				{
-					if (mouse_in_control.drag_enabled)
+					if (_mouseInControl._dragEnabled)
 					{
-						if (mouse_in_control.DoRequestDrop(drag_info))
+						if (_mouseInControl.doRequestDrop(_dragInfo))
 						{
-							drag_info.state = DragInfo.DRAG_STATE_ACCEPT;
+							_dragInfo.state = DragInfo.DRAG_STATE_ACCEPT;
 						}
 						else
 						{
-							drag_info.state = DragInfo.DRAG_STATE_REFUSE;
+							_dragInfo.state = DragInfo.DRAG_STATE_REFUSE;
 						}
 					}
 					else
 					{
-						drag_info.state = DragInfo.DRAG_STATE_MISS;
+						_dragInfo.state = DragInfo.DRAG_STATE_MISS;
 					}
 				}
-				drag_info.drag_control.DoUpdateDrag(drag_info);
+				_dragInfo._dragControl.updateDrag(_dragInfo);
 				return;
 			}
 			else
 			{
-				drag_info.state = DragInfo.DRAG_STATE_NONE;
+				_dragInfo.state = DragInfo.DRAG_STATE_NONE;
 			}
 		}
 		else
 		{
-			drag_info.state = DragInfo.DRAG_STATE_NONE;
+			_dragInfo.state = DragInfo.DRAG_STATE_NONE;
 		}
-		EndDrag(true);
+		endDrag(true);
 	}
 
 	public void ResolutionChanged()
 	{
 		Config config = Config.getInstance();
-		root.SetSize(config.getScreenWidth(), config.getScreenHeight());
-		normal.SetSize(config.getScreenWidth(), config.getScreenHeight());
-		popup.SetSize(config.getScreenWidth(), config.getScreenHeight());
-		modal.SetSize(config.getScreenWidth(), config.getScreenHeight());
-		custom.SetSize(config.getScreenWidth(), config.getScreenHeight());
+		root.setSize(config.getScreenWidth(), config.getScreenHeight());
+		normal.setSize(config.getScreenWidth(), config.getScreenHeight());
+		popup.setSize(config.getScreenWidth(), config.getScreenHeight());
+		modal.setSize(config.getScreenWidth(), config.getScreenHeight());
+		custom.setSize(config.getScreenWidth(), config.getScreenHeight());
 	}
 
 }

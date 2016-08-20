@@ -36,7 +36,7 @@ public class Hand
 
 	public void makeControl()
 	{
-		if (_image != null) _image.Unlink();
+		if (_image != null) _image.unlink();
 		_image = new GUI_Image(GUI.rootPopup());
 		_image.drag = true;
 		_image.drag_offset = new Vec2i(_offsetX, _offsetY);
@@ -47,14 +47,14 @@ public class Hand
 			_image.skin_element = UNKNOWN_ICON;
 		}
 
-		_image.SetSize(_image.getSkin().getElementSize(_image.skin_element));
+		_image.setSize(_image.getSkin().getElementSize(_image.skin_element));
 	}
 
 	public void dispose()
 	{
 		if (_image != null)
 		{
-			_image.Unlink();
+			_image.unlink();
 		}
 	}
 }

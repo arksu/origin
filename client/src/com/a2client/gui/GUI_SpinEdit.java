@@ -46,12 +46,12 @@ public class GUI_SpinEdit extends GUI_Control
             public void DoClick()
             {
                 DoDec();
-                gui.SetFocus(parent);
+                gui.setFocus(parent);
             }
 
-            public boolean DoMouseWheel(boolean isUp, int len)
+            public boolean onMouseWheel(boolean isUp, int len)
             {
-                return parent.DoMouseWheel(isUp, len);
+                return parent.onMouseWheel(isUp, len);
             }
         };
         btn_inc = new GUI_Button(this)
@@ -59,18 +59,18 @@ public class GUI_SpinEdit extends GUI_Control
             public void DoClick()
             {
                 DoInc();
-                gui.SetFocus(parent);
+                gui.setFocus(parent);
             }
 
-            public boolean DoMouseWheel(boolean isUp, int len)
+            public boolean onMouseWheel(boolean isUp, int len)
             {
-                return parent.DoMouseWheel(isUp, len);
+                return parent.onMouseWheel(isUp, len);
             }
         };
         btn_dec.skin_element = "button_left";
-        btn_dec.SetSize(getSkin().getElementSize("button_left"));
+        btn_dec.setSize(getSkin().getElementSize("button_left"));
         btn_inc.skin_element = "button_right";
-        btn_inc.SetSize(getSkin().getElementSize("button_right"));
+        btn_inc.setSize(getSkin().getElementSize("button_right"));
         skin_element = "edit";
         focusable = true;
 
@@ -125,13 +125,13 @@ public class GUI_SpinEdit extends GUI_Control
 
     public void DoChanged() { }
 
-    public void DoSetSize()
+    public void onSetSize()
     {
-        btn_dec.SetPos(0, (size.y - btn_dec.Height()) / 2);
-        btn_inc.SetPos(size.x - btn_inc.Width(), (size.y - btn_inc.Height()) / 2);
+        btn_dec.setPos(0, (size.y - btn_dec.getHeight()) / 2);
+        btn_inc.setPos(size.x - btn_inc.getWidth(), (size.y - btn_inc.getHeight()) / 2);
     }
 
-    public void DoRender()
+    public void render()
     {
         int state;
         if (!enabled)
@@ -142,7 +142,7 @@ public class GUI_SpinEdit extends GUI_Control
                 state = StateNormal_Checked;
             else
             {
-                if (MouseInMe())
+                if (isMouseInMe())
                 {
                     if (pressed)
                         state = StatePressed;
@@ -157,9 +157,9 @@ public class GUI_SpinEdit extends GUI_Control
         GUIGDX.Text(font, abs_pos.x, abs_pos.y, size.x, size.y, Align.Align_Center, String.valueOf(value), text_color);
     }
 
-    public boolean DoMouseWheel(boolean isUp, int len)
+    public boolean onMouseWheel(boolean isUp, int len)
     {
-        if (!MouseInMe() && !btn_dec.MouseInMe() && !btn_inc.MouseInMe())
+        if (!isMouseInMe() && !btn_dec.isMouseInMe() && !btn_inc.isMouseInMe())
             return false;
 
         if (isUp)
@@ -169,7 +169,7 @@ public class GUI_SpinEdit extends GUI_Control
         return true;
     }
 
-    public boolean DoMouseBtn(int btn, boolean down)
+    public boolean onMouseBtn(int btn, boolean down)
     {
         if (!enabled)
             return false;
@@ -177,9 +177,9 @@ public class GUI_SpinEdit extends GUI_Control
         if (btn == Input.MB_LEFT)
             if (down)
             {
-                if (MouseInMe())
+                if (isMouseInMe())
                 {
-                    gui.SetFocus(this);
+                    gui.setFocus(this);
 
                     pressed = true;
                     return true;
@@ -187,7 +187,7 @@ public class GUI_SpinEdit extends GUI_Control
             }
             else
             {
-                if (pressed && MouseInMe())
+                if (pressed && isMouseInMe())
                 {
                     DoClick();
                     return true;
@@ -197,7 +197,7 @@ public class GUI_SpinEdit extends GUI_Control
         return false;
     }
 
-    public boolean DoKey(char c, int key, boolean down)
+    public boolean onKey(char c, int key, boolean down)
     {
         if (isFocused())
         {

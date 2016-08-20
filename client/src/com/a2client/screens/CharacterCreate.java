@@ -22,14 +22,14 @@ public class CharacterCreate extends BaseScreen
 		lblNickname = new GUI_Label(GUI.rootNormal());
 		lblNickname.caption = Lang.getTranslate("Game.character.nickname");
 		lblNickname.align = Align.Align_Center;
-		lblNickname.SetSize(150, 25);
-		lblNickname.SetPos(0, 100);
-		lblNickname.CenterX();
+		lblNickname.setSize(150, 25);
+		lblNickname.setPos(0, 100);
+		lblNickname.centerX();
 
 		editNickname = new GUI_Edit(GUI.rootNormal());
-		editNickname.SetSize(150, 27);
-		editNickname.SetPos(lblNickname.pos.add(0, 30));
-		editNickname.CenterX();
+		editNickname.setSize(150, 27);
+		editNickname.setPos(lblNickname.pos.add(0, 30));
+		editNickname.centerX();
 
 		btnCreate = new GUI_Button(GUI.rootNormal())
 		{
@@ -43,9 +43,9 @@ public class CharacterCreate extends BaseScreen
 			}
 		};
 		btnCreate.caption = Lang.getTranslate("Game.character.create");
-		btnCreate.SetSize(150, 25);
-		btnCreate.SetPos(editNickname.pos.add(0, 45));
-		btnCreate.CenterX();
+		btnCreate.setSize(150, 25);
+		btnCreate.setPos(editNickname.pos.add(0, 45));
+		btnCreate.centerX();
 
 		btnExit = new GUI_Button(GUI.rootNormal())
 		{
@@ -56,8 +56,8 @@ public class CharacterCreate extends BaseScreen
 			}
 		};
 		btnExit.caption = Lang.getTranslate("Game.cancel");
-		btnExit.SetSize(100, 25);
-		btnExit.SetPos(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 35);
+		btnExit.setSize(100, 25);
+		btnExit.setPos(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 35);
 
 	}
 

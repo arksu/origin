@@ -41,7 +41,7 @@ public class Equip
 	{
 		if (_wnd != null)
 		{
-			_wnd.BringToFront();
+			_wnd.bringToFront();
 		}
 		else
 		{
@@ -54,7 +54,7 @@ public class Equip
 				}
 			};
 			_wnd.assign(this);
-			_wnd.SetPos(300, 100);
+			_wnd.setPos(300, 100);
 		}
 	}
 
@@ -62,7 +62,7 @@ public class Equip
 	{
 		if (_wnd != null)
 		{
-			_wnd.Unlink();
+			_wnd.unlink();
 			_wnd = null;
 		}
 	}

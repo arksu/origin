@@ -79,7 +79,7 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
     {
         if (!marking)
             return;
-        pos2 = getIndex(gui.mouse_pos.x - abs_pos.x);
+        pos2 = getIndex(gui._mousePos.x - abs_pos.x);
     }
 
     protected int getIndex(int x)
@@ -113,7 +113,7 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
 
     protected void StartMark()
     {
-        pos1 = getIndex(gui.mouse_pos.x - abs_pos.x);
+        pos1 = getIndex(gui._mousePos.x - abs_pos.x);
         pos2 = pos1;
         marking = true;
     }
@@ -297,7 +297,7 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
         marking = false;
     }
 
-    public boolean DoMouseBtn(int btn, boolean down)
+    public boolean onMouseBtn(int btn, boolean down)
     {
         if (!enabled)
             return false;
@@ -313,7 +313,7 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
         if (btn == Input.MB_LEFT)
             if (down)
             {
-                if (MouseInMe())
+                if (isMouseInMe())
                 {
                     if (isFocused())
                     {
@@ -321,7 +321,7 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
                     }
                     else
                     {
-                        gui.SetFocus(this);
+                        gui.setFocus(this);
                         StartMark();
                     }
                     pressed = true;
@@ -330,7 +330,7 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
             }
             else
             {
-                if (pressed && MouseInMe())
+                if (pressed && isMouseInMe())
                 {
                     DoClick();
                     return true;
@@ -340,7 +340,7 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
         return false;
     }
 
-    public boolean DoKey(char c, int key, boolean down)
+    public boolean onKey(char c, int key, boolean down)
     {
         if (isFocused())
         {
@@ -380,7 +380,7 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
             return false;
     }
 
-    public void DoUpdate()
+    public void update()
     {
         UpdateCursor();
         int cursorx = GUIGDX.getTextWidth(font_name, getVisualText().substring(0, pos2));
@@ -389,7 +389,7 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
         scroll = Math.max(0, scroll);
     }
 
-    public void DoRender()
+    public void render()
     {
         int state;
         if (!enabled)
@@ -400,7 +400,7 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
                 state = StateNormal_Checked;
             else
             {
-                if (MouseInMe())
+                if (isMouseInMe())
                 {
                     if (pressed)
                         state = StatePressed;
@@ -443,7 +443,7 @@ public class GUI_Edit extends GUI_Control implements ClipboardOwner
         GUIGDX.popScissor();
     }
 
-    public void DoGetFocus()
+    public void onGetFocus()
     {
         SelectAll();
     }

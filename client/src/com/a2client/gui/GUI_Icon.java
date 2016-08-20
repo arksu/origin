@@ -27,11 +27,11 @@ public class GUI_Icon extends GUI_DragControl
 
     public GUI_Icon(String name)
     {
-        SetSize(32, 32);
+        setSize(32, 32);
         iname = name;
     }
 
-    public void DoRender()
+    public void render()
     {
         if (getSkin().hasElement("icon_" + iname))
             getSkin().draw("icon_" + iname, abs_pos.x, abs_pos.y, size.x, size.y, StateNormal);
@@ -39,7 +39,7 @@ public class GUI_Icon extends GUI_DragControl
             getSkin().draw("icon_unknown", abs_pos.x, abs_pos.y, size.x, size.y, StateNormal);
     }
 
-    public void DoEndDrag(DragInfo info)
+    public void endDrag(DragInfo info)
     {
         // если дропнули не на слот а тащили с хотбар
         // TODO : поддержка GUI_HotbarSlot

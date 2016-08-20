@@ -112,12 +112,12 @@ public class Inventory
 			};
 			_wnd.assign(this);
 			// TODO хранить позиции инвентарей
-			_wnd.SetPos(50, 50);
+			_wnd.setPos(50, 50);
 		}
 		else
 		{
 			// окно есть, поместим поверх
-			_wnd.BringToFront();
+			_wnd.bringToFront();
 		}
 	}
 
@@ -128,7 +128,7 @@ public class Inventory
 	{
 		if (_wnd != null)
 		{
-			_wnd.Unlink();
+			_wnd.unlink();
 			_wnd = null;
 		}
 	}

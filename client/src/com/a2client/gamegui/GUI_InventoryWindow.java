@@ -34,8 +34,8 @@ public class GUI_InventoryWindow extends GUI_Window
 		else
 		{
 			_inventoryControl = new GUI_Inventory(this, inventory);
-			_inventoryControl.SetPos(5, 35);
-			SetSize(InventoryItem.WIDTH * inventory.getWidth()+10, InventoryItem.HEIGHT * inventory.getHeight()+40);
+			_inventoryControl.setPos(5, 35);
+			setSize(InventoryItem.WIDTH * inventory.getWidth() + 10, InventoryItem.HEIGHT * inventory.getHeight() + 40);
 //			updateSize();
 		}
 	}

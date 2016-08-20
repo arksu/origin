@@ -34,12 +34,12 @@ public class GUI_Inventory extends GUI_Control
 		// сначала чистим
 		for (GUI_InventoryItem item : _items)
 		{
-			item.Unlink();
+			item.unlink();
 		}
 		_items.clear();
 
 		_inventory = inventory;
-		SetSize(InventoryItem.WIDTH * _inventory.getWidth(), InventoryItem.HEIGHT * _inventory.getHeight());
+		setSize(InventoryItem.WIDTH * _inventory.getWidth(), InventoryItem.HEIGHT * _inventory.getHeight());
 
 		// тупо создаем итемы - контролы, они сами будут себя отрисовывать как надо
 		for (InventoryItem item : _inventory.getItems().values())
@@ -74,7 +74,7 @@ public class GUI_Inventory extends GUI_Control
 	}
 
 	@Override
-	public void DoRender()
+	public void render()
 	{
 		// возможно в будущем отрисуем какой нибудь общий фон
 	}
