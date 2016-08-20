@@ -66,7 +66,7 @@ public class ContextMenu extends GameServerPacket
 				@Override
 				public void OnContextClick(int idx)
 				{
-					new ContextSelect(_list.get(idx)).Send();
+					new ContextSelect(_list.get(idx)).send();
 				}
 			});
 

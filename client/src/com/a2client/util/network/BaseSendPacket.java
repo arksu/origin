@@ -17,7 +17,7 @@ public abstract class BaseSendPacket
 		_bao = new ByteArrayOutputStream(32);
 	}
 
-	public byte[] EncodePacket()
+	public byte[] encodePacket()
 	{
 		write();
 		int len = _bao.size();
@@ -30,7 +30,7 @@ public abstract class BaseSendPacket
 		return buf;
 	}
 
-	public void EncodePacket(ByteBuf out)
+	public void encodePacket(ByteBuf out)
 	{
 		write();
 		// len

@@ -144,12 +144,12 @@ public class CharacterSelect extends BaseScreen
 
 	public void charSelected(int id)
 	{
-		new com.a2client.network.game.clientpackets.CharacterSelect(id).Send();
+		new com.a2client.network.game.clientpackets.CharacterSelect(id).send();
 	}
 
 	protected void charDelete(int id)
 	{
-		new CharacterDelete(id).Send();
+		new CharacterDelete(id).send();
 	}
 
 	static public void Show()

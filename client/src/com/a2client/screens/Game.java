@@ -107,7 +107,7 @@ public class Game extends BaseScreen
 					}
 					return;
 				}
-				new ChatMessage(0, _chatEdit.text).Send();
+				new ChatMessage(0, _chatEdit.text).send();
 				ChatHistory.add(_chatEdit.text);
 				_chatEdit.SetText("");
 			}
@@ -121,7 +121,7 @@ public class Game extends BaseScreen
 			public void DoClick()
 			{
 				String item = getItemTag(GetSelected());
-				new ActionSelect(item).Send();
+				new ActionSelect(item).send();
 			}
 		};
 		_actions.SetSize(150, 100);
@@ -345,7 +345,7 @@ public class Game extends BaseScreen
 								_worldMousePos.x,
 								_worldMousePos.y,
 								(_render.getSelected() != null ? _render.getSelected().getObjectId() : 0)
-						).Send();
+						).send();
 					}
 				}
 			}

@@ -63,7 +63,7 @@ public class CharacterCreate extends BaseScreen
 
 	public void doCreateCharacter()
 	{
-		new com.a2client.network.game.clientpackets.CharacterCreate(editNickname.text, 0, 0, 0, 0).Send();
+		new com.a2client.network.game.clientpackets.CharacterCreate(editNickname.text, 0, 0, 0, 0).send();
 	}
 
 	static public void Show()

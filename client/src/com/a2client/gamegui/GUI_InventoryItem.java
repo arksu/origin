@@ -105,7 +105,7 @@ public class GUI_InventoryItem extends GUI_Control
 					my,
 					ox,
 					oy
-			).Send();
+			).send();
 		}
 		else if (tagi == 2)
 		{
@@ -116,7 +116,7 @@ public class GUI_InventoryItem extends GUI_Control
 					mx,
 					my,
 					_y
-			).Send();
+			).send();
 		}
 	}
 

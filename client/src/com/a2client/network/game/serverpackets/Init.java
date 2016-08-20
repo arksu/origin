@@ -24,7 +24,7 @@ public class Init extends GameServerPacket
 	{
 		if (_proto_version == 3)
 		{
-			new AuthGame().Send();
+			new AuthGame().send();
 		}
 		else
 		{

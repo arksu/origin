@@ -5,7 +5,7 @@ import com.a2client.util.network.BaseSendPacket;
 
 public abstract class GameClientPacket extends BaseSendPacket
 {
-	public void Send()
+	public void send()
 	{
 		Net.getConnection().sendPacket(this);
 	}
