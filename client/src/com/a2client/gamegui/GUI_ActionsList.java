@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * список доступных действий игроку
+ * крафт строительство и тд
  * Created by arksu on 12.08.16.
  */
 public class GUI_ActionsList extends GUI_ListBox

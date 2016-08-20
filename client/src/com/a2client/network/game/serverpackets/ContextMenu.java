@@ -1,8 +1,10 @@
 package com.a2client.network.game.serverpackets;
 
 import com.a2client.ObjectCache;
+import com.a2client.gamegui.GUI_ContextMenu;
 import com.a2client.model.GameObject;
 import com.a2client.network.game.GamePacketHandler;
+import com.a2client.network.game.clientpackets.ContextSelect;
 import com.a2client.screens.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Matrix4;
@@ -58,6 +60,21 @@ public class ContextMenu extends GameServerPacket
 			y *= Gdx.graphics.getHeight();
 
 			System.out.println("x=" + x + " y=" + y);
+
+			GUI_ContextMenu popup = GUI_ContextMenu.popup(new com.a2client.gamegui.ContextMenu()
+			{
+				@Override
+				public void OnContextClick(int idx)
+				{
+					new ContextSelect(_list.get(idx)).Send();
+				}
+			});
+
+			for (String s : _list)
+			{
+				popup.addMenuItem(s);
+			}
+			popup.apply();
 		}
 	}
 }

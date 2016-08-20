@@ -1,4 +1,4 @@
-package com.a2client.guigame;
+package com.a2client.gamegui;
 
 import com.a2client.Input;
 import com.a2client.gui.GUI_Control;

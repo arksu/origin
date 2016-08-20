@@ -75,6 +75,9 @@ public class GamePacketHandler
 					case 0x21:
 						pkt = new ActionSelect();
 						break;
+					case 0x24:
+						pkt = new ContextSelect();
+						break;
 
 					default:
 						debugOpcode(opcode, state);

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.a2client.guigame;
+package com.a2client.gamegui;
 
 import com.a2client.gui.GUI;
 import com.a2client.gui.GUIGDX;
@@ -41,7 +41,7 @@ public class GUI_ContextMenu extends GUI_StringList
 	/**
 	 * показать контекстное меню в указанных координатах
 	 */
-	public static GUI_ContextMenu Popup(ContextMenu impl)
+	public static GUI_ContextMenu popup(ContextMenu impl)
 	{
 		GUI_ContextMenu control = new GUI_ContextMenu(GUI.getInstance().popup);
 		control.impl = impl;
@@ -52,7 +52,7 @@ public class GUI_ContextMenu extends GUI_StringList
 	 * добавить пункт меню
 	 * @param s название
 	 */
-	public void AddMenuItem(String s)
+	public void addMenuItem(String s)
 	{
 		Add(s);
 	}
@@ -60,7 +60,7 @@ public class GUI_ContextMenu extends GUI_StringList
 	/**
 	 * закончить формирование меню и вывести на экран
 	 */
-	public void Apply()
+	public void apply()
 	{
 		int h = GetCount() * GetItemHeight(0) + 6;
 		int w = 0;

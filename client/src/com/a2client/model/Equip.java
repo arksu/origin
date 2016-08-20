@@ -1,7 +1,7 @@
 package com.a2client.model;
 
 import com.a2client.gui.GUI;
-import com.a2client.guigame.GUI_EquipWindow;
+import com.a2client.gamegui.GUI_EquipWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
