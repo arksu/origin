@@ -39,12 +39,12 @@ public class GridChunk
 	/**
 	 * отступ данного грида в тайлах
 	 */
-	int _gx, _gy;
+	private int _gx, _gy;
 
 	/**
 	 * отступ чанка внутри грида
 	 */
-	int _cx, _cy;
+	private int _cx, _cy;
 
 	/**
 	 * грид в котором создаем чанк
@@ -56,6 +56,9 @@ public class GridChunk
 	 */
 	private boolean _isBorder = false;
 
+	/**
+	 * добавить отображение нормалей в меш, их видно в wireframe режиме
+	 */
 	private static final boolean SHOW_NORMALS = false;
 
 	private float _maxHeight;
@@ -331,7 +334,7 @@ public class GridChunk
 		}
 	}
 
-	protected void makeWater()
+	private void makeWater()
 	{
 		final float x = _gx + _cx;
 		final float y = _gy + _cy;
@@ -365,7 +368,7 @@ public class GridChunk
 	public static class HeightAverage
 	{
 		public final float h;
-		public final boolean isBorder;
+		private final boolean isBorder;
 
 		public HeightAverage(int tx, int ty, GridChunk chunk)
 		{

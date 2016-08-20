@@ -80,17 +80,29 @@ public abstract class BaseSendPacket
 		return pkt;
 	}
 
+	/**
+	 * 1 byte int
+	 * @param value
+	 */
 	protected void writeC(int value)
 	{
 		_bao.write(value & 0xff);
 	}
 
+	/**
+	 * 2 byte int
+	 * @param value
+	 */
 	protected void writeH(int value)
 	{
 		_bao.write(value & 0xff);
 		_bao.write((value >> 8) & 0xff);
 	}
 
+	/**
+	 * 4 byte int
+	 * @param value
+	 */
 	protected void writeD(int value)
 	{
 		_bao.write(value & 0xff);
@@ -112,6 +124,10 @@ public abstract class BaseSendPacket
 		_bao.write((int) ((value >> 56) & 0xff));
 	}
 
+	/**
+	 * string
+	 * @param text
+	 */
 	protected void writeS(String text)
 	{
 		try
