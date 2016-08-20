@@ -5,7 +5,6 @@ import com.a2client.render.Render;
 import com.a2client.render.ShadowShaderProvider;
 import com.a2client.render.framebuffer.DepthFrameBuffer;
 import com.a2client.util.vector.Vector2f;
-import com.a2client.util.vector.Vector3f;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -59,11 +58,11 @@ public class Shadow
 	{
 		_shadowBox.update();
 
-		Vector3f lightDirection = new Vector3f(-Render.sunPosition.x, -Render.sunPosition.y, -Render.sunPosition.z);
+		Vector3 lightDirection = new Vector3(-Render.sunPosition.x, -Render.sunPosition.y, -Render.sunPosition.z);
 		prepare(lightDirection);
 	}
 
-	private void prepare(Vector3f lightDirection)
+	private void prepare(Vector3 lightDirection)
 	{
 		updateOrthoProjectionMatrix();
 		Vector3 center = _shadowBox.getCenter();
@@ -93,9 +92,9 @@ public class Shadow
 		_projectionMatrix.val[M33] = 1;
 	}
 
-	private Matrix4 updateLightViewMatrix(Vector3f direction, Vector3 center)
+	private Matrix4 updateLightViewMatrix(Vector3 direction, Vector3 center)
 	{
-		direction.normalise();
+		direction.nor();
 		center.x = -center.x;
 		center.y = -center.y;
 		center.z = -center.z;
@@ -103,9 +102,6 @@ public class Shadow
 		float pitch = (float) Math.toDegrees(Math.acos(new Vector2f(direction.x, direction.z).length()));
 		float yaw = (float) Math.toDegrees(((float) Math.atan(direction.x / direction.z)));
 		yaw = direction.z > 0 ? yaw - 180 : yaw;
-
-//		Matrix4f.rotate(pitch, new Vector3f(1, 0, 0), lightViewMatrix, lightViewMatrix);
-//		Matrix4f.rotate((float) -Math.toRadians(yaw), new Vector3f(0, 1, 0), lightViewMatrix, lightViewMatrix);
 
 		Matrix4 view = _shadowBox.getLightViewMatrix();
 		view.idt();
@@ -116,7 +112,6 @@ public class Shadow
 
 		view.mul(t);
 
-//		lightViewMatrix= Matrix4f.fromM4(view);
 		return view;
 	}
 

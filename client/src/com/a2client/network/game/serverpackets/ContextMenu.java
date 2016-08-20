@@ -1,6 +1,12 @@
 package com.a2client.network.game.serverpackets;
 
+import com.a2client.ObjectCache;
+import com.a2client.model.GameObject;
 import com.a2client.network.game.GamePacketHandler;
+import com.a2client.screens.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +40,24 @@ public class ContextMenu extends GameServerPacket
 	@Override
 	public void run()
 	{
+		Game game = Game.getInstance();
+		if (game != null && ObjectCache.getInstance() != null)
+		{
+			Matrix4 MVP = game.getCamera().combined.cpy();
+			GameObject object = ObjectCache.getInstance().getObject(_objectId);
+			Vector3 pos = object.getWorldCoord().cpy();
+			pos.prj(MVP);
 
+			float x = pos.x + 1;
+			float y = 1 - pos.y;
+
+			x /= 2f;
+			y /= 2f;
+
+			x *= Gdx.graphics.getWidth();
+			y *= Gdx.graphics.getHeight();
+
+			System.out.println("x=" + x + " y=" + y);
+		}
 	}
 }

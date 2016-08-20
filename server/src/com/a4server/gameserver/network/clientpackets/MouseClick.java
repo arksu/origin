@@ -8,7 +8,7 @@ import com.a4server.gameserver.model.position.ObjectPosition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.a4server.gameserver.model.Cursor.CursorName.Arrow;
+import static com.a4server.gameserver.model.Cursor.CursorName.*;
 
 /**
  * клик по карте (тайлы, объекты)
@@ -19,7 +19,7 @@ public class MouseClick extends GameClientPacket
 	private static final Logger _log = LoggerFactory.getLogger(MouseClick.class.getName());
 
 	private static final int BUTTON_PRIMARY = 0;
-	private static final int BUTTON_ACTION = 1;
+	private static final int BUTTON_SECONDARY = 1;
 
 	/**
 	 * какая кнопка была нажата
@@ -90,7 +90,7 @@ public class MouseClick extends GameClientPacket
 								}
 								break;
 
-							case BUTTON_ACTION:
+							case BUTTON_SECONDARY:
 								// клик по объекту?
 								GameObject object = player.isKnownObject(_objectId);
 								if (object != null)
@@ -104,7 +104,7 @@ public class MouseClick extends GameClientPacket
 					}
 					else
 					{
-						cursorClick(player, _x, _y);
+						cursorClick(player, _x, _y, _button);
 					}
 				}
 				catch (Exception e)
@@ -146,8 +146,10 @@ public class MouseClick extends GameClientPacket
 		}
 	}
 
-	private void cursorClick(Player player, int x, int y)
+	private void cursorClick(Player player, int x, int y, int button)
 	{
+		if (button != BUTTON_PRIMARY) return;
+
 		Cursor.CursorName cursor = player.getCursor();
 		_log.debug("mouse click with cursor: " + cursor);
 		Grid grid;

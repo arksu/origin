@@ -10,7 +10,7 @@ public class ContextMenu extends GameServerPacket
 	private final List<String> _list;
 	private final int _objectId;
 
-	public ContextMenu(List<String> list, int objectId)
+	public ContextMenu(int objectId, List<String> list)
 	{
 		_list = list;
 		_objectId = objectId;

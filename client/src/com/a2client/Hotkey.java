@@ -15,7 +15,7 @@ public class Hotkey
 	public static int TERRAIN_WIREFRAME = Keys.I;
 	public static int RENDER_OUTLINE = Keys.L;
 
-	public static int BUTTON_MOVE = Input.MB_LEFT;
-	public static int BUTTON_ACTION = Input.MB_MIDDLE;
+	public static int BUTTON_ACTION_PRIMARY = Input.MB_LEFT;
+	public static int BUTTON_ACTION_SECONDARY = Input.MB_RIGHT;
 	public static int BUTTON_CAMERA = Input.MB_RIGHT;
 }

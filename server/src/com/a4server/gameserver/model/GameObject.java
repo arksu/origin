@@ -8,10 +8,7 @@ import com.a4server.gameserver.model.objects.InventoryTemplate;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
 import com.a4server.gameserver.model.position.ObjectPosition;
-import com.a4server.gameserver.network.serverpackets.GameServerPacket;
-import com.a4server.gameserver.network.serverpackets.ObjectAdd;
-import com.a4server.gameserver.network.serverpackets.ObjectInteractive;
-import com.a4server.gameserver.network.serverpackets.ObjectRemove;
+import com.a4server.gameserver.network.serverpackets.*;
 import com.a4server.util.Rect;
 import com.a4server.util.network.BaseSendPacket;
 import javolution.util.FastSet;
@@ -22,6 +19,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -471,5 +470,10 @@ public class GameObject
 	public void actionClick(Player player)
 	{
 		// TODO: пкм по объекту для вызова меню взаимодействия с объектом
+		List<String> list = new ArrayList<>();
+		list.add("item1");
+		list.add("chop");
+
+		player.getClient().sendPacket(new ContextMenu(_objectId, list));
 	}
 }

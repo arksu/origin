@@ -329,7 +329,7 @@ public class Game extends BaseScreen
 				}
 			}
 			// узнаем на какую кнопку нажали
-			else if (click)
+			if (click)
 			{
 				if (!_mouseBtns[i] || GUI.getInstance().mouse_in_control == null)
 				{
@@ -337,8 +337,8 @@ public class Game extends BaseScreen
 					if (_worldMousePos != null)
 					{
 						int action = -1;
-						if (i == Hotkey.BUTTON_MOVE) action = 0;
-						if (i == Hotkey.BUTTON_ACTION) action = 1;
+						if (i == Hotkey.BUTTON_ACTION_PRIMARY) action = 0;
+						if (i == Hotkey.BUTTON_ACTION_SECONDARY) action = 1;
 						new MouseClick(
 								_mouseBtns[i],
 								action,

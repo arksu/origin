@@ -37,16 +37,15 @@ public class GameServerAuth extends LoginServerPacket
 		// получаем хост гейм сервера
 		try
 		{
-			InetAddress adr = InetAddress.getByAddress(_host);
 			if (!Utils.isEmpty(Config.getInstance()._gameServer))
 			{
 				Login._gameserver_host = Config.getInstance()._gameServer;
 			}
 			else
 			{
+				InetAddress adr = InetAddress.getByAddress(_host);
 				Login._gameserver_host = adr.getHostAddress();
 			}
-
 		}
 		catch (UnknownHostException e)
 		{
