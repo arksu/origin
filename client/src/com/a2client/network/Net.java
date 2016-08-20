@@ -7,7 +7,7 @@ public class Net
 {
 	private static NettyConnection _connection;
 
-	public static NettyConnection NewConnection(String host, int port, NettyConnection.ConnectionType type)
+	public static NettyConnection newConnection(String host, int port, NettyConnection.ConnectionType type)
 	{
 		if (_connection != null)
 		{

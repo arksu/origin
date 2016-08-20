@@ -150,7 +150,7 @@ public class Login extends BaseScreen
 		{
 			Net.getConnection().Close();
 		}
-		Net.NewConnection(Config.getInstance()._loginServer, Config.getInstance()._loginServerPort, NettyConnection.ConnectionType.LOGIN_SERVER);
+		Net.newConnection(Config.getInstance()._loginServer, Config.getInstance()._loginServerPort, NettyConnection.ConnectionType.LOGIN_SERVER);
 
 	}
 

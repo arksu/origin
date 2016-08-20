@@ -2,14 +2,12 @@ package com.a2client.screens;
 
 import com.a2client.*;
 import com.a2client.gamegui.GUI_ActionsList;
+import com.a2client.gamegui.GUI_GameArea;
 import com.a2client.gui.*;
 import com.a2client.model.GameObject;
-import com.a2client.model.Grid;
-import com.a2client.model.GridChunk;
 import com.a2client.model.Inventory;
 import com.a2client.network.game.clientpackets.ActionSelect;
 import com.a2client.network.game.clientpackets.ChatMessage;
-import com.a2client.network.game.clientpackets.MouseClick;
 import com.a2client.render.Fog;
 import com.a2client.render.GameCamera;
 import com.a2client.render.Render;
@@ -22,8 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.a2client.Terrain.TILE_SIZE;
-import static com.a2client.Terrain.getGrid;
-import static com.a2client.model.Grid.CHUNK_SIZE;
 
 /**
  * основной игровой экран. тут выводим все объекты и всю информацию по ним
@@ -40,6 +36,7 @@ public class Game extends BaseScreen
 
 	private static String _statusText = "";
 
+	private GUI_GameArea _gameArea;
 	private GUI_Label _lblStatus;
 	private GUI_Button _btnExit;
 	public GUI_Memo _chatMemo;
@@ -70,6 +67,9 @@ public class Game extends BaseScreen
 		Terrain.clear();
 
 		GUI.reCreate();
+		_gameArea = new GUI_GameArea(GUI.getInstance().custom, this);
+		_gameArea.SetPos(0, 0);
+		_gameArea.SetSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		_lblStatus = new GUI_Label(GUI.rootNormal());
 		_lblStatus.SetPos(10, 10);
 
@@ -256,34 +256,15 @@ public class Game extends BaseScreen
 			{
 				_worldMousePos = new Vec2i(Math.round(terrainPoint.x * TILE_SIZE), Math.round(terrainPoint.z * TILE_SIZE));
 				_statusText = "mouse coord: " +
-							  _worldMousePos.x + ", " + _worldMousePos.y + " : " +
-							  Terrain.getTileHeight(_worldMousePos.x / TILE_SIZE, _worldMousePos.y / TILE_SIZE);
-
-				int wx = _worldMousePos.x;
-				int wy = _worldMousePos.y;
-				int tx = _worldMousePos.x / TILE_SIZE;
-				int ty = _worldMousePos.y / TILE_SIZE;
-				Grid grid = getGrid(tx, ty);
-				if (grid != null)
-				{
-					tx -= grid.getTc().x;
-					ty -= grid.getTc().y;
-					tx /= CHUNK_SIZE;
-					ty /= CHUNK_SIZE;
-					GridChunk chunk = grid.getChunk(tx, ty);
-					if (chunk != null)
-					{
-//						_log.debug(chunk.toString());
-					}
-				}
-
+							  _worldMousePos.x + ", " + _worldMousePos.y
+//							 + " : " + Terrain.getTileHeight(_worldMousePos.x / TILE_SIZE, _worldMousePos.y / TILE_SIZE)
+				;
 			}
 			else
 			{
 				_worldMousePos = null;
 				_statusText = "mouse coord: NULL";
 			}
-			UpdateMouseButtons();
 		}
 		_lblStatus.caption =
 				"FPS: " + Gdx.graphics.getFramesPerSecond() +
@@ -291,65 +272,9 @@ public class Game extends BaseScreen
 				" chunks: " + _render.getChunksRendered() + " / " + _render.getWaterChunksRendered() +
 				" selected: " + (_render.getSelected() != null ? "" + _render.getSelected() : "null") +
 				" objects: " + _render.getRenderedObjects() +
-				" cam: " + _gameCamera.getCameraDistance()
+//				" cam: " + _gameCamera.getCameraDistance()+
+				" gui: " + GUI.getInstance().mouse_in_control
 		;
-	}
-
-	protected void UpdateMouseButtons()
-	{
-		boolean[] old_btns = new boolean[3];
-		old_btns[0] = _mouseBtns[0];
-		old_btns[1] = _mouseBtns[1];
-		old_btns[2] = _mouseBtns[2];
-		for (int i = 0; i < 3; i++)
-		{
-			_mouseBtns[i] = Input.MouseBtns[i];
-			boolean click = _mouseBtns[i] != old_btns[i];
-			// вращаем камеру
-			if (i == Hotkey.BUTTON_CAMERA)
-			{
-				// если кнопка нажата
-				if (_mouseBtns[i])
-				{
-					// это был клик?
-					if (click)
-					{
-						_gameCamera.startDrag(new Vec2i(Gdx.input.getX(), Gdx.input.getY()));
-					}
-					else
-					{
-						_gameCamera.updateDrag(new Vec2i(Gdx.input.getX(), Gdx.input.getY()));
-					}
-				}
-				// кнопку отжали
-				else if (click)
-				{
-					// закончим вращение перетаскивание камеры
-					_gameCamera.startDrag(null);
-				}
-			}
-			// узнаем на какую кнопку нажали
-			if (click)
-			{
-				if (!_mouseBtns[i] || GUI.getInstance().mouse_in_control == null)
-				{
-					GUI.getInstance().focused_control = null;
-					if (_worldMousePos != null)
-					{
-						int action = -1;
-						if (i == Hotkey.BUTTON_ACTION_PRIMARY) action = 0;
-						if (i == Hotkey.BUTTON_ACTION_SECONDARY) action = 1;
-						new MouseClick(
-								_mouseBtns[i],
-								action,
-								_worldMousePos.x,
-								_worldMousePos.y,
-								(_render.getSelected() != null ? _render.getSelected().getObjectId() : 0)
-						).send();
-					}
-				}
-			}
-		}
 	}
 
 	@Override
@@ -363,6 +288,7 @@ public class Game extends BaseScreen
 	{
 		super.resize(width, height);
 		_gameCamera.onResize(width, height);
+		_gameArea.SetSize(width, height);
 		_render.onResize(width, height);
 	}
 
@@ -371,8 +297,19 @@ public class Game extends BaseScreen
 		_state = state;
 	}
 
+	public Vec2i getWorldMousePos()
+	{
+		return _worldMousePos;
+	}
+
+	public Render getRender()
+	{
+		return _render;
+	}
+
 	static public Game getInstance()
 	{
+		// создаем в Show
 		if (_instance == null)
 		{
 			throw new RuntimeException("Game instance is NULL");

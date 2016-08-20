@@ -160,6 +160,11 @@ public class GameCamera extends PerspectiveCamera
 		}
 	}
 
+	public Vec2i getStartDrag()
+	{
+		return _startDrag;
+	}
+
 	public Vector3 getOffset()
 	{
 		return _offset;

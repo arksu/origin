@@ -124,9 +124,6 @@ public class Main extends com.badlogic.gdx.Game
 	{
 		update();
 		super.render();
-
-		// курсор выводим в самую последнюю очередь
-		Cursor.getInstance().render();
 	}
 
 	private void update()

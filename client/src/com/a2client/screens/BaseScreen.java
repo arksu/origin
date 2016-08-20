@@ -43,8 +43,6 @@ public class BaseScreen implements Screen
 		onRender();
 		GUI.getInstance().Render();
 
-		//GUIGDX.fillRect(new Vec2i(Input.MouseX, Input.MouseY), new Vec2i(10, 10), Color.RED);
-
 		GUIGDX.getSpriteBatch().end();
 	}
 

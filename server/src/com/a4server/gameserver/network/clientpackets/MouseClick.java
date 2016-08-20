@@ -8,7 +8,7 @@ import com.a4server.gameserver.model.position.ObjectPosition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.a4server.gameserver.model.Cursor.CursorName.*;
+import static com.a4server.gameserver.model.Cursor.CursorName.Arrow;
 
 /**
  * клик по карте (тайлы, объекты)
@@ -59,15 +59,15 @@ public class MouseClick extends GameClientPacket
 		Player player = client.getPlayer();
 		if (player != null)
 		{
-			if (_isDown)
+			try (GameLock ignored = player.tryLock())
 			{
-				try (GameLock ignored = player.tryLock())
+				if (player.getCursor() == Arrow)
 				{
-					if (player.getCursor() == Arrow)
+					switch (_button)
 					{
-						switch (_button)
-						{
-							case BUTTON_PRIMARY:
+						case BUTTON_PRIMARY:
+							if (_isDown)
+							{
 								// в руке что-то держим?
 								if (player.getHand() != null)
 								{
@@ -88,30 +88,31 @@ public class MouseClick extends GameClientPacket
 									// запустим движение. создадим контроллер для этого
 									player.StartMove(new MoveToPoint(_x, _y));
 								}
-								break;
+							}
+							break;
 
-							case BUTTON_SECONDARY:
-								// клик по объекту?
-								GameObject object = player.isKnownObject(_objectId);
-								if (object != null)
-								{
-									// пкм по объекту - посмотрим что сделает объект
-									_log.debug("actionClick on object: " + object);
-									object.actionClick(player);
-								}
-								break;
-						}
-					}
-					else
-					{
-						cursorClick(player, _x, _y, _button);
+						case BUTTON_SECONDARY:
+							// клик по объекту?
+							GameObject object = player.isKnownObject(_objectId);
+							if (object != null && !_isDown)
+							{
+								// пкм по объекту - посмотрим что сделает объект
+								_log.debug("actionClick on object: " + object);
+								object.actionClick(player);
+							}
+							break;
 					}
 				}
-				catch (Exception e)
+				else
 				{
-					_log.error("MouseClick error:" + e.getMessage(), e);
+					cursorClick(player, _x, _y, _button);
 				}
 			}
+			catch (Exception e)
+			{
+				_log.error("MouseClick error:" + e.getMessage(), e);
+			}
+
 		}
 	}
 

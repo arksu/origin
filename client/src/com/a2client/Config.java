@@ -242,6 +242,9 @@ public class Config
 		_password = p.getString("password", "");
 		//
 		_savePassword = p.getBoolean("save_pass", true);
+
+//		_framePerSecond = 0;
+//		_vSync = false;
 	}
 
 	public void saveOptions()

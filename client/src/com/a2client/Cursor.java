@@ -92,11 +92,6 @@ public class Cursor
 		pm.dispose();
 	}
 
-	public void render()
-	{
-
-	}
-
 	public class CursorData
 	{
 		@SerializedName("x")
