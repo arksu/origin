@@ -23,33 +23,33 @@ import com.a2client.util.Vec2i;
 
 public class DragInfo
 {
-    public static final int DRAG_STATE_NONE = 0;
-    // over empty space or controls that don't have drag'n'drop
-    public static final int DRAG_STATE_MISS = 1;
-    // over another Object that accept dropping on it
-    public static final int DRAG_STATE_ACCEPT = 2;
-    // over another Object that refuse dropping on it
-    public static final int DRAG_STATE_REFUSE = 3;
-    //--------------------------------------------------------------------
+	public static final int DRAG_STATE_NONE = 0;
+	// over empty space or controls that don't have drag'n'drop
+	public static final int DRAG_STATE_MISS = 1;
+	// over another Object that accept dropping on it
+	public static final int DRAG_STATE_ACCEPT = 2;
+	// over another Object that refuse dropping on it
+	public static final int DRAG_STATE_REFUSE = 3;
+	//--------------------------------------------------------------------
 
-    // состояние перетаскивания
-    public int state = DRAG_STATE_NONE;
-    // перетаскиваемый контрол
-    public GUI_DragControl _dragControl = null;
-    // смещение перетаскиваемого объекта относительно мыши
-    public Vec2i _hotspot = new Vec2i(0, 0);
+	// состояние перетаскивания
+	public int state = DRAG_STATE_NONE;
+	// перетаскиваемый контрол
+	public GUI_DragControl _dragControl = null;
+	// смещение перетаскиваемого объекта относительно мыши
+	public Vec2i _hotspot = new Vec2i(0, 0);
 
-    public void reset()
-    {
-        state = DRAG_STATE_NONE;
+	public void reset()
+	{
+		state = DRAG_STATE_NONE;
 
-        if (_dragControl != null)
-        {
-            GUI_Control c = _dragControl;
-            _dragControl = null;
-            c.unlink();
-        }
+		if (_dragControl != null)
+		{
+			GUI_Control c = _dragControl;
+			_dragControl = null;
+			c.unlink();
+		}
 
-        _hotspot = new Vec2i(0, 0);
-    }
+		_hotspot = new Vec2i(0, 0);
+	}
 }

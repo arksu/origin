@@ -111,7 +111,6 @@ public class GameObject
 	 * загружаем объект из базы в грид
 	 * @param grid грид
 	 * @param rset строка в базе в таблице супергрида с объектом
-	 * @throws SQLException
 	 */
 	public GameObject(Grid grid, ResultSet rset) throws SQLException
 	{

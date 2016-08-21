@@ -16,9 +16,16 @@ public class CollisionTemplate
 {
 	private static final Logger _log = LoggerFactory.getLogger(CollisionTemplate.class.getName());
 
+	/**
+	 * применять для всех объектов? тогда список исключений работает как исключения. для них коллизий не будет
+	 * если приенять ни для одного. тогда список исключений работает как список объектов которые будут давать коллизию
+	 */
 	@SerializedName("all")
 	private boolean _allYes = true;
 
+	/**
+	 * список исключений
+	 */
 	@SerializedName("exclude")
 	private List<String> _exclude = new ArrayList<>();
 

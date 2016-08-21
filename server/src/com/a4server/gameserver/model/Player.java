@@ -633,4 +633,10 @@ public class Player extends Human
 		list[idx++] = new Action("tile_fir");
 		return list;
 	}
+
+	@Override
+	public void actionClick(Player player)
+	{
+		// nothing to do
+	}
 }

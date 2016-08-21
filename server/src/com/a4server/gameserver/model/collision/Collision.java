@@ -241,7 +241,7 @@ public class Collision
 	private static boolean getCollision(GameObject obj1, GameObject obj2, boolean isTarget)
 	{
 		// вещи не дают коллизий будучи брошенными на землю
-		if (obj1.getTemplate().getItem() != null)
+		if (obj2.getTemplate().getItem() != null || obj1.getTemplate().getItem() != null)
 		{
 			return false;
 		}
