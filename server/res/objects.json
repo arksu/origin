@@ -1,6 +1,7 @@
 {
 	"appleTree": {
-		"typeId": 11
+		"typeId": 11,
+		"class": "tree"
 	},
 	"oakTree": {
 		"typeId": 12,

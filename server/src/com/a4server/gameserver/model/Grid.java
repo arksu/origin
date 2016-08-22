@@ -15,6 +15,8 @@ import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
 import com.a4server.gameserver.model.collision.VirtualObject;
 import com.a4server.gameserver.model.event.Event;
+import com.a4server.gameserver.model.objects.ObjectTemplate;
+import com.a4server.gameserver.model.objects.ObjectsFactory;
 import com.a4server.gameserver.network.serverpackets.MapGrid;
 import com.a4server.util.Rect;
 import com.a4server.util.Rnd;
@@ -458,8 +460,35 @@ public class Grid
 	 */
 	private void loadObject(ResultSet rset) throws SQLException
 	{
-		GameObject object = new GameObject(this, rset);
-		_objects.add(object);
+		int typeId = rset.getInt("type");
+		ObjectTemplate template = ObjectsFactory.getInstance().getTemplate(typeId);
+
+		if (template != null)
+		{
+			GameObject object;
+			Class<? extends GameObject> clazz = template.getClassName();
+			if (clazz != null)
+			{
+				try
+				{
+					object = clazz.getDeclaredConstructor(Grid.class, ResultSet.class).newInstance(this, rset);
+					_objects.add(object);
+				}
+				catch (Exception e)
+				{
+					throw new RuntimeException("failed create game object type=" + typeId + " " + e.getMessage(), e);
+				}
+			}
+			else
+			{
+				object = new GameObject(this, rset);
+				_objects.add(object);
+			}
+		}
+		else
+		{
+			throw new RuntimeException("no template for object type=" + typeId);
+		}
 	}
 
 	/**
@@ -770,7 +799,7 @@ public class Grid
 
 			// гриды залочены, проходим итерациями и ищем коллизию
 			CollisionResult result = Collision
-					.checkCollision(object, fromX, fromY, toX, toY, moveType, virtual, grids, 0);
+											 .checkCollision(object, fromX, fromY, toX, toY, moveType, virtual, grids, 0);
 
 			// узнаем переместился ли объект из одного грида в другой
 			// и только в том случае если в передвижении участвует больше 1 грида

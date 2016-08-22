@@ -135,6 +135,12 @@ public class Player extends Human
 		}
 
 		@Override
+		public Class<? extends GameObject> getClassName()
+		{
+			return null;
+		}
+
+		@Override
 		public CollisionTemplate getCollision()
 		{
 			return null;

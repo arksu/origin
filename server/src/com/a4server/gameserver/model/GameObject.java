@@ -468,11 +468,5 @@ public class GameObject
 	 */
 	public void actionClick(Player player)
 	{
-		// TODO: пкм по объекту для вызова меню взаимодействия с объектом
-		List<String> list = new ArrayList<>();
-		list.add("item1");
-		list.add("chop");
-
-		player.getClient().sendPacket(new ContextMenu(_objectId, list));
 	}
 }

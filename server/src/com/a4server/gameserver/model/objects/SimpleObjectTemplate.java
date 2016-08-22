@@ -1,5 +1,7 @@
 package com.a4server.gameserver.model.objects;
 
+import com.a4server.gameserver.model.GameObject;
+import com.a4server.gameserver.model.objects.impl.ObjectsImpl;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -18,6 +20,7 @@ public class SimpleObjectTemplate implements ObjectTemplate
 	private int _typeId;
 	private int _width = 10;
 	private int _height = 10;
+	private Class<? extends GameObject> _class;
 	private CollisionTemplate _collision = null;
 	private InventoryTemplate _inventory = null;
 	private ItemTemplate _item = null;
@@ -63,6 +66,10 @@ public class SimpleObjectTemplate implements ObjectTemplate
 		{
 			_typeId = in.nextInt();
 		}
+		else if ("class".equalsIgnoreCase(paramName))
+		{
+			_class = ObjectsImpl.getClass(in.nextString());
+		}
 		else if ("size".equalsIgnoreCase(paramName))
 		{
 			int sz = in.nextInt();
@@ -106,6 +113,12 @@ public class SimpleObjectTemplate implements ObjectTemplate
 	public String getName()
 	{
 		return _name;
+	}
+
+	@Override
+	public Class<? extends GameObject> getClassName()
+	{
+		return _class;
 	}
 
 	@Override
