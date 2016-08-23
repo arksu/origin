@@ -4,6 +4,7 @@ import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
+import com.a4server.gameserver.model.position.MoveToObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,5 +43,10 @@ public class Tree extends GameObject
 	public void contextSelected(Player player, String item)
 	{
 		_log.debug("Tree context: " + item);
+
+		// для простого передвижения не требуется мозг) не надо ни о чем думать
+		player.setMind(null);
+		// запустим движение. создадим контроллер для этого
+		player.StartMove(new MoveToObject(this));
 	}
 }

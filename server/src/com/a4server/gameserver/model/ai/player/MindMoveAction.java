@@ -49,42 +49,39 @@ public class MindMoveAction extends PlayerMind
 				// коллизии нет. мы знаем этот объект?
 				object = _player.isKnownObject(_targetObjectId);
 				// если мы находимся точно в его позиции
-				if (object.getPos().equals(_player.getPos()))
+				// этот объект вещь? т.е. вещь валяется на земле
+				if (object.getPos().equals(_player.getPos()) && object.getTemplate().getItem() != null)
 				{
-					// этот объект вещь? т.е. вещь валяется на земле
-					if (object.getTemplate().getItem() != null)
+					// найдем вещь в базе
+					AbstractItem item = AbstractItem.load(_player, _targetObjectId);
+					if (item != null)
 					{
-						// найдем вещь в базе
-						AbstractItem item = AbstractItem.load(_player, _targetObjectId);
-						if (item != null)
+						// вещь обязательно должна быть помечена как удаленная
+						if (!item.isDeleted()) throw new RuntimeException("pickup item is not deleted! " + item);
+
+						// положим вещь в инвентарь игрока
+						InventoryItem putItem = _player.getInventory().putItem(item);
+						// сначала пометим объект в базе как удаленный, а с вещи наоборот снимем пометку
+						if (putItem != null && object.markDeleted(true) && putItem.markDeleted(false))
 						{
-							// вещь обязательно должна быть помечена как удаленная
-							if (!item.isDeleted()) throw new RuntimeException("pickup item is not deleted! " + item);
+							// сохраним в базе
+							putItem.store();
 
-							// положим вещь в инвентарь игрока
-							InventoryItem putItem = _player.getInventory().putItem(item);
-							// сначала пометим объект в базе как удаленный, а с вещи наоборот снимем пометку
-							if (putItem != null && object.markDeleted(true) && putItem.markDeleted(false))
+							// разошлем всем пакет с удалением объекта из мира
+							Grid grid = _player.getGrid();
+							if (grid.tryLock())
 							{
-								// сохраним в базе
-								putItem.store();
-
-								// разошлем всем пакет с удалением объекта из мира
-								Grid grid = _player.getGrid();
-								if (grid.tryLock())
+								try
 								{
-									try
-									{
-										grid.removeObject(object);
-									}
-									finally
-									{
-										grid.unlock();
-									}
+									grid.removeObject(object);
 								}
-
-								_player.sendInteractPacket(new InventoryUpdate(_player.getInventory()));
+								finally
+								{
+									grid.unlock();
+								}
 							}
+
+							_player.sendInteractPacket(new InventoryUpdate(_player.getInventory()));
 						}
 					}
 				}

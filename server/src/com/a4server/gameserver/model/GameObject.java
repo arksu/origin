@@ -179,6 +179,7 @@ public class GameObject
 			statement.setInt(2, _objectId);
 			statement.executeUpdate();
 			con.close();
+			_isDeleteing = value;
 			return true;
 		}
 		catch (Exception e)

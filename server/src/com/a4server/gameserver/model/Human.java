@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * объект описывающий поведение живых, активных объектов (игроки, животные)
  * Created by arksu on 02.02.15.
  */
-public abstract class Human extends MoveObject
+public abstract class Human extends MovingObject
 {
 	private static final Logger _log = LoggerFactory.getLogger(Human.class.getName());
 
@@ -142,7 +142,7 @@ public abstract class Human extends MoveObject
 	{
 		for (GameObject object : _knownKist)
 		{
-			if (object.getObjectId() == objectId)
+			if (!object.isDeleteing() && object.getObjectId() == objectId)
 			{
 				return object;
 			}

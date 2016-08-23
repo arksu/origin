@@ -85,7 +85,7 @@ public class MoveToPoint extends MoveController
 	@Override
 	public boolean canStartMoving()
 	{
-		// COPYPAST! ^^^
+		// COPYPAST! ^^^ MovingImpl
 
 		// время прошедшее с последнего апдейта. пока тупо захардкодим
 		double dt = 0.1f;

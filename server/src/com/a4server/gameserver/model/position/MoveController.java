@@ -2,7 +2,7 @@ package com.a4server.gameserver.model.position;
 
 import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Human;
-import com.a4server.gameserver.model.MoveObject;
+import com.a4server.gameserver.model.MovingObject;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
 import com.a4server.gameserver.model.collision.VirtualObject;
@@ -28,7 +28,7 @@ public abstract class MoveController
 	/**
 	 * объект который двигаем
 	 */
-	protected MoveObject _activeObject;
+	protected MovingObject _activeObject;
 
 	/**
 	 * текущие координаты объекта. double для сглаживания.
@@ -52,7 +52,7 @@ public abstract class MoveController
 		_lastMoveTime = System.currentTimeMillis();
 	}
 
-	public void setActiveObject(MoveObject object)
+	public void setActiveObject(MovingObject object)
 	{
 		_activeObject = object;
 		if (object != null)

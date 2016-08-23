@@ -17,9 +17,9 @@ import java.util.List;
  * объект который может передвигаться в мире
  * Created by arksu on 09.01.2015.
  */
-public abstract class MoveObject extends GameObject
+public abstract class MovingObject extends GameObject
 {
-	private static final Logger _log = LoggerFactory.getLogger(MoveObject.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(MovingObject.class.getName());
 
 	/**
 	 * контроллер который управляет передвижением объекта
@@ -36,7 +36,7 @@ public abstract class MoveObject extends GameObject
 	 */
 	protected List<Grid> _grids = new ArrayList<>();
 
-	public MoveObject(int objectId, ObjectTemplate template)
+	public MovingObject(int objectId, ObjectTemplate template)
 	{
 		super(objectId, template);
 	}

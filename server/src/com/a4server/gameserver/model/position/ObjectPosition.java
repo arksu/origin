@@ -3,7 +3,7 @@ package com.a4server.gameserver.model.position;
 import com.a4server.Config;
 import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Grid;
-import com.a4server.gameserver.model.MoveObject;
+import com.a4server.gameserver.model.MovingObject;
 import com.a4server.gameserver.model.World;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.util.Rnd;
@@ -213,9 +213,9 @@ public class ObjectPosition
 		}
 
 		// проинформируем объект что перешли в другой грид
-		if (getActiveObject() instanceof MoveObject)
+		if (getActiveObject() instanceof MovingObject)
 		{
-			((MoveObject) getActiveObject()).onGridChanged();
+			((MovingObject) getActiveObject()).onGridChanged();
 		}
 		_grid = value;
 	}
