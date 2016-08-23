@@ -1,7 +1,7 @@
 package com.a4server.gameserver.model.objects;
 
 import com.a4server.gameserver.model.GameObject;
-import com.a4server.gameserver.model.objects.impl.ObjectsImpl;
+import com.a4server.gameserver.model.objects.impl.ObjectClasses;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -68,7 +68,7 @@ public class SimpleObjectTemplate implements ObjectTemplate
 		}
 		else if ("class".equalsIgnoreCase(paramName))
 		{
-			_class = ObjectsImpl.getClass(in.nextString());
+			_class = ObjectClasses.getClass(in.nextString());
 		}
 		else if ("size".equalsIgnoreCase(paramName))
 		{

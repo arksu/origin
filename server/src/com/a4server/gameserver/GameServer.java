@@ -7,7 +7,7 @@ import com.a4server.ThreadPoolManager;
 import com.a4server.gameserver.idfactory.IdFactory;
 import com.a4server.gameserver.model.World;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
-import com.a4server.gameserver.model.objects.impl.ObjectsImpl;
+import com.a4server.gameserver.model.objects.impl.ObjectClasses;
 import com.a4server.gameserver.network.GameServerHandler;
 import com.a4server.util.network.AsyncPacketReader;
 import com.a4server.util.network.PacketDecoder;
@@ -54,7 +54,7 @@ public class GameServer
 	public GameServer() throws Exception
 	{
 		Config.load();
-		ObjectsImpl.init();
+		ObjectClasses.init();
 
 		logPrintSection("Database");
 		Database.getInstance();
