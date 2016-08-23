@@ -61,12 +61,13 @@ public class ContextMenu extends GameServerPacket
 
 			System.out.println("x=" + x + " y=" + y);
 
+			final int objectId = _objectId;
 			GUI_ContextMenu popup = GUI_ContextMenu.popup(new com.a2client.gamegui.ContextMenu()
 			{
 				@Override
 				public void OnContextClick(int idx)
 				{
-					new ContextSelect(_list.get(idx)).send();
+					new ContextSelect(objectId, _list.get(idx)).send();
 				}
 			});
 

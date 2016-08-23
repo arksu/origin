@@ -4,7 +4,6 @@ import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
-import com.a4server.gameserver.network.serverpackets.ContextMenu;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,12 +30,17 @@ public class Tree extends GameObject
 	}
 
 	@Override
-	public void actionClick(Player player)
+	public List<String> getContextMenu(Player player)
 	{
 		List<String> list = new ArrayList<>();
 		list.add("take_branch");
 		list.add("chop");
+		return list;
+	}
 
-		player.getClient().sendPacket(new ContextMenu(_objectId, list));
+	@Override
+	public void contextSelected(Player player, String item)
+	{
+		_log.debug("Tree context: " + item);
 	}
 }

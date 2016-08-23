@@ -19,7 +19,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
@@ -323,7 +322,7 @@ public class GameObject
 	public String toString()
 	{
 		return "(" + getClass().getSimpleName() + ": " + (!_name
-				.isEmpty() ? _name + " " : "") + "id=" + _objectId + ")";
+																   .isEmpty() ? _name + " " : "") + "id=" + _objectId + ")";
 	}
 
 	@Override
@@ -464,9 +463,25 @@ public class GameObject
 	}
 
 	/**
+	 * пункты контекстного меню объекта которые доступны в данный момент
+	 */
+	public List<String> getContextMenu(Player player)
+	{
+		return null;
+	}
+
+	/**
+	 * выбран пункт контекстного меню
+	 */
+	public void contextSelected(Player player, String item)
+	{
+	}
+
+	/**
 	 * клик мышкой по объекту для совершения действия (пкм на объекте)
 	 */
 	public void actionClick(Player player)
 	{
+		player.getClient().sendPacket(new ContextMenu(_objectId, getContextMenu(player)));
 	}
 }
