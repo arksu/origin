@@ -4,6 +4,7 @@ import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
+import com.a4server.gameserver.model.objects.ObjectsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,8 +40,13 @@ public class Tree extends GameObject
 	}
 
 	@Override
-	protected void contextRun(Player player, String item)
+	protected void contextRun(Player player, String contextItem)
 	{
-		_log.debug("context: " + item);
+		_log.debug("context: " + contextItem);
+
+		if ("take_branch".equals(contextItem))
+		{
+			player.generateItem(ObjectsFactory.getInstance().getTemplate("branch").getTypeId(), getQuality());
+		}
 	}
 }

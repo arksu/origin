@@ -259,9 +259,9 @@ public class Player extends Human
 	{
 		GameServerPacket pkt = new ObjectAdd(this);
 		BaseSendPacket next = pkt
-				// раз это персонаж, отправим его представление, то как он должен выглядеть
-				.addNext(new PlayerAppearance(_appearance))
-				.addNext(new EquipUpdate(_equip));
+									  // раз это персонаж, отправим его представление, то как он должен выглядеть
+									  .addNext(new PlayerAppearance(_appearance))
+									  .addNext(new EquipUpdate(_equip));
 		if (_hand != null)
 		{
 			next.addNext(new PlayerHand(_hand));
@@ -272,7 +272,7 @@ public class Player extends Human
 	public BaseSendPacket makeInitClientPacket()
 	{
 		return new InventoryUpdate(_inventory)
-				.addNext(new ActionsList(getActions()));
+					   .addNext(new ActionsList(getActions()));
 	}
 
 	/**
@@ -521,17 +521,8 @@ public class Player extends Human
 						{
 							while (count > 0)
 							{
-								int id = IdFactory.getInstance().getNextId();
-								_log.info("сreate item: " + template.getName() + " count: " + count + " id: " + id);
-								InventoryItem item = new InventoryItem(this, typeId, 10);
-								// пробуем закинуть вещь в инвентарь
-								InventoryItem puttedItem = getInventory().putItem(item);
-								if (puttedItem != null)
-								{
-									sendInteractPacket(new InventoryUpdate(getInventory()));
-									puttedItem.store();
-								}
-								else
+								_log.info("сreate item: " + template.getName() + " count: " + count);
+								if (!generateItem(typeId, 10))
 								{
 									break;
 								}
@@ -644,5 +635,25 @@ public class Player extends Human
 	public void actionClick(Player player)
 	{
 		// nothing to do
+	}
+
+	/**
+	 * попытаться создать вещь в инвентаре игрока
+	 * @param typeId
+	 * @param quality
+	 * @return
+	 */
+	public boolean generateItem(int typeId, int quality)
+	{
+		InventoryItem item = new InventoryItem(this, typeId, quality);
+		// пробуем закинуть вещь в инвентарь
+		InventoryItem puttedItem = getInventory().putItem(item);
+		if (puttedItem != null)
+		{
+			sendInteractPacket(new InventoryUpdate(getInventory()));
+			puttedItem.store();
+			return true;
+		}
+		return false;
 	}
 }

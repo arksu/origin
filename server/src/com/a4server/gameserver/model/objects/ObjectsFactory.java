@@ -98,6 +98,18 @@ public class ObjectsFactory
 		return _templates.get(typeId);
 	}
 
+	public ObjectTemplate getTemplate(String name)
+	{
+		for (ObjectTemplate template : _templates.values())
+		{
+			if (template.getName().equals(name))
+			{
+				return template;
+			}
+		}
+		return null;
+	}
+
 	public static ObjectsFactory getInstance()
 	{
 		return SingletonHolder._instance;

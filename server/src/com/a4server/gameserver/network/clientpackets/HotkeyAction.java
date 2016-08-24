@@ -11,7 +11,7 @@ public class HotkeyAction extends GameClientPacket
 {
 	private static final Logger _log = LoggerFactory.getLogger(HotkeyAction.class.getName());
 
-	int _hotkey;
+	private int _hotkey;
 
 	@Override
 	public void readImpl()

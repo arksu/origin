@@ -32,9 +32,9 @@ public class GameObject
 {
 	private static final Logger _log = LoggerFactory.getLogger(GameObject.class.getName());
 
-	public static final String LOAD_OBJECTS = "SELECT id, x, y, type, hp, data, create_tick, last_tick FROM sg_0_obj WHERE del=0 AND grid = ?";
+	public static final String LOAD_OBJECTS = "SELECT id, x, y, type, q, hp, data, create_tick, last_tick FROM sg_0_obj WHERE del=0 AND grid = ?";
 
-	public static final String STORE = "REPLACE INTO sg_0_obj (id, grid, x, y, type, create_tick) VALUES (?, ?, ?, ?, ?, ?)";
+	public static final String STORE = "REPLACE INTO sg_0_obj (id, grid, x, y, type, q, create_tick) VALUES (?, ?, ?, ?, ?, ?)";
 
 	public static final String MARK_DELETED = "UPDATE sg_0_obj SET del=? WHERE id=?";
 
@@ -42,6 +42,11 @@ public class GameObject
 	 * ид объекта, задается лишь единожды
 	 */
 	protected final int _objectId;
+
+	/**
+	 * качество объекта
+	 */
+	protected int _quality;
 
 	/**
 	 * позиция объекта в мире
@@ -118,6 +123,7 @@ public class GameObject
 		_objectId = rset.getInt("id");
 		_pos = new ObjectPosition(rset.getInt("x"), rset.getInt("y"), grid.getLevel(), grid);
 		int typeId = rset.getInt("type");
+		_quality = rset.getInt("q");
 		_template = ObjectsFactory.getInstance().getTemplate(typeId);
 		_boundRect = new Rect(-_template.getWidth() / 2,
 							  -_template.getHeight() / 2,
@@ -148,7 +154,8 @@ public class GameObject
 			statement.setInt(3, getPos().getX());
 			statement.setInt(4, getPos().getY());
 			statement.setInt(5, getTemplate().getTypeId());
-			statement.setInt(6, GameTimeController.getInstance().getTickCount());
+			statement.setInt(6, getQuality());
+			statement.setInt(7, GameTimeController.getInstance().getTickCount());
 			statement.executeUpdate();
 			con.close();
 			return true;
@@ -199,6 +206,11 @@ public class GameObject
 	public int getTypeId()
 	{
 		return _template.getTypeId();
+	}
+
+	public int getQuality()
+	{
+		return _quality;
 	}
 
 	public ObjectTemplate getTemplate()
@@ -507,10 +519,8 @@ public class GameObject
 
 	/**
 	 * запустить выполнение пункта контекстного меню
-	 * @param player
-	 * @param item
 	 */
-	protected void contextRun(final Player player, final String item)
+	protected void contextRun(final Player player, final String contextItem)
 	{
 	}
 
@@ -519,6 +529,10 @@ public class GameObject
 	 */
 	public void actionClick(Player player)
 	{
-		player.getClient().sendPacket(new ContextMenu(_objectId, getContextMenu(player)));
+		List<String> contextMenu = getContextMenu(player);
+		if (contextMenu != null)
+		{
+			player.getClient().sendPacket(new ContextMenu(_objectId, contextMenu));
+		}
 	}
 }

@@ -140,6 +140,7 @@ CREATE TABLE `sg_0_obj` (
   `x` int(11) NOT NULL,
   `y` int(11) NOT NULL,
   `type` smallint(5) unsigned NOT NULL COMMENT 'тип',
+  `q` smallint(5) unsigned NOT NULL DEFAULT '10' COMMENT 'качество',
   `hp` smallint(5) unsigned NOT NULL DEFAULT '100',
   `data` text COMMENT 'json',
   `create_tick` int(10) unsigned NOT NULL COMMENT 'время создания, тик',
@@ -163,4 +164,4 @@ CREATE TABLE `sg_0_obj` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-17 21:20:26
+-- Dump completed on 2016-08-24 11:22:49

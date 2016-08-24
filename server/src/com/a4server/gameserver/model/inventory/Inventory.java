@@ -186,6 +186,11 @@ public class Inventory
 		return _items.remove(item);
 	}
 
+	/**
+	 * положить вещь в инвентарь. ищем свободное место под нее с учетом ее размеров
+	 * @param itemPut ведь которую кладем
+	 * @return {@link InventoryItem} положенная вещь если удалось найти под нее место, иначе null
+	 */
 	public InventoryItem putItem(AbstractItem itemPut)
 	{
 		return putItem(itemPut, -1, -1);
@@ -195,6 +200,7 @@ public class Inventory
 	 * положить вещь в инвентарь
 	 * @param x координаты куда положить вещь в инвентаре
 	 * @param y координаты куда положить вещь в инвентаре
+	 * @return положенная вещь если удалось найти под нее место, иначе null
 	 */
 	public InventoryItem putItem(AbstractItem itemPut, int x, int y)
 	{
@@ -212,6 +218,7 @@ public class Inventory
 		else
 		{
 			// мы не знаем куда положить. ищем свободное место
+			// перебираем все доступные координаты в инвентаре
 			for (int iy = 0; iy < _height; iy++)
 			{
 				for (int ix = 0; ix < _width; ix++)
