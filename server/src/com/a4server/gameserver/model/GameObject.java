@@ -2,6 +2,8 @@ package com.a4server.gameserver.model;
 
 import com.a4server.Database;
 import com.a4server.gameserver.GameTimeController;
+import com.a4server.gameserver.model.ai.player.MindMoveAction;
+import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.objects.InventoryTemplate;
@@ -474,7 +476,41 @@ public class GameObject
 	/**
 	 * выбран пункт контекстного меню
 	 */
-	public void contextSelected(Player player, String item)
+	public void contextSelected(final Player player, final String item)
+	{
+		_log.debug("contextSelected: " + item);
+
+		// проверим что такой пункт есть в меню
+		List<String> contextMenu = getContextMenu(player);
+		if (contextMenu != null && contextMenu.contains(item))
+		{
+			player.setMind(new MindMoveAction(player, _objectId, new MindMoveAction.ArrivedCallback()
+			{
+				@Override
+				public void onArrived(CollisionResult moveResult)
+				{
+					// убедимся что прибыли к нужному объекту
+					if (moveResult.getResultType() == CollisionResult.CollisionType.COLLISION_OBJECT
+						&& moveResult.getObject().getObjectId() == _objectId)
+					// проверим что такой пункт еще реально есть по прибытии к объекту
+					{
+						List<String> contextMenu1 = getContextMenu(player);
+						if (contextMenu1 != null && contextMenu1.contains(item))
+						{
+							contextRun(player, item);
+						}
+					}
+				}
+			}));
+		}
+	}
+
+	/**
+	 * запустить выполнение пункта контекстного меню
+	 * @param player
+	 * @param item
+	 */
+	protected void contextRun(final Player player, final String item)
 	{
 	}
 

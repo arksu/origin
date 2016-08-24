@@ -36,10 +36,4 @@ public class Stone extends GameObject
 		list.add("chip_stone");
 		return list;
 	}
-
-	@Override
-	public void contextSelected(Player player, String item)
-	{
-
-	}
 }

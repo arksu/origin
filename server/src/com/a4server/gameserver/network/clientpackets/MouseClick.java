@@ -2,9 +2,12 @@ package com.a4server.gameserver.network.clientpackets;
 
 import com.a4server.gameserver.model.*;
 import com.a4server.gameserver.model.ai.player.MindMoveAction;
+import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.inventory.AbstractItem;
+import com.a4server.gameserver.model.inventory.InventoryItem;
 import com.a4server.gameserver.model.position.MoveToPoint;
 import com.a4server.gameserver.model.position.ObjectPosition;
+import com.a4server.gameserver.network.serverpackets.InventoryUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,8 +80,7 @@ public class MouseClick extends GameClientPacket
 								// кликнули в объект?
 								else if (_objectId != 0 && _objectId != player.getObjectId())
 								{
-									// клик по объекту. бежим к нему и делаем действие над ним
-									player.setMind(new MindMoveAction(player, _objectId));
+									moveToObject(player, _objectId);
 								}
 								else
 								{
@@ -114,6 +116,78 @@ public class MouseClick extends GameClientPacket
 			}
 
 		}
+	}
+
+	private void moveToObject(final Player player, final int objectId)
+	{
+		// клик по объекту. бежим к нему и делаем действие над ним
+		player.setMind(new MindMoveAction(player, _objectId, new MindMoveAction.ArrivedCallback()
+		{
+			@Override
+			public void onArrived(CollisionResult moveResult)
+			{
+				GameObject object;
+				// наша цель совпадает с тем куда пришли?
+				switch (moveResult.getResultType())
+				{
+					case COLLISION_OBJECT:
+						object = moveResult.getObject();
+						if (object != null && object.getObjectId() == objectId && !object.isDeleteing())
+						{
+							_log.debug("interact with object " + object.toString());
+							// надо провести взаимодействие с этим объектом
+							player.beginInteract(object);
+						}
+						break;
+
+					case COLLISION_NONE:
+						// коллизии нет. мы знаем этот объект?
+						object = player.isKnownObject(objectId);
+						// если мы находимся точно в его позиции
+						// этот объект вещь? т.е. вещь валяется на земле
+						if (object.getPos().equals(player.getPos()) && object.getTemplate().getItem() != null)
+						{
+							// найдем вещь в базе
+							AbstractItem item = AbstractItem.load(player, objectId);
+							if (item != null)
+							{
+								// вещь обязательно должна быть помечена как удаленная
+								if (!item.isDeleted())
+								{
+									throw new RuntimeException("pickup item is not deleted! " + item);
+								}
+
+								// положим вещь в инвентарь игрока
+								InventoryItem putItem = player.getInventory().putItem(item);
+								// сначала пометим объект в базе как удаленный, а с вещи наоборот снимем пометку
+								if (putItem != null && object.markDeleted(true) && putItem.markDeleted(false))
+								{
+									// сохраним в базе
+									putItem.store();
+
+									// разошлем всем пакет с удалением объекта из мира
+									Grid grid = player.getGrid();
+									if (grid.tryLock())
+									{
+										try
+										{
+											grid.removeObject(object);
+										}
+										finally
+										{
+											grid.unlock();
+										}
+									}
+
+									player.sendInteractPacket(new InventoryUpdate(player.getInventory()));
+								}
+							}
+						}
+						break;
+				}
+
+			}
+		}));
 	}
 
 	private void itemDrop(Player player)

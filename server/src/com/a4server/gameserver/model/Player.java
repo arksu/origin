@@ -445,7 +445,7 @@ public class Player extends Human
 	@Override
 	public double getMoveSpeed()
 	{
-		return 15f;
+		return 25f;
 	}
 
 	// нагенерить объектов в гриде
