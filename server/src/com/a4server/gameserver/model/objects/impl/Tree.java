@@ -46,7 +46,7 @@ public class Tree extends GameObject
 
 		if ("take_branch".equals(contextItem))
 		{
-			player.generateItem(ObjectsFactory.getInstance().getTemplate("branch").getTypeId(), getQuality());
+			player.generateItem(ObjectsFactory.getInstance().getTemplate("branch").getTypeId(), getQuality(), true);
 		}
 	}
 }

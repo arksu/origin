@@ -5,6 +5,7 @@ import com.a4server.gameserver.GameClient;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.idfactory.IdFactory;
 import com.a4server.gameserver.model.event.Event;
+import com.a4server.gameserver.model.inventory.AbstractItem;
 import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.inventory.InventoryItem;
 import com.a4server.gameserver.model.objects.*;
@@ -451,7 +452,7 @@ public class Player extends Human
 	// нагенерить объектов в гриде
 	public void randomGrid()
 	{
-		int ido = 100;
+		int ido;
 		int gx = getPos().getGridX();
 		int gy = getPos().getGridY();
 		int grid;
@@ -460,7 +461,7 @@ public class Player extends Human
 			int rx = Rnd.get(0, Grid.GRID_FULL_SIZE) + (gx * 1200);
 			int ry = Rnd.get(0, Grid.GRID_FULL_SIZE) + (gy * 1200);
 			grid = rx / Grid.GRID_FULL_SIZE + ry / Grid.GRID_FULL_SIZE * Grid.SUPERGRID_SIZE;
-			ido++;
+			ido = IdFactory.getInstance().getNextId();
 			_log.debug("create obj " + ido + " x=" + rx + " y=" + ry);
 
 			String q = "INSERT INTO sg_0_obj (id, grid, x, y, type, hp, create_tick) VALUES (?,?,?,?,?,?,?);";
@@ -522,7 +523,7 @@ public class Player extends Human
 							while (count > 0)
 							{
 								_log.info("сreate item: " + template.getName() + " count: " + count);
-								if (!generateItem(typeId, 10))
+								if (!generateItem(typeId, 10, true))
 								{
 									break;
 								}
@@ -639,21 +640,64 @@ public class Player extends Human
 
 	/**
 	 * попытаться создать вещь в инвентаре игрока
-	 * @param typeId
-	 * @param quality
+	 * @param typeId ид типа вещи
+	 * @param quality качество создаваемой вещи
+	 * @param cadDrop можно ли бросить на землю если места в инвентаре не оказалось
 	 * @return
 	 */
-	public boolean generateItem(int typeId, int quality)
+	public boolean generateItem(int typeId, int quality, boolean cadDrop)
 	{
 		InventoryItem item = new InventoryItem(this, typeId, quality);
 		// пробуем закинуть вещь в инвентарь
 		InventoryItem puttedItem = getInventory().putItem(item);
+		// только если реально влезло в инвентарь
 		if (puttedItem != null)
 		{
+			// пошлем инвентарь всем с кем взаимодействуем
 			sendInteractPacket(new InventoryUpdate(getInventory()));
+			// сохраним вещь в бд
 			puttedItem.store();
 			return true;
 		}
+		else
+		{
+			if (cadDrop && dropItem(item))
+			{
+				return true;
+			}
+		}
 		return false;
 	}
+
+	public boolean dropItem(AbstractItem item)
+	{
+		if (item == null) throw new RuntimeException("drop NULL item");
+
+		// создаем новый игровой объект на основании шаблона взятой вещи
+		GameObject object = new GameObject(item.getObjectId(), item.getTemplate().getObjectTemplate());
+		// зададим этому объекту позицию - прямо под игроком
+		object.setPos(new ObjectPosition(getPos(), object));
+
+		// пытаемся заспавнить этот объект
+		if (object.getPos().trySpawn())
+		{
+			_log.debug("item dropped: " + item);
+			// сначала грохнем вещь! и только потом сохраним объект в базу
+			if (item.markDeleted() && object.store())
+			{
+				return true;
+			}
+			else
+			{
+				// но если чето сцуко пошло не так - уроним все к хуям
+				throw new RuntimeException("failed update db on item drop");
+			}
+		}
+		else
+		{
+			_log.debug("cant drop: " + item);
+		}
+		return false;
+	}
+
 }

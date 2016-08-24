@@ -34,7 +34,7 @@ public class GameObject
 
 	public static final String LOAD_OBJECTS = "SELECT id, x, y, type, q, hp, data, create_tick, last_tick FROM sg_0_obj WHERE del=0 AND grid = ?";
 
-	public static final String STORE = "REPLACE INTO sg_0_obj (id, grid, x, y, type, q, create_tick) VALUES (?, ?, ?, ?, ?, ?)";
+	public static final String STORE = "REPLACE INTO sg_0_obj (id, grid, x, y, type, q, create_tick) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
 	public static final String MARK_DELETED = "UPDATE sg_0_obj SET del=? WHERE id=?";
 

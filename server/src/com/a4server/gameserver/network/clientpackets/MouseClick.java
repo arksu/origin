@@ -6,7 +6,6 @@ import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.inventory.AbstractItem;
 import com.a4server.gameserver.model.inventory.InventoryItem;
 import com.a4server.gameserver.model.position.MoveToPoint;
-import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.InventoryUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +74,11 @@ public class MouseClick extends GameClientPacket
 								if (player.getHand() != null)
 								{
 									// chpok
-									itemDrop(player);
+									if (player.dropItem(player.getHand().getItem()))
+									{
+										// уберем все из руки
+										player.setHand(null);
+									}
 								}
 								// кликнули в объект?
 								else if (_objectId != 0 && _objectId != player.getObjectId())
@@ -188,37 +191,6 @@ public class MouseClick extends GameClientPacket
 
 			}
 		}));
-	}
-
-	private void itemDrop(Player player)
-	{
-		// берем вещь из руки
-		AbstractItem item = player.getHand().getItem();
-		// создаем новый игровой объект на основании шаблона взятой вещи
-		GameObject object = new GameObject(item.getObjectId(), item.getTemplate().getObjectTemplate());
-		// зададим этому объекту позицию - прямо под игроком
-		object.setPos(new ObjectPosition(player.getPos(), object));
-
-		// пытаемся заспавнить этот объект
-		if (object.getPos().trySpawn())
-		{
-			_log.debug("item dropped: " + item);
-			// сначала грохнем вещь! и только потом сохраним объект в базу
-			if (item.markDeleted() && object.store())
-			{
-				// уберем все из руки
-				player.setHand(null);
-			}
-			else
-			{
-				// но если чето сцуко пошло не так - уроним все к хуям
-				throw new RuntimeException("failed update db on item drop");
-			}
-		}
-		else
-		{
-			_log.debug("cant drop: " + item);
-		}
 	}
 
 	private void cursorClick(Player player, int x, int y, int button)
