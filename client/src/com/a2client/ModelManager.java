@@ -4,7 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.Timer;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import org.slf4j.Logger;
@@ -56,8 +59,8 @@ public class ModelManager
 
 		if (desc == null)
 		{
-			throw new GdxRuntimeException(
-					"no model by typeId: " + typeId);
+			desc = _modelList.get(0);
+//			throw new GdxRuntimeException("no model by typeId: " + typeId);
 		}
 
 		if (!desc._loaded)
@@ -73,7 +76,12 @@ public class ModelManager
 
 	public ModelDesc getDescByType(int typeId)
 	{
-		return _modelList.get(typeId);
+		ModelDesc desc = _modelList.get(typeId);
+		if (desc == null)
+		{
+			desc = _modelList.get(0);
+		}
+		return desc;
 	}
 
 	public void updateModelTime(int typeId)
