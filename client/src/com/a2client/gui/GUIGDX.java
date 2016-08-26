@@ -123,11 +123,11 @@ public class GUIGDX
 		_spriteBatch.setColor(c);
 	}
 
-	static public void pushScissor(Rect s)
+	static public boolean pushScissor(Rect s)
 	{
 		Rectangle clipBounds = new Rectangle(s.x, Gdx.graphics.getHeight() - s.y, s.w, -s.h);
 		_spriteBatch.flush();
-		ScissorStack.pushScissors(clipBounds);
+		return ScissorStack.pushScissors(clipBounds);
 	}
 
 	static public void popScissor()

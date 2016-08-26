@@ -18,12 +18,13 @@ const int pcfCount = 1;
 const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
 
 void main() {
-    outColor = u_ambient * v_diffuse * texture(u_texture, texCoords);
+//    outColor = u_ambient * v_diffuse * texture(u_texture, texCoords);
+    outColor = v_diffuse * texture(u_texture, texCoords);
 //    gl_FragColor = texture2D(u_texture, texCoords);
 
 	float intensity = max(NdotL, 0.0);
 	float shadeIntensity = ceil(intensity * numShades)/numShades;
-	outColor.xyz = outColor.xyz * shadeIntensity;
+//	outColor.xyz = outColor.xyz * shadeIntensity;
 
 	// shadows
 	if (shadowCoords.w > 0) {
@@ -41,7 +42,7 @@ void main() {
 		}
 		totalShadowWeight /= totalTexels;
 		float lightFactor = 1.0 - (totalShadowWeight * shadowCoords.w);
-		lightFactor = lightFactor * 0.5 + 0.5;
+		lightFactor = max(lightFactor * 0.5 + 0.5, 0.5);
 		outColor.xyz = outColor.xyz * lightFactor;
 	}
 

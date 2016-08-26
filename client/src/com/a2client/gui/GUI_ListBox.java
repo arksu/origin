@@ -21,11 +21,16 @@ import com.a2client.Input;
 import com.a2client.util.Rect;
 import com.a2client.util.Vec2i;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GUI_ListBox extends GUI_ScrollPage
 {
     protected int SelectedItem = -1;
+    protected final List<Integer> selected = new ArrayList<>();
     public boolean RenderBG = true;
     public boolean pressed = false;
+    public boolean allowMutliSelect = false;
 
     public GUI_ListBox(GUI_Control parent)
     {
@@ -36,7 +41,7 @@ public class GUI_ListBox extends GUI_ScrollPage
         ResetSelected();
     }
 
-    public void render()
+    public void DoRender()
     {
         if (RenderBG)
         {
@@ -49,7 +54,7 @@ public class GUI_ListBox extends GUI_ScrollPage
         int ay = abs_pos.y + _clientRect.y - wr.y;
 
         // для отсечки записей находящихся на границе контрола - ставим доп. скиссор
-        GUIGDX.pushScissor(new Rect(abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, wr.w, wr.h));
+        boolean bs = GUIGDX.pushScissor(new Rect(abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, wr.w, wr.h));
 
         int h;
         for (int i = 0; i < GetCount(); i++)
@@ -58,15 +63,21 @@ public class GUI_ListBox extends GUI_ScrollPage
             // если запись всяко за границами рисуемой области - пропускаем
             if ((ay + h >= abs_pos.y + _clientRect.y) && (ay < abs_pos.y + _clientRect.y + wr.h))
             {
-                GUIGDX.pushScissor(new Rect(ax, ay, wr.w, h));
+                boolean scissor = GUIGDX.pushScissor(new Rect(ax, ay, wr.w, h));
                 DrawItemBg(i, ax, ay, wr.w, h);
                 DoDrawItem(i, ax, ay, wr.w, h);
 
-                GUIGDX.popScissor();
+                if (scissor)
+                {
+                    GUIGDX.popScissor();
+                }
             }
             ay += h;
         }
-        GUIGDX.popScissor();
+        if (bs)
+        {
+            GUIGDX.popScissor();
+        }
     }
 
     protected void UpdateFullSize()
@@ -80,7 +91,7 @@ public class GUI_ListBox extends GUI_ScrollPage
         SetFullWidth(getWidth());
     }
 
-    public boolean onMouseBtn(int btn, boolean down)
+    public boolean DoMouseBtn(int btn, boolean down)
     {
         boolean result = false;
         if (!isMouseInMe())
@@ -144,9 +155,10 @@ public class GUI_ListBox extends GUI_ScrollPage
 
     public void SetSelected(int index, boolean value)
     {
-        if (value)
+        if (value && index >= 0 && index < GetCount())
         {
             SelectedItem = index;
+            selected.add(index);
         }
         else
         {
@@ -157,6 +169,16 @@ public class GUI_ListBox extends GUI_ScrollPage
     public int GetSelected()
     {
         return SelectedItem;
+    }
+
+    public List<Integer> getSelected()
+    {
+        return selected;
+    }
+
+    public boolean isSelected(int index)
+    {
+        return allowMutliSelect ? selected.contains(index) : SelectedItem == index;
     }
 
     public int GetCount()
@@ -174,25 +196,35 @@ public class GUI_ListBox extends GUI_ScrollPage
         // координаты передаются глобальные. скиссор ставит листбокс перед вызовом этой процедуры
         // рисуем обводку записи. в потомках вызываем inherited если надо
         int state;
-        if (GetSelected() == index)
+        if (isSelected(index))
         {
             if (gui.isMouseInRect(new Vec2i(x, y), new Vec2i(w, h)) && isMouseInMe())
+            {
                 state = Skin.StateHighlight_Checked;
+            }
             else
+            {
                 state = Skin.StateNormal_Checked;
+            }
         }
         else
         {
             if (gui.isMouseInRect(new Vec2i(x, y), new Vec2i(w, h)) && isMouseInMe())
+            {
                 state = Skin.StateHighlight;
+            }
             else
+            {
                 state = Skin.StateNormal;
+            }
         }
 
         getSkin().draw(skin_element + "_item", x, y, w, h, state);
     }
 
-    protected void DoDrawItem(int index, int x, int y, int w, int h) {}
+    protected void DoDrawItem(int index, int x, int y, int w, int h)
+    {
+    }
 
     protected boolean OnItemClick(int index, int btn, boolean down)
     {
@@ -205,17 +237,32 @@ public class GUI_ListBox extends GUI_ScrollPage
         if (down && btn == Input.MB_LEFT)
         {
             SelectedItem = index;
+            if (allowMutliSelect)
+            {
+                int i = selected.indexOf(index);
+                if (i >= 0)
+                {
+                    selected.remove(i);
+                }
+                else
+                {
+                    selected.add(index);
+                }
+            }
             result = true;
             DoClick();
         }
         return result;
     }
 
-    public void DoClick() {} // abstract
+    public void DoClick()
+    {
+    } // abstract
 
     public void ResetSelected()
     {
         SelectedItem = -1;
+        selected.clear();
     }
 
     // получить индекс итема над которым мышь
@@ -223,7 +270,9 @@ public class GUI_ListBox extends GUI_ScrollPage
     {
         int result = -1;
         if (!isMouseInMe())
+        {
             return result;
+        }
 
         Rect wr = WorkRect();
         // координаты текущей записи относительно контрола
@@ -255,9 +304,15 @@ public class GUI_ListBox extends GUI_ScrollPage
     protected void OnDeleteItem(int index)
     {
         if (SelectedItem == index)
+        {
             SelectedItem = -1;
+        }
         if (GetCount() <= SelectedItem)
+        {
             SelectedItem = GetCount() - 1;
+        }
+        int i = selected.indexOf(index);
+        if (i >= 0) selected.remove(i);
         UpdateFullSize();
     }
 

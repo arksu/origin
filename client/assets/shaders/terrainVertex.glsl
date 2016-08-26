@@ -9,7 +9,7 @@ uniform mat4 u_worldTrans;
 uniform mat3 u_viewTrans;
 uniform vec4 u_cameraPosition;
 uniform vec3 u_cameraDirection;
-
+uniform vec4 u_ambient;
 uniform vec4 u_clipPlane;
 uniform mat4 u_toShadowMapSpace;
 
@@ -24,7 +24,7 @@ out float NdotL;
 
 
 uniform vec3 u_lightPosition;
-vec4 diffuse = vec4(2,2,2,1);
+vec4 diffuse = vec4(1,1,1,1);
 
 uniform float u_density;
 uniform float u_gradient;
@@ -41,7 +41,7 @@ void main() {
     NdotL = max(dot(normal, lightDir), 0.0);
 
 //    v_diffuse = u_ambient * NdotL;
-    v_diffuse = diffuse * NdotL;
+    v_diffuse =  diffuse * NdotL;
 
     texCoords = a_texCoord0;
 
