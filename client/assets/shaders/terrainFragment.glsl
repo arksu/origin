@@ -23,7 +23,7 @@ void main() {
 
 	float intensity = max(NdotL, 0.0);
 	float shadeIntensity = ceil(intensity * numShades)/numShades;
-//	outColor.xyz = outColor.xyz * shadeIntensity;
+	outColor.xyz = outColor.xyz * shadeIntensity;
 
 	// shadows
 	if (shadowCoords.w > 0) {

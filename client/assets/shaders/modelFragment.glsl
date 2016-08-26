@@ -157,8 +157,8 @@ void main() {
 		gl_FragColor.a = 1.0;
 	#endif
 
-//	float intensity = max(NdotL, 0.0);
-//	float shadeIntensity = ceil(intensity * numShades)/numShades;
+	float intensity = max(NdotL, 0.0);
+	float shadeIntensity = ceil(intensity * numShades)/numShades;
 //	gl_FragColor.xyz = gl_FragColor.xyz * shadeIntensity;
 
 	// shadows

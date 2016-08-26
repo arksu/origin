@@ -193,6 +193,7 @@ varying float NdotL;
 out vec4 shadowCoords;
 uniform mat4 u_toShadowMapSpace;
 uniform float u_shadowDistance;
+uniform vec3 u_lightPosition;
 
 const float transitionDistance = 10.0;
 
@@ -347,6 +348,10 @@ void main() {
 			}
 		#endif // numPointLights
 	#endif // lightingFlag
+
+//    vec3 normal2 = normalize(a_normal);
+//    vec3 lightDir = normalize(u_lightPosition);
+//    NdotL = max(dot(normal2, lightDir), 0.0);
 
 	float distance = length(u_cameraPosition.xyz - pos.xyz);
 	visibility = exp(-pow((distance * u_density), u_gradient));

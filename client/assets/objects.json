@@ -9,8 +9,8 @@
 //		"res": "assets/debug/leg.g3db",
 //		"res": "assets/untitled.g3db",
 //		"res": "assets/debug/cube_test.obj",
-		"res": "assets/models/Rabbit.obj",
-//		"res": "assets/models/board.obj",
+//		"res": "assets/models/Rabbit.obj",
+		"res": "assets/models/stone.obj",
 //		"res": "assets/models/unknown.obj",
 //		"res": "assets/models/trex.obj",
 //		"res": "assets/models/pine_tree_1.obj",
@@ -59,6 +59,7 @@
 	{
 		// branch
 		"typeId": 22,
-		"res": "assets/debug/ship.obj"
+		"scale": 0.1,
+		"res": "assets/models/branch.obj"
 	}
 ]
