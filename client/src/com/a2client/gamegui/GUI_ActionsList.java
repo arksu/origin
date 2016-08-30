@@ -58,13 +58,13 @@ public class GUI_ActionsList extends GUI_ListBox
 	}
 
 	@Override
-	public int GetCount()
+	public int getCount()
 	{
 		return _list.size();
 	}
 
 	@Override
-	public int GetItemHeight(int index)
+	public int getItemHeight(int index)
 	{
 		if (index < 0 || index >= _list.size())
 		{
@@ -74,7 +74,7 @@ public class GUI_ActionsList extends GUI_ListBox
 	}
 
 	@Override
-	protected void DoDrawItem(int index, int x, int y, int w, int h)
+	protected void drawItem(int index, int x, int y, int w, int h)
 	{
 		GUIGDX.Text(_fontName, x, y, getItemCaption(index));
 	}
@@ -82,12 +82,12 @@ public class GUI_ActionsList extends GUI_ListBox
 	public void add(String tag, String caption)
 	{
 		_list.add(new Item(caption, tag));
-		OnInsertItem(0);
+		onInsertItem(0);
 	}
 
 	public void clear()
 	{
 		_list.clear();
-		OnDeleteItem(0);
+		onDeleteItem(0);
 	}
 }

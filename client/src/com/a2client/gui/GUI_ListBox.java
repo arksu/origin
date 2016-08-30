@@ -26,300 +26,303 @@ import java.util.List;
 
 public class GUI_ListBox extends GUI_ScrollPage
 {
-    protected int SelectedItem = -1;
-    protected final List<Integer> selected = new ArrayList<>();
-    public boolean RenderBG = true;
-    public boolean pressed = false;
-    public boolean allowMutliSelect = false;
+	protected int SelectedItem = -1;
+	protected final List<Integer> selected = new ArrayList<>();
+	public boolean RenderBG = true;
+	public boolean pressed = false;
+	public boolean allowMutliSelect = false;
 
-    public GUI_ListBox(GUI_Control parent)
-    {
-        super(parent);
-        skin_element = "listbox";
-        min_size = new Vec2i(getSkin().getElementSize(skin_element));
-        SetStyle(true, false);
-        ResetSelected();
-    }
+	public GUI_ListBox(GUI_Control parent)
+	{
+		super(parent);
+		skin_element = "listbox";
+		min_size = new Vec2i(getSkin().getElementSize(skin_element));
+		SetStyle(true, false);
+		resetSelected();
+	}
 
-    public void DoRender()
-    {
-        if (RenderBG)
-        {
-            getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
-        }
+	@Override
+	public void render()
+	{
+		if (RenderBG)
+		{
+			getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
+		}
 
-        Rect wr = WorkRect();
-        // координаты текущей записи относительно контрола
-        int ax = abs_pos.x + _clientRect.x - wr.x;
-        int ay = abs_pos.y + _clientRect.y - wr.y;
+		Rect wr = WorkRect();
+		// координаты текущей записи относительно контрола
+		int ax = abs_pos.x + _clientRect.x - wr.x;
+		int ay = abs_pos.y + _clientRect.y - wr.y;
 
-        // для отсечки записей находящихся на границе контрола - ставим доп. скиссор
-        boolean bs = GUIGDX.pushScissor(new Rect(abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, wr.w, wr.h));
+		// для отсечки записей находящихся на границе контрола - ставим доп. скиссор
+		boolean bs = GUIGDX.pushScissor(new Rect(abs_pos.x + _clientRect.x, abs_pos.y + _clientRect.y, wr.w, wr.h));
 
-        int h;
-        for (int i = 0; i < GetCount(); i++)
-        {
-            h = GetItemHeight(i);
-            // если запись всяко за границами рисуемой области - пропускаем
-            if ((ay + h >= abs_pos.y + _clientRect.y) && (ay < abs_pos.y + _clientRect.y + wr.h))
-            {
-                boolean scissor = GUIGDX.pushScissor(new Rect(ax, ay, wr.w, h));
-                DrawItemBg(i, ax, ay, wr.w, h);
-                DoDrawItem(i, ax, ay, wr.w, h);
+		int h;
+		for (int i = 0; i < getCount(); i++)
+		{
+			h = getItemHeight(i);
+			// если запись всяко за границами рисуемой области - пропускаем
+			if ((ay + h >= abs_pos.y + _clientRect.y) && (ay < abs_pos.y + _clientRect.y + wr.h))
+			{
+				boolean scissor = GUIGDX.pushScissor(new Rect(ax, ay, wr.w, h));
+				drawItemBg(i, ax, ay, wr.w, h);
+				drawItem(i, ax, ay, wr.w, h);
 
-                if (scissor)
-                {
-                    GUIGDX.popScissor();
-                }
-            }
-            ay += h;
-        }
-        if (bs)
-        {
-            GUIGDX.popScissor();
-        }
-    }
+				if (scissor)
+				{
+					GUIGDX.popScissor();
+				}
+			}
+			ay += h;
+		}
+		if (bs)
+		{
+			GUIGDX.popScissor();
+		}
+	}
 
-    protected void UpdateFullSize()
-    {
-        int h = 0;
-        for (int i = 0; i < GetCount(); i++)
-        {
-            h += GetItemHeight(i);
-        }
-        SetFullHeight(h);
-        SetFullWidth(getWidth());
-    }
+	@Override
+	protected void updateFullSize()
+	{
+		int h = 0;
+		for (int i = 0; i < getCount(); i++)
+		{
+			h += getItemHeight(i);
+		}
+		SetFullHeight(h);
+		SetFullWidth(getWidth());
+	}
 
-    public boolean DoMouseBtn(int btn, boolean down)
-    {
-        boolean result = false;
-        if (!isMouseInMe())
-        {
-            pressed = false;
-            return result;
-        }
+	@Override
+	public boolean onMouseBtn(int btn, boolean down)
+	{
+		boolean result = false;
+		if (!isMouseInMe())
+		{
+			pressed = false;
+			return result;
+		}
 
-        if (btn == Input.MB_LEFT)
-        {
-            if (down)
-            {
-                if (isMouseInMe())
-                {
-                    pressed = true;
-                }
-            }
-            else
-            {
-                pressed = false;
-            }
-        }
+		if (btn == Input.MB_LEFT)
+		{
+			if (down)
+			{
+				if (isMouseInMe())
+				{
+					pressed = true;
+				}
+			}
+			else
+			{
+				pressed = false;
+			}
+		}
 
-        Rect wr = WorkRect();
-        // координаты текущей записи относительно контрола
-        int ax = abs_pos.x + _clientRect.x - wr.x;
-        int ay = abs_pos.y + _clientRect.y - wr.y;
+		Rect wr = WorkRect();
+		// координаты текущей записи относительно контрола
+		int ax = abs_pos.x + _clientRect.x - wr.x;
+		int ay = abs_pos.y + _clientRect.y - wr.y;
 
-        int h;
-        for (int i = 0; i < GetCount(); i++)
-        {
-            h = GetItemHeight(i);
-            // если запись всяко за границами рисуемой области - пропускаем
-            if ((ay + h >= abs_pos.y + _clientRect.y) && (ay < abs_pos.y + _clientRect.y + wr.h))
-            {
-                boolean mouse_captured;
-                mouse_captured = gui.isMouseInRect(new Vec2i(ax, ay), new Vec2i(wr.w, h));
+		int h;
+		for (int i = 0; i < getCount(); i++)
+		{
+			h = getItemHeight(i);
+			// если запись всяко за границами рисуемой области - пропускаем
+			if ((ay + h >= abs_pos.y + _clientRect.y) && (ay < abs_pos.y + _clientRect.y + wr.h))
+			{
+				boolean mouse_captured;
+				mouse_captured = gui.isMouseInRect(new Vec2i(ax, ay), new Vec2i(wr.w, h));
 
-                if (mouse_captured)
-                {
-                    result = OnItemClick(i, btn, down);
-                    if (!result)
-                    {
-                        int cx = gui._mousePos.x - ax;
-                        int cy = gui._mousePos.y - ay;
-                        result = OnItemClick(i, cx, cy, btn, down);
-                    }
-                    return result;
-                }
-            }
-            ay += h;
-        }
+				if (mouse_captured)
+				{
+					result = onItemClick(i, btn, down);
+					if (!result)
+					{
+						int cx = gui._mousePos.x - ax;
+						int cy = gui._mousePos.y - ay;
+						result = onItemClick(i, cx, cy, btn, down);
+					}
+					return result;
+				}
+			}
+			ay += h;
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    public void SetSelected(int index)
-    {
-        SetSelected(index, true);
-    }
+	public void setSelected(int index)
+	{
+		setSelected(index, true);
+	}
 
-    public void SetSelected(int index, boolean value)
-    {
-        if (value && index >= 0 && index < GetCount())
-        {
-            SelectedItem = index;
-            selected.add(index);
-        }
-        else
-        {
-            SelectedItem = -1;
-        }
-    }
+	public void setSelected(int index, boolean value)
+	{
+		if (value && index >= 0 && index < getCount())
+		{
+			SelectedItem = index;
+			selected.add(index);
+		}
+		else
+		{
+			SelectedItem = -1;
+		}
+	}
 
-    public int GetSelected()
-    {
-        return SelectedItem;
-    }
+	public int getSelectedItem()
+	{
+		return SelectedItem;
+	}
 
-    public List<Integer> getSelected()
-    {
-        return selected;
-    }
+	public List<Integer> getSelected()
+	{
+		return selected;
+	}
 
-    public boolean isSelected(int index)
-    {
-        return allowMutliSelect ? selected.contains(index) : SelectedItem == index;
-    }
+	public boolean isSelected(int index)
+	{
+		return allowMutliSelect ? selected.contains(index) : SelectedItem == index;
+	}
 
-    public int GetCount()
-    {
-        return 0;
-    }
+	public int getCount()
+	{
+		return 0;
+	}
 
-    public int GetItemHeight(int index)
-    {
-        return 0;
-    }
+	public int getItemHeight(int index)
+	{
+		return 0;
+	}
 
-    protected void DrawItemBg(int index, int x, int y, int w, int h)
-    {
-        // координаты передаются глобальные. скиссор ставит листбокс перед вызовом этой процедуры
-        // рисуем обводку записи. в потомках вызываем inherited если надо
-        int state;
-        if (isSelected(index))
-        {
-            if (gui.isMouseInRect(new Vec2i(x, y), new Vec2i(w, h)) && isMouseInMe())
-            {
-                state = Skin.StateHighlight_Checked;
-            }
-            else
-            {
-                state = Skin.StateNormal_Checked;
-            }
-        }
-        else
-        {
-            if (gui.isMouseInRect(new Vec2i(x, y), new Vec2i(w, h)) && isMouseInMe())
-            {
-                state = Skin.StateHighlight;
-            }
-            else
-            {
-                state = Skin.StateNormal;
-            }
-        }
+	protected void drawItemBg(int index, int x, int y, int w, int h)
+	{
+		// координаты передаются глобальные. скиссор ставит листбокс перед вызовом этой процедуры
+		// рисуем обводку записи. в потомках вызываем inherited если надо
+		int state;
+		if (isSelected(index))
+		{
+			if (gui.isMouseInRect(new Vec2i(x, y), new Vec2i(w, h)) && isMouseInMe())
+			{
+				state = Skin.StateHighlight_Checked;
+			}
+			else
+			{
+				state = Skin.StateNormal_Checked;
+			}
+		}
+		else
+		{
+			if (gui.isMouseInRect(new Vec2i(x, y), new Vec2i(w, h)) && isMouseInMe())
+			{
+				state = Skin.StateHighlight;
+			}
+			else
+			{
+				state = Skin.StateNormal;
+			}
+		}
 
-        getSkin().draw(skin_element + "_item", x, y, w, h, state);
-    }
+		getSkin().draw(skin_element + "_item", x, y, w, h, state);
+	}
 
-    protected void DoDrawItem(int index, int x, int y, int w, int h)
-    {
-    }
+	protected void drawItem(int index, int x, int y, int w, int h)
+	{
+	}
 
-    protected boolean OnItemClick(int index, int btn, boolean down)
-    {
-        return false;
-    }
+	protected boolean onItemClick(int index, int btn, boolean down)
+	{
+		return false;
+	}
 
-    protected boolean OnItemClick(int index, int ax, int ay, int btn, boolean down)
-    {
-        boolean result = false;
-        if (down && btn == Input.MB_LEFT)
-        {
-            SelectedItem = index;
-            if (allowMutliSelect)
-            {
-                int i = selected.indexOf(index);
-                if (i >= 0)
-                {
-                    selected.remove(i);
-                }
-                else
-                {
-                    selected.add(index);
-                }
-            }
-            result = true;
-            DoClick();
-        }
-        return result;
-    }
+	protected boolean onItemClick(int index, int ax, int ay, int btn, boolean down)
+	{
+		boolean result = false;
+		if (down && btn == Input.MB_LEFT)
+		{
+			SelectedItem = index;
+			if (allowMutliSelect)
+			{
+				int i = selected.indexOf(index);
+				if (i >= 0)
+				{
+					selected.remove(i);
+				}
+				else
+				{
+					selected.add(index);
+				}
+			}
+			result = true;
+			doClick();
+		}
+		return result;
+	}
 
-    public void DoClick()
-    {
-    } // abstract
+	public void doClick()
+	{
+	} // abstract
 
-    public void ResetSelected()
-    {
-        SelectedItem = -1;
-        selected.clear();
-    }
+	public void resetSelected()
+	{
+		SelectedItem = -1;
+		selected.clear();
+	}
 
-    // получить индекс итема над которым мышь
-    public int GetMouseItemIndex()
-    {
-        int result = -1;
-        if (!isMouseInMe())
-        {
-            return result;
-        }
+	// получить индекс итема над которым мышь
+	public int getMouseItemIndex()
+	{
+		int result = -1;
+		if (!isMouseInMe())
+		{
+			return result;
+		}
 
-        Rect wr = WorkRect();
-        // координаты текущей записи относительно контрола
-        int ax = abs_pos.x + _clientRect.x - wr.x;
-        int ay = abs_pos.y + _clientRect.y - wr.y;
+		Rect wr = WorkRect();
+		// координаты текущей записи относительно контрола
+		int ax = abs_pos.x + _clientRect.x - wr.x;
+		int ay = abs_pos.y + _clientRect.y - wr.y;
 
-        int h;
-        for (int i = 0; i < GetCount(); i++)
-        {
-            h = GetItemHeight(i);
-            // если запись всяко за границами рисуемой области - пропускаем
-            if ((ay + h >= abs_pos.y + _clientRect.y) && (ay < abs_pos.y + _clientRect.y + wr.h))
-            {
-                boolean mouse_captured;
-                mouse_captured = gui.isMouseInRect(new Vec2i(ax, ay), new Vec2i(wr.w, h));
+		int h;
+		for (int i = 0; i < getCount(); i++)
+		{
+			h = getItemHeight(i);
+			// если запись всяко за границами рисуемой области - пропускаем
+			if ((ay + h >= abs_pos.y + _clientRect.y) && (ay < abs_pos.y + _clientRect.y + wr.h))
+			{
+				boolean mouse_captured;
+				mouse_captured = gui.isMouseInRect(new Vec2i(ax, ay), new Vec2i(wr.w, h));
 
-                if (mouse_captured)
-                {
-                    return i;
-                }
-            }
-            ay += h;
-        }
-        return result;
-    }
+				if (mouse_captured)
+				{
+					return i;
+				}
+			}
+			ay += h;
+		}
+		return result;
+	}
 
-    // обновляет селекты при удалении записи из списка
-    // используется по мере надобности
-    protected void OnDeleteItem(int index)
-    {
-        if (SelectedItem == index)
-        {
-            SelectedItem = -1;
-        }
-        if (GetCount() <= SelectedItem)
-        {
-            SelectedItem = GetCount() - 1;
-        }
-        int i = selected.indexOf(index);
-        if (i >= 0) selected.remove(i);
-        UpdateFullSize();
-    }
+	// обновляет селекты при удалении записи из списка
+	// используется по мере надобности
+	protected void onDeleteItem(int index)
+	{
+		if (SelectedItem == index)
+		{
+			SelectedItem = -1;
+		}
+		if (getCount() <= SelectedItem)
+		{
+			SelectedItem = getCount() - 1;
+		}
+		int i = selected.indexOf(index);
+		if (i >= 0) selected.remove(i);
+		updateFullSize();
+	}
 
-    // обновляет селекты при инсерте новой записи
-    protected void OnInsertItem(int index)
-    {
-        UpdateFullSize();
-    }
+	// обновляет селекты при инсерте новой записи
+	protected void onInsertItem(int index)
+	{
+		updateFullSize();
+	}
 
 }

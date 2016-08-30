@@ -61,7 +61,7 @@ public class GUI_Memo extends GUI_ScrollPage
             render_lines.add(new MemoLine(ww.Lines.get(i), "default", Color.WHITE));
         }
 
-        UpdateFullSize();
+        updateFullSize();
     }
 
     public void UpdateLines()
@@ -76,7 +76,7 @@ public class GUI_Memo extends GUI_ScrollPage
                 render_lines.add(new MemoLine(ww.Lines.get(i), "default", Color.WHITE));
             }
         }
-        UpdateFullSize();
+        updateFullSize();
     }
 
     public void render()
@@ -104,7 +104,7 @@ public class GUI_Memo extends GUI_ScrollPage
         getSkin().draw(skin_element, abs_pos.x, abs_pos.y, size.x, size.y);
     }
 
-    protected void UpdateFullSize()
+    protected void updateFullSize()
     {
         int h = 0;
         for (MemoLine l : render_lines)
@@ -119,7 +119,7 @@ public class GUI_Memo extends GUI_ScrollPage
     public void ClearLines()
     {
         render_lines.clear();
-        UpdateFullSize();
+        updateFullSize();
     }
 
     public void onSetSize()

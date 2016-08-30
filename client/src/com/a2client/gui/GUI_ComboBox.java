@@ -115,7 +115,7 @@ public class GUI_ComboBox extends GUI_Control
 
         drop_list = new GUI_StringList(gui.popup)
         {
-            public void DoClick()
+            public void doClick()
             {
                 OnDropListClick();
             }
@@ -125,8 +125,8 @@ public class GUI_ComboBox extends GUI_Control
         for (int i = 0; i < GetCount(); i++)
             drop_list.Add(Items.get(i));
         drop_list.setPos(abs_pos.x, abs_pos.y + size.y);
-        drop_list.setSize(size.x, Math.min(GetCount(), 8) * drop_list.GetItemHeight(0) + 6);
-        drop_list.SetSelected(Selected, true);
+        drop_list.setSize(size.x, Math.min(GetCount(), 8) * drop_list.getItemHeight(0) + 6);
+        drop_list.setSelected(Selected, true);
     }
 
     protected void DoCollapse()
@@ -142,7 +142,7 @@ public class GUI_ComboBox extends GUI_Control
     {
         if (drop_list != null && !drop_list._terminated)
         {
-            SetSelected(drop_list.GetSelected());
+            SetSelected(drop_list.getSelectedItem());
         }
         DoCollapse();
     }

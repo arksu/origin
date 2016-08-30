@@ -62,9 +62,9 @@ public class GUI_ContextMenu extends GUI_StringList
 	 */
 	public void apply()
 	{
-		int h = GetCount() * GetItemHeight(0) + 6;
+		int h = getCount() * getItemHeight(0) + 6;
 		int w = 0;
-		for (int i = 0; i < GetCount(); i++)
+		for (int i = 0; i < getCount(); i++)
 		{
 			w = max(w, GUIGDX.getTextWidth(font_name, GetItem(i)));
 		}
@@ -95,10 +95,10 @@ public class GUI_ContextMenu extends GUI_StringList
 		setPos(x, y);
 	}
 
-	public void DoClick()
+	public void doClick()
 	{
 		this.unlink();
-		impl.OnContextClick(GetSelected());
+		impl.OnContextClick(getSelectedItem());
 	}
 
 	@Override

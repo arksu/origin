@@ -223,7 +223,7 @@ public class GUI_ScrollPage extends GUI_Control
         };
     }
 
-    protected void UpdateFullSize()
+    protected void updateFullSize()
     {
 
     }

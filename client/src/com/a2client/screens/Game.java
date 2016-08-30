@@ -118,9 +118,9 @@ public class Game extends BaseScreen
 		_actions = new GUI_ActionsList(GUI.rootNormal())
 		{
 			@Override
-			public void DoClick()
+			public void doClick()
 			{
-				String item = getItemTag(GetSelected());
+				String item = getItemTag(getSelectedItem());
 				new ActionSelect(item).send();
 			}
 		};

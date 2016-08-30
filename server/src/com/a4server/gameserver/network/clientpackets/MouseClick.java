@@ -130,11 +130,11 @@ public class MouseClick extends GameClientPacket
 			public void onArrived(CollisionResult moveResult)
 			{
 				GameObject object;
-				// наша цель совпадает с тем куда пришли?
 				switch (moveResult.getResultType())
 				{
 					case COLLISION_OBJECT:
 						object = moveResult.getObject();
+						// наша цель совпадает с тем куда пришли?
 						if (object != null && object.getObjectId() == objectId && !object.isDeleteing())
 						{
 							_log.debug("interact with object " + object.toString());

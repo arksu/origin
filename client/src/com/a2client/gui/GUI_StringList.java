@@ -45,12 +45,12 @@ public class GUI_StringList extends GUI_ListBox
         Strings.set(index, value);
     }
 
-    public int GetCount()
+    public int getCount()
     {
         return Strings.size();
     }
 
-    public int GetItemHeight(int index)
+    public int getItemHeight(int index)
     {
         if (index < 0 || index >= Strings.size())
         {
@@ -59,7 +59,7 @@ public class GUI_StringList extends GUI_ListBox
         return GUIGDX.getTextHeight(font_name, GetItem(index)) + 2;
     }
 
-    protected void DoDrawItem(int index, int x, int y, int w, int h)
+    protected void drawItem(int index, int x, int y, int w, int h)
     {
         GUIGDX.Text(font_name, x, y, GetItem(index));
     }
@@ -67,13 +67,13 @@ public class GUI_StringList extends GUI_ListBox
     public void Add(String s)
     {
         Strings.add(s);
-        OnInsertItem(0);
+        onInsertItem(0);
     }
 
     public void Insert(int index, String s)
     {
         Strings.add(index, s);
-        OnInsertItem(index);
+        onInsertItem(index);
     }
 
     public void Delete(int index)
@@ -81,13 +81,13 @@ public class GUI_StringList extends GUI_ListBox
         if (index < 0 || index >= Strings.size())
             return;
         Strings.remove(index);
-        OnDeleteItem(index);
+        onDeleteItem(index);
     }
 
     public void Clear()
     {
         Strings.clear();
-        OnDeleteItem(0);
+        onDeleteItem(0);
     }
 
 }
