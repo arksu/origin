@@ -86,12 +86,16 @@ varying float v_fog;
 uniform vec3 u_skyColor;
 varying float visibility;
 varying float NdotL;
+varying float NdotL2;
 
-const float numShades = 7.0;
+const float numShades = 6.0;
 const int pcfCount = 1;
 const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
 uniform sampler2D u_shadowMap;
 in vec4 shadowCoords;
+
+const float shadowMapSize = 2048.0;
+const float texelSize = 1.0 / shadowMapSize;
 
 void main() {
 
@@ -117,6 +121,8 @@ void main() {
 		vec4 diffuse = vec4(1.0);
 	#endif
 
+		gl_FragColor.rgb = diffuse.rgb;
+/*
 	#if (!defined(lightingFlag))
 		gl_FragColor.rgb = diffuse.rgb;
 	#elif (!defined(specularFlag))
@@ -142,10 +148,7 @@ void main() {
 				gl_FragColor.rgb = (diffuse.rgb * v_lightDiffuse) + specular;
 		#endif
 	#endif //lightingFlag
-
-	#ifdef fogFlag
-		gl_FragColor.rgb = mix(gl_FragColor.rgb, u_fogColor.rgb, v_fog);
-	#endif // end fogFlag
+*/
 
 	#ifdef blendedFlag
 		gl_FragColor.a = diffuse.a * v_opacity;
@@ -157,14 +160,12 @@ void main() {
 		gl_FragColor.a = 1.0;
 	#endif
 
-	float intensity = max(NdotL, 0.0);
+	float intensity = max(NdotL2, 0.25);
 	float shadeIntensity = ceil(intensity * numShades)/numShades;
-//	gl_FragColor.xyz = gl_FragColor.xyz * shadeIntensity;
+	gl_FragColor.xyz = gl_FragColor.xyz * shadeIntensity;
 
 	// shadows
 	if (shadowCoords.w > 0) {
-	float mapSize = 2048.0;
-	float texelSize = 1.0 / mapSize;
 	float totalShadowWeight = 0.0;
 
 	for (int x = -pcfCount; x <= pcfCount; x++) {

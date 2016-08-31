@@ -22,6 +22,7 @@ public class ModelShader extends DefaultShader
 	public final int u_shadowMap;
 	public final int u_toShadowMapSpace;
 	public final int u_shadowDistance;
+	public final int u_lightPosition;
 
 	public final static Uniform skyColor = new Uniform("u_skyColor");
 	public final static Uniform density = new Uniform("u_density");
@@ -30,6 +31,8 @@ public class ModelShader extends DefaultShader
 	public final static Uniform shadowMap = new Uniform("u_shadowMap");
 	public final static Uniform toShadowMapSpace = new Uniform("u_toShadowMapSpace");
 	public final static Uniform shadowDistance = new Uniform("u_shadowDistance");
+
+	public final static Uniform lightPosition = new Uniform("u_lightPosition");
 
 	public final static Setter skyColorSetter = new GlobalSetter()
 	{
@@ -91,6 +94,16 @@ public class ModelShader extends DefaultShader
 		}
 	};
 
+	public final static Setter lightPositionSetter = new GlobalSetter()
+	{
+		@Override
+		public void set(BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes)
+		{
+			shader.set(inputID, Render.sunPosition);
+		}
+	};
+
+
 	public ModelShader(Renderable renderable, Config config)
 	{
 		super(renderable, config);
@@ -101,6 +114,8 @@ public class ModelShader extends DefaultShader
 		u_shadowMap = register(shadowMap, shadowMapSetter);
 		u_toShadowMapSpace = register(toShadowMapSpace, toShadowMapSpaceSetter);
 		u_shadowDistance = register(shadowDistance, shadowDistanceSetter);
+
+		u_lightPosition = register(lightPosition, lightPositionSetter);
 	}
 
 	@Override

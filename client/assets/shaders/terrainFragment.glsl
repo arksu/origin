@@ -12,24 +12,23 @@ in vec4 shadowCoords;
 
 in float NdotL;
 
-const float numShades = 7.0;
+const float numShades = 6.0;
 
 const int pcfCount = 1;
 const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
+const float shadowMapSize = 2048.0;
+const float texelSize = 1.0 / shadowMapSize;
 
 void main() {
-//    outColor = u_ambient * v_diffuse * texture(u_texture, texCoords);
-    outColor = v_diffuse * texture(u_texture, texCoords);
-//    gl_FragColor = texture2D(u_texture, texCoords);
+	float intensity = max(NdotL, 0.25);
+	float shadeIntensity = ceil(intensity * numShades) / numShades;
 
-	float intensity = max(NdotL, 0.0);
-	float shadeIntensity = ceil(intensity * numShades)/numShades;
+//    outColor = (v_diffuse) * texture(u_texture, texCoords);
+    outColor = (shadeIntensity) * texture(u_texture, texCoords);
 //	outColor.xyz = outColor.xyz * shadeIntensity;
 
 	// shadows
 	if (shadowCoords.w > 0) {
-		float mapSize = 2048.0;
-		float texelSize = 1.0 / mapSize;
 		float totalShadowWeight = 0.0;
 
 		for (int x = -pcfCount; x <= pcfCount; x++) {

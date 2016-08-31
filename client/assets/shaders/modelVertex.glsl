@@ -190,6 +190,7 @@ uniform float u_gradient;
 uniform vec4 u_clipPlane;
 varying float visibility;
 varying float NdotL;
+varying float NdotL2;
 out vec4 shadowCoords;
 uniform mat4 u_toShadowMapSpace;
 uniform float u_shadowDistance;
@@ -349,9 +350,9 @@ void main() {
 		#endif // numPointLights
 	#endif // lightingFlag
 
-//    vec3 normal2 = normalize(a_normal);
-//    vec3 lightDir = normalize(u_lightPosition);
-//    NdotL = max(dot(normal2, lightDir), 0.0);
+    vec3 normal2 = normalize(a_normal);
+    vec3 lightDir = normalize(u_lightPosition);
+    NdotL2 = max(dot(normal2, lightDir), 0.0);
 
 	float distance = length(u_cameraPosition.xyz - pos.xyz);
 	visibility = exp(-pow((distance * u_density), u_gradient));
