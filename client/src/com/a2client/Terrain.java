@@ -39,6 +39,9 @@ public class Terrain
 	 */
 	public static final float WATER_LEVEL = -0.2f;
 
+	/**
+	 * скорость движения волны на воде
+	 */
 	public static final float WATER_WAVE_SPEED = 0.03f;
 
 	/**
@@ -51,6 +54,9 @@ public class Terrain
 	 */
 	public static final int GRID_SIZE = 100;
 
+	/**
+	 * площадь грида
+	 */
 	public static final int GRID_FULL_SIZE = GRID_SIZE * TILE_SIZE;
 
 	/**
@@ -58,8 +64,14 @@ public class Terrain
 	 */
 	public static final int GRID_SIZE_BYTES = GRID_SIZE * GRID_SIZE * 2;
 
-	public static List<Grid> grids = new LinkedList<>();
+	/**
+	 * спиоск гридов которые получили с сервера, о которых знает клиент
+	 */
+	public static final List<Grid> grids = new LinkedList<>();
 
+	/**
+	 * неведомая высота
+	 */
 	public static final float FAKE_HEIGHT = -100000f;
 
 	public ShaderProgram _shaderTerrain;

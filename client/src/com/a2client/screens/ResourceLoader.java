@@ -24,9 +24,14 @@ import java.io.LineNumberReader;
 
 import static com.a2client.Config.RESOURCE_DIR;
 
+/**
+ * экран загрузки критически важных ресурсов без которых игра не может работать
+ */
 public class ResourceLoader implements Screen
 {
 	private static final Logger _log = LoggerFactory.getLogger(ResourceLoader.class.getName());
+
+	private static final int FADE_TIME = 300;
 
 	public static BitmapFont systemFont;
 	private State _state;
@@ -74,7 +79,7 @@ public class ResourceLoader implements Screen
 		{
 			_state_timer += Main.DT;
 
-			if (_state_timer >= 400)
+			if (_state_timer >= FADE_TIME)
 			{
 				_state = State.LOADING;
 			}
@@ -91,16 +96,12 @@ public class ResourceLoader implements Screen
 		}
 
 		// все ресурсы загружены?
-		if (_state == State.LOADING)
+		if ((_state == State.LOADING || _state == State.FADEIN) && Main.getAssetManager().update())
 		{
-			boolean ready = Main.getAssetManager().update();
-			if (ready && _state == State.LOADING)
-			{
-				_state = State.FADEOUT;
-			}
+			_state = State.FADEOUT;
 		}
 
-		float t = 0.7f * ((float) _state_timer / 1000f);
+		float t = 0.77f * ((float) _state_timer / 1000f);
 
 		Gdx.gl.glClearColor(t, t, t, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
