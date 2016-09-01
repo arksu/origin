@@ -196,6 +196,10 @@ uniform mat4 u_toShadowMapSpace;
 uniform float u_shadowDistance;
 uniform vec3 u_lightPosition;
 
+out vec4 world_pos;
+out vec3 world_normal;
+
+
 const float transitionDistance = 10.0;
 
 void main() {
@@ -247,20 +251,16 @@ void main() {
 	#endif //skinningFlag
 
 	#ifdef skinningFlag
-		vec4 pos = u_worldTrans * skinning * vec4(a_position, 1.0);
+		world_pos = u_worldTrans * skinning * vec4(a_position, 1.0);
 	#else
-		vec4 pos = u_worldTrans * vec4(a_position, 1.0);
+		world_pos = u_worldTrans * vec4(a_position, 1.0);
 	#endif
+//	world_normal = u_worldTrans * vec4(a_normal, 1.0);
+	world_normal = u_normalMatrix * a_normal;
 
-	gl_ClipDistance[0] = dot(pos, u_clipPlane);
+	gl_ClipDistance[0] = dot(world_pos, u_clipPlane);
 
-	gl_Position = u_projViewTrans * pos;
-
-	#ifdef shadowMapFlag
-		vec4 spos = u_shadowMapProjViewTrans * pos;
-		v_shadowMapUv.xy = (spos.xy / spos.w) * 0.5 + 0.5;
-		v_shadowMapUv.z = min(spos.z * 0.5 + 0.5, 0.998);
-	#endif //shadowMapFlag
+	gl_Position = u_projViewTrans * world_pos;
 
 	#if defined(normalFlag)
 		#if defined(skinningFlag)
@@ -272,7 +272,7 @@ void main() {
 	#endif // normalFlag
 
     #ifdef fogFlag
-        vec3 flen = u_cameraPosition.xyz - pos.xyz;
+        vec3 flen = u_cameraPosition.xyz - world_pos.xyz;
         float fog = dot(flen, flen) * u_cameraPosition.w;
         v_fog = min(fog, 1.0);
     #endif
@@ -318,7 +318,7 @@ void main() {
 
 		#ifdef specularFlag
 			v_lightSpecular = vec3(0.0);
-			vec3 viewVec = normalize(u_cameraPosition.xyz - pos.xyz);
+			vec3 viewVec = normalize(u_cameraPosition.xyz - world_pos.xyz);
 		#endif // specularFlag
 
 		#if (numDirectionalLights > 0) && defined(normalFlag)
@@ -336,7 +336,7 @@ void main() {
 
 		#if (numPointLights > 0) && defined(normalFlag)
 			for (int i = 0; i < numPointLights; i++) {
-				vec3 lightDir = u_pointLights[i].position - pos.xyz;
+				vec3 lightDir = u_pointLights[i].position - world_pos.xyz;
 				float dist2 = dot(lightDir, lightDir);
 				lightDir *= inversesqrt(dist2);
 				NdotL = clamp(dot(normal, lightDir), 0.0, 1.0);
@@ -354,7 +354,7 @@ void main() {
     vec3 lightDir = normalize(u_lightPosition);
     NdotL2 = max(dot(normal2, lightDir), 0.0);
 
-	float distance = length(u_cameraPosition.xyz - pos.xyz);
+	float distance = length(u_cameraPosition.xyz - world_pos.xyz);
 	visibility = exp(-pow((distance * u_density), u_gradient));
 
 	// shadow

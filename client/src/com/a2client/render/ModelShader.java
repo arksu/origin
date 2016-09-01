@@ -5,16 +5,12 @@ import com.badlogic.gdx.graphics.g3d.Attributes;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.shaders.BaseShader;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by arksu on 24.07.16.
  */
 public class ModelShader extends DefaultShader
 {
-	private static final Logger _log = LoggerFactory.getLogger(ModelShader.class.getName());
-
 	public final int u_skyColor;
 	public final int u_density;
 	public final int u_gradient;
@@ -102,7 +98,6 @@ public class ModelShader extends DefaultShader
 			shader.set(inputID, Render.sunPosition);
 		}
 	};
-
 
 	public ModelShader(Renderable renderable, Config config)
 	{

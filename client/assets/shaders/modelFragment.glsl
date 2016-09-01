@@ -83,10 +83,23 @@ varying float v_fog;
 #endif // fogFlag
 
 // arksu
+#if numDirectionalLights > 0
+struct DirectionalLight
+{
+	vec3 color;
+	vec3 direction;
+};
+uniform DirectionalLight u_dirLights[numDirectionalLights];
+#endif // numDirectionalLights
+
+uniform vec4 u_cameraPosition;
 uniform vec3 u_skyColor;
 varying float visibility;
 varying float NdotL;
 varying float NdotL2;
+
+in vec4 world_pos;
+in vec3 world_normal;
 
 const float numShades = 6.0;
 const int pcfCount = 1;
@@ -98,6 +111,14 @@ const float shadowMapSize = 2048.0;
 const float texelSize = 1.0 / shadowMapSize;
 
 void main() {
+
+//	vec3 L = normalize( u_dirLights[0].direction - world_pos.xyz);
+    vec3 V = normalize( u_cameraPosition.xyz - world_pos.xyz);
+//    vec3 H = normalize(L + V );
+
+	//Black color if dot product is smaller than 0.3
+	//else keep the same colors
+	float edgeDetection = (dot(V, normalize(world_normal.xyz)) > 0.3) ? 1 : 0;
 
 	#if defined(normalFlag)
 		vec3 normal = v_normal;
@@ -162,7 +183,7 @@ void main() {
 
 	float intensity = max(NdotL2, 0.25);
 	float shadeIntensity = ceil(intensity * numShades)/numShades;
-	gl_FragColor.xyz = gl_FragColor.xyz * shadeIntensity;
+	gl_FragColor.xyz = gl_FragColor.xyz * shadeIntensity * edgeDetection;
 
 	// shadows
 	if (shadowCoords.w > 0) {
