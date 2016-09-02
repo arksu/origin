@@ -29,7 +29,6 @@ public class ShadowShader extends BaseShader
 		this.program = shaderProgram;
 		register(Inputs.worldTrans, Setters.worldTrans);
 		register(Inputs.projViewTrans, Setters.projViewTrans);
-//		register(Inputs.normalMatrix, Setters.normalMatrix);
 
 		register(Inputs.diffuseTexture, Setters.diffuseTexture);
 

@@ -79,7 +79,7 @@ public class Terrain
 	public ShaderProgram _shaderWaterSimple;
 
 	public ShaderProgram _shaderCel;
-	public ShaderProgram _shaderOutline;
+//	public ShaderProgram _shaderOutline;
 	public ShaderProgram _shaderDepth;
 
 	public ShaderProgram _shader;
@@ -103,7 +103,7 @@ public class Terrain
 		_shaderWaterSimple = makeShader("waterSimple", "waterSimple");
 
 		_shaderCel = makeShader("cel", "cel");
-		_shaderOutline = makeShader("outline", "outline");
+//		_shaderOutline = makeShader("outline", "outline");
 		_shaderDepth = makeShader("depth", "depth");
 
 		_tileAtlas = Main.getAssetManager().get(Config.RESOURCE_DIR + "tiles_atlas.png", Texture.class);

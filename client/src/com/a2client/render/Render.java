@@ -3,7 +3,7 @@ package com.a2client.render;
 import com.a2client.*;
 import com.a2client.model.GameObject;
 import com.a2client.render.framebuffer.DepthFrameBuffer;
-import com.a2client.render.postprocess.DepthOfFieldEffect;
+import com.a2client.render.postprocess.OutlineEffect;
 import com.a2client.render.postprocess.PostProcessing;
 import com.a2client.render.shadows.Shadow;
 import com.a2client.render.water.WaterFrameBuffers;
@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.DirectionalLightsAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
@@ -118,7 +119,8 @@ public class Render
 		_terrain = new Terrain(this);
 
 		_postProcessing = new PostProcessing();
-		_postProcessing.addEffect(new DepthOfFieldEffect(true));
+		_postProcessing.addEffect(new OutlineEffect(true));
+//		_postProcessing.addEffect(new DepthOfFieldEffect(true));
 //		_postProcessing.addEffect(new MotionBlurEffect(true));
 //		_postProcessing.addEffect(new HorizontalBlurEffect(1f / 2f));
 //		_postProcessing.addEffect(new VerticalBlurEffect(1f / 2f));
@@ -267,6 +269,9 @@ public class Render
 		}
 
 		// MAIN RENDER =================================================================================================
+		_modelBatch = _depthModelBatch;
+		DefaultShader.defaultCullFace = GL20.GL_BACK;
+
 		Gdx.gl.glDisable(GL_CLIP_DISTANCE0);
 		clipNormal = new Vector3(0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);

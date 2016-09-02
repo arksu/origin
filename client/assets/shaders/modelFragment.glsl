@@ -110,6 +110,17 @@ in vec4 shadowCoords;
 const float shadowMapSize = 2048.0;
 const float texelSize = 1.0 / shadowMapSize;
 
+float toonify(in float intensity) {
+    if (intensity > 0.7)
+        return 1.0;
+    else if (intensity > 0.5)
+        return 0.8;
+    else if (intensity > 0.25)
+        return 0.4;
+    else
+        return 0.2;
+}
+
 void main() {
 
 //	vec3 L = normalize( u_dirLights[0].direction - world_pos.xyz);
@@ -143,7 +154,7 @@ void main() {
 	#endif
 
 		gl_FragColor.rgb = diffuse.rgb;
-/*
+
 	#if (!defined(lightingFlag))
 		gl_FragColor.rgb = diffuse.rgb;
 	#elif (!defined(specularFlag))
@@ -169,7 +180,7 @@ void main() {
 				gl_FragColor.rgb = (diffuse.rgb * v_lightDiffuse) + specular;
 		#endif
 	#endif //lightingFlag
-*/
+
 
 	#ifdef blendedFlag
 		gl_FragColor.a = diffuse.a * v_opacity;
@@ -183,7 +194,10 @@ void main() {
 
 	float intensity = max(NdotL2, 0.25);
 	float shadeIntensity = ceil(intensity * numShades)/numShades;
-	gl_FragColor.xyz = gl_FragColor.xyz * shadeIntensity * edgeDetection;
+	float cel_factor = toonify(max(gl_FragColor.r, max(gl_FragColor.g, gl_FragColor.b)));
+
+//	gl_FragColor.xyz = gl_FragColor.xyz * shadeIntensity * edgeDetection;
+//	gl_FragColor.xyz = gl_FragColor.xyz * cel_factor * edgeDetection;
 
 	// shadows
 	if (shadowCoords.w > 0) {

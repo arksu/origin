@@ -123,6 +123,5 @@ void main() {
 //	#endif //PackedDepthFlag
 
 	v_depth = (-pos.z-1.0) / 999.0;
-//	v_depth = pos.z;
 	gl_Position = pos;
 }

@@ -155,7 +155,7 @@ public class Config
 	/**
 	 * пост процессинг финального кадра
 	 */
-	public boolean _renderPostProcessing = false;
+	public boolean _renderPostProcessing = true;
 
 	/**
 	 * MSAA сглаживание. сколько samples использовать?
