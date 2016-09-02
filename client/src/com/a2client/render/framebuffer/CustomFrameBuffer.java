@@ -28,7 +28,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter.Linear;
  * </p>
  * @author mzechner, realitix
  */
-public class CustomFrameBuffer extends CustomGLFrameBuffer<Texture>
+public class CustomFrameBuffer extends CustomGLFrameBuffer
 {
 	protected TextureFilter colorTextureFilter = Linear;
 	protected TextureWrap colorTextureWrap = TextureWrap.ClampToEdge;
@@ -56,7 +56,7 @@ public class CustomFrameBuffer extends CustomGLFrameBuffer<Texture>
 	public CustomFrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth,
 							 boolean hasStencil, boolean hasColor)
 	{
-		super(format, width, height, hasDepth, hasStencil, hasColor);
+		super(format, width, height, hasDepth, hasStencil, hasColor, 2);
 	}
 
 	@Override

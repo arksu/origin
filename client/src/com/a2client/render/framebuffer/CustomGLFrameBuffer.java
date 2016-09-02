@@ -5,8 +5,8 @@ import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
-import com.badlogic.gdx.graphics.GLTexture;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -36,7 +36,7 @@ import java.util.Map;
  * </p>
  * @author mzechner, realitix
  */
-public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Disposable
+public abstract class CustomGLFrameBuffer implements Disposable
 {
 	/**
 	 * the frame buffers
@@ -48,12 +48,14 @@ public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Dispos
 	/**
 	 * the color buffer texture
 	 **/
-	protected T colorTexture;
+	protected Texture[] colorTextures;
+
+	protected int targetCount;
 
 	/**
 	 * depth buffer texture
 	 */
-	protected T depthTexture;
+	protected Texture depthTexture;
 
 	/**
 	 * the default framebuffer handle, a.k.a screen.
@@ -138,7 +140,7 @@ public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Dispos
 	 */
 	public CustomGLFrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth)
 	{
-		this(format, width, height, hasDepth, false, true);
+		this(format, width, height, hasDepth, false, true, 1);
 	}
 
 	/**
@@ -151,7 +153,7 @@ public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Dispos
 	 * @throws com.badlogic.gdx.utils.GdxRuntimeException in case the FrameBuffer could not be created
 	 */
 	public CustomGLFrameBuffer(Pixmap.Format format, int width, int height,
-	                           boolean hasDepth, boolean hasStencil, boolean hasColor)
+	                           boolean hasDepth, boolean hasStencil, boolean hasColor, int targetCount)
 	{
 		this.width = width;
 		this.height = height;
@@ -161,23 +163,29 @@ public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Dispos
 		this.hasColor = hasColor;
 		this.hasDepthTexture = false;
 
+		this.targetCount = targetCount;
+		if (hasColor)
+		{
+			colorTextures = new Texture[targetCount];
+		}
+
 		addManagedFrameBuffer(Gdx.app, this);
 	}
 
 	/**
 	 * Override this method in a derived class to set up the backing texture as you like.
 	 */
-	protected abstract T createColorTexture();
+	protected abstract Texture createColorTexture();
 
 	/**
 	 * Override this method in a derived class to set up the backing texture as you like.
 	 */
-	protected abstract T createDepthTexture();
+	protected abstract Texture createDepthTexture();
 
 	/**
 	 * Override this method in a derived class to dispose the backing texture as you like.
 	 */
-	protected abstract void disposeTexture(T texture);
+	protected abstract void disposeTexture(Texture texture);
 
 	public void build()
 	{
@@ -201,7 +209,10 @@ public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Dispos
 
 		if (hasColor)
 		{
-			colorTexture = createColorTexture();
+			for (int i = 0; i < targetCount; i++)
+			{
+				colorTextures[i] = createColorTexture();
+			}
 		}
 
 		if (hasDepth && hasDepthTexture)
@@ -223,7 +234,10 @@ public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Dispos
 
 		if (hasColor)
 		{
-			gl.glBindTexture(GL20.GL_TEXTURE_2D, colorTexture.getTextureObjectHandle());
+			for (int i = 0; i < targetCount; i++)
+			{
+				gl.glBindTexture(GL20.GL_TEXTURE_2D, colorTextures[i].getTextureObjectHandle());
+			}
 		}
 
 		if (hasDepth)
@@ -241,8 +255,11 @@ public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Dispos
 		gl.glBindFramebuffer(GL20.GL_FRAMEBUFFER, framebufferHandle);
 		if (hasColor)
 		{
-			gl.glFramebufferTexture2D(GL20.GL_FRAMEBUFFER, GL20.GL_COLOR_ATTACHMENT0, GL20.GL_TEXTURE_2D,
-			                          colorTexture.getTextureObjectHandle(), 0);
+			for (int i = 0; i < targetCount; i++)
+			{
+				gl.glFramebufferTexture2D(GL20.GL_FRAMEBUFFER, GL20.GL_COLOR_ATTACHMENT0 + i, GL20.GL_TEXTURE_2D,
+				                          colorTextures[i].getTextureObjectHandle(), 0);
+			}
 		}
 
 		if (hasDepth)
@@ -297,7 +314,10 @@ public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Dispos
 		{
 			if (hasColor)
 			{
-				disposeTexture(colorTexture);
+				for (int i = 0; i < targetCount; i++)
+				{
+					disposeTexture(colorTextures[i]);
+				}
 			}
 
 			if (hasDepthStencilPackedBuffer)
@@ -342,7 +362,10 @@ public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Dispos
 
 		if (hasColor)
 		{
-			disposeTexture(colorTexture);
+			for (int i = 0; i < targetCount; i++)
+			{
+				disposeTexture(colorTextures[i]);
+			}
 		}
 
 		if (hasDepthTexture && hasDepth)
@@ -422,15 +445,15 @@ public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Dispos
 	/**
 	 * @return the gl texture
 	 */
-	public T getColorBufferTexture()
+	public Texture getColorBufferTexture()
 	{
-		return colorTexture;
+		return colorTextures[0];
 	}
 
 	/**
 	 * @return the gl texture
 	 */
-	public T getDepthBufferTexture()
+	public Texture getDepthBufferTexture()
 	{
 		return depthTexture;
 	}
@@ -488,7 +511,7 @@ public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Dispos
 	 */
 	public int getDepth()
 	{
-		return colorTexture.getDepth();
+		return colorTextures[0].getDepth();
 	}
 
 	public boolean isHasColor()
