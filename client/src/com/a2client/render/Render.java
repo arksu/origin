@@ -2,9 +2,8 @@ package com.a2client.render;
 
 import com.a2client.*;
 import com.a2client.model.GameObject;
-import com.a2client.render.framebuffer.DepthFrameBuffer;
 import com.a2client.render.postprocess.OutlineEffect;
-import com.a2client.render.postprocess.PostProcessing;
+import com.a2client.render.postprocess.PostProcess;
 import com.a2client.render.shadows.Shadow;
 import com.a2client.render.water.WaterFrameBuffers;
 import com.a2client.screens.Game;
@@ -75,7 +74,7 @@ public class Render
 	private Skybox _skybox;
 	private WaterFrameBuffers _waterFrameBuffers;
 	private Shadow _shadow;
-	private PostProcessing _postProcessing;
+	private PostProcess _postProcess;
 
 	/**
 	 * объект в который попадает луч из мыши (объект под мышью)
@@ -85,8 +84,7 @@ public class Render
 	private float _selectedDist;
 	private int _renderedObjects;
 
-	private FrameBuffer frameBuffer;
-	private DepthFrameBuffer _postProcessingFBO;
+	private FrameBuffer _frameBuffer;
 	private DepthShaderProvider _depthShaderProvider;
 	private ModelBatch _depthModelBatch;
 	private ModelBatch _simpleModelBatch;
@@ -118,17 +116,17 @@ public class Render
 		_skybox = new Skybox();
 		_terrain = new Terrain(this);
 
-		_postProcessing = new PostProcessing();
-		_postProcessing.addEffect(new OutlineEffect(true));
-//		_postProcessing.addEffect(new DepthOfFieldEffect(true));
-//		_postProcessing.addEffect(new MotionBlurEffect(true));
-//		_postProcessing.addEffect(new HorizontalBlurEffect(1f / 2f));
-//		_postProcessing.addEffect(new VerticalBlurEffect(1f / 2f));
-//		_postProcessing.addEffect(new HorizontalBlurEffect(1f / 8f));
-//		_postProcessing.addEffect(new VerticalBlurEffect(1f / 8f));
-//		_postProcessing.addEffect(new EmptyEffect(true));
+		_postProcess = new PostProcess();
+		_postProcess.addEffect(new OutlineEffect(true));
+//		_postProcess.addEffect(new DepthOfFieldEffect(true));
+//		_postProcess.addEffect(new MotionBlurEffect(true));
+//		_postProcess.addEffect(new HorizontalBlurEffect(1f / 2f));
+//		_postProcess.addEffect(new VerticalBlurEffect(1f / 2f));
+//		_postProcess.addEffect(new HorizontalBlurEffect(1f / 8f));
+//		_postProcess.addEffect(new VerticalBlurEffect(1f / 8f));
+//		_postProcess.addEffect(new EmptyEffect(true));
 
-		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+		_frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 
 		fullScreenQuad = createFullScreenQuad();
 		// for debug
@@ -151,7 +149,7 @@ public class Render
 			_modelBatch = _depthModelBatch;
 			_terrain._shader = _terrain._shaderDepth;
 
-			frameBuffer.begin();
+			_frameBuffer.begin();
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
@@ -161,7 +159,7 @@ public class Render
 
 			renderTerrain(camera, null);
 			renderObjects(camera, false);
-			frameBuffer.end();
+			_frameBuffer.end();
 		}
 */
 
@@ -261,11 +259,7 @@ public class Render
 		// POST PROCESSING (prepare)
 		if (Config.getInstance()._renderPostProcessing)
 		{
-			if (_postProcessingFBO == null)
-			{
-				createPostProcessingFBO();
-			}
-			_postProcessingFBO.begin();
+			_postProcess.getFrameBuffer().begin();
 		}
 
 		// MAIN RENDER =================================================================================================
@@ -302,15 +296,15 @@ public class Render
 		// POST PROCESSING
 		if (Config.getInstance()._renderPostProcessing)
 		{
-			_postProcessingFBO.end();
-			_postProcessing.doPostProcessing(_postProcessingFBO);
+			_postProcess.getFrameBuffer().end();
+			_postProcess.doPostProcess();
 		}
 		// END POST PROCESSING
 
 		/*if (Config._renderOutline)
 		{
 			// выводим содержимое буфера
-			frameBuffer.getColorBufferTexture().bind();
+			_frameBuffer.getColorBufferTexture().bind();
 
 			ShaderProgram program = _terrain._shaderOutline;
 //			 ShaderProgram program = _terrain._shaderCel;
@@ -330,7 +324,7 @@ public class Render
 			program.begin();
 //			_waterFrameBuffers.getReflectionFrameBuffer().getColorBufferTexture().bind();
 //			_shadow.getFrameBuffer().getColorBufferTexture().bind();
-			_postProcessingFBO.bindDepthTexture();
+			_postProcess.getFrameBuffer().bindDepthTexture();
 			testQuad1.render(program, GL20.GL_TRIANGLE_STRIP);
 
 			_waterFrameBuffers.getRefractionFrameBuffer().bindDepthTexture();
@@ -369,7 +363,7 @@ public class Render
 					{
 						Vector3 intersection = new Vector3();
 						if (Intersector.intersectRayBounds(_game.getCamera().getRay(), o.getBoundingBox(),
-														   intersection))
+						                                   intersection))
 						{
 							// дистанция до объекта
 							float dist = intersection.dst(camera.position);
@@ -442,8 +436,8 @@ public class Render
 		verts[i] = 1.f; // v4
 
 		Mesh tmpMesh = new Mesh(true, 4, 0,
-								new VertexAttribute(VertexAttributes.Usage.Position, 2, "a_position"),
-								new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "a_texCoord0"));
+		                        new VertexAttribute(VertexAttributes.Usage.Position, 2, "a_position"),
+		                        new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "a_texCoord0"));
 		tmpMesh.setVertices(verts);
 		return tmpMesh;
 	}
@@ -474,8 +468,8 @@ public class Render
 		verts[i] = 1.f; // v4
 
 		Mesh tmpMesh = new Mesh(true, 4, 0,
-								new VertexAttribute(VertexAttributes.Usage.Position, 2, "a_position"),
-								new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "a_texCoord0"));
+		                        new VertexAttribute(VertexAttributes.Usage.Position, 2, "a_position"),
+		                        new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "a_texCoord0"));
 		tmpMesh.setVertices(verts);
 		return tmpMesh;
 	}
@@ -548,25 +542,12 @@ public class Render
 
 	public void onResize(int width, int height)
 	{
-		if (_postProcessingFBO != null)
-		{
-			_postProcessingFBO.dispose();
-		}
-		createPostProcessingFBO();
-	}
-
-	protected void createPostProcessingFBO()
-	{
-		_postProcessingFBO = new DepthFrameBuffer(
-				Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
-				true, false, true);
-		_postProcessingFBO.setHasDepthTexture(true);
-		_postProcessingFBO.build();
+		_postProcess.onResize();
 	}
 
 	public void dispose()
 	{
-		if (_postProcessingFBO != null) _postProcessingFBO.dispose();
-		if (frameBuffer != null) frameBuffer.dispose();
+		_postProcess.dispose();
+		if (_frameBuffer != null) _frameBuffer.dispose();
 	}
 }

@@ -17,6 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * переписанный к херам класс для FBO, нужно для полного контроля над составляющими буфера,
+ * а конкретно доступ к текстуре буфера глубины и возможности вырубать текстуру цвета
+ *
  * <p>
  * Encapsulates OpenGL ES 2.0 frame buffer objects. This is a simple helper class which should cover most FBO uses. It will
  * automatically create a gltexture for the color attachment and a renderbuffer for the depth buffer. You can get a hold of the
@@ -32,9 +35,6 @@ import java.util.Map;
  * A FrameBuffer must be disposed if it is no longer needed
  * </p>
  * @author mzechner, realitix
- *
- * переписанный к херам класс для FBO, нужно для полного контроля над составляющими буфера,
- * а конкретно доступ к текстуре буфера глубины и возможности вырубать текстуру цвета
  */
 public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Disposable
 {
@@ -150,8 +150,8 @@ public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Dispos
 	 * @param hasDepth whether to attach a depth buffer
 	 * @throws com.badlogic.gdx.utils.GdxRuntimeException in case the FrameBuffer could not be created
 	 */
-	public CustomGLFrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth, boolean hasStencil,
-							   boolean hasColor)
+	public CustomGLFrameBuffer(Pixmap.Format format, int width, int height,
+	                           boolean hasDepth, boolean hasStencil, boolean hasColor)
 	{
 		this.width = width;
 		this.height = height;
@@ -242,7 +242,7 @@ public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Dispos
 		if (hasColor)
 		{
 			gl.glFramebufferTexture2D(GL20.GL_FRAMEBUFFER, GL20.GL_COLOR_ATTACHMENT0, GL20.GL_TEXTURE_2D,
-									  colorTexture.getTextureObjectHandle(), 0);
+			                          colorTexture.getTextureObjectHandle(), 0);
 		}
 
 		if (hasDepth)
@@ -258,7 +258,7 @@ public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Dispos
 		if (hasDepth && hasDepthTexture)
 		{
 			gl.glFramebufferTexture2D(GL20.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL20.GL_TEXTURE_2D,
-									  depthTexture.getTextureObjectHandle(), 0);
+			                          depthTexture.getTextureObjectHandle(), 0);
 		}
 		gl.glBindRenderbuffer(GL20.GL_RENDERBUFFER, 0);
 		gl.glBindTexture(GL20.GL_TEXTURE_2D, 0);
@@ -266,8 +266,8 @@ public abstract class CustomGLFrameBuffer<T extends GLTexture> implements Dispos
 		int result = gl.glCheckFramebufferStatus(GL20.GL_FRAMEBUFFER);
 
 		if (result == GL20.GL_FRAMEBUFFER_UNSUPPORTED && hasDepth && hasStencil
-			&& (Gdx.graphics.supportsExtension("GL_OES_packed_depth_stencil") ||
-				Gdx.graphics.supportsExtension("GL_EXT_packed_depth_stencil")))
+		    && (Gdx.graphics.supportsExtension("GL_OES_packed_depth_stencil") ||
+		        Gdx.graphics.supportsExtension("GL_EXT_packed_depth_stencil")))
 		{
 			if (hasDepth)
 			{

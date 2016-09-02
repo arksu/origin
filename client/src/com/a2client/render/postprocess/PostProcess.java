@@ -5,11 +5,10 @@ import com.a2client.render.framebuffer.DepthFrameBuffer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.Vector2;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +19,8 @@ import static com.badlogic.gdx.Gdx.gl;
  * пост процессинг. эффекты накладываем на финальный кадр
  * Created by arksu on 31.07.16.
  */
-public class PostProcessing
+public class PostProcess
 {
-	private static final Logger _log = LoggerFactory.getLogger(PostProcessing.class.getName());
-
 	/**
 	 * квад для вывода на экран
 	 */
@@ -34,15 +31,20 @@ public class PostProcessing
 	 */
 	private final List<Effect> _effects = new ArrayList<>();
 
-	public PostProcessing()
+	/**
+	 * буфер в который выводим изначальную картинку
+	 */
+	private DepthFrameBuffer _frameBuffer;
+
+	public PostProcess()
 	{
 		_fullScreenQuad = Render.createFullScreenQuad();
 	}
 
-	public void doPostProcessing(DepthFrameBuffer initialFBO)
+	public void doPostProcess()
 	{
 		// текущий буфер который обрабатываем
-		DepthFrameBuffer frameBuffer = initialFBO;
+		DepthFrameBuffer frameBuffer = _frameBuffer;
 
 		// пройдем по всем эффектам
 		for (Effect effect : _effects)
@@ -81,7 +83,41 @@ public class PostProcessing
 			}
 		}
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
+	}
 
+	public void onResize()
+	{
+		if (_frameBuffer != null)
+		{
+			_frameBuffer.dispose();
+		}
+		createBuffer();
+	}
+
+	public void createBuffer()
+	{
+		_frameBuffer = new DepthFrameBuffer(
+				Pixmap.Format.RGBA8888,
+				Gdx.graphics.getWidth() * 2, Gdx.graphics.getHeight() * 2,
+				true, false, true
+		);
+		_frameBuffer.setHasDepthTexture(true);
+		_frameBuffer.build();
+
+	}
+
+	public void dispose()
+	{
+		if (_frameBuffer != null)
+		{
+			_frameBuffer.dispose();
+		}
+	}
+
+	public DepthFrameBuffer getFrameBuffer()
+	{
+		if (_frameBuffer == null) createBuffer();
+		return _frameBuffer;
 	}
 
 	/**
