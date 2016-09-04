@@ -58,5 +58,5 @@ void main(){
     }
 
 
-    fragColor = texture(u_texture, v_texCoords2);
+//    fragColor = texture(u_texture, v_texCoords2);
 }

@@ -77,7 +77,7 @@ uniform mat4 u_bones[numBones];
 #endif //numBones
 #endif
 
-varying float v_depth;
+out float v_depth;
 
 void main() {
 	#ifdef blendedTextureFlag

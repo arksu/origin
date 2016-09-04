@@ -199,6 +199,7 @@ uniform vec3 u_lightPosition;
 out vec4 world_pos;
 out vec3 world_normal;
 
+out float v_depth;
 
 const float transitionDistance = 10.0;
 
@@ -258,9 +259,12 @@ void main() {
 //	world_normal = u_worldTrans * vec4(a_normal, 1.0);
 	world_normal = u_normalMatrix * a_normal;
 
+
 	gl_ClipDistance[0] = dot(world_pos, u_clipPlane);
 
 	gl_Position = u_projViewTrans * world_pos;
+
+	v_depth = (-gl_Position.z-1.0) / 999.0;
 
 	#if defined(normalFlag)
 		#if defined(skinningFlag)

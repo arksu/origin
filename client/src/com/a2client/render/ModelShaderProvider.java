@@ -18,8 +18,6 @@ import static com.a2client.render.Render.SHADER_VERSION;
  */
 public class ModelShaderProvider extends BaseShaderProvider
 {
-	private static final Logger _log = LoggerFactory.getLogger(ModelShaderProvider.class.getName());
-
 	public static final String VERTEX = "modelVertex.glsl";
 	public static final String FRAGMENT = "modelFragment.glsl";
 

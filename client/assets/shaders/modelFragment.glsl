@@ -110,6 +110,9 @@ const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
 uniform sampler2D u_shadowMap;
 in vec4 shadowCoords;
 
+// outline
+in float v_depth;
+
 const float shadowMapSize = 2048.0;
 const float texelSize = 1.0 / shadowMapSize;
 
@@ -122,6 +125,16 @@ float toonify(in float intensity) {
         return 0.4;
     else
         return 0.2;
+}
+
+vec4 pack_depth(const in float depth){
+    const vec4 bit_shift =
+        vec4(256.0*256.0*256.0, 256.0*256.0, 256.0, 1.0);
+    const vec4 bit_mask  =
+        vec4(0.0, 1.0/256.0, 1.0/256.0, 1.0/256.0);
+    vec4 res = fract(depth * bit_shift);
+    res -= res.xxyz * bit_mask;
+    return res;
 }
 
 void main() {
@@ -223,5 +236,5 @@ void main() {
 
 	fragColor = mix(vec4(u_skyColor, 1.0), fragColor, visibility);
 
-	fragColor2 = vec4(0, 1, 0, 1);
+    fragColor2 = pack_depth(v_depth);
 }

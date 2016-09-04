@@ -1,4 +1,5 @@
-out vec4 fragColor;
+layout (location = 0) out vec4 fragColor;
+layout (location = 1) out vec4 fragColor2;
 
 #ifdef GL_ES
 #define LOWP lowp
@@ -18,7 +19,7 @@ uniform sampler2D u_diffuseTexture;
 uniform float u_alphaTest;
 #endif
 
-in HIGH float v_depth;
+in float v_depth;
 
 vec4 pack_depth(const in float depth){
     const HIGH vec4 bit_shift =
@@ -38,4 +39,5 @@ void main(){
 
 
     fragColor = pack_depth(v_depth);
+    fragColor2 = fragColor;
 }

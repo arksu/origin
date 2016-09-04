@@ -20,6 +20,18 @@ const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
 const float shadowMapSize = 2048.0;
 const float texelSize = 1.0 / shadowMapSize;
 
+in float v_depth;
+
+vec4 pack_depth(const in float depth){
+    const vec4 bit_shift =
+        vec4(256.0*256.0*256.0, 256.0*256.0, 256.0, 1.0);
+    const vec4 bit_mask  =
+        vec4(0.0, 1.0/256.0, 1.0/256.0, 1.0/256.0);
+    vec4 res = fract(depth * bit_shift);
+    res -= res.xxyz * bit_mask;
+    return res;
+}
+
 void main() {
 	float intensity = max(NdotL, 0.25);
 	float shadeIntensity = ceil(intensity * numShades) / numShades;
@@ -47,5 +59,6 @@ void main() {
 	}
 
 	outColor = mix(vec4(u_skyColor, 1.0), outColor, visibility);
-	outColor2 = vec4(1,0,0,1);
+//    outColor2 = pack_depth(v_depth);
+    outColor2 = vec4(0);
 }

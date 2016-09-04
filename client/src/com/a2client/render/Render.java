@@ -263,7 +263,7 @@ public class Render
 		}
 
 		// MAIN RENDER =================================================================================================
-		_modelBatch = _depthModelBatch;
+//		_modelBatch = _depthModelBatch;
 		DefaultShader.defaultCullFace = GL20.GL_BACK;
 
 		Gdx.gl.glDisable(GL_CLIP_DISTANCE0);

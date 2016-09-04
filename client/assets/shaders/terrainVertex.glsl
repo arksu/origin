@@ -22,6 +22,7 @@ out float visibility;
 
 out float NdotL;
 
+out float v_depth;
 
 uniform vec3 u_lightPosition;
 vec4 diffuse = vec4(1,1,1,1);
@@ -62,4 +63,6 @@ void main() {
     } else {
     	shadowCoords.w = -1.0;
     }
+
+	v_depth = (-gl_Position.z-1.0) / 999.0;
 }

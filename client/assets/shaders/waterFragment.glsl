@@ -1,4 +1,5 @@
-out vec4 outColor;
+layout (location = 0) out vec4 outColor;
+layout (location = 1) out vec4 outColor2;
 
 uniform sampler2D u_reflectionTexture;
 uniform sampler2D u_refractionTexture;
@@ -82,4 +83,6 @@ void main() {
 
 	outColor = mix(vec4(u_skyColor, 1.0), outColor, visibility);
 	outColor.a = depthFactor;
+
+	outColor2 = vec4(0);
 }

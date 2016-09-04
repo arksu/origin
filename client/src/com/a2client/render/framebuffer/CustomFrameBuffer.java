@@ -56,7 +56,7 @@ public class CustomFrameBuffer extends CustomGLFrameBuffer
 	public CustomFrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth,
 							 boolean hasStencil, boolean hasColor)
 	{
-		super(format, width, height, hasDepth, hasStencil, hasColor, 2);
+		super(format, width, height, hasDepth, hasStencil, hasColor, 1);
 	}
 
 	@Override

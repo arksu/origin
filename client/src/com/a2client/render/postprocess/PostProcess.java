@@ -98,7 +98,7 @@ public class PostProcess
 	{
 		_frameBuffer = new DepthFrameBuffer(
 				Pixmap.Format.RGBA8888,
-				Gdx.graphics.getWidth() * 2, Gdx.graphics.getHeight() * 2,
+				Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
 				true, false, true
 		);
 		_frameBuffer.setHasDepthTexture(true);
