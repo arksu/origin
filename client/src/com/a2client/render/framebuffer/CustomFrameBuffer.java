@@ -41,7 +41,7 @@ public class CustomFrameBuffer extends CustomGLFrameBuffer
 	 */
 	public CustomFrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth)
 	{
-		this(format, width, height, hasDepth, false, true);
+		this(format, width, height, hasDepth, false, true, 1);
 	}
 
 	/**
@@ -54,9 +54,9 @@ public class CustomFrameBuffer extends CustomGLFrameBuffer
 	 * @throws com.badlogic.gdx.utils.GdxRuntimeException in case the CustomFrameBuffer could not be created
 	 */
 	public CustomFrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth,
-							 boolean hasStencil, boolean hasColor)
+							 boolean hasStencil, boolean hasColor, int targetCount)
 	{
-		super(format, width, height, hasDepth, hasStencil, hasColor, 1);
+		super(format, width, height, hasDepth, hasStencil, hasColor, targetCount);
 	}
 
 	@Override

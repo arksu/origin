@@ -118,6 +118,7 @@ public class Render
 
 		_postProcess = new PostProcess();
 		_postProcess.addEffect(new OutlineEffect(true));
+//		_postProcess.addEffect(new ContrastEffect(true));
 //		_postProcess.addEffect(new DepthOfFieldEffect(true));
 //		_postProcess.addEffect(new MotionBlurEffect(true));
 //		_postProcess.addEffect(new HorizontalBlurEffect(1f / 2f));

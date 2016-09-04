@@ -1,6 +1,7 @@
 out vec4 fragColor;
 
 uniform sampler2D u_texture;
+uniform sampler2D u_textureDepth;
 
 in vec2 v_texCoords0;
 in vec2 v_texCoords1;
@@ -31,32 +32,34 @@ float unpack_depth(const in vec4 rgba_depth){
 void main(){
 
 //    float depth = abs(
-//      unpack_depth(texture(u_texture, v_texCoords0))
-//    + unpack_depth(texture(u_texture, v_texCoords1))
-//    - unpack_depth(8 * texture(u_texture, v_texCoords2))
-//    + unpack_depth(texture(u_texture, v_texCoords3))
-//    + unpack_depth(texture(u_texture, v_texCoords4))
-//    + unpack_depth(texture(u_texture, v_texCoords5))
-//    + unpack_depth(texture(u_texture, v_texCoords6))
-//    + unpack_depth(texture(u_texture, v_texCoords7))
-//    + unpack_depth(texture(u_texture, v_texCoords8))
+//      unpack_depth(texture(u_textureDepth, v_texCoords0))
+//    + unpack_depth(texture(u_textureDepth, v_texCoords1))
+//    - unpack_depth(8 * texture(u_textureDepth, v_texCoords2))
+//    + unpack_depth(texture(u_textureDepth, v_texCoords3))
+//    + unpack_depth(texture(u_textureDepth, v_texCoords4))
+//    + unpack_depth(texture(u_textureDepth, v_texCoords5))
+//    + unpack_depth(texture(u_textureDepth, v_texCoords6))
+//    + unpack_depth(texture(u_textureDepth, v_texCoords7))
+//    + unpack_depth(texture(u_textureDepth, v_texCoords8))
 //    ) ;
 
     float depth =
-        abs(unpack_depth(texture(u_texture, v_texCoords0))
-    + unpack_depth(texture(u_texture, v_texCoords1))
-    - unpack_depth(4.0 * texture(u_texture, v_texCoords2))
-    + unpack_depth(texture(u_texture, v_texCoords3))
-    + unpack_depth(texture(u_texture, v_texCoords4)));
+        abs(unpack_depth(texture(u_textureDepth, v_texCoords0))
+    + unpack_depth(texture(u_textureDepth, v_texCoords1))
+    - unpack_depth(4.0 * texture(u_textureDepth, v_texCoords2))
+    + unpack_depth(texture(u_textureDepth, v_texCoords3))
+    + unpack_depth(texture(u_textureDepth, v_texCoords4)));
 //    if(depth > 0.0004) {
 
     if(depth > 0.0004) {
-        fragColor = vec4(0.0,0.0,0.0,1.0);
+        fragColor = mix(vec4(0.1,0.1,0.1,0.7), texture(u_texture, v_texCoords2), 0.3);
     } else {
-    	fragColor = vec4(1.0,1.0,1.0,0.0);
+//    	fragColor = vec4(1.0,1.0,1.0,0.0);
+    	fragColor = texture(u_texture, v_texCoords2);
 //        discard;
     }
 
 
 //    fragColor = texture(u_texture, v_texCoords2);
+//    fragColor = texture(u_textureDepth, v_texCoords2);
 }

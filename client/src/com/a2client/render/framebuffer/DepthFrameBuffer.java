@@ -15,17 +15,25 @@ import static com.badlogic.gdx.Gdx.gl;
  */
 public class DepthFrameBuffer extends CustomFrameBuffer
 {
+	@Deprecated
 	private int _depthTexture = -1;
 
 	public DepthFrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth,
-							boolean hasStencil, boolean hasColor)
+	                        boolean hasStencil, boolean hasColor)
 	{
-		super(format, width, height, hasDepth, hasStencil, hasColor);
+		super(format, width, height, hasDepth, hasStencil, hasColor, 1);
+	}
+
+	public DepthFrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth,
+	                        boolean hasStencil, boolean hasColor, int targetCount)
+	{
+		super(format, width, height, hasDepth, hasStencil, hasColor, targetCount);
 	}
 
 	/**
 	 * старый но! рабочий код) создания текстуры для буфера глубины. оставлен для истории
 	 */
+	@Deprecated
 	public void createDepthTextre(Texture.TextureFilter filter, Texture.TextureWrap wrap)
 	{
 		// сначала биндим наш буфер
@@ -46,8 +54,8 @@ public class DepthFrameBuffer extends CustomFrameBuffer
 		gl.glTexParameteri(GL11.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, wrap.getGLEnum());
 		// связываем нашу текстуру с буфером
 		gl.glFramebufferTexture2D(GL20.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT,
-								  GL20.GL_TEXTURE_2D,
-								  _depthTexture, 0);
+		                          GL20.GL_TEXTURE_2D,
+		                          _depthTexture, 0);
 
 		// а вот тут может случится ата-та. т.к. надо знать ид буфера экрана. см код libgdx
 		gl.glBindFramebuffer(GL20.GL_FRAMEBUFFER, 0);

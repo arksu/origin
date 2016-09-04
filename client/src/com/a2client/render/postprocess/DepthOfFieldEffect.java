@@ -36,7 +36,7 @@ public class DepthOfFieldEffect extends Effect
 		gl.glActiveTexture(GL13.GL_TEXTURE7);
 		frameBuffer.bindDepthTexture();
 
-		_shaderProgram.setUniformi("u_texture", 0);
+		getShaderProgram().setUniformi("u_texture", 0);
 		getShaderProgram().setUniformi("u_textureDepth", 7);
 
 	}
