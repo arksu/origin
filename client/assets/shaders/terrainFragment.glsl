@@ -13,7 +13,7 @@ in vec4 shadowCoords;
 
 in float NdotL;
 
-const float numShades = 6.0;
+const float numShades = 16.0;
 
 const int pcfCount = 1;
 const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
@@ -54,7 +54,7 @@ void main() {
 		}
 		totalShadowWeight /= totalTexels;
 		float lightFactor = 1.0 - (totalShadowWeight * shadowCoords.w);
-		lightFactor = max(lightFactor * 0.5 + 0.5, 0.5);
+		lightFactor = max(lightFactor * 0.5 + 0.8, 0.5);
 		outColor.xyz = outColor.xyz * lightFactor;
 	}
 

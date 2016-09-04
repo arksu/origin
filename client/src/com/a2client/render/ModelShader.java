@@ -19,6 +19,7 @@ public class ModelShader extends DefaultShader
 	public final int u_toShadowMapSpace;
 	public final int u_shadowDistance;
 	public final int u_lightPosition;
+	public final int u_selected;
 
 	public final static Uniform skyColor = new Uniform("u_skyColor");
 	public final static Uniform density = new Uniform("u_density");
@@ -27,6 +28,7 @@ public class ModelShader extends DefaultShader
 	public final static Uniform shadowMap = new Uniform("u_shadowMap");
 	public final static Uniform toShadowMapSpace = new Uniform("u_toShadowMapSpace");
 	public final static Uniform shadowDistance = new Uniform("u_shadowDistance");
+	public final static Uniform selected = new Uniform("u_selected");
 
 	public final static Uniform lightPosition = new Uniform("u_lightPosition");
 
@@ -99,6 +101,23 @@ public class ModelShader extends DefaultShader
 		}
 	};
 
+	public final static Setter selectedSetter = new LocalSetter()
+	{
+		@Override
+		public void set(BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes)
+		{
+			if (renderable != null && renderable.userData != null && renderable.userData instanceof Boolean)
+			{
+				boolean userData = (Boolean) renderable.userData;
+				shader.set(inputID, (userData ? 1 : 0));
+			}
+			else
+			{
+				shader.set(inputID, 0);
+			}
+		}
+	};
+
 	public ModelShader(Renderable renderable, Config config)
 	{
 		super(renderable, config);
@@ -111,6 +130,7 @@ public class ModelShader extends DefaultShader
 		u_shadowDistance = register(shadowDistance, shadowDistanceSetter);
 
 		u_lightPosition = register(lightPosition, lightPositionSetter);
+		u_selected = register(selected, selectedSetter);
 	}
 
 	@Override

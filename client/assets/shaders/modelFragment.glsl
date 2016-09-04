@@ -97,6 +97,7 @@ uniform DirectionalLight u_dirLights[numDirectionalLights];
 
 uniform vec4 u_cameraPosition;
 uniform vec3 u_skyColor;
+uniform int u_selected;
 in float visibility;
 in float NdotL;
 in float NdotL2;
@@ -104,7 +105,7 @@ in float NdotL2;
 in vec4 world_pos;
 in vec3 world_normal;
 
-const float numShades = 6.0;
+const float numShades = 9.0;
 const int pcfCount = 1;
 const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
 uniform sampler2D u_shadowMap;
@@ -134,18 +135,25 @@ vec4 pack_depth(const in float depth){
         vec4(0.0, 1.0/256.0, 1.0/256.0, 1.0/256.0);
     vec4 res = fract(depth * bit_shift);
     res -= res.xxyz * bit_mask;
+
+	res.x = clamp(res.x / 2.0, 0, 0.5);
+    if (u_selected == 1) res.x = res.x + 0.51;
+
     return res;
 }
 
 void main() {
 
 //	vec3 L = normalize( u_dirLights[0].direction - world_pos.xyz);
-    vec3 V = normalize( u_cameraPosition.xyz - world_pos.xyz);
+//    vec3 V = normalize( u_cameraPosition.xyz - world_pos.xyz);
 //    vec3 H = normalize(L + V );
 
 	//Black color if dot product is smaller than 0.3
 	//else keep the same colors
-	float edgeDetection = (dot(V, normalize(world_normal.xyz)) > 0.3) ? 1 : 0;
+//	float edgeDetection = (dot(V, normalize(world_normal.xyz)) > 0.3) ? 1 : 0;
+
+	float intensity = max(NdotL2, 0.45);
+	float shadeIntensity = ceil(intensity * numShades)/numShades;
 
 	#if defined(normalFlag)
 		vec3 normal = v_normal;
@@ -193,7 +201,9 @@ void main() {
 		#if defined(ambientFlag) && defined(separateAmbientFlag)
 				fragColor.rgb = (diffuse.rgb * (v_lightDiffuse + v_ambientLight)) + specular;
 		#else
-				fragColor.rgb = (diffuse.rgb * v_lightDiffuse) + specular;
+//				fragColor.rgb = (diffuse.rgb * (v_lightDiffuse + vec3(shadeIntensity))) + specular;
+//				fragColor.rgb = (diffuse.rgb * ( vec3(0.8)));// + specular;
+				fragColor.rgb = diffuse.rgb;
 		#endif
 	#endif //lightingFlag
 
@@ -208,12 +218,10 @@ void main() {
 		fragColor.a = 1.0;
 	#endif
 
-	float intensity = max(NdotL2, 0.25);
-	float shadeIntensity = ceil(intensity * numShades)/numShades;
-	float cel_factor = toonify(max(fragColor.r, max(fragColor.g, fragColor.b)));
+//	float cel_factor = toonify(max(fragColor.r, max(fragColor.g, fragColor.b)));
 
-//	fragColor.xyz = fragColor.xyz * shadeIntensity * edgeDetection;
-//	fragColor.xyz = fragColor.xyz * cel_factor * edgeDetection;
+//	fragColor.xyz = fragColor.xyz * shadeIntensity;
+//	fragColor.xyz = fragColor.xyz * cel_factor;
 
 	// shadows
 	if (shadowCoords.w > 0) {
@@ -229,12 +237,19 @@ void main() {
 	}
 	totalShadowWeight /= totalTexels;
 	float lightFactor = 1.0 - (totalShadowWeight * shadowCoords.w);
-	lightFactor = lightFactor * 0.5 + 0.5;
+	lightFactor = lightFactor * 0.5 + 0.8;
 
 		fragColor.xyz = fragColor.xyz * lightFactor;
+//		fragColor.xyz = vec3(1,1,1) * lightFactor;
 	}
 
+	fragColor.xyz = fragColor.xyz * shadeIntensity;
 	fragColor = mix(vec4(u_skyColor, 1.0), fragColor, visibility);
 
-    fragColor2 = pack_depth(v_depth);
+//	if (u_selected == 1) {
+    	fragColor2 = pack_depth(v_depth);
+//    	fragColor2.r = max(fragColor2.r, 0.5);
+//	} else {
+//    	fragColor2 = pack_depth(v_depth);
+//    }
 }

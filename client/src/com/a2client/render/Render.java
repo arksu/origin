@@ -63,7 +63,7 @@ public class Render
 	 * позиция солнца, учитывается при всем освещении
 	 * также передается в шейдеры
 	 */
-	public static Vector3 sunPosition = new Vector3(10000, 10000, 10000);
+	public static Vector3 sunPosition = new Vector3(10000, 20000, 10000);
 
 	private Game _game;
 	private Environment _environment;
@@ -80,6 +80,7 @@ public class Render
 	 * объект в который попадает луч из мыши (объект под мышью)
 	 */
 	private GameObject _selected;
+	private static GameObject _oldSelected;
 
 	private float _selectedDist;
 	private int _renderedObjects;
@@ -346,6 +347,7 @@ public class Render
 //			Gdx.gl.glBlendFunc(GL20.GL_EQUAL, GL20.GL_ONE);
 			if (findIntersect)
 			{
+				_oldSelected = _selected;
 				_selected = null;
 				_selectedDist = 100500;
 			}
@@ -356,6 +358,7 @@ public class Render
 				// если объект попадает в поле зрения камеры
 				if (model != null && camera.frustum.boundsInFrustum(o.getBoundingBox()))
 				{
+					model.userData = o == _oldSelected && findIntersect ? Boolean.TRUE : Boolean.FALSE;
 					_modelBatch.render(model, _environment);
 					_renderedObjects++;
 
@@ -490,6 +493,11 @@ public class Render
 		return _selected;
 	}
 
+	public static GameObject getOldSelected()
+	{
+		return _oldSelected;
+	}
+
 	public int getRenderedObjects()
 	{
 		return _renderedObjects;
@@ -513,7 +521,7 @@ public class Render
 		}
 
 		Vector3 pos = new Vector3(0, sunDistance, 0);
-		pos.rotate(60f, 1, 0, 0);
+		pos.rotate(90f - 45f, 1, 0, 0);
 		pos.rotate(sunAngle, 0, 1, 0);
 
 		sunPosition.set(pos);

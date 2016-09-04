@@ -195,6 +195,7 @@ out vec4 shadowCoords;
 uniform mat4 u_toShadowMapSpace;
 uniform float u_shadowDistance;
 uniform vec3 u_lightPosition;
+uniform int u_selected;
 
 out vec4 world_pos;
 out vec3 world_normal;
@@ -264,7 +265,22 @@ void main() {
 
 	gl_Position = u_projViewTrans * world_pos;
 
-	v_depth = (-gl_Position.z-1.0) / 999.0;
+	float z = -gl_Position.z-1;
+	z /= 1900;
+//	if (z > 0.5) z = 0.5;
+//	if (z < -0) z = 0;
+//	z = 0.5 - z;
+//	if (z > -10) {
+//		z = gl_Position.z;
+//		if (u_selected == 1) {
+//			z+=0.5;
+//		}
+//	} else {
+//		z = -10 - 1000;
+//	}
+	v_depth = (z);
+//	v_depth = (z) / 600.0;
+//	v_depth = (z) / 999.0;
 
 	#if defined(normalFlag)
 		#if defined(skinningFlag)
