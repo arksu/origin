@@ -81,6 +81,6 @@ public class Effect
 		getShaderProgram().setUniformf("u_texture", 0);
 		// биндим и указываем текстуру которую выводим на экран / обрабатываем текущим эффектом
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
-		frameBuffer.getColorBufferTexture().bind();
+		frameBuffer.getColorBufferTexture(1).bind();
 	}
 }

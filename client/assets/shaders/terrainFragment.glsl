@@ -1,4 +1,5 @@
-out vec4 outColor;
+layout (location = 0) out vec4 outColor;
+layout (location = 1) out vec4 outColor2;
 
 uniform sampler2D u_texture;
 uniform vec4 u_ambient;
@@ -46,5 +47,5 @@ void main() {
 	}
 
 	outColor = mix(vec4(u_skyColor, 1.0), outColor, visibility);
-
+	outColor2 = vec4(1,0,0,1);
 }

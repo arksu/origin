@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -232,14 +233,6 @@ public abstract class CustomGLFrameBuffer implements Disposable
 			stencilbufferHandle = gl.glGenRenderbuffer();
 		}
 
-		if (hasColor)
-		{
-			for (int i = 0; i < targetCount; i++)
-			{
-				gl.glBindTexture(GL20.GL_TEXTURE_2D, colorTextures[i].getTextureObjectHandle());
-			}
-		}
-
 		if (hasDepth)
 		{
 			gl.glBindRenderbuffer(GL20.GL_RENDERBUFFER, depthbufferHandle);
@@ -253,10 +246,12 @@ public abstract class CustomGLFrameBuffer implements Disposable
 		}
 
 		gl.glBindFramebuffer(GL20.GL_FRAMEBUFFER, framebufferHandle);
+
 		if (hasColor)
 		{
 			for (int i = 0; i < targetCount; i++)
 			{
+				gl.glBindTexture(GL20.GL_TEXTURE_2D, colorTextures[i].getTextureObjectHandle());
 				gl.glFramebufferTexture2D(GL20.GL_FRAMEBUFFER, GL20.GL_COLOR_ATTACHMENT0 + i, GL20.GL_TEXTURE_2D,
 				                          colorTextures[i].getTextureObjectHandle(), 0);
 			}
@@ -277,6 +272,17 @@ public abstract class CustomGLFrameBuffer implements Disposable
 			gl.glFramebufferTexture2D(GL20.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL20.GL_TEXTURE_2D,
 			                          depthTexture.getTextureObjectHandle(), 0);
 		}
+		if (targetCount > 1)
+		{
+			IntBuffer buffer = BufferUtils.createIntBuffer(targetCount);
+			for (int i = 0; i < targetCount; i++)
+			{
+				buffer.put(GL20.GL_COLOR_ATTACHMENT0 + i);
+			}
+			buffer.flip();
+			Gdx.gl30.glDrawBuffers(targetCount, buffer);
+		}
+
 		gl.glBindRenderbuffer(GL20.GL_RENDERBUFFER, 0);
 		gl.glBindTexture(GL20.GL_TEXTURE_2D, 0);
 
@@ -448,6 +454,11 @@ public abstract class CustomGLFrameBuffer implements Disposable
 	public Texture getColorBufferTexture()
 	{
 		return colorTextures[0];
+	}
+
+	public Texture getColorBufferTexture(int target)
+	{
+		return colorTextures[target];
 	}
 
 	/**

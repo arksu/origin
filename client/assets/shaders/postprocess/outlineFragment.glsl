@@ -56,4 +56,7 @@ void main(){
     	fragColor = vec4(1.0,1.0,1.0,0.0);
 //        discard;
     }
+
+
+    fragColor = texture(u_texture, v_texCoords2);
 }

@@ -43,17 +43,9 @@ public class ModelShaderProvider extends BaseShaderProvider
 	{
 		// небольшой такой КОСТЫЛЬ из за убогости LibGDX
 		// явно укажем версию шейдеров. и немного поправим совместимость...
-		ShaderProgram.prependVertexCode =
-				SHADER_VERSION + "\n"
-				+ "#define varying out\n"
-				+ "#define attribute in\n";
+		ShaderProgram.prependVertexCode = SHADER_VERSION + "\n";
 
-		ShaderProgram.prependFragmentCode =
-				SHADER_VERSION + "\n"
-				+ "#define varying in\n"
-				+ "#define texture2D texture\n"
-				+ "#define gl_FragColor fragColor\n"
-				+ "out vec4 fragColor;\n";
+		ShaderProgram.prependFragmentCode = SHADER_VERSION + "\n";
 
 		Shader shader = super.getShader(renderable);
 

@@ -40,7 +40,7 @@ public class Render
 	/**
 	 * версия шейдеров. прописывается ВО ВСЕ шейдеры в самом начале
 	 */
-	public static final String SHADER_VERSION = "#version 140";
+	public static final String SHADER_VERSION = "#version 330";
 
 	/**
 	 * где лежат все шейдеры
