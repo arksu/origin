@@ -54,7 +54,7 @@ void main() {
 		}
 		totalShadowWeight /= totalTexels;
 		float lightFactor = 1.0 - (totalShadowWeight * shadowCoords.w);
-		lightFactor = max(lightFactor * 0.5 + 0.8, 0.5);
+		lightFactor = max(lightFactor , 0.5);
 		outColor.xyz = outColor.xyz * lightFactor;
 	}
 
