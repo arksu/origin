@@ -17,11 +17,25 @@ public class Player
 	private static Player _instance;
 
 	private int _objectId = -1;
+
+	/**
+	 * никнейм игрока
+	 */
 	private String _name;
 
+	/**
+	 * что держим в руке
+	 */
 	private Hand _hand;
+
+	/**
+	 * эквип игрока
+	 */
 	private final Equip _equip = new Equip();
 
+	/**
+	 * доступные действия для игрока
+	 */
 	private Action _rootAction;
 
 	public void setObjectId(int myObjectId)

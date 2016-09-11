@@ -9,15 +9,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * экипировка
  * Created by arksu on 17.09.15.
  */
 public class Equip
 {
 	private static final Logger _log = LoggerFactory.getLogger(Equip.class.getName());
 
+	/**
+	 * вещи в эквипе
+	 */
 	private final List<InventoryItem> _items = new ArrayList<>();
 
-	GUI_EquipWindow _wnd;
+	/**
+	 * инстанс окна в котором выводим инвентарть
+	 */
+	private GUI_EquipWindow _wnd;
 
 	public List<InventoryItem> getItems()
 	{
@@ -37,6 +44,9 @@ public class Equip
 		}
 	}
 
+	/**
+	 * показать эквип
+	 */
 	public void show()
 	{
 		if (_wnd != null)
@@ -67,6 +77,9 @@ public class Equip
 		}
 	}
 
+	/**
+	 * переключить эквип показан / спрятан
+	 */
 	public void toggle()
 	{
 		if (_wnd != null)
