@@ -16,7 +16,7 @@ public class Player
 	private static final Logger _log = LoggerFactory.getLogger(Player.class.getName());
 	private static Player _instance;
 
-	private int _objectId;
+	private int _objectId = -1;
 	private String _name;
 
 	private Hand _hand;

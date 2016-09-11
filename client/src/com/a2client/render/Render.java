@@ -358,7 +358,7 @@ public class Render
 				// если объект попадает в поле зрения камеры
 				if (model != null && camera.frustum.boundsInFrustum(o.getBoundingBox()))
 				{
-					model.userData = o == _oldSelected && findIntersect ? Boolean.TRUE : Boolean.FALSE;
+					model.userData = o == _oldSelected && o.getObjectId() != Player.getInstance().getObjectId()  && findIntersect ? Boolean.TRUE : Boolean.FALSE;
 					_modelBatch.render(model, _environment);
 					_renderedObjects++;
 
