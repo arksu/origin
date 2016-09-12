@@ -1,4 +1,3 @@
-
 in vec4 a_position;
 in vec3 a_normal;
 in vec2 a_texCoord0;
@@ -17,12 +16,9 @@ uniform float u_shadowDistance;
 
 out vec2 texCoords;
 out vec4 shadowCoords;
-out vec4 v_diffuse;
 out float visibility;
 
 out float NdotL;
-
-out float v_depth;
 
 uniform vec3 u_lightPosition;
 vec4 diffuse = vec4(1,1,1,1);
@@ -41,14 +37,6 @@ void main() {
     vec3 lightDir = normalize(u_lightPosition);
     NdotL = max(dot(normal, lightDir), 0.0);
 
-//    v_diffuse = u_ambient * NdotL;
-    v_diffuse =  diffuse * NdotL;
-
-    texCoords = a_texCoord0;
-
-//    surfaceNormal = (u_worldTrans * vec4(normal, 0.0)).xyz;
-//    toLightVector = u_lightPosition - worldPosition.xyz;
-
     float distance = length(u_cameraPosition.xyz - worldPosition.xyz);
     visibility = exp(-pow((distance * u_density), u_gradient));
 
@@ -64,5 +52,5 @@ void main() {
     	shadowCoords.w = -1.0;
     }
 
-	v_depth = (-gl_Position.z-1.0) / 999.0;
+    texCoords = a_texCoord0;
 }
