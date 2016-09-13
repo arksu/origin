@@ -10,9 +10,12 @@ uniform vec4 u_cameraPosition;
 uniform vec3 u_cameraDirection;
 uniform vec4 u_ambient;
 uniform vec4 u_clipPlane;
+uniform vec3 u_lightPosition;
 uniform mat4 u_toShadowMapSpace;
-
 uniform float u_shadowDistance;
+
+uniform float u_density;
+uniform float u_gradient;
 
 out vec2 texCoords;
 out vec4 shadowCoords;
@@ -20,11 +23,7 @@ out float visibility;
 
 out float NdotL;
 
-uniform vec3 u_lightPosition;
-vec4 diffuse = vec4(1,1,1,1);
-
-uniform float u_density;
-uniform float u_gradient;
+const vec4 diffuse = vec4(1,1,1,1);
 
 const float transitionDistance = 10.0;
 

@@ -278,13 +278,13 @@ public class Render
 		_skybox.Render(camera, _environment);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		renderTerrain(camera, toShadowMapSpace);
+//		renderTerrain(camera, toShadowMapSpace);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		renderObjects(camera, true);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		renderWater(camera);
+//		renderWater(camera);
 
 //		if (_game.getWorldMousePos() != null)
 //		{
@@ -521,8 +521,8 @@ public class Render
 		}
 
 		Vector3 pos = new Vector3(0, sunDistance, 0);
-		pos.rotate(90f - 45f, 1, 0, 0);
-		pos.rotate(sunAngle, 0, 1, 0);
+//		pos.rotate(90f - 5f, 1, 0, 0);
+		pos.rotate(sunAngle, 1, 0, 0);
 
 		sunPosition.set(pos);
 

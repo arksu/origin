@@ -103,7 +103,7 @@ public class GameCamera extends PerspectiveCamera
 
 			float h = Terrain.getHeight(position.x, position.z);
 			h = Math.max(Terrain.WATER_LEVEL, h) + 1f;
-			position.y = Math.max(h, position.y);
+//			position.y = Math.max(h, position.y);
 
 			// скажем смотреть на игрока
 			lookAt(_chaseObj.getWorldCoord());
@@ -112,6 +112,7 @@ public class GameCamera extends PerspectiveCamera
 			normalizeUp();
 
 			position.add(_offset);
+			position.add(0,10,0);
 		}
 
 		super.update();
@@ -155,7 +156,7 @@ public class GameCamera extends PerspectiveCamera
 			_angleX = _startAngleX - (c.sub(_startDrag).y * 0.3f);
 
 			// ограничим вертикальный угол
-			_angleX = Math.min(_angleX, 110f);
+//			_angleX = Math.min(_angleX, 110f);
 			_angleX = Math.max(_angleX, 1f);
 		}
 	}
