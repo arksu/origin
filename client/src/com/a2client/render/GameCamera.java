@@ -112,7 +112,7 @@ public class GameCamera extends PerspectiveCamera
 			normalizeUp();
 
 			position.add(_offset);
-			position.add(0,10,0);
+			position.add(0,5,0);
 		}
 
 		super.update();
