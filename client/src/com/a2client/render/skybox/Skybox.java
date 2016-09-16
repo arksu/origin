@@ -115,7 +115,6 @@ public class Skybox
 		_cubemap.dispose();
 	}
 
-
 	public void Render(Camera camera, Environment environment)
 	{
 		_shader.begin();
@@ -147,16 +146,17 @@ public class Skybox
 		_shader.setUniformf("u_cameraDirection", camera.direction);
 
 		// ATMO
-		float radius = 400f;
-		float cameraHeight = radius * 1.05f;
+		float r = (Math.max(Render.sunPosition.y, 200f) / 300f);
+		float radius =360f;
+		float cameraHeight = radius * 1.35f * (r);
 		float PI = ((float) Math.PI);
 
 		float Kr = 0.0025f;
 		float Km = 0.0010f;
-		float ESun = 16.0f;
+		float ESun = 1.0f;
 		float g = -0.990f;
 		float innerRadius = radius;
-		float outerRadius = radius * 1.25f;
+		float outerRadius = radius * 1.35f;
 		Vector3 waveLength = new Vector3(0.650f, 0.570f, 0.475f);
 		float scaleDepth = 0.25f;
 		float mieScaleDepth = 0.1f;

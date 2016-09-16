@@ -515,7 +515,7 @@ public class Render
 	}
 
 	float sunDistance = 1000;
-	float sunAngle = 0f;
+	float sunAngle = 20f;
 	boolean sunMoving = true;
 
 	public void updateSunPos()
@@ -523,7 +523,7 @@ public class Render
 		if (Input.KeyHit(Keys.SPACE)) sunMoving = !sunMoving;
 		if (sunMoving)
 		{
-			sunAngle -= Main.deltaTime * 30.9f;
+			sunAngle -= Main.deltaTime * 20.9f;
 		}
 
 		Vector3 pos = new Vector3(0, sunDistance, 0);
