@@ -20,7 +20,7 @@ public class Skybox
 {
 	private static final Logger _log = LoggerFactory.getLogger(Skybox.class.getName());
 
-	private static final float SIZE = 700f;
+	private static final float SIZE = 600f;
 
 	/**
 	 * degrees per second
@@ -147,13 +147,13 @@ public class Skybox
 		_shader.setUniformf("u_cameraDirection", camera.direction);
 
 		// ATMO
-		float radius = 500f;
-		float cameraHeight = radius * 1.15f;
+		float radius = 400f;
+		float cameraHeight = radius * 1.05f;
 		float PI = ((float) Math.PI);
 
 		float Kr = 0.0025f;
 		float Km = 0.0010f;
-		float ESun = 10.0f;
+		float ESun = 16.0f;
 		float g = -0.990f;
 		float innerRadius = radius;
 		float outerRadius = radius * 1.25f;
@@ -233,7 +233,8 @@ public class Skybox
 //		);
 //		_mesh.setVertices(VERTICES);
 
-		_mesh = Icosahedron.getMesh(SIZE);
+		Icosahedron icosahedron = new Icosahedron(4, SIZE);
+		_mesh = icosahedron.getMesh();
 	}
 
 	public void updateDayNight()
