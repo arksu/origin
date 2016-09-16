@@ -8,19 +8,16 @@ import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * икосаэдр для создания сфер
  * Created by arksu on 16.09.16.
  */
 public class Icosahedron
 {
-	private static final Logger _log = LoggerFactory.getLogger(Icosahedron.class.getName());
-
 	private static final float X = 0.525731112119133606f;
 
 	private static final float Z = 0.850650808352039932f;
@@ -44,6 +41,11 @@ public class Icosahedron
 	private Mesh _mesh;
 	private float _mult;
 
+	/**
+	 * создать икосаэдр
+	 * @param depth глубина для деления треугольников
+	 * @param mult на это умножаем кажду вершину (радиус)
+	 */
 	public Icosahedron(int depth, float mult)
 	{
 		_mult = mult;
@@ -133,10 +135,10 @@ public class Icosahedron
 		return _mesh;
 	}
 
-	// DEBUG PART !!
+	// DEBUG PART !! ====================================================
 	public static Mesh getMesh(float size)
 	{
-		Icosahedron icosahedron = new Icosahedron(2, 1f);
+		Icosahedron icosahedron = new Icosahedron(4, 1f);
 
 		return icosahedron.getMesh();
 	}
