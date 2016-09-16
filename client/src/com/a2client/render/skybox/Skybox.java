@@ -1,6 +1,8 @@
-package com.a2client.render;
+package com.a2client.render.skybox;
 
 import com.a2client.Main;
+import com.a2client.render.Fog;
+import com.a2client.render.Render;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -18,7 +20,7 @@ public class Skybox
 {
 	private static final Logger _log = LoggerFactory.getLogger(Skybox.class.getName());
 
-	private static final float SIZE = 500f;
+	private static final float SIZE = 700f;
 
 	/**
 	 * degrees per second
@@ -113,13 +115,11 @@ public class Skybox
 		_cubemap.dispose();
 	}
 
+
 	public void Render(Camera camera, Environment environment)
 	{
 		_shader.begin();
 		prepareShader(camera, environment);
-
-//		Matrix4 matrix4 = new Matrix4().idt();
-//		matrix4.translate(camera.position);
 
 		_mesh.render(_shader, GL20.GL_TRIANGLES);
 
@@ -228,10 +228,12 @@ public class Skybox
 
 	protected void makeMesh()
 	{
-		_mesh = new Mesh(true, VERTICES.length / 3, 0,
-		                 new VertexAttribute(VertexAttributes.Usage.Position, 3, "a_position")
-		);
-		_mesh.setVertices(VERTICES);
+//		_mesh = new Mesh(true, VERTICES.length / 3, 0,
+//		                 new VertexAttribute(VertexAttributes.Usage.Position, 3, "a_position")
+//		);
+//		_mesh.setVertices(VERTICES);
+
+		_mesh = Icosahedron.getMesh(SIZE);
 	}
 
 	public void updateDayNight()

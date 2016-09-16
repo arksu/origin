@@ -64,6 +64,12 @@ void main (void)
 //	fragColor = finalColor * getRayleighPhase(fCos2) + getMiePhase(fCos, fCos2, g, g2) * 0.02;
 //	fragColor = vec4( vec3(getMiePhase(fCos, fCos2, g, g2) * 0.01), 1.0);
 
+	// небо из текстур
+	float factor = (texCoords.y - lowerLimit) / (upperLimit - lowerLimit);
+	factor = clamp(factor, 0.0, 1.0);
+//	fragColor = finalColor;
+//	fragColor = mix(vec4(u_skyColor, 1.0), finalColor, factor);
+
 	fragColor2 = vec4(0);
 }
 

@@ -112,7 +112,7 @@ public class GameCamera extends PerspectiveCamera
 			normalizeUp();
 
 			position.add(_offset);
-			position.add(0,5,0);
+//			position.add(0,5,0);
 		}
 
 		super.update();
@@ -128,6 +128,11 @@ public class GameCamera extends PerspectiveCamera
 		}
 
 		direction.set(0, 0, -1);
+	}
+
+	public GameObject getChaseObj()
+	{
+		return _chaseObj;
 	}
 
 	public void onResize(int width, int height)

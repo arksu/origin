@@ -5,6 +5,8 @@ import com.a2client.model.GameObject;
 import com.a2client.render.postprocess.OutlineEffect;
 import com.a2client.render.postprocess.PostProcess;
 import com.a2client.render.shadows.Shadow;
+import com.a2client.render.skybox.Icosahedron;
+import com.a2client.render.skybox.Skybox;
 import com.a2client.render.water.WaterFrameBuffers;
 import com.a2client.screens.Game;
 import com.a2client.util.Keys;
@@ -136,6 +138,8 @@ public class Render
 		testQuad2 = createTestQuad(0.7f, 0, 0.3f);
 
 		_testModel = ModelManager.getInstance().getModelByType(19);
+
+		Icosahedron.init();
 	}
 
 	public void render(Camera camera)
@@ -285,6 +289,8 @@ public class Render
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 //		renderWater(camera);
+
+		Icosahedron.render(((GameCamera) camera));
 
 //		if (_game.getWorldMousePos() != null)
 //		{
