@@ -20,7 +20,7 @@ public class Skybox
 {
 	private static final Logger _log = LoggerFactory.getLogger(Skybox.class.getName());
 
-	private static final float SIZE = 600f;
+	private static final float SIZE = 900f;
 
 	/**
 	 * degrees per second
@@ -82,6 +82,8 @@ public class Skybox
 
 	private float _time = 5000;
 
+	private TuningWindow _tuningWindow;
+
 	public Skybox()
 	{
 		_cubemap = new Cubemap(
@@ -108,6 +110,7 @@ public class Skybox
 
 		makeMesh();
 
+		_tuningWindow = new TuningWindow();
 	}
 
 	public void clear()
@@ -146,17 +149,17 @@ public class Skybox
 		_shader.setUniformf("u_cameraDirection", camera.direction);
 
 		// ATMO
-		float r = (Math.max(Render.sunPosition.y, 200f) / 300f);
-		float radius =360f;
-		float cameraHeight = radius * 1.35f * (r);
+		float r = (Math.max(Render.sunPosition.y, 300f) / 900f);
+		float radius = 100f;
+		float cameraHeight = radius * 1.85f * (r);
 		float PI = ((float) Math.PI);
 
 		float Kr = 0.0025f;
 		float Km = 0.0010f;
-		float ESun = 1.0f;
+		float ESun = 15.0f;
 		float g = -0.990f;
 		float innerRadius = radius;
-		float outerRadius = radius * 1.35f;
+		float outerRadius = radius * 1.3f;
 		Vector3 waveLength = new Vector3(0.650f, 0.570f, 0.475f);
 		float scaleDepth = 0.25f;
 		float mieScaleDepth = 0.1f;
