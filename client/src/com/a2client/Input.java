@@ -38,6 +38,8 @@ public class Input implements InputProcessor
 
 	public void Update()
 	{
+		MouseX = Gdx.input.getX();
+		MouseY = Gdx.input.getY();
 		boolean old;
 		for (int i = 0; i < 256; i++)
 		{
@@ -146,8 +148,6 @@ public class Input implements InputProcessor
 	@Override
 	public boolean mouseMoved(int screenX, int screenY)
 	{
-		MouseX = screenX;
-		MouseY = screenY;
 		return false;
 	}
 

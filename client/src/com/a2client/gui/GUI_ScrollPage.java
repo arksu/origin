@@ -171,7 +171,7 @@ public class GUI_ScrollPage extends GUI_Control
 
             if (AutoScrollV)
                 if (FVerticalScrollbar.Pos + old_page_size >= old_max)
-                    FVerticalScrollbar.SetPos(FVerticalScrollbar.Max - FVerticalScrollbar.PageSize);
+                    FVerticalScrollbar.setValue(FVerticalScrollbar.Max - FVerticalScrollbar.PageSize);
         }
 
         if (HaveHorizontalScrollbar)
@@ -203,7 +203,7 @@ public class GUI_ScrollPage extends GUI_Control
 
             if (AutoScrollH)
                 if (FHorizontalScrollbar.Pos + old_page_size >= old_max)
-                    FHorizontalScrollbar.SetPos(FHorizontalScrollbar.Max - FHorizontalScrollbar.PageSize);
+                    FHorizontalScrollbar.setValue(FHorizontalScrollbar.Max - FHorizontalScrollbar.PageSize);
         }
     }
 
@@ -249,10 +249,10 @@ public class GUI_ScrollPage extends GUI_Control
         if (vertical)
         {
             if (FVerticalScrollbar != null)
-                FVerticalScrollbar.SetPos(FVerticalScrollbar.Min);
+                FVerticalScrollbar.setValue(FVerticalScrollbar.Min);
         }
         else if (FHorizontalScrollbar != null)
-            FHorizontalScrollbar.SetPos(FHorizontalScrollbar.Min);
+            FHorizontalScrollbar.setValue(FHorizontalScrollbar.Min);
     }
 
     public void SetStyle(boolean v, boolean h)

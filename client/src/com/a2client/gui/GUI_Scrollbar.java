@@ -68,17 +68,17 @@ public class GUI_Scrollbar extends GUI_Control
     public void DoDec()
     {
         if (!HaveTrack())
-            SetPos(Min);
+            setValue(Min);
         else
-            SetPos(Pos - Step);
+            setValue(Pos - Step);
     }
 
     public void DoInc()
     {
         if (!HaveTrack())
-            SetPos(Min);
+            setValue(Min);
         else
-            SetPos(Pos + Step);
+            setValue(Pos + Step);
     }
 
     public boolean HaveTrack()
@@ -86,7 +86,7 @@ public class GUI_Scrollbar extends GUI_Control
         return PageSize < (Max - Min);
     }
 
-    public void SetMin(int val)
+    public void setMin(int val)
     {
         if (val == Min)
             return;
@@ -109,7 +109,7 @@ public class GUI_Scrollbar extends GUI_Control
 
     }
 
-    public void SetMax(int val)
+    public void setMax(int val)
     {
         if (val == Max)
             return;
@@ -134,7 +134,7 @@ public class GUI_Scrollbar extends GUI_Control
         DoChanged();
     }
 
-    public void SetPos(int val)
+    public void setValue(int val)
     {
         if (Pos == val)
             return;
@@ -151,7 +151,7 @@ public class GUI_Scrollbar extends GUI_Control
             DoChanged();
     }
 
-    public int getPos()
+    public int getValue()
     {
         return Pos;
     }
@@ -394,7 +394,7 @@ public class GUI_Scrollbar extends GUI_Control
             if (new_pos_pix > len_pix - page_size_pix)
                 new_pos_pix = len_pix - page_size_pix;
 
-            SetPos(Math.round(((float) new_pos_pix) * (Max - Min - PageSize) / (len_pix - page_size_pix) + Min));
+            setValue(Math.round(((float) new_pos_pix) * (Max - Min - PageSize) / (len_pix - page_size_pix) + Min));
         }
 
     }
