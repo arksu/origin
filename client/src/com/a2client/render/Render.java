@@ -274,6 +274,7 @@ public class Render
 
 		Gdx.gl.glDisable(GL_CLIP_DISTANCE0);
 		clipNormal = new Vector3(0, 0, 0);
+		Gdx.gl.glClearColor(0.1f, 0.2f, 0.9f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glCullFace(GL20.GL_BACK);

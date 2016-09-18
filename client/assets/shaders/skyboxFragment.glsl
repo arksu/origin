@@ -30,8 +30,6 @@ in vec3 v3Direction;
 in vec3 c0;
 in vec3 c1;
 
-in vec3 v3;
-
 // Calculates the Mie phase function
 float getMiePhase(float fCos, float fCos2, float g, float g2)
 {
@@ -54,10 +52,10 @@ void main (void)
 	float fCos2 = fCos * fCos;
 
 	vec3 color =	getRayleighPhase(fCos2) * c0 +
-					getMiePhase(fCos, fCos2, g, g2) * c1 * 0.1;
+					getMiePhase(fCos, fCos2, g, g2) * c1 * 0.5;
 
  	fragColor = vec4(color, 1.0);
-//	fragColor.a = fragColor.b;
+	fragColor.a = fragColor.b;
 
 //	fragColor = vec4( v3, 1.0);
 //	fragColor = vec4( vec3(getRayleighPhase(fCos2)), 1.0);

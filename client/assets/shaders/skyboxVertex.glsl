@@ -33,14 +33,12 @@ uniform float fScale;			// 1 / (fOuterRadius - fInnerRadius)
 uniform float fScaleDepth;		// The scale depth (i.e. the altitude at which the atmosphere's average density is found)
 uniform float fScaleOverScaleDepth;	// fScale / fScaleDepth
 
-const int nSamples = 4;
-const float fSamples = 4.0;
+const int nSamples = 3;
+const float fSamples = 3.0;
 
 out vec3 v3Direction;
 out vec3 c0;
 out vec3 c1;
-
-out vec3 v3;
 
 float scale(float fCos)
 {
@@ -64,8 +62,6 @@ void main()
 	float fDet = max(0.0, B*B - 4.0 * C);
 	float fNear = 0.5 * (-B - sqrt(fDet));
 
-	v3 = vec3(-fNear)  / 500;
-
 	// Calculate the ray's starting position, then calculate its scattering offset
 	vec3 v3Start = cameraPosition;
 	float fHeight = length(v3Start);
@@ -79,8 +75,6 @@ void main()
 	vec3 v3SampleRay = v3Ray * fSampleLength;
 	vec3 v3SamplePoint = v3Start + v3SampleRay * 0.5;
 
-	v3 = vec3(fStartOffset);
-
 	// Now loop through the sample rays
 	vec3 v3FrontColor = vec3(0.0);
 	for(int i = 0; i < nSamples; i++)
@@ -93,20 +87,13 @@ void main()
 		vec3 v3Attenuate = exp(-fScatter * (v3InvWavelength * fKr4PI + fKm4PI));
 		v3FrontColor += v3Attenuate * (fDepth * fScaledLength);
 		v3SamplePoint += v3SampleRay;
-
-		v3 = vec3(v3FrontColor * 1.0);
 	}
 
-//	v3 = v3FrontColor * 100;
-
 	// Finally, scale the Mie and Rayleigh colors and set up the varying variables for the pixel shader
-//	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-	gl_Position = u_projTrans * u_viewTrans * a_position;
 	c0 = v3FrontColor * (v3InvWavelength * fKrESun);
 	c1 = v3FrontColor * fKmESun;
 	v3Direction = cameraPosition - position;
-
-	v3 = c0;
+	gl_Position = u_projTrans * u_viewTrans * a_position;
 
     texCoords = a_position.xyz;
 }

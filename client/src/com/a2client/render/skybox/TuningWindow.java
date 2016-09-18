@@ -21,11 +21,13 @@ public class TuningWindow
 	GUI_Scrollbar _scrollbarRadius;
 	GUI_Scrollbar _scrollbarCameraHeight;
 	GUI_Scrollbar _scrollbarOutRadius;
+	GUI_Scrollbar _scrollbarEsun;
 
 	GUI_Label _label1;
 	GUI_Label _label2;
 	GUI_Label _label3;
 	GUI_Label _label4;
+	GUI_Label _label5;
 
 	public TuningWindow()
 	{
@@ -85,6 +87,19 @@ public class TuningWindow
 		_scrollbarOutRadius.setValue(100);
 		_scrollbarOutRadius.SetPageSize(20);
 
+		// -----------------------------
+		_label5 = new GUI_Label(_window);
+		_label5.setPos(_scrollbarOutRadius.pos.add(0, 20));
+
+		_scrollbarEsun = new GUI_Scrollbar(_window);
+		_scrollbarEsun.SetVertical(false);
+		_scrollbarEsun.setSize(580, 20);
+		_scrollbarEsun.setPos(_label5.pos.add(0, 15));
+		_scrollbarEsun.setMax(200);
+		_scrollbarEsun.setMin(0);
+		_scrollbarEsun.setValue(150);
+		_scrollbarEsun.SetPageSize(20);
+
 	}
 
 	public float getSunAngle()
@@ -107,6 +122,11 @@ public class TuningWindow
 		return ((float) _scrollbarOutRadius.getValue()) / 100f + 1f;
 	}
 
+	public float getEsun()
+	{
+		return _scrollbarEsun.getValue() / 10f;
+	}
+
 	public void update()
 	{
 		Render.sunAngle = getSunAngle();
@@ -115,5 +135,6 @@ public class TuningWindow
 		_label2.caption = "radius " + getRadius();
 		_label3.caption = "camera height" + getCameraHeigjt();
 		_label4.caption = "out raius " + getOutRadius();
+		_label5.caption = "esun " + getEsun();
 	}
 }

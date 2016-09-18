@@ -20,7 +20,7 @@ public class Skybox
 {
 	private static final Logger _log = LoggerFactory.getLogger(Skybox.class.getName());
 
-	private static final float SIZE = 900f;
+	private static final float SIZE = 600f;
 
 	/**
 	 * degrees per second
@@ -157,12 +157,12 @@ public class Skybox
 
 		float Kr = 0.0025f;
 		float Km = 0.0010f;
-		float ESun = 15.0f;
+		float ESun = _tuningWindow.getEsun();// 15.0f;
 		float g = -0.990f;
 		float innerRadius = radius;
 		float outerRadius = radius * _tuningWindow.getOutRadius();
 		Vector3 waveLength = new Vector3(0.650f, 0.570f, 0.475f);
-		float scaleDepth = 0.25f;
+		float scaleDepth = 0.35f;
 		float mieScaleDepth = 0.1f;
 
 		_shader.setUniformf("u_cameraPosition", 0, cameraHeight, 0);
