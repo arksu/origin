@@ -364,7 +364,7 @@ public class Render
 				// если объект попадает в поле зрения камеры
 				if (model != null && camera.frustum.boundsInFrustum(o.getBoundingBox()))
 				{
-					model.userData = o == _oldSelected && o.getObjectId() != Player.getInstance().getObjectId()  && findIntersect ? Boolean.TRUE : Boolean.FALSE;
+					model.userData = o == _oldSelected && o.getObjectId() != Player.getInstance().getObjectId() && findIntersect ? Boolean.TRUE : Boolean.FALSE;
 					_modelBatch.render(model, _environment);
 					_renderedObjects++;
 
@@ -515,8 +515,8 @@ public class Render
 	}
 
 	float sunDistance = 1000;
-	float sunAngle = 20f;
-	boolean sunMoving = true;
+	public static float sunAngle = 20f;
+	public static boolean sunMoving = false;
 
 	public void updateSunPos()
 	{

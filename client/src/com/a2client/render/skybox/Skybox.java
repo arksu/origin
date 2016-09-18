@@ -120,6 +120,7 @@ public class Skybox
 
 	public void Render(Camera camera, Environment environment)
 	{
+		if (_tuningWindow != null) _tuningWindow.update();
 		_shader.begin();
 		prepareShader(camera, environment);
 
@@ -149,9 +150,9 @@ public class Skybox
 		_shader.setUniformf("u_cameraDirection", camera.direction);
 
 		// ATMO
-		float r = (Math.max(Render.sunPosition.y, 300f) / 900f);
-		float radius = 100f;
-		float cameraHeight = radius * 1.85f * (r);
+		float r = 1f;//(Math.max(Render.sunPosition.y, 300f) / 900f);
+		float radius = _tuningWindow.getRadius();
+		float cameraHeight = radius * _tuningWindow.getCameraHeigjt() * (r);
 		float PI = ((float) Math.PI);
 
 		float Kr = 0.0025f;
@@ -159,7 +160,7 @@ public class Skybox
 		float ESun = 15.0f;
 		float g = -0.990f;
 		float innerRadius = radius;
-		float outerRadius = radius * 1.3f;
+		float outerRadius = radius * _tuningWindow.getOutRadius();
 		Vector3 waveLength = new Vector3(0.650f, 0.570f, 0.475f);
 		float scaleDepth = 0.25f;
 		float mieScaleDepth = 0.1f;
