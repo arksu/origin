@@ -43,7 +43,7 @@ public class TuningWindow
 		_scrollbarSun.SetVertical(false);
 		_scrollbarSun.setSize(580, 20);
 		_scrollbarSun.setPos(_label1.pos.add(0, 15));
-		_scrollbarSun.setMax(200);
+		_scrollbarSun.setMax(250);
 		_scrollbarSun.setMin(0);
 		_scrollbarSun.setValue(100);
 		_scrollbarSun.SetPageSize(10);
@@ -69,7 +69,7 @@ public class TuningWindow
 		_scrollbarCameraHeight.SetVertical(false);
 		_scrollbarCameraHeight.setSize(580, 20);
 		_scrollbarCameraHeight.setPos(_label3.pos.add(0, 15));
-		_scrollbarCameraHeight.setMax(200);
+		_scrollbarCameraHeight.setMax(300);
 		_scrollbarCameraHeight.setMin(0);
 		_scrollbarCameraHeight.setValue(100);
 		_scrollbarCameraHeight.SetPageSize(20);
@@ -102,9 +102,9 @@ public class TuningWindow
 
 	}
 
-	public float getSunAngle()
+	public float getSunTime()
 	{
-		return (-((float) _scrollbarSun.getValue()) / ((float) _scrollbarSun.getMax())) * 100f;
+		return ((float) _scrollbarSun.getValue()) / 10f;
 	}
 
 	public float getRadius()
@@ -112,7 +112,7 @@ public class TuningWindow
 		return ((float) _scrollbarRadius.getValue());
 	}
 
-	public float getCameraHeigjt()
+	public float getCameraHeight()
 	{
 		return ((float) _scrollbarCameraHeight.getValue()) / 100f + 0.5f;
 	}
@@ -129,11 +129,14 @@ public class TuningWindow
 
 	public void update()
 	{
-		Render.sunAngle = getSunAngle();
+		if (!Render.sunMoving)
+		{
+			Render.sunTime = getSunTime();
+		}
 
-		_label1.caption = "sun angle " + getSunAngle();
+		_label1.caption = "sun time " + getSunTime();
 		_label2.caption = "radius " + getRadius();
-		_label3.caption = "camera height" + getCameraHeigjt();
+		_label3.caption = "camera height" + getCameraHeight();
 		_label4.caption = "out raius " + getOutRadius();
 		_label5.caption = "esun " + getEsun();
 	}

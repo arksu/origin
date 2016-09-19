@@ -274,7 +274,7 @@ public class Render
 
 		Gdx.gl.glDisable(GL_CLIP_DISTANCE0);
 		clipNormal = new Vector3(0, 0, 0);
-		Gdx.gl.glClearColor(0.1f, 0.2f, 0.9f, 1f);
+//		Gdx.gl.glClearColor(0.1f, 0.3f, 0.9f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glCullFace(GL20.GL_BACK);
@@ -517,7 +517,9 @@ public class Render
 
 	float sunDistance = 1000;
 	public static float sunAngle = 20f;
-	public static boolean sunMoving = false;
+	public static boolean sunMoving = true;
+	// время дня в 24 часовом формате (0-24)
+	public static float sunTime = 0f;
 
 	public void updateSunPos()
 	{
@@ -529,7 +531,7 @@ public class Render
 
 		Vector3 pos = new Vector3(0, sunDistance, 0);
 //		pos.rotate(90f - 5f, 1, 0, 0);
-		pos.rotate(sunAngle, 1, 0, 0);
+		pos.rotate(sunAngle, 0, 0, 1);
 
 		sunPosition.set(pos);
 

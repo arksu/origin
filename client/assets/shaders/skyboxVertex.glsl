@@ -6,7 +6,6 @@ uniform mat4 u_viewTrans;
 out vec3 texCoords;
 
 uniform vec4 u_cameraPosition;
-uniform vec3 u_cameraDirection;
 
 //======================================================================================================================
 //
@@ -56,28 +55,48 @@ void main()
 	float fFar = length(v3Ray);
 	v3Ray /= fFar;
 
-	// Calculate the closest intersection of the ray with the outer atmosphere (which is the near point of the ray passing through the atmosphere)
+	// Calculate the closest intersection of the ray with the outer atmosphere
+	// (which is the near point of the ray passing through the atmosphere)
 	float B = 2.0 * dot(cameraPosition, v3Ray);
 	float C = fCameraHeight2 - fOuterRadius2;
 	float fDet = max(0.0, B*B - 4.0 * C);
 	float fNear = 0.5 * (-B - sqrt(fDet));
 
+
+    float fStartOffset;
+    vec3 v3Start;
+
+    if (length(cameraPosition) > fOuterRadius) {
+        v3Start = cameraPosition + v3Ray * fNear;
+        fFar -= fNear;
+        float fStartAngle = dot(v3Ray, v3Start) / fOuterRadius;
+        float fStartDepth = exp(-1.0 / fScaleDepth);
+        fStartOffset = fStartDepth * scale(fStartAngle);
+    } else {
+        v3Start = cameraPosition;
+        float fHeight = length(v3Start);
+        float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fCameraHeight));
+        float fStartAngle = dot(v3Ray, v3Start) / fHeight;
+        fStartOffset = fDepth*scale(fStartAngle);
+    }
+
 	// Calculate the ray's starting position, then calculate its scattering offset
-	vec3 v3Start = cameraPosition;
-	float fHeight = length(v3Start);
-	float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fCameraHeight));
-	float fStartAngle = dot(v3Ray, v3Start) / fHeight;
-	float fStartOffset = fDepth * scale(fStartAngle);
+//	vec3 v3Start = cameraPosition + v3Ray * fNear;
+//	fFar -= fNear;
+//	float fStartAngle = dot(v3Ray, v3Start) / fOuterRadius;
+//	float fStartDepth = exp(-1.0 / fScaleDepth);
+//	float fStartOffset = fStartDepth * scale(fStartAngle);
+	//c0 = vec3(1.0, 0, 0) * fStartAngle;
 
 	// Initialize the scattering loop variables
-	float fSampleLength = fFar / nSamples;
+	float fSampleLength = fFar / fSamples;
 	float fScaledLength = fSampleLength * fScale;
 	vec3 v3SampleRay = v3Ray * fSampleLength;
 	vec3 v3SamplePoint = v3Start + v3SampleRay * 0.5;
 
 	// Now loop through the sample rays
-	vec3 v3FrontColor = vec3(0.0);
-	for(int i = 0; i < nSamples; i++)
+	vec3 v3FrontColor = vec3(0.0, 0.0, 0.0);
+	for(int i=0; i<nSamples; i++)
 	{
 		float fHeight = length(v3SamplePoint);
 		float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fHeight));
@@ -85,10 +104,10 @@ void main()
 		float fCameraAngle = dot(v3Ray, v3SamplePoint) / fHeight;
 		float fScatter = (fStartOffset + fDepth * (scale(fLightAngle) - scale(fCameraAngle)));
 		vec3 v3Attenuate = exp(-fScatter * (v3InvWavelength * fKr4PI + fKm4PI));
+
 		v3FrontColor += v3Attenuate * (fDepth * fScaledLength);
 		v3SamplePoint += v3SampleRay;
 	}
-
 	// Finally, scale the Mie and Rayleigh colors and set up the varying variables for the pixel shader
 	c0 = v3FrontColor * (v3InvWavelength * fKrESun);
 	c1 = v3FrontColor * fKmESun;

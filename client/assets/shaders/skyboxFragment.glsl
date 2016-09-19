@@ -52,7 +52,7 @@ void main (void)
 	float fCos2 = fCos * fCos;
 
 	vec3 color =	getRayleighPhase(fCos2) * c0 +
-					getMiePhase(fCos, fCos2, g, g2) * c1 * 0.5;
+					getMiePhase(fCos, fCos2, g, g2) * c1 * 0.1;
 
  	fragColor = vec4(color, 1.0);
 	fragColor.a = fragColor.b;

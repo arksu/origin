@@ -137,6 +137,7 @@ public class Skybox
 
 		_shader.setUniformMatrix("u_projTrans", camera.projection);
 
+		final float PI = ((float) Math.PI);
 		Matrix4 tmp;
 		tmp = camera.view.cpy();
 		tmp.translate(camera.position);
@@ -147,13 +148,11 @@ public class Skybox
 		_shader.setUniformf("u_density", Fog.enabled ? Fog.density : 0f);
 		_shader.setUniformf("u_gradient", Fog.gradient);
 
-		_shader.setUniformf("u_cameraDirection", camera.direction);
-
 		// ATMO
 		float r = 1f;//(Math.max(Render.sunPosition.y, 300f) / 900f);
 		float radius = _tuningWindow.getRadius();
-		float cameraHeight = radius * _tuningWindow.getCameraHeigjt() * (r);
-		float PI = ((float) Math.PI);
+		float cameraHeight = radius * _tuningWindow.getCameraHeight() * (r);
+//		float cameraHeight = radius + camera.position.y;
 
 		float Kr = 0.0025f;
 		float Km = 0.0010f;
@@ -162,12 +161,14 @@ public class Skybox
 		float innerRadius = radius;
 		float outerRadius = radius * _tuningWindow.getOutRadius();
 		Vector3 waveLength = new Vector3(0.650f, 0.570f, 0.475f);
-		float scaleDepth = 0.35f;
+		float scaleDepth = 0.25f;
 		float mieScaleDepth = 0.1f;
 
+		Vector3 cpos = camera.position.cpy().add(0,radius,0);
+//		_shader.setUniformf("u_cameraPosition", cpos.x, cpos.y, cpos.z);
 		_shader.setUniformf("u_cameraPosition", 0, cameraHeight, 0);
 
-		_shader.setUniformf("v3LightPosition", Render.sunPosition.cpy().scl(1f).nor());
+		_shader.setUniformf("v3LightPosition", Render.sunPosition.cpy().nor().scl(1f));
 		_shader.setUniformf("v3InvWavelength", new Vector3(
 				1f / ((float) Math.pow(waveLength.x, 4)),
 				1f / ((float) Math.pow(waveLength.y, 4)),
