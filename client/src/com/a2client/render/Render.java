@@ -283,13 +283,13 @@ public class Render
 		_skybox.Render(camera, _environment);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-//		renderTerrain(camera, toShadowMapSpace);
+		renderTerrain(camera, toShadowMapSpace);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		renderObjects(camera, true);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-//		renderWater(camera);
+		renderWater(camera);
 
 		Icosahedron.render(((GameCamera) camera));
 
@@ -526,12 +526,23 @@ public class Render
 		if (Input.KeyHit(Keys.SPACE)) sunMoving = !sunMoving;
 		if (sunMoving)
 		{
-			sunAngle -= Main.deltaTime * 20.9f;
+			sunTime -= Main.deltaTime * 2.9f;
 		}
 
-		Vector3 pos = new Vector3(0, sunDistance, 0);
+		// задали вектор на плоскости земли
+		Vector3 pos = new Vector3(sunDistance, 0, 0);
+
+		// повернем на угол в часах (24)
+		pos.rotate(((sunTime-12f) / 24f) * 360f, 0, 1, 0);
+
+		// сместим в соответствии с широтой местности
+		pos.add(0, 200f, 0);
+
+		// и еще раз повернем на 23.5 градуса (угол наклона оси вращения планеты)
+		pos.rotate(23.5f, 0, 0, 1);
+
 //		pos.rotate(90f - 5f, 1, 0, 0);
-		pos.rotate(sunAngle, 0, 0, 1);
+//		pos.rotate(sunAngle, 0, 0, 1);
 
 		sunPosition.set(pos);
 
