@@ -24,54 +24,54 @@ import java.util.Random;
 @SuppressWarnings("serial")
 public class WeightList<T> implements java.io.Serializable
 {
-	List<T> c;
-	List<Integer> w;
-	int tw = 0;
+	private final List<T> list;
+	private final List<Integer> weights;
+	private int totalWeight = 0;
 
 	public WeightList()
 	{
-		c = new ArrayList<T>();
-		w = new ArrayList<Integer>();
+		list = new ArrayList<>();
+		weights = new ArrayList<>();
 	}
 
 	public void add(T c, int w)
 	{
-		this.c.add(c);
-		this.w.add(w);
-		tw += w;
+		this.list.add(c);
+		this.weights.add(w);
+		totalWeight += w;
 	}
 
-	public T pick(int p)
+	private T pick(int p)
 	{
-		if (tw == 0)
+		if (totalWeight == 0)
 		{
 			return null;
 		}
-		p %= tw;
+		p %= totalWeight;
 		int i = 0;
 		while (true)
 		{
-			if ((p -= w.get(i)) <= 0)
+			if ((p -= weights.get(i)) <= 0)
 			{
 				break;
 			}
 			i++;
 		}
-		return (c.get(i));
+		return (list.get(i));
 	}
 
 	public T pick_first()
 	{
-		return c.get(0);
+		return list.get(0);
 	}
 
 	public T pick(Random gen)
 	{
-		return (pick(gen.nextInt(tw)));
+		return (pick(gen.nextInt(totalWeight)));
 	}
 
 	public int size()
 	{
-		return (c.size());
+		return (list.size());
 	}
 }
