@@ -69,13 +69,6 @@
 			"height": 1
 		}
 	},
-	"branch": {
-		"typeId": 22,
-		"item": {
-			"width": 1,
-			"height": 1
-		}
-	},
 	"board": {
 		"typeId": 20,
 		"item": {
@@ -86,7 +79,12 @@
 	"stone": {
 		"typeId": 21,
 		"class": "stone"
+	},
+	"branch": {
+		"typeId": 22,
+		"item": {
+			"width": 1,
+			"height": 1
+		}
 	}
-
-	// last used: 22
 }

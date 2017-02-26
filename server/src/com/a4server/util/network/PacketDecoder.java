@@ -36,7 +36,9 @@ public class PacketDecoder extends ReplayingDecoder<PacketDecoder.DecoderState>
 				checkpoint(DecoderState.READ_CONTENT);
 				break;
 			case READ_CONTENT:
-				byte[] buf = in.readBytes(length).array();
+				ByteBuf byteBuf = in.readBytes(length);
+				byte[] buf = new byte[length];
+				byteBuf.getBytes(0, buf);
 				checkpoint(DecoderState.READ_LENGTH);
 				out.add(buf);
 				break;

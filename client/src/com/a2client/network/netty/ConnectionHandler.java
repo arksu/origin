@@ -33,7 +33,7 @@ public class ConnectionHandler extends SimpleChannelInboundHandler<byte[]>
 	}
 
 	@Override
-	protected void messageReceived(ChannelHandlerContext channelHandlerContext, byte[] bytes) throws Exception
+	protected void channelRead0(ChannelHandlerContext channelHandlerContext, byte[] bytes) throws Exception
 	{
 		BaseRecvPacket pkt = null;
 		_connection.incRecvCounter(bytes.length);

@@ -25,19 +25,24 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Locale;
 
 /**
  * Created by arksu on 01.01.2015.
  */
 public class GameServer
 {
-	private static final Logger _log = LoggerFactory.getLogger(GameServer.class);
+	private static Logger _log;
 	private static GameServer _instance;
 	private InetAddress _bindAddress = null;
 	private final AsyncPacketReader<GameClient> _reader;
 
 	public static void main(String[] args) throws Exception
 	{
+		Locale.setDefault(Locale.ROOT);
+		System.setProperty("server.logfile", "logs/game_server.log");
+		_log = LoggerFactory.getLogger(GameServer.class);
+
 		Server.serverMode = Server.MODE_GAMESERVER;
 		for (String arg : args)
 		{
@@ -118,7 +123,7 @@ public class GameServer
 		{
 			ServerBootstrap b = new ServerBootstrap();
 			b.option(ChannelOption.SO_BACKLOG, 256);
-			b.option(ChannelOption.TCP_NODELAY, true);
+//			b.option(ChannelOption.TCP_NODELAY, true);
 			b.group(bossGroup, workerGroup)
 			 .channel(NioServerSocketChannel.class)
 			 .childHandler(new ChannelInitializer<SocketChannel>()

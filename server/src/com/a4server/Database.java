@@ -200,7 +200,7 @@ public class Database
 		// проверим есть ли таблица с супергридом. если нет - ее надо будет заполнить
 		boolean needSg = !isTableExist("sg_0");
 		List<String> sql = new ArrayList<>();
-		final String[] files = new String[]{"/sql/struct.sql", "/sql/test_data.sql"};
+		final String[] files = new String[]{"/etc/sql/struct.sql", "/etc/sql/test_data.sql"};
 		try
 		{
 			for (String fileName : files)

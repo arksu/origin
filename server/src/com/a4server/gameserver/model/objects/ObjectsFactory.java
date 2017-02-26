@@ -59,11 +59,11 @@ public class ObjectsFactory
 		}
 		catch (UnsupportedEncodingException e)
 		{
-			_log.warn("LoadInternalConfig: unsupported encoding");
+			_log.error("LoadInternalConfig: unsupported encoding", e);
 		}
 		catch (IOException e)
 		{
-			_log.warn("LoadInternalConfig: io error");
+			_log.error("LoadInternalConfig: io error", e);
 		}
 		catch (Exception e)
 		{

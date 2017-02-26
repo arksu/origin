@@ -5,18 +5,21 @@ repositories {
     flatDir {
         dirs 'dist/libs'
     }
+    mavenCentral()
 }
 
 dependencies {
-    compile name: 'slf4j-simple-1.7.9'
-    compile name: 'slf4j-api-1.7.9'
-    compile name: 'netty-all-5.0.0.Alpha1'
+    compile 'org.slf4j:slf4j-api:1.7+'
+    compile 'org.slf4j:slf4j-log4j12:1.7+'
+
+    compile 'io.netty:netty-all:4.1+'
+    compile 'com.google.code.gson:gson:2.8+'
+    compile 'com.zaxxer:HikariCP-java7:2.4+'
+    runtime 'mysql:mysql-connector-java:5+'
+
     compile name: 'parallelcolt-0.9.4'
     compile name: 'javolution-5.5.1'
     compile name: 'javassist'
-    compile name: 'HikariCP-java6-2.2.5'
-    runtime name: 'mysql-connector-java'
-    compile name: 'gson-2.7'
 }
 
 task jarGame(type: Jar) {

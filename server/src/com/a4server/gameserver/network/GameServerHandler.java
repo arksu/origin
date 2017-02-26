@@ -29,7 +29,7 @@ public class GameServerHandler extends SimpleChannelInboundHandler<byte[]>
 	}
 
 	@Override
-	public void messageReceived(ChannelHandlerContext ctx, byte[] msg) throws Exception
+	public void channelRead0(ChannelHandlerContext ctx, byte[] msg) throws Exception
 	{
 		// добавляем данные в очередь пакетов клиента
 		client.addReadPacketQueue(msg);

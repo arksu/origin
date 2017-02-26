@@ -22,13 +22,14 @@ import org.slf4j.LoggerFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
+import java.util.Locale;
 
 /**
  * Created by arksu on 01.01.2015.
  */
 public class LoginServer
 {
-	private static final Logger _log = LoggerFactory.getLogger(LoginServer.class.getName());
+	private static Logger _log;
 	private static LoginServer _instance;
 
 	private InetAddress _bindAddress = null;
@@ -36,6 +37,9 @@ public class LoginServer
 
 	public static void main(String[] args) throws Exception
 	{
+		Locale.setDefault(Locale.ROOT);
+		System.setProperty("server.logfile", "logs/login_server.log");
+		_log = LoggerFactory.getLogger(LoginServer.class);
 		Server.serverMode = Server.MODE_LOGINSERVER;
 		_instance = new LoginServer();
 	}
@@ -105,7 +109,7 @@ public class LoginServer
 		{
 			ServerBootstrap b = new ServerBootstrap();
 			b.option(ChannelOption.SO_BACKLOG, 256);
-			b.option(ChannelOption.TCP_NODELAY, true);
+//			b.option(ChannelOption.TCP_NODELAY, true);
 			b.group(bossGroup, workerGroup)
 			 .channel(NioServerSocketChannel.class)
 			 .childHandler(new ChannelInitializer<SocketChannel>()

@@ -4,22 +4,22 @@ repositories {
     flatDir {
         dirs 'lib'
     }
+    mavenCentral()
 }
 
 dependencies {
     compile name: 'gdx'
     compile name: 'gdx-freetype'
+    compile name: 'gdx-backend-lwjgl'
     runtime name: 'gdx-backend-lwjgl-natives'
     runtime name: 'gdx-natives'
     runtime name: 'gdx-freetype-natives'
 
-    compile name: 'netty'
-    compile name: 'gdx-backend-lwjgl'
-    compile name: 'slf4j-api-1.7.6'
-    compile name: 'slf4j-log4j12-1.7.6'
-    compile name: 'log4j-1.2.17'
-    compile name: 'gson-2.7'
-    compile name: 'args4j-2.33'
+    compile 'io.netty:netty-all:4.1+'
+    compile 'org.slf4j:slf4j-api:1.7+'
+    compile 'org.slf4j:slf4j-log4j12:1.7+'
+    compile 'com.google.code.gson:gson:2.8+'
+    compile 'args4j:args4j:2+'
 }
 
 jar {
