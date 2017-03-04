@@ -1,10 +1,13 @@
 package com.a2client.render.skybox;
 
 import com.a2client.render.GameCamera;
+import com.a2client.render.Render;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix4;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,7 +138,7 @@ public class Icosahedron
 	// DEBUG PART !! ====================================================
 	public static Mesh getMesh(float size)
 	{
-		Icosahedron icosahedron = new Icosahedron(4, 1f);
+		Icosahedron icosahedron = new Icosahedron(4, size);
 
 		return icosahedron.getMesh();
 	}
@@ -146,13 +149,13 @@ public class Icosahedron
 
 	public static void init()
 	{
-//		mesh = getMesh(2.1f);
-//		shader = Render.makeShader("simple", "simple");
+		mesh = getMesh(1f);
+		shader = Render.makeShader("simple", "simple");
 	}
 
 	public static void render(GameCamera camera)
 	{
-		/*
+
 		shader.begin();
 
 		shader.setUniformMatrix("u_projTrans", camera.projection);
@@ -174,7 +177,7 @@ public class Icosahedron
 		mesh.render(shader, GL20.GL_LINE_STRIP);
 
 		shader.end();
-		*/
+
 	}
 
 }

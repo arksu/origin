@@ -3,6 +3,7 @@ package com.a2client.render.skybox;
 import com.a2client.Main;
 import com.a2client.render.Fog;
 import com.a2client.render.Render;
+import com.a2client.screens.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -20,7 +21,7 @@ public class Skybox
 {
 	private static final Logger _log = LoggerFactory.getLogger(Skybox.class.getName());
 
-	private static final float SIZE = 300f;
+	private static final float SIZE = 80;
 
 	/**
 	 * degrees per second
@@ -87,12 +88,19 @@ public class Skybox
 	public Skybox()
 	{
 		_cubemap = new Cubemap(
-				Gdx.files.internal("assets/skybox/right.png"),
-				Gdx.files.internal("assets/skybox/left.png"),
-				Gdx.files.internal("assets/skybox/top.png"),
-				Gdx.files.internal("assets/skybox/bottom.png"),
-				Gdx.files.internal("assets/skybox/back.png"),
-				Gdx.files.internal("assets/skybox/front.png")
+				Gdx.files.internal("assets/skybox/nightRight.png"),
+				Gdx.files.internal("assets/skybox/nightLeft.png"),
+				Gdx.files.internal("assets/skybox/nightTop.png"),
+				Gdx.files.internal("assets/skybox/nightBottom.png"),
+				Gdx.files.internal("assets/skybox/nightBack.png"),
+				Gdx.files.internal("assets/skybox/nightFront.png")
+
+//				Gdx.files.internal("assets/skybox/right.png"),
+//				Gdx.files.internal("assets/skybox/left.png"),
+//				Gdx.files.internal("assets/skybox/top.png"),
+//				Gdx.files.internal("assets/skybox/bottom.png"),
+//				Gdx.files.internal("assets/skybox/back.png"),
+//				Gdx.files.internal("assets/skybox/front.png")
 		);
 		_cubemap.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
@@ -106,6 +114,7 @@ public class Skybox
 		);
 		_cubemapNight.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
+//		_shader = Render.makeShader("skybox2");
 		_shader = Render.makeShader("skybox");
 
 		makeMesh();
@@ -115,7 +124,7 @@ public class Skybox
 
 	public void clear()
 	{
-		_cubemap.dispose();
+//		_cubemap.dispose();
 	}
 
 	public void Render(Camera camera, Environment environment)
@@ -125,6 +134,7 @@ public class Skybox
 		prepareShader(camera, environment);
 
 		_mesh.render(_shader, GL20.GL_TRIANGLES);
+//		_mesh.render(_shader, GL20.GL_LINE_STRIP);
 
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
 
@@ -136,6 +146,8 @@ public class Skybox
 		_rotate += ROTATE_SPEED * Main.deltaTime;
 
 		_shader.setUniformMatrix("u_projTrans", camera.projection);
+		_shader.setUniformMatrix("u_projViewTrans", camera.combined);
+
 
 		final float PI = ((float) Math.PI);
 		Matrix4 tmp;
@@ -143,6 +155,14 @@ public class Skybox
 		tmp.translate(camera.position);
 //		tmp.rotate(0, 1, 0, _rotate);
 		_shader.setUniformMatrix("u_viewTrans", tmp);
+
+		tmp = new Matrix4();
+		if (Game.getInstance().getCamera().getChaseObj() != null)
+		{
+			tmp.translate(Game.getInstance().getCamera().getChaseObj().getWorldCoord().cpy().add(0, 0, 0));
+		}
+		_shader.setUniformMatrix("u_worldTrans", tmp);
+
 
 		_shader.setUniformf("u_skyColor", Fog.skyColor.r, Fog.skyColor.g, Fog.skyColor.b);
 		_shader.setUniformf("u_density", Fog.enabled ? Fog.density : 0f);
@@ -227,13 +247,16 @@ public class Skybox
 
 		_shader.setUniformf("u_blendValue", blendValue);
 
-		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
-		texture1.bind();
-		_shader.setUniformi("u_texture1", 0);
 
-		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE1);
+		texture1 = _cubemap;
+		texture2 = _cubemapNight;
+		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE4);
+		texture1.bind();
+		_shader.setUniformi("u_texture1", 4);
+
+		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE5);
 		texture2.bind();
-		_shader.setUniformi("u_texture2", 1);
+		_shader.setUniformi("u_texture2", 5);
 	}
 
 	protected void makeMesh()

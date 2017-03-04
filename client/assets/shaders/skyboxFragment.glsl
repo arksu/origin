@@ -66,6 +66,7 @@ void main (void)
 	float factor = (texCoords.y - lowerLimit) / (upperLimit - lowerLimit);
 	factor = clamp(factor, 0.0, 1.0);
 //	fragColor = finalColor;
+//	fragColor.a = 1;
 //	fragColor = mix(vec4(u_skyColor, 1.0), finalColor, factor);
 
 	fragColor2 = vec4(0);

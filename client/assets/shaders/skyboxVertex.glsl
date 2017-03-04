@@ -66,19 +66,20 @@ void main()
     float fStartOffset;
     vec3 v3Start;
 
-    if (length(cameraPosition) > fOuterRadius) {
+    // за пределами атмосферы?
+//    if (length(cameraPosition) > fOuterRadius) {
         v3Start = cameraPosition + v3Ray * fNear;
         fFar -= fNear;
         float fStartAngle = dot(v3Ray, v3Start) / fOuterRadius;
         float fStartDepth = exp(-1.0 / fScaleDepth);
         fStartOffset = fStartDepth * scale(fStartAngle);
-    } else {
-        v3Start = cameraPosition;
-        float fHeight = length(v3Start);
-        float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fCameraHeight));
-        float fStartAngle = dot(v3Ray, v3Start) / fHeight;
-        fStartOffset = fDepth*scale(fStartAngle);
-    }
+//    } else {
+//        v3Start = cameraPosition;
+//        float fHeight1 = length(v3Start);
+//        float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fCameraHeight));
+//        float fStartAngle = dot(v3Ray, v3Start) / fHeight1;
+//        fStartOffset = fDepth*scale(fStartAngle);
+//    }
 
 	// Calculate the ray's starting position, then calculate its scattering offset
 //	vec3 v3Start = cameraPosition + v3Ray * fNear;
@@ -105,6 +106,7 @@ void main()
 		float fScatter = (fStartOffset + fDepth * (scale(fLightAngle) - scale(fCameraAngle)));
 		vec3 v3Attenuate = exp(-fScatter * (v3InvWavelength * fKr4PI + fKm4PI));
 
+//        v3FrontColor.x += fCameraAngle;
 		v3FrontColor += v3Attenuate * (fDepth * fScaledLength);
 		v3SamplePoint += v3SampleRay;
 	}

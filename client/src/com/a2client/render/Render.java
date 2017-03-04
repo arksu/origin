@@ -121,7 +121,7 @@ public class Render
 		_terrain = new Terrain(this);
 
 		_postProcess = new PostProcess();
-		_postProcess.addEffect(new OutlineEffect(true));
+//		_postProcess.addEffect(new OutlineEffect(true));
 //		_postProcess.addEffect(new ContrastEffect(true));
 //		_postProcess.addEffect(new DepthOfFieldEffect(true));
 //		_postProcess.addEffect(new MotionBlurEffect(true));
@@ -129,7 +129,7 @@ public class Render
 //		_postProcess.addEffect(new VerticalBlurEffect(1f / 2f));
 //		_postProcess.addEffect(new HorizontalBlurEffect(1f / 8f));
 //		_postProcess.addEffect(new VerticalBlurEffect(1f / 8f));
-//		_postProcess.addEffect(new EmptyEffect(true));
+		_postProcess.addEffect(new EmptyEffect(true));
 
 		_frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 
@@ -280,10 +280,13 @@ public class Render
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glCullFace(GL20.GL_BACK);
 
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		Gdx.gl.glDepthRangef(0.999f, 0.999f);
+		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		_skybox.Render(camera, _environment);
 
+		Gdx.gl.glDepthRangef(0, 1);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+
 //		renderTerrain(camera, toShadowMapSpace);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
