@@ -23,13 +23,13 @@ public class GameCamera extends PerspectiveCamera
 	/**
 	 * дистанция от камеры до точки куда смотрим
 	 */
-	private float _cameraDistance = 20;
+	private float _cameraDistance = 80;
 
 	/**
 	 * углы поворота камеры
 	 */
-	private float _angleY = 0f;
-	private float _angleX = 45f;
+	private float _angleY = 90f;
+	private float _angleX = 75f;
 
 	/**
 	 * координаты мыши в которых начали вращение камеры

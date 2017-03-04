@@ -26,7 +26,7 @@ public class MotionBlurEffect extends Effect
 	public MotionBlurEffect(boolean isFinal)
 	{
 		super(isFinal);
-		_shaderProgram = makeShader("postprocess/motionBlur", "postprocess/motionBlur");
+		_shaderProgram = makeShader("postprocess/motionBlur");
 	}
 
 	@Override

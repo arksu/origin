@@ -20,7 +20,7 @@ public class Skybox
 {
 	private static final Logger _log = LoggerFactory.getLogger(Skybox.class.getName());
 
-	private static final float SIZE = 600f;
+	private static final float SIZE = 300f;
 
 	/**
 	 * degrees per second
@@ -106,7 +106,7 @@ public class Skybox
 		);
 		_cubemapNight.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-		_shader = Render.makeShader("skybox", "skybox");
+		_shader = Render.makeShader("skybox");
 
 		makeMesh();
 
@@ -148,47 +148,52 @@ public class Skybox
 		_shader.setUniformf("u_density", Fog.enabled ? Fog.density : 0f);
 		_shader.setUniformf("u_gradient", Fog.gradient);
 
-		// ATMO
-		float r = 1f;//(Math.max(Render.sunPosition.y, 300f) / 900f);
-		float radius = _tuningWindow.getRadius();
-		float cameraHeight = radius * _tuningWindow.getCameraHeight() * (r);
+		if (_tuningWindow != null)
+		{
+			// ATMO
+			float r = 1f;//(Math.max(Render.sunPosition.y, 300f) / 900f);
+			float radius = _tuningWindow.getRadius();
+			float cameraHeight = radius * _tuningWindow.getCameraHeight() * (r);
 //		float cameraHeight = radius + camera.position.y;
 
-		float Kr = 0.0025f;
-		float Km = 0.0010f;
-		float ESun = _tuningWindow.getEsun();// 15.0f;
-		float g = -0.990f;
-		float innerRadius = radius;
-		float outerRadius = radius * _tuningWindow.getOutRadius();
-		Vector3 waveLength = new Vector3(0.650f, 0.570f, 0.475f);
-		float scaleDepth = 0.25f;
-		float mieScaleDepth = 0.1f;
+			float Kr = 0.0025f;
+			float Km = 0.0010f;
+			float ESun = _tuningWindow.getEsun();// 15.0f;
+			float g = -0.990f;
+			float innerRadius = radius;
+			float outerRadius = radius * _tuningWindow.getOutRadius();
+			Vector3 waveLength = new Vector3(0.650f, 0.570f, 0.475f);
+			float scaleDepth = 0.25f;
+			float mieScaleDepth = 0.1f;
 
-		Vector3 cpos = camera.position.cpy().add(0,radius,0);
+			Vector3 cpos = camera.position.cpy().add(0, radius, 0);
 //		_shader.setUniformf("u_cameraPosition", cpos.x, cpos.y, cpos.z);
-		_shader.setUniformf("u_cameraPosition", 0, cameraHeight, 0);
+			_shader.setUniformf("u_cameraPosition", 0, cameraHeight, 0);
+
+			_shader.setUniformf("v3InvWavelength", new Vector3(
+					1f / ((float) Math.pow(waveLength.x, 4)),
+					1f / ((float) Math.pow(waveLength.y, 4)),
+					1f / ((float) Math.pow(waveLength.z, 4))
+			));
+			_shader.setUniformf("fCameraHeight", cameraHeight);
+			_shader.setUniformf("fCameraHeight2", cameraHeight * cameraHeight);
+			_shader.setUniformf("fInnerRadius", innerRadius);
+			_shader.setUniformf("fInnerRadius2", innerRadius * innerRadius);
+			_shader.setUniformf("fOuterRadius", outerRadius);
+			_shader.setUniformf("fOuterRadius2", outerRadius * outerRadius);
+			_shader.setUniformf("fKrESun", Kr * ESun);
+			_shader.setUniformf("fKmESun", Km * ESun);
+			_shader.setUniformf("fKr4PI", Kr * 4.0f * PI);
+			_shader.setUniformf("fKm4PI", Km * 4.0f * PI);
+			_shader.setUniformf("fScale", 1f / (outerRadius - innerRadius));
+			_shader.setUniformf("fScaleDepth", scaleDepth);
+			_shader.setUniformf("fScaleOverScaleDepth", 1f / (outerRadius - innerRadius) / scaleDepth);
+			_shader.setUniformf("g", g);
+			_shader.setUniformf("g2", g * g);
+		}
 
 		_shader.setUniformf("v3LightPosition", Render.sunPosition.cpy().nor().scl(1f));
-		_shader.setUniformf("v3InvWavelength", new Vector3(
-				1f / ((float) Math.pow(waveLength.x, 4)),
-				1f / ((float) Math.pow(waveLength.y, 4)),
-				1f / ((float) Math.pow(waveLength.z, 4))
-		));
-		_shader.setUniformf("fCameraHeight", cameraHeight);
-		_shader.setUniformf("fCameraHeight2", cameraHeight * cameraHeight);
-		_shader.setUniformf("fInnerRadius", innerRadius);
-		_shader.setUniformf("fInnerRadius2", innerRadius * innerRadius);
-		_shader.setUniformf("fOuterRadius", outerRadius);
-		_shader.setUniformf("fOuterRadius2", outerRadius * outerRadius);
-		_shader.setUniformf("fKrESun", Kr * ESun);
-		_shader.setUniformf("fKmESun", Km * ESun);
-		_shader.setUniformf("fKr4PI", Kr * 4.0f * PI);
-		_shader.setUniformf("fKm4PI", Km * 4.0f * PI);
-		_shader.setUniformf("fScale", 1f / (outerRadius - innerRadius));
-		_shader.setUniformf("fScaleDepth", scaleDepth);
-		_shader.setUniformf("fScaleOverScaleDepth", 1f / (outerRadius - innerRadius) / scaleDepth);
-		_shader.setUniformf("g", g);
-		_shader.setUniformf("g2", g * g);
+		_shader.setUniformf("u_size", SIZE);
 
 		Cubemap texture1;
 		Cubemap texture2;

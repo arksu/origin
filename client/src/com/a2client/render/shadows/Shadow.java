@@ -25,9 +25,6 @@ public class Shadow
 
 	public static final int SHADOW_MAP_SIZE = 2048;
 
-	public static final String VERTEX = "shadow";
-	public static final String FRAGMENT = "shadow";
-
 	private final DepthFrameBuffer _frameBuffer;
 
 	private final ModelBatch _modelBatch;

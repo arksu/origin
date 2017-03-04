@@ -23,7 +23,7 @@ public class DepthOfFieldEffect extends Effect
 	public DepthOfFieldEffect(boolean isFinal)
 	{
 		super(isFinal);
-		_shaderProgram = makeShader("postprocess/dof", "postprocess/dof");
+		_shaderProgram = makeShader("postprocess/dof");
 	}
 
 	@Override

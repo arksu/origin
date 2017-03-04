@@ -45,8 +45,8 @@ public class TuningWindow
 		_scrollbarSun.setPos(_label1.pos.add(0, 15));
 		_scrollbarSun.setMax(250);
 		_scrollbarSun.setMin(0);
-		_scrollbarSun.setValue(100);
 		_scrollbarSun.SetPageSize(10);
+		_scrollbarSun.setValue(232);
 
 		// -----------------------------
 		_label2 = new GUI_Label(_window);
@@ -56,9 +56,9 @@ public class TuningWindow
 		_scrollbarRadius.SetVertical(false);
 		_scrollbarRadius.setSize(580, 20);
 		_scrollbarRadius.setPos(_label2.pos.add(0, 15));
-		_scrollbarRadius.setMax(500);
-		_scrollbarRadius.setMin(50);
-		_scrollbarRadius.setValue(100);
+		_scrollbarRadius.setMax(200);
+		_scrollbarRadius.setMin(0);
+		_scrollbarRadius.setValue(44);
 		_scrollbarRadius.SetPageSize(20);
 
 		// -----------------------------
@@ -71,7 +71,7 @@ public class TuningWindow
 		_scrollbarCameraHeight.setPos(_label3.pos.add(0, 15));
 		_scrollbarCameraHeight.setMax(300);
 		_scrollbarCameraHeight.setMin(0);
-		_scrollbarCameraHeight.setValue(100);
+		_scrollbarCameraHeight.setValue(175);
 		_scrollbarCameraHeight.SetPageSize(20);
 
 		// -----------------------------
@@ -84,7 +84,7 @@ public class TuningWindow
 		_scrollbarOutRadius.setPos(_label4.pos.add(0, 15));
 		_scrollbarOutRadius.setMax(200);
 		_scrollbarOutRadius.setMin(0);
-		_scrollbarOutRadius.setValue(100);
+		_scrollbarOutRadius.setValue(175);
 		_scrollbarOutRadius.SetPageSize(20);
 
 		// -----------------------------
@@ -114,12 +114,12 @@ public class TuningWindow
 
 	public float getCameraHeight()
 	{
-		return ((float) _scrollbarCameraHeight.getValue()) / 100f + 0.5f;
+		return ((float) _scrollbarCameraHeight.getValue()) / 100f;
 	}
 
 	public float getOutRadius()
 	{
-		return ((float) _scrollbarOutRadius.getValue()) / 100f + 1f;
+		return ((float) _scrollbarOutRadius.getValue()) / 100f;
 	}
 
 	public float getEsun()

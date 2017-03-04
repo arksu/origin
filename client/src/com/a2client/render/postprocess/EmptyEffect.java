@@ -15,6 +15,6 @@ public class EmptyEffect extends Effect
 	public EmptyEffect(boolean isFinal)
 	{
 		super(isFinal);
-		_shaderProgram  = makeShader("postprocess/empty", "postprocess/empty");
+		_shaderProgram  = makeShader("postprocess/empty");
 	}
 }

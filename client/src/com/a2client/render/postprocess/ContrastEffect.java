@@ -20,6 +20,6 @@ public class ContrastEffect extends Effect
 	public ContrastEffect(boolean isFinal)
 	{
 		super(isFinal);
-		_shaderProgram  = makeShader("postprocess/contrast", "postprocess/contrast");
+		_shaderProgram  = makeShader("postprocess/contrast");
 	}
 }

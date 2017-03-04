@@ -23,7 +23,7 @@ public class OutlineEffect extends Effect
 	public OutlineEffect(boolean isFinal)
 	{
 		super(isFinal);
-		_shaderProgram  = makeShader("postprocess/outline", "postprocess/outline");
+		_shaderProgram  = makeShader("postprocess/outline");
 	}
 
 	@Override

@@ -98,13 +98,13 @@ public class Terrain
 	public Terrain(Render render)
 	{
 		_render = render;
-		_shaderTerrain = makeShader("terrain", "terrain");
-		_shaderWater = makeShader("water", "water");
-		_shaderWaterSimple = makeShader("waterSimple", "waterSimple");
+		_shaderTerrain = makeShader("terrain");
+		_shaderWater = makeShader("water");
+		_shaderWaterSimple = makeShader("waterSimple");
 
-		_shaderCel = makeShader("cel", "cel");
+		_shaderCel = makeShader("cel");
 //		_shaderOutline = makeShader("outline", "outline");
-		_shaderDepth = makeShader("depth", "depth");
+		_shaderDepth = makeShader("depth");
 
 		_tileAtlas = Main.getAssetManager().get(Config.RESOURCE_DIR + "tiles_atlas.png", Texture.class);
 		_waterDuDv = Main.getAssetManager().get(Config.RESOURCE_DIR + "water/waterdudv.png", Texture.class);

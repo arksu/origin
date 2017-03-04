@@ -21,6 +21,6 @@ public class VerticalBlurEffect extends Effect
 	{
 		super(isFinal, scale);
 		_scale = scale;
-		_shaderProgram = makeShader("postprocess/verticalBlur", "postprocess/blur");
+		_shaderProgram = makeShader("postprocess/verticalBlur");
 	}
 }

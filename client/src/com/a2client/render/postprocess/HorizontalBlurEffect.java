@@ -20,6 +20,6 @@ public class HorizontalBlurEffect extends Effect
 	public HorizontalBlurEffect(boolean isFinal, float scale)
 	{
 		super(isFinal, scale);
-		_shaderProgram  = makeShader("postprocess/horizontalBlur", "postprocess/blur");
+		_shaderProgram  = makeShader("postprocess/horizontalBlur");
 	}
 }

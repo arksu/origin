@@ -2,6 +2,7 @@ package com.a2client.render;
 
 import com.a2client.*;
 import com.a2client.model.GameObject;
+import com.a2client.render.postprocess.EmptyEffect;
 import com.a2client.render.postprocess.OutlineEffect;
 import com.a2client.render.postprocess.PostProcess;
 import com.a2client.render.shadows.Shadow;
@@ -283,13 +284,13 @@ public class Render
 		_skybox.Render(camera, _environment);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		renderTerrain(camera, toShadowMapSpace);
+//		renderTerrain(camera, toShadowMapSpace);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		renderObjects(camera, true);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		renderWater(camera);
+//		renderWater(camera);
 
 		Icosahedron.render(((GameCamera) camera));
 
@@ -324,9 +325,10 @@ public class Render
 			program.end();
 		}*/
 
+
 		if (Config.getInstance()._renderOutline)
 		{
-			// выводим содержимое буфера9
+			// выводим содержимое буфера
 
 			ShaderProgram program = _terrain._shaderCel;
 
@@ -341,7 +343,6 @@ public class Render
 			testQuad2.render(program, GL20.GL_TRIANGLE_STRIP);
 			program.end();
 		}
-
 	}
 
 	protected void renderObjects(Camera camera, boolean findIntersect)
@@ -413,7 +414,7 @@ public class Render
 	{
 		if (_shadowShader == null)
 		{
-			_shadowShader = makeShader(Shadow.VERTEX, Shadow.FRAGMENT);
+			_shadowShader = makeShader("shadow");
 		}
 		return _shadowShader;
 	}
@@ -517,7 +518,7 @@ public class Render
 
 	float sunDistance = 1000;
 	public static float sunAngle = 20f;
-	public static boolean sunMoving = true;
+	public static boolean sunMoving = false;
 	// время дня в 24 часовом формате (0-24)
 	public static float sunTime = 0f;
 
@@ -533,7 +534,7 @@ public class Render
 		Vector3 pos = new Vector3(sunDistance, 0, 0);
 
 		// повернем на угол в часах (24)
-		pos.rotate(((sunTime-12f) / 24f) * 360f, 0, 1, 0);
+		pos.rotate(((sunTime - 12f) / 24f) * 360f, 0, 1, 0);
 
 		// сместим в соответствии с широтой местности
 		pos.add(0, 200f, 0);
@@ -548,6 +549,11 @@ public class Render
 
 		DirectionalLightsAttribute lights = ((DirectionalLightsAttribute) _environment.get(DirectionalLightsAttribute.Type));
 		lights.lights.get(0).set(0.8f, 0.8f, 0.8f, -sunPosition.x, -sunPosition.y, -sunPosition.z);
+	}
+
+	public static ShaderProgram makeShader(String name)
+	{
+		return makeShader(name, name);
 	}
 
 	public static ShaderProgram makeShader(String vertFile, String fragFile)
