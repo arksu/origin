@@ -56,9 +56,9 @@ public class TuningWindow
 		_scrollbarRadius.SetVertical(false);
 		_scrollbarRadius.setSize(580, 20);
 		_scrollbarRadius.setPos(_label2.pos.add(0, 15));
-		_scrollbarRadius.setMax(200);
+		_scrollbarRadius.setMax(300);
 		_scrollbarRadius.setMin(0);
-		_scrollbarRadius.setValue(44);
+		_scrollbarRadius.setValue(15);
 		_scrollbarRadius.SetPageSize(20);
 
 		// -----------------------------
@@ -71,7 +71,7 @@ public class TuningWindow
 		_scrollbarCameraHeight.setPos(_label3.pos.add(0, 15));
 		_scrollbarCameraHeight.setMax(300);
 		_scrollbarCameraHeight.setMin(0);
-		_scrollbarCameraHeight.setValue(175);
+		_scrollbarCameraHeight.setValue(172);
 		_scrollbarCameraHeight.SetPageSize(20);
 
 		// -----------------------------
@@ -82,9 +82,9 @@ public class TuningWindow
 		_scrollbarOutRadius.SetVertical(false);
 		_scrollbarOutRadius.setSize(580, 20);
 		_scrollbarOutRadius.setPos(_label4.pos.add(0, 15));
-		_scrollbarOutRadius.setMax(200);
+		_scrollbarOutRadius.setMax(300);
 		_scrollbarOutRadius.setMin(0);
-		_scrollbarOutRadius.setValue(175);
+		_scrollbarOutRadius.setValue(255);
 		_scrollbarOutRadius.SetPageSize(20);
 
 		// -----------------------------

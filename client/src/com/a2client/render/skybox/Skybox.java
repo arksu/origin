@@ -21,7 +21,7 @@ public class Skybox
 {
 	private static final Logger _log = LoggerFactory.getLogger(Skybox.class.getName());
 
-	private static final float SIZE = 80;
+	private static final float SIZE = 100;
 
 	/**
 	 * degrees per second
@@ -188,7 +188,7 @@ public class Skybox
 
 			Vector3 cpos = camera.position.cpy().add(0, radius, 0);
 //		_shader.setUniformf("u_cameraPosition", cpos.x, cpos.y, cpos.z);
-			_shader.setUniformf("u_cameraPosition", 0, cameraHeight, 0);
+			_shader.setUniformf("u_cameraPosition", -0, 0, 0);
 
 			_shader.setUniformf("v3InvWavelength", new Vector3(
 					1f / ((float) Math.pow(waveLength.x, 4)),

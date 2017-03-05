@@ -48,14 +48,14 @@ void main (void)
 	vec4 color2 = texture(u_texture2, texCoords);
 	vec4 finalColor = mix(color1, color2, u_blendValue);
 
-	float fCos = dot(v3LightPosition, v3Direction) / length(v3Direction);
+	float fCos = dot(v3LightPosition, v3Direction) / (length(v3Direction));
 	float fCos2 = fCos * fCos;
 
-	vec3 color =	getRayleighPhase(fCos2) * c0 +
-					getMiePhase(fCos, fCos2, g, g2) * c1 * 0.1;
+	vec3 color =	getRayleighPhase(fCos2) * c0
+	                + getMiePhase(fCos, fCos2, g, g2) * c1 * 0.08;
 
  	fragColor = vec4(color, 1.0);
-	fragColor.a = fragColor.b;
+//	fragColor.a = fragColor.b;
 
 //	fragColor = vec4( v3, 1.0);
 //	fragColor = vec4( vec3(getRayleighPhase(fCos2)), 1.0);

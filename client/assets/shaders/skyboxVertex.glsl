@@ -32,8 +32,8 @@ uniform float fScale;			// 1 / (fOuterRadius - fInnerRadius)
 uniform float fScaleDepth;		// The scale depth (i.e. the altitude at which the atmosphere's average density is found)
 uniform float fScaleOverScaleDepth;	// fScale / fScaleDepth
 
-const int nSamples = 3;
-const float fSamples = 3.0;
+const int nSamples = 4;
+const float fSamples = 4.0;
 
 out vec3 v3Direction;
 out vec3 c0;
@@ -51,8 +51,11 @@ void main()
 	vec3 position = a_position.xyz;
 
 	// Get the ray from the camera to the vertex and its length (which is the far point of the ray passing through the atmosphere)
+	// луч из камеры до точки на сфере
 	vec3 v3Ray = position - cameraPosition;
+	// длина луча из камеры до вершины
 	float fFar = length(v3Ray);
+	// единичный вектор (направление) на вершину из камеры
 	v3Ray /= fFar;
 
 	// Calculate the closest intersection of the ray with the outer atmosphere
@@ -68,17 +71,23 @@ void main()
 
     // за пределами атмосферы?
 //    if (length(cameraPosition) > fOuterRadius) {
-        v3Start = cameraPosition + v3Ray * fNear;
+//        v3Start = cameraPosition + v3Ray * fNear;
+        v3Start = cameraPosition;
+//        v3Start = v3Ray * fNear;
         fFar -= fNear;
         float fStartAngle = dot(v3Ray, v3Start) / fOuterRadius;
-        float fStartDepth = exp(-1.0 / fScaleDepth);
+//        float fStartAngle = dot(v3Ray, v3Start) / length(v3Start);
+
+//        float fStartDepth = exp(-1.0 / fScaleDepth);
+        float fStartDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fCameraHeight));
+
         fStartOffset = fStartDepth * scale(fStartAngle);
 //    } else {
 //        v3Start = cameraPosition;
 //        float fHeight1 = length(v3Start);
-//        float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fCameraHeight));
-//        float fStartAngle = dot(v3Ray, v3Start) / fHeight1;
-//        fStartOffset = fDepth*scale(fStartAngle);
+//        float fDepth1 = exp(fScaleOverScaleDepth * (fInnerRadius - fCameraHeight));
+//        float fStartAngle1 = dot(v3Ray, v3Start) / fHeight1;
+//        fStartOffset = fDepth1*scale(fStartAngle1);
 //    }
 
 	// Calculate the ray's starting position, then calculate its scattering offset
@@ -114,6 +123,7 @@ void main()
 	c0 = v3FrontColor * (v3InvWavelength * fKrESun);
 	c1 = v3FrontColor * fKmESun;
 	v3Direction = cameraPosition - position;
+//	v3Direction = vec3(-1);
 	gl_Position = u_projTrans * u_viewTrans * a_position;
 
     texCoords = a_position.xyz;
