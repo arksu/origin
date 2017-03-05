@@ -15,6 +15,9 @@ out float l;
 uniform vec4 u_cameraPosition;
 uniform float u_size;
 
+/**
+* неудачная попытка шейдера для неба
+**/
 void main() {
 	vec3 sun = v3LightPosition * u_size;
 	y = a_position.y / u_size;

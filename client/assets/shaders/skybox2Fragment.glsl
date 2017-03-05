@@ -29,7 +29,6 @@ void main (void)
               );
 
 
-//	float k = clamp(l * 2.99, 0, 1);
 	fragColor = vec4(0.5,0.5,1,0) * sun;
 	fragColor = mix(vec4(.3984,.5117,.7305,1), vec4(.7031,.4687,.1055,1), sun) * k;
 }

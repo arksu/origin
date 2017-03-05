@@ -40,11 +40,6 @@ const float fSamples = 4.0;
 out vec3 v3Direction;
 out vec3 c0;
 out vec3 c1;
-
-// текущая высота солнца
-out float sunalt;
-// высота вершины
-out float alt;
 out float v3antiray;
 
 float scale(float fCos)
@@ -55,9 +50,6 @@ float scale(float fCos)
 
 void main()
 {
-	sunalt = clamp( v3LightPosition.y, 0, 1);
-	alt = clamp((a_position.y + u_size * 0.5) / u_size, 0, 1);
-
 	vec3 cameraPosition = u_cameraPosition.xyz;
 	vec3 position = a_position.xyz;
 
@@ -80,34 +72,21 @@ void main()
     float fStartOffset;
     vec3 v3Start;
 
+	// Calculate the ray's starting position, then calculate its scattering offset
     // за пределами атмосферы?
-//    if (length(cameraPosition) > fOuterRadius) {
-//        v3Start = cameraPosition + v3Ray * fNear;
         v3Start = cameraPosition;
-//        v3Start = v3Ray * fNear;
         fFar -= fNear;
         float fStartAngle = dot(v3Ray, v3Start) / fOuterRadius;
-//        float fStartAngle = dot(v3Ray, v3Start) / length(v3Start);
-
-//        float fStartDepth = exp(-1.0 / fScaleDepth);
         float fStartDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fCameraHeight));
 
         fStartOffset = fStartDepth * scale(fStartAngle);
-//    } else {
+
 //        v3Start = cameraPosition;
 //        float fHeight1 = length(v3Start);
 //        float fDepth1 = exp(fScaleOverScaleDepth * (fInnerRadius - fCameraHeight));
 //        float fStartAngle1 = dot(v3Ray, v3Start) / fHeight1;
 //        fStartOffset = fDepth1*scale(fStartAngle1);
-//    }
 
-	// Calculate the ray's starting position, then calculate its scattering offset
-//	vec3 v3Start = cameraPosition + v3Ray * fNear;
-//	fFar -= fNear;
-//	float fStartAngle = dot(v3Ray, v3Start) / fOuterRadius;
-//	float fStartDepth = exp(-1.0 / fScaleDepth);
-//	float fStartOffset = fStartDepth * scale(fStartAngle);
-	//c0 = vec3(1.0, 0, 0) * fStartAngle;
 
 	// Initialize the scattering loop variables
 	float fSampleLength = fFar / fSamples;
@@ -126,7 +105,6 @@ void main()
 		float fScatter = (fStartOffset + fDepth * (scale(fLightAngle) - scale(fCameraAngle)));
 		vec3 v3Attenuate = exp(-fScatter * (v3InvWavelength * fKr4PI + fKm4PI));
 
-//        v3FrontColor.x += fCameraAngle;
 		v3FrontColor += v3Attenuate * (fDepth * fScaledLength);
 		v3SamplePoint += v3SampleRay;
 	}
@@ -134,17 +112,11 @@ void main()
 	c0 = v3FrontColor * (v3InvWavelength * fKrESun);
 	c1 = v3FrontColor * fKmESun;
 	v3Direction = cameraPosition - position;
-//	v3Direction = vec3(-1);
 	gl_Position = u_projTrans * u_viewTrans * a_position;
 
     texCoords = a_position.xyz;
 
+	// хитры хак чтобы заполнить остальное небо (за пределами солнца) одним цветом
     v3antiray = 1.5 - dot(v3Ray, v3LightPosition);
     v3antiray = clamp(v3antiray, 0, 1);
 }
-
-
-//void main() {
-//	gl_Position = u_projTrans * u_viewTrans * a_position;
-//    texCoords = a_position.xyz;
-//}

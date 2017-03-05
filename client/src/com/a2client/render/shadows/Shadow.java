@@ -12,8 +12,6 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import org.lwjgl.opengl.GL14;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static com.badlogic.gdx.math.Matrix4.*;
 
@@ -22,8 +20,6 @@ import static com.badlogic.gdx.math.Matrix4.*;
  */
 public class Shadow
 {
-	private static final Logger _log = LoggerFactory.getLogger(Shadow.class.getName());
-
 	public static final int SHADOW_MAP_SIZE = 2048;
 
 	private final DepthFrameBuffer _frameBuffer;

@@ -276,9 +276,9 @@ public class Game extends BaseScreen
 				" gui: " + GUI.getInstance()._mouseInControl
 		;
 
-		_lblStatus.caption =
-				" sun: " + Skybox.sunTime +
-				" sun y: " + Skybox.sunPosition.y;
+//		_lblStatus.caption =
+//				" sun: " + Skybox.sunTime +
+//				" sun y: " + Skybox.sunPosition.y;
 
 	}
 

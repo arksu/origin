@@ -2,7 +2,6 @@ package com.a2client.render;
 
 import com.a2client.*;
 import com.a2client.model.GameObject;
-import com.a2client.render.postprocess.EmptyEffect;
 import com.a2client.render.postprocess.OutlineEffect;
 import com.a2client.render.postprocess.PostProcess;
 import com.a2client.render.shadows.Shadow;
@@ -10,14 +9,12 @@ import com.a2client.render.skybox.Icosahedron;
 import com.a2client.render.skybox.Skybox;
 import com.a2client.render.water.WaterFrameBuffers;
 import com.a2client.screens.Game;
-import com.a2client.util.Keys;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.DirectionalLightsAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -141,29 +138,8 @@ public class Render
 	{
 		Skybox.updateSunPos();
 		_skybox.updateSkyParams();
-		_skybox.updateDayNight();
 
-//		Matrix4 toShadowMapSpace = null;
 		toShadowMapSpace = null;
-/*
-		if (Config._renderOutline)
-		{
-			_modelBatch = _depthModelBatch;
-			_terrain._shader = _terrain._shaderDepth;
-
-			_frameBuffer.begin();
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-			Gdx.gl.glCullFace(GL20.GL_FRONT);
-			// Gdx.gl.glDepthFunc(GL20.GL_LEQUAL);
-			// Gdx.gl.glDepthMask(true);
-
-			renderTerrain(camera, null);
-			renderObjects(camera, false);
-			_frameBuffer.end();
-		}
-*/
 
 		// SHADOWS =====================================================================================================
 		if (Config.getInstance()._renderShadows)
@@ -307,21 +283,6 @@ public class Render
 			_postProcess.doPostProcess();
 		}
 		// END POST PROCESSING
-
-		/*if (Config._renderOutline)
-		{
-			// выводим содержимое буфера
-			_frameBuffer.getColorBufferTexture().bind();
-
-			ShaderProgram program = _terrain._shaderOutline;
-//			 ShaderProgram program = _terrain._shaderCel;
-
-			program.begin();
-			program.setUniformf("size", new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-			fullScreenQuad.render(program, GL20.GL_TRIANGLE_STRIP);
-			program.end();
-		}*/
-
 
 		if (Config.getInstance()._renderOutline)
 		{
