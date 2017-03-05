@@ -1,6 +1,7 @@
 package com.a2client.render;
 
 import com.a2client.render.shadows.ShadowBox;
+import com.a2client.render.skybox.Skybox;
 import com.badlogic.gdx.graphics.g3d.Attributes;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.shaders.BaseShader;
@@ -37,7 +38,7 @@ public class ModelShader extends DefaultShader
 		@Override
 		public void set(BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes)
 		{
-			shader.set(inputID, Fog.skyColor.r, Fog.skyColor.g, Fog.skyColor.b);
+			shader.set(inputID, Skybox.skyColor.r, Skybox.skyColor.g, Skybox.skyColor.b);
 		}
 	};
 	public final static Setter densitySetter = new GlobalSetter()
@@ -45,7 +46,7 @@ public class ModelShader extends DefaultShader
 		@Override
 		public void set(BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes)
 		{
-			shader.set(inputID, Fog.enabled ? Fog.density : 0f);
+			shader.set(inputID, Skybox.fogEnabled ? Skybox.fogDensity : 0f);
 		}
 	};
 	public final static Setter gradientSetter = new GlobalSetter()
@@ -53,7 +54,7 @@ public class ModelShader extends DefaultShader
 		@Override
 		public void set(BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes)
 		{
-			shader.set(inputID, Fog.gradient);
+			shader.set(inputID, Skybox.fogGradient);
 		}
 	};
 	public final static Setter clipPlanetSetter = new GlobalSetter()
@@ -97,7 +98,7 @@ public class ModelShader extends DefaultShader
 		@Override
 		public void set(BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes)
 		{
-			shader.set(inputID, Render.sunPosition);
+			shader.set(inputID, Skybox.sunPosition);
 		}
 	};
 

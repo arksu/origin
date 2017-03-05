@@ -30,7 +30,7 @@ in vec3 v3Direction;
 in vec3 c0;
 in vec3 c1;
 
-uniform vec3 u_backColor;
+uniform vec4 u_backColor;
 in float sunalt;
 in float alt;
 in float v3antiray;
@@ -60,7 +60,7 @@ void main (void)
 	                + getMiePhase(fCos, fCos2, g, g2) * c1 * 0.08;
 
  	fragColor = vec4(color, 1.0);
- 	fragColor = mix(fragColor, vec4(u_backColor, 1), v3antiray);
+ 	fragColor = mix(fragColor, u_backColor, v3antiray);
 //	fragColor.a = fragColor.b;
 // 	fragColor = vec4(v3antiray);
 
@@ -74,7 +74,7 @@ void main (void)
 	factor = clamp(factor, 0.0, 1.0);
 //	fragColor = finalColor;
 //	fragColor.a = 1;
-//	fragColor = mix(vec4(u_skyColor, 1.0), finalColor, factor);
+	fragColor = mix(vec4(u_skyColor, 1.0), fragColor, factor);
 
 	fragColor2 = vec4(0);
 }

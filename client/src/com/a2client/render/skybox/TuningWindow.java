@@ -4,7 +4,6 @@ import com.a2client.gui.GUI;
 import com.a2client.gui.GUI_Label;
 import com.a2client.gui.GUI_Scrollbar;
 import com.a2client.gui.GUI_Window;
-import com.a2client.render.Render;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +32,7 @@ public class TuningWindow
 	{
 		_window = new GUI_Window(GUI.rootNormal());
 		_window.setSize(600, 200);
-		_window.setPos(10, 350);
+		_window.setPos(10, 500);
 
 		// -----------------------------
 		_label1 = new GUI_Label(_window);
@@ -46,7 +45,7 @@ public class TuningWindow
 		_scrollbarSun.setMax(250);
 		_scrollbarSun.setMin(0);
 		_scrollbarSun.SetPageSize(10);
-		_scrollbarSun.setValue(232);
+		_scrollbarSun.setValue(202);
 
 		// -----------------------------
 		_label2 = new GUI_Label(_window);
@@ -129,9 +128,13 @@ public class TuningWindow
 
 	public void update()
 	{
-		if (!Render.sunMoving)
+		if (!Skybox.sunMoving)
 		{
-			Render.sunTime = getSunTime();
+			Skybox.sunTime = getSunTime();
+		}
+		else
+		{
+			_scrollbarSun.setValue(Math.round(Skybox.sunTime * 10f));
 		}
 
 		_label1.caption = "sun time " + getSunTime();

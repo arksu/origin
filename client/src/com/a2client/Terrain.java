@@ -2,9 +2,9 @@ package com.a2client;
 
 import com.a2client.model.Grid;
 import com.a2client.model.GridChunk;
-import com.a2client.render.Fog;
 import com.a2client.render.Render;
 import com.a2client.render.shadows.ShadowBox;
+import com.a2client.render.skybox.Skybox;
 import com.a2client.util.Utils;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
@@ -202,10 +202,10 @@ public class Terrain
 
 		shader.setUniformf("u_ambient", ((ColorAttribute) environment.get(ColorAttribute.AmbientLight)).color);
 
-		shader.setUniformf("u_skyColor", Fog.skyColor.r, Fog.skyColor.g, Fog.skyColor.b);
-		shader.setUniformf("u_density", Fog.enabled ? Fog.density : 0f);
-		shader.setUniformf("u_gradient", Fog.gradient);
-		shader.setUniformf("u_lightPosition", Render.sunPosition);
+		shader.setUniformf("u_skyColor", Skybox.fogColor.r, Skybox.fogColor.g, Skybox.fogColor.b);
+		shader.setUniformf("u_density", Skybox.fogEnabled ? Skybox.fogDensity : 0f);
+		shader.setUniformf("u_gradient", Skybox.fogGradient);
+		shader.setUniformf("u_lightPosition", Skybox.sunPosition);
 
 		shader.setUniformf("u_clipPlane", Render.clipNormal.x, Render.clipNormal.y, Render.clipNormal.z, Render.clipHeight);
 
@@ -242,13 +242,13 @@ public class Terrain
 
 		shader.setUniformf("u_ambient", ((ColorAttribute) environment.get(ColorAttribute.AmbientLight)).color);
 
-		shader.setUniformf("u_skyColor", Fog.skyColor.r, Fog.skyColor.g, Fog.skyColor.b);
-		shader.setUniformf("u_density", Fog.enabled ? Fog.density : 0f);
-		shader.setUniformf("u_gradient", Fog.gradient);
+		shader.setUniformf("u_skyColor", Skybox.fogColor.r, Skybox.fogColor.g, Skybox.fogColor.b);
+		shader.setUniformf("u_density", Skybox.fogEnabled ? Skybox.fogDensity : 0f);
+		shader.setUniformf("u_gradient", Skybox.fogGradient);
 
 		shader.setUniformf("u_moveFactor", _waterMoveFactor);
 		shader.setUniformf("u_lightColor", new Vector3(1, 1, 1));
-		shader.setUniformf("u_lightPosition", Render.sunPosition);
+		shader.setUniformf("u_lightPosition", Skybox.sunPosition);
 
 		shader.setUniformi("u_reflectionTexture", 0);
 		shader.setUniformi("u_refractionTexture", 1);

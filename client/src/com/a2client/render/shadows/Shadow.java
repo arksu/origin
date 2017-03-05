@@ -4,6 +4,7 @@ import com.a2client.render.GameCamera;
 import com.a2client.render.Render;
 import com.a2client.render.ShadowShaderProvider;
 import com.a2client.render.framebuffer.DepthFrameBuffer;
+import com.a2client.render.skybox.Skybox;
 import com.a2client.util.vector.Vector2f;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -55,7 +56,7 @@ public class Shadow
 	{
 		_shadowBox.update();
 
-		Vector3 lightDirection = new Vector3(-Render.sunPosition.x, -Render.sunPosition.y, -Render.sunPosition.z);
+		Vector3 lightDirection = new Vector3(-Skybox.sunPosition.x, -Skybox.sunPosition.y, -Skybox.sunPosition.z);
 		prepare(lightDirection);
 	}
 

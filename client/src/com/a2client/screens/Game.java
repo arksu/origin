@@ -8,9 +8,9 @@ import com.a2client.model.GameObject;
 import com.a2client.model.Inventory;
 import com.a2client.network.game.clientpackets.ActionSelect;
 import com.a2client.network.game.clientpackets.ChatMessage;
-import com.a2client.render.Fog;
 import com.a2client.render.GameCamera;
 import com.a2client.render.Render;
+import com.a2client.render.skybox.Skybox;
 import com.a2client.util.Keys;
 import com.a2client.util.Utils;
 import com.a2client.util.Vec2i;
@@ -129,7 +129,7 @@ public class Game extends BaseScreen
 
 		_gameCamera = new GameCamera();
 		_render = new Render(this);
-		_bgcolor = Fog.skyColor;
+		_bgcolor = Skybox.skyColor;
 	}
 
 	@Override
@@ -192,7 +192,7 @@ public class Game extends BaseScreen
 				}
 				else if (Input.KeyHit(Hotkey.FOG))
 				{
-					Fog.enabled = !Fog.enabled;
+					Skybox.fogEnabled = !Skybox.fogEnabled;
 				}
 				else if (Input.KeyHit(Hotkey.TERRAIN_WIREFRAME))
 				{
@@ -256,7 +256,7 @@ public class Game extends BaseScreen
 			{
 				_worldMousePos = new Vec2i(Math.round(terrainPoint.x * TILE_SIZE), Math.round(terrainPoint.z * TILE_SIZE));
 				_statusText = "mouse coord: " +
-							  _worldMousePos.x + ", " + _worldMousePos.y
+				              _worldMousePos.x + ", " + _worldMousePos.y
 //							 + " : " + Terrain.getTileHeight(_worldMousePos.x / TILE_SIZE, _worldMousePos.y / TILE_SIZE)
 				;
 			}
@@ -275,6 +275,11 @@ public class Game extends BaseScreen
 //				" cam: " + _gameCamera.getCameraDistance()+
 				" gui: " + GUI.getInstance()._mouseInControl
 		;
+
+		_lblStatus.caption =
+				" sun: " + Skybox.sunTime +
+				" sun y: " + Skybox.sunPosition.y;
+
 	}
 
 	@Override

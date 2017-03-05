@@ -62,12 +62,6 @@ public class Render
 	public static Vector3 clipNormal = new Vector3(0, -1, 0);
 	public static float clipHeight = 1.5f;
 
-	/**
-	 * позиция солнца, учитывается при всем освещении
-	 * также передается в шейдеры
-	 */
-	public static Vector3 sunPosition = new Vector3(10000, 20000, 10000);
-
 	private Game _game;
 	private Environment _environment;
 
@@ -121,7 +115,7 @@ public class Render
 		_terrain = new Terrain(this);
 
 		_postProcess = new PostProcess();
-//		_postProcess.addEffect(new OutlineEffect(true));
+		_postProcess.addEffect(new OutlineEffect(true));
 //		_postProcess.addEffect(new ContrastEffect(true));
 //		_postProcess.addEffect(new DepthOfFieldEffect(true));
 //		_postProcess.addEffect(new MotionBlurEffect(true));
@@ -129,7 +123,7 @@ public class Render
 //		_postProcess.addEffect(new VerticalBlurEffect(1f / 2f));
 //		_postProcess.addEffect(new HorizontalBlurEffect(1f / 8f));
 //		_postProcess.addEffect(new VerticalBlurEffect(1f / 8f));
-		_postProcess.addEffect(new EmptyEffect(true));
+//		_postProcess.addEffect(new EmptyEffect(true));
 
 		_frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 
@@ -145,7 +139,8 @@ public class Render
 
 	public void render(Camera camera)
 	{
-		updateSunPos();
+		Skybox.updateSunPos();
+		_skybox.updateSkyParams();
 		_skybox.updateDayNight();
 
 //		Matrix4 toShadowMapSpace = null;
@@ -286,13 +281,13 @@ public class Render
 		Gdx.gl.glDepthRangef(0, 1);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-//		renderTerrain(camera, toShadowMapSpace);
+		renderTerrain(camera, toShadowMapSpace);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		renderObjects(camera, true);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-//		renderWater(camera);
+		renderWater(camera);
 
 //		Icosahedron.render(((GameCamera) camera));
 
@@ -516,41 +511,6 @@ public class Render
 	public WaterFrameBuffers getWaterFrameBuffers()
 	{
 		return _waterFrameBuffers;
-	}
-
-	float sunDistance = 1000;
-	public static float sunAngle = 20f;
-	public static boolean sunMoving = false;
-	// время дня в 24 часовом формате (0-24)
-	public static float sunTime = 0f;
-
-	public void updateSunPos()
-	{
-		if (Input.KeyHit(Keys.SPACE)) sunMoving = !sunMoving;
-		if (sunMoving)
-		{
-			sunTime -= Main.deltaTime * 2.9f;
-		}
-
-		// задали вектор на плоскости земли
-		Vector3 pos = new Vector3(sunDistance, 0, 0);
-
-		// повернем на угол в часах (24)
-		pos.rotate(((sunTime - 12f) / 24f) * 360f, 0, 1, 0);
-
-		// сместим в соответствии с широтой местности
-		pos.add(0, 200f, 0);
-
-		// и еще раз повернем на 23.5 градуса (угол наклона оси вращения планеты)
-		pos.rotate(23.5f, 0, 0, 1);
-
-//		pos.rotate(90f - 5f, 1, 0, 0);
-//		pos.rotate(sunAngle, 0, 0, 1);
-
-		sunPosition.set(pos);
-
-		DirectionalLightsAttribute lights = ((DirectionalLightsAttribute) _environment.get(DirectionalLightsAttribute.Type));
-		lights.lights.get(0).set(0.8f, 0.8f, 0.8f, -sunPosition.x, -sunPosition.y, -sunPosition.z);
 	}
 
 	public static ShaderProgram makeShader(String name)
