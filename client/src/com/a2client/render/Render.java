@@ -283,10 +283,9 @@ public class Render
 		Gdx.gl.glDepthRangef(0.999f, 0.999f);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		_skybox.Render(camera, _environment);
-
 		Gdx.gl.glDepthRangef(0, 1);
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 //		renderTerrain(camera, toShadowMapSpace);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
@@ -295,7 +294,7 @@ public class Render
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 //		renderWater(camera);
 
-		Icosahedron.render(((GameCamera) camera));
+//		Icosahedron.render(((GameCamera) camera));
 
 //		if (_game.getWorldMousePos() != null)
 //		{

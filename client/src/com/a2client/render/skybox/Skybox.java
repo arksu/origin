@@ -148,7 +148,6 @@ public class Skybox
 		_shader.setUniformMatrix("u_projTrans", camera.projection);
 		_shader.setUniformMatrix("u_projViewTrans", camera.combined);
 
-
 		final float PI = ((float) Math.PI);
 		Matrix4 tmp;
 		tmp = camera.view.cpy();
@@ -162,7 +161,6 @@ public class Skybox
 			tmp.translate(Game.getInstance().getCamera().getChaseObj().getWorldCoord().cpy().add(0, 0, 0));
 		}
 		_shader.setUniformMatrix("u_worldTrans", tmp);
-
 
 		_shader.setUniformf("u_skyColor", Fog.skyColor.r, Fog.skyColor.g, Fog.skyColor.b);
 		_shader.setUniformf("u_density", Fog.enabled ? Fog.density : 0f);
@@ -214,6 +212,7 @@ public class Skybox
 
 		_shader.setUniformf("v3LightPosition", Render.sunPosition.cpy().nor().scl(1f));
 		_shader.setUniformf("u_size", SIZE);
+		_shader.setUniformf("u_backColor", 0.216f, 0.373f, 0.741f);
 
 		Cubemap texture1;
 		Cubemap texture2;
@@ -246,7 +245,6 @@ public class Skybox
 		}
 
 		_shader.setUniformf("u_blendValue", blendValue);
-
 
 		texture1 = _cubemap;
 		texture2 = _cubemapNight;

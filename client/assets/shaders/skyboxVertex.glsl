@@ -32,12 +32,20 @@ uniform float fScale;			// 1 / (fOuterRadius - fInnerRadius)
 uniform float fScaleDepth;		// The scale depth (i.e. the altitude at which the atmosphere's average density is found)
 uniform float fScaleOverScaleDepth;	// fScale / fScaleDepth
 
+uniform float u_size;
+
 const int nSamples = 4;
 const float fSamples = 4.0;
 
 out vec3 v3Direction;
 out vec3 c0;
 out vec3 c1;
+
+// текущая высота солнца
+out float sunalt;
+// высота вершины
+out float alt;
+out float v3antiray;
 
 float scale(float fCos)
 {
@@ -47,6 +55,9 @@ float scale(float fCos)
 
 void main()
 {
+	sunalt = clamp( v3LightPosition.y, 0, 1);
+	alt = clamp((a_position.y + u_size * 0.5) / u_size, 0, 1);
+
 	vec3 cameraPosition = u_cameraPosition.xyz;
 	vec3 position = a_position.xyz;
 
@@ -127,6 +138,9 @@ void main()
 	gl_Position = u_projTrans * u_viewTrans * a_position;
 
     texCoords = a_position.xyz;
+
+    v3antiray = 1.5 - dot(v3Ray, v3LightPosition);
+    v3antiray = clamp(v3antiray, 0, 1);
 }
 
 
