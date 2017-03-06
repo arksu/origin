@@ -45,7 +45,7 @@ public class TuningWindow
 		_scrollbarSun.setMax(250);
 		_scrollbarSun.setMin(0);
 		_scrollbarSun.SetPageSize(10);
-		_scrollbarSun.setValue(202);
+		_scrollbarSun.setValue(Math.round(Skybox.sunTime * 10f));
 
 		// -----------------------------
 		_label2 = new GUI_Label(_window);

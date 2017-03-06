@@ -511,7 +511,10 @@ public class Grid
 //		_log.debug("min: " + minH + " max: " + maxH);
 	}
 
-	public void updateTiles()
+	/**
+	 * обновить тайлы этого грида в базе данных
+	 */
+	private void updateTiles()
 	{
 		String query = UPDATE_DATA;
 		query = query.replaceFirst("sg_0", "sg_" + Integer.toString(_sg));
@@ -535,7 +538,7 @@ public class Grid
 		catch (SQLException e)
 		{
 			_log.warn("failed update tiles data " + toString());
-			throw new RuntimeException("Cant load grid " + toString());
+			throw new RuntimeException("Cant update grid " + toString());
 		}
 	}
 
@@ -545,7 +548,7 @@ public class Grid
 		if (update)
 		{
 			updateTiles();
-			broadcastEvent(new Event(null, Event.EventType.DEFAULT, new MapGrid(this, -1, -1)));
+			broadcastEvent(new Event(null, Event.EventType.EVT_DEFAULT, new MapGrid(this, -1, -1)));
 		}
 	}
 
@@ -945,7 +948,7 @@ public class Grid
 		for (Player p : _activePlayers)
 		{
 			// если игрок обработал это событие. и оно касается его
-			if (!p.isDeleteing() && p.HandleEvent(event))
+			if (!p.isDeleteing() && p.handleEvent(event))
 			{
 				// отправим пакет
 				p.getClient().sendPacket(event.getPacket());
@@ -954,9 +957,9 @@ public class Grid
 			// это все была базовая обработка событий связанная с рассылкой пакетов
 			// а теперь разошлем всем мозгам эти же события
 			// также тут потом будет еще проверочка на дистанцию до события... незачем мозгу знать о далеких вещах
-			if (p.getMind() != null)
+			if (p.getAi() != null)
 			{
-				p.getMind().handleEvent(event);
+				p.getAi().handleEvent(event);
 			}
 		}
 	}

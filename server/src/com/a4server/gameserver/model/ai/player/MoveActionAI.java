@@ -10,7 +10,7 @@ import com.a4server.gameserver.model.position.MoveToPoint;
  * поведение для движения к объекту и взаимодействия с ним
  * Created by arksu on 28.02.15.
  */
-public class MindMoveAction extends PlayerMind
+public class MoveActionAI extends PlayerAI
 {
 	private int _targetObjectId;
 
@@ -21,7 +21,7 @@ public class MindMoveAction extends PlayerMind
 		void onArrived(CollisionResult moveResult);
 	}
 
-	public MindMoveAction(Player player, int objectId, ArrivedCallback callback)
+	public MoveActionAI(Player player, int objectId, ArrivedCallback callback)
 	{
 		super(player);
 		_targetObjectId = objectId;
@@ -53,7 +53,7 @@ public class MindMoveAction extends PlayerMind
 		GameObject object = _player.isKnownObject(_targetObjectId);
 		if (object.getPos().getDistance(_player.getPos()) < 2000)
 		{
-			_player.StartMove(new MoveToPoint(object.getPos()._x, object.getPos()._y));
+			_player.startMove(new MoveToPoint(object.getPos()._x, object.getPos()._y));
 		}
 	}
 }

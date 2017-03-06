@@ -1,6 +1,6 @@
 package com.a4server.gameserver.model;
 
-import com.a4server.gameserver.model.ai.Mind;
+import com.a4server.gameserver.model.ai.AI;
 import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.ObjectPosition;
@@ -19,7 +19,7 @@ public abstract class Human extends MovingObject
 	/**
 	 * мозг объекта который определяет его поведение, реагирует на все события
 	 */
-	protected Mind _mind = null;
+	protected AI _ai = null;
 
 	/**
 	 * объекты которые известны мне, инфа о которых отправляется и синхронизирована с клиентом
@@ -50,9 +50,9 @@ public abstract class Human extends MovingObject
 		super(objectId, template);
 	}
 
-	public Mind getMind()
+	public AI getAi()
 	{
-		return _mind;
+		return _ai;
 	}
 
 	public void setVisibleDistance(int visibleDistance)
@@ -65,7 +65,7 @@ public abstract class Human extends MovingObject
 	 * все новые что увидим - отправятся клиенту. старые что перестали видеть - будут удалены
 	 * @param force принудительно
 	 */
-	public void UpdateVisibleObjects(boolean force)
+	public void updateVisibleObjects(boolean force)
 	{
 		// только если отошли достаточно далеко от последней позиции апдейта
 		if (force || (
@@ -74,7 +74,7 @@ public abstract class Human extends MovingObject
 				getPos().getDistance(_lastVisibleUpdatePos) > VISIBLE_UPDATE_DISTANCE
 		))
 		{
-			_log.debug("UpdateVisibleObjects " + toString());
+			_log.debug("updateVisibleObjects " + toString());
 			// запомним те объекты которые видимы при текущем апдейте
 			FastList<GameObject> newList = new FastList<>();
 
@@ -168,21 +168,21 @@ public abstract class Human extends MovingObject
 	 * @return истина если событие обработано, значит событие нужно переправить клиенту,
 	 * значит к нему уйдет прикрепленный пакет
 	 */
-	public boolean HandleEvent(Event event)
+	public boolean handleEvent(Event event)
 	{
 		// событие движения
 		switch (event.getType())
 		{
-			case MOVE:
-			case STOP_MOVE:
+			case EVT_MOVE:
+			case EVT_STOP_MOVE:
 				// знаю ли я этот объект?
-				if (isKnownObject(event.getObject()))
+				if (isKnownObject(event.getInitiator()))
 				{
 					// я больше не вижу объект
-					if (!isObjectVisibleForMe(event.getObject()))
+					if (!isObjectVisibleForMe(event.getInitiator()))
 					{
 						// удалим его из списка видимых
-						removeKnownObject(event.getObject());
+						removeKnownObject(event.getInitiator());
 						// т.к. объект мы больше не знаем. пакет слать не будем
 						return false;
 					}
@@ -192,25 +192,25 @@ public abstract class Human extends MovingObject
 				else
 				{
 					// объекта я не знаю. проверим может я теперь вижу его?
-					if (isObjectVisibleForMe(event.getObject()))
+					if (isObjectVisibleForMe(event.getInitiator()))
 					{
 						// ага. вижу. добавим в список видимых
-						addKnownObject(event.getObject());
+						addKnownObject(event.getInitiator());
 						// мы видим объект, отправим пакет клиенту
 						return true;
 					}
 				}
 				break;
 
-			case DEFAULT:
-				return event.getObject() == null || isKnownObject(event.getObject());
+			case EVT_DEFAULT:
+				return event.getInitiator() == null || isKnownObject(event.getInitiator());
 
-			case CHAT_GENERAL_MESSAGE:
+			case EVT_CHAT_GENERAL_MESSAGE:
 				return onChatMessage(event);
 
-			case INTERACT:
+			case EVT_INTERACT:
 				// если мы знаем такой объект - пошлем пакет клиенту
-				return isKnownObject(event.getObject());
+				return isKnownObject(event.getInitiator());
 		}
 		return false;
 	}
@@ -220,33 +220,33 @@ public abstract class Human extends MovingObject
 	 */
 	protected boolean onChatMessage(Event event)
 	{
-		return isKnownObject(event.getObject());
+		return isKnownObject(event.getInitiator());
 	}
 
 	@Override
 	public void onArrived()
 	{
 		super.onArrived();
-		if (_mind != null)
+		if (_ai != null)
 		{
-			_mind.onArrived(_moveResult);
+			_ai.onArrived(_moveResult);
 		}
 	}
 
-	public void setMind(Mind mind)
+	public void setAi(AI newAi)
 	{
-		if (_mind != null)
+		if (_ai != null)
 		{
-			Mind old = _mind;
-			_mind = null;
-			old.free();
+			AI oldAi = _ai;
+			_ai = null;
+			oldAi.dispose();
 		}
 
-		_mind = mind;
+		_ai = newAi;
 
-		if (_mind != null)
+		if (_ai != null)
 		{
-			_mind.begin();
+			_ai.begin();
 		}
 	}
 }

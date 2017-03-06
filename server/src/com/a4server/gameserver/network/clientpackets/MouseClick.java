@@ -1,7 +1,7 @@
 package com.a4server.gameserver.network.clientpackets;
 
 import com.a4server.gameserver.model.*;
-import com.a4server.gameserver.model.ai.player.MindMoveAction;
+import com.a4server.gameserver.model.ai.player.MoveActionAI;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.inventory.AbstractItem;
 import com.a4server.gameserver.model.inventory.InventoryItem;
@@ -89,9 +89,9 @@ public class MouseClick extends GameClientPacket
 								{
 									_log.debug("MoveToPoint (" + _x + ", " + _y + ")");
 									// для простого передвижения не требуется мозг) не надо ни о чем думать
-									player.setMind(null);
+									player.setAi(null);
 									// запустим движение. создадим контроллер для этого
-									player.StartMove(new MoveToPoint(_x, _y));
+									player.startMove(new MoveToPoint(_x, _y));
 								}
 							}
 							break;
@@ -124,7 +124,7 @@ public class MouseClick extends GameClientPacket
 	private void moveToObject(final Player player, final int objectId)
 	{
 		// клик по объекту. бежим к нему и делаем действие над ним
-		player.setMind(new MindMoveAction(player, _objectId, new MindMoveAction.ArrivedCallback()
+		player.setAi(new MoveActionAI(player, _objectId, new MoveActionAI.ArrivedCallback()
 		{
 			@Override
 			public void onArrived(CollisionResult moveResult)

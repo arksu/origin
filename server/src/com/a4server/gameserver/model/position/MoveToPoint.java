@@ -63,7 +63,7 @@ public class MoveToPoint extends MoveController
 			// если уже дошли - остановим движение
 			if (arrive)
 			{
-				_activeObject.StopMove(CollisionResult.NONE, _toX, _toY);
+				_activeObject.stopMove(CollisionResult.NONE, _toX, _toY);
 			}
 			return arrive;
 		}

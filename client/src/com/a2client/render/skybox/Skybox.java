@@ -48,7 +48,7 @@ public class Skybox
 	/**
 	 * время дня в 24 часовом формате (0-24)
 	 */
-	public static float sunTime = 0f;
+	public static float sunTime = 13f;
 
 	private ShaderProgram _shader;
 
@@ -177,7 +177,8 @@ public class Skybox
 
 		makeMesh();
 
-		_tuningWindow = new TuningWindow();
+		// debug
+//		_tuningWindow = new TuningWindow();
 	}
 
 	public void Render(Camera camera, Environment environment)
@@ -229,26 +230,34 @@ public class Skybox
 		_shader.setUniformf("u_gradient", fogGradient);
 
 		// ATMO
-		float r = 1f;//(Math.max(Render.sunPosition.y, 300f) / 900f);
-		float radius = _tuningWindow.getRadius();
-		float cameraHeight = radius * _tuningWindow.getCameraHeight() * (r);
-		float outRadius = _tuningWindow.getOutRadius();
+		float radius = 1;
+		float cameraHeight = 1;
+		float outRadius = 1;
+		if (_tuningWindow != null)
+		{
+			radius = _tuningWindow.getRadius();
+			cameraHeight = radius * _tuningWindow.getCameraHeight();
+			outRadius = _tuningWindow.getOutRadius();
+		}
 
-		if (!takeFromTuningWindow)
+		if (!takeFromTuningWindow || _tuningWindow == null)
 		{
 			radius = skyboxParams.radius;
 			cameraHeight = radius * skyboxParams.cameraHeight;
 			outRadius = skyboxParams.outerRadius;
 			_shader.setUniformf("u_backColor", skyboxParams.skyColor);
 
-			_tuningWindow._scrollbarRadius.setValue(Math.round(radius));
-			_tuningWindow._scrollbarCameraHeight.setValue(Math.round(skyboxParams.cameraHeight * 100f));
-			_tuningWindow._scrollbarOutRadius.setValue(Math.round(skyboxParams.outerRadius * 100f));
+			if (_tuningWindow != null)
+			{
+				_tuningWindow._scrollbarRadius.setValue(Math.round(radius));
+				_tuningWindow._scrollbarCameraHeight.setValue(Math.round(skyboxParams.cameraHeight * 100f));
+				_tuningWindow._scrollbarOutRadius.setValue(Math.round(skyboxParams.outerRadius * 100f));
+			}
 		}
 
 		float Kr = 0.0025f;
 		float Km = 0.0010f;
-		float ESun = _tuningWindow.getEsun();// 15.0f;
+		float ESun = 15.0f; // _tuningWindow.getEsun();
 		float g = -0.990f;
 		float innerRadius = radius;
 		float outerRadius = radius * outRadius;

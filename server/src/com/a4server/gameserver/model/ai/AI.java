@@ -9,7 +9,7 @@ import com.a4server.gameserver.model.event.Event;
  * и внешние раздражители (различные события от грида)
  * Created by arksu on 27.02.15.
  */
-public interface Mind
+public interface AI
 {
 	/**
 	 * объект закончил движение
@@ -30,7 +30,7 @@ public interface Mind
 	/**
 	 * отключить этот мозг, надо сделать все чтобы корректно перевести объект в нейтральное состояние
 	 */
-	void free();
+	void dispose();
 
 	/**
 	 * мозг подключен к объекту. начало работы

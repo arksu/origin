@@ -7,7 +7,7 @@ import com.a4server.gameserver.network.serverpackets.GameServerPacket;
  * базовое игровое событие
  * рассылается объектами или гридом всем живым объектам внутри грида
  * к событию может быть прикреплен пакет. тогда он будет разослан всем клиентам которые обработали событие
- * а также дополнительная информация _extraInfo описывающая событие
+ * а также дополнительная информация _info описывающая событие
  * Created by arksu on 11.02.15.
  */
 public class Event
@@ -17,18 +17,18 @@ public class Event
 		/**
 		 * тип события по умолчанию. прикрепленный пакет шлется всем у кого он в known списке
 		 */
-		DEFAULT,
-		MOVE,
-		STOP_MOVE,
-		CHAT_GENERAL_MESSAGE,
-		INTERACT
+		EVT_DEFAULT,
+		EVT_MOVE,
+		EVT_STOP_MOVE,
+		EVT_CHAT_GENERAL_MESSAGE,
+		EVT_INTERACT
 	}
 
 	/**
 	 * объект который сгенерировал событие
 	 * к которому оно относится
 	 */
-	protected final GameObject _object;
+	protected final GameObject _initiator;
 
 	/**
 	 * тип сообщения
@@ -38,7 +38,7 @@ public class Event
 	/**
 	 * дополнительная информация о событии
 	 */
-	protected Object _extraInfo = null;
+	protected Object[] _info = null;
 
 	/**
 	 * пакет прикрепленный к событию. если другой объект обработал это событие
@@ -46,29 +46,29 @@ public class Event
 	 */
 	protected GameServerPacket _packet = null;
 
-	public Event(GameObject object, EventType type)
+	public Event(GameObject initiator, EventType type)
 	{
-		_object = object;
+		_initiator = initiator;
 		_type = type;
 	}
 
-	public Event(GameObject object, EventType type, GameServerPacket pkt)
+	public Event(GameObject initiator, EventType type, GameServerPacket pkt)
 	{
-		_object = object;
+		_initiator = initiator;
 		_type = type;
 		_packet = pkt;
 	}
 
-	public Event(GameObject object, EventType type, Object extraInfo)
+	public Event(GameObject initiator, EventType type, Object... info)
 	{
-		_object = object;
+		_initiator = initiator;
 		_type = type;
-		_extraInfo = extraInfo;
+		_info = info;
 	}
 
-	public GameObject getObject()
+	public GameObject getInitiator()
 	{
-		return _object;
+		return _initiator;
 	}
 
 	public EventType getType()
@@ -86,17 +86,17 @@ public class Event
 		_packet = pkt;
 	}
 
-	public Object getExtraInfo()
+	public Object getInfo()
 	{
-		return _extraInfo;
+		return _info;
 	}
 
 	@Override
 	public String toString()
 	{
-		return "(event " + _object +
-			   " type=" + _type +
-			   (_extraInfo != null ? " extra=" + _extraInfo : "") +
-			   ")";
+		return "(event " + _initiator +
+		       " type=" + _type +
+		       (_info != null ? " info=" + _info : "") +
+		       ")";
 	}
 }

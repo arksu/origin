@@ -2,7 +2,7 @@ package com.a4server.gameserver.model;
 
 import com.a4server.Database;
 import com.a4server.gameserver.GameTimeController;
-import com.a4server.gameserver.model.ai.player.MindMoveAction;
+import com.a4server.gameserver.model.ai.player.MoveActionAI;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.model.inventory.Inventory;
@@ -441,7 +441,7 @@ public class GameObject
 	protected void setInteractive(boolean value)
 	{
 		_log.debug("setInteractive " + value);
-		Event evt = new Event(this, Event.EventType.INTERACT, value);
+		Event evt = new Event(this, Event.EventType.EVT_INTERACT, value);
 		evt.setPacket(new ObjectInteractive(_objectId, value));
 		getPos().getGrid().broadcastEvent(evt);
 	}
@@ -496,7 +496,7 @@ public class GameObject
 		List<String> contextMenu = getContextMenu(player);
 		if (contextMenu != null && contextMenu.contains(item))
 		{
-			player.setMind(new MindMoveAction(player, _objectId, new MindMoveAction.ArrivedCallback()
+			player.setAi(new MoveActionAI(player, _objectId, new MoveActionAI.ArrivedCallback()
 			{
 				@Override
 				public void onArrived(CollisionResult moveResult)

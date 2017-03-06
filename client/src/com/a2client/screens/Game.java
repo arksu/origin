@@ -167,7 +167,7 @@ public class Game extends BaseScreen
 					_chatEdit.SetCursor(_chatEdit.text.length());
 				}
 			}
-			else if (GUI.getInstance()._mouseInControl == null)
+			else if (GUI.getInstance()._mouseInControl == _gameArea)
 			{
 				if (Input.KeyHit(Hotkey.INVENTORY))
 				{
@@ -215,6 +215,7 @@ public class Game extends BaseScreen
 					Config.getInstance()._renderPostProcessing = !Config.getInstance()._renderPostProcessing;
 				}
 
+/*
 				else if (Input.KeyDown(Keys.W))
 				{
 					_gameCamera.getOffset().add(0, 0, Main.deltaTime * GameCamera.OFFSET_SPEED);
@@ -239,6 +240,7 @@ public class Game extends BaseScreen
 				{
 					_gameCamera.getOffset().add(0, -Main.deltaTime * GameCamera.OFFSET_SPEED, 0);
 				}
+*/
 			}
 
 			if (ObjectCache.getInstance() != null)

@@ -21,26 +21,32 @@ public class GUI_EquipWindow extends GUI_Window
 {
 	private static final Logger _log = LoggerFactory.getLogger(GUI_EquipWindow.class.getName());
 
+	/**
+	 * сами контролы эквипа <ид слота, контрол>
+	 */
 	private final Map<Integer, GUI_InventoryItem> _items = new HashMap<>();
 
-	public static final List<Vec2i> _slotPos = new ArrayList<>();
+	/**
+	 * позиции слотов внутри окна, по индексу (номера) слота
+	 */
+	private static final List<Vec2i> _slotPos = new ArrayList<>();
 
 	static
 	{
 		// позиции слотов
-		_slotPos.add(new Vec2i(10, 25));
-		_slotPos.add(new Vec2i(10, 65));
-		_slotPos.add(new Vec2i(10, 105));
-		_slotPos.add(new Vec2i(10, 145));
-		_slotPos.add(new Vec2i(10, 185));
-		_slotPos.add(new Vec2i(10, 225));
-		_slotPos.add(new Vec2i(10, 265));
+		int py = 35;
+
+		for (int i = 0; i < 7; i++)
+		{
+			_slotPos.add(new Vec2i(10, py));
+			py += 40;
+		}
 	}
 
-	public GUI_EquipWindow(GUI_Control parent)
+	protected GUI_EquipWindow(GUI_Control parent)
 	{
 		super(parent);
-		setSize(190, 290);
+		setSize(190, 350);
 	}
 
 	public void assign(Equip equip)
@@ -51,11 +57,16 @@ public class GUI_EquipWindow extends GUI_Window
 		}
 		_items.clear();
 
+		// создаем и заполняем контролы слотов в которых есть вещи
 		for (InventoryItem item : equip.getItems())
 		{
 			GUI_InventoryItem ctrl = new GUI_InventoryItem(this, item);
+			// укажем что это слот для эквипа
 			ctrl.tagi = 2;
+
 			// поставим слоту правильную позицию
+			// если у нас есть заранее определенная позиция для слота с таким ид
+			// ид слота хранится в Y координате вещи
 			if (item.getY() >= 0 && item.getY() < _slotPos.size())
 			{
 				ctrl.setPos(_slotPos.get(item.getY()));
@@ -74,6 +85,7 @@ public class GUI_EquipWindow extends GUI_Window
 			if (!_items.containsKey(i))
 			{
 				GUI_InventoryItem ctrl = new GUI_InventoryItem(this, 200, i);
+				// укажем что это слот для эквипа
 				ctrl.tagi = 2;
 				ctrl.setPos(_slotPos.get(i));
 			}

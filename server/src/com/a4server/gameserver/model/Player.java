@@ -256,6 +256,7 @@ public class Player extends Human
 	 * пакет остылается всем окружающим, поэтому тут должно быть все что связано с отображением игрока в мире
 	 * @return пакет
 	 */
+	@Override
 	public GameServerPacket makeAddToWorldPacket()
 	{
 		GameServerPacket pkt = new ObjectAdd(this);
@@ -490,7 +491,7 @@ public class Player extends Human
 	@Override
 	protected boolean onChatMessage(Event event)
 	{
-		String message = (String) event.getExtraInfo();
+		String message = (String) event.getInfo();
 		if (message.startsWith("/"))
 		{
 			if (_accessLevel >= 100)

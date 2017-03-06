@@ -1,5 +1,6 @@
 package com.a4server;
 
+import com.a4server.gameserver.model.Grid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +55,11 @@ public class Config
 	public static int WORLD_SG_HEIGHT;
 	public static int WORLD_LEVELS;
 
+	/**
+	 * расстояние через которое будет обновлятся позиция в базе данных при передвижении
+	 */
+	public static final int UPDATE_DB_DISTANCE = Grid.TILE_SIZE * 5;
+
 	public static void loadGameServerConfig()
 	{
 		DATABASE_CONNECTION_CLOSE_TIME = 1000;
@@ -73,7 +79,7 @@ public class Config
 		PORT_LOGIN = 2040;
 		LOGIN_NET_WORKER_THREADS = 2;
 		LOGIN_NET_READER_THREADS = 2;
-		GAME_SERVER_HOST = "31.25.28.248";
+		GAME_SERVER_HOST = "127.0.0.1";
 		GAME_SERVER_PORT = 2041;
 		SCRYPT_N = 2048;
 	}

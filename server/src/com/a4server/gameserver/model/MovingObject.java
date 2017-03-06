@@ -63,7 +63,7 @@ public abstract class MovingObject extends GameObject
 	 * начать передвижение объекта
 	 * @param controller контроллер движения
 	 */
-	public void StartMove(MoveController controller)
+	public void startMove(MoveController controller)
 	{
 		unlinkFromAll();
 		controller.setActiveObject(this);
@@ -94,15 +94,15 @@ public abstract class MovingObject extends GameObject
 	/**
 	 * прекратить движение объекта по той или иной причине
 	 */
-	public void StopMove(CollisionResult result, int x, int y)
+	public void stopMove(CollisionResult result, int x, int y)
 	{
-		_log.debug("StopMove: " + result.toString() + " at " + x + ", " + y);
+		_log.debug("stopMove: " + result.toString() + " at " + x + ", " + y);
 		_moveController = null;
 		_moveResult = result;
 		getPos().setXY(x, y);
 		storeInDb();
 		// расскажем всем что мы остановились
-		Event event = new Event(this, Event.EventType.STOP_MOVE, new ObjectPos(getObjectId(), getPos()._x, getPos()._y));
+		Event event = new Event(this, Event.EventType.EVT_STOP_MOVE, new ObjectPos(getObjectId(), getPos()._x, getPos()._y));
 		getPos().getGrid().broadcastEvent(event);
 	}
 

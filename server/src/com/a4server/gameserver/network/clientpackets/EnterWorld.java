@@ -47,7 +47,7 @@ public class EnterWorld extends GameClientPacket
 			}
 
 			// обновим список видимости. автоматически вышлет клиенту новые объекты
-			cha.UpdateVisibleObjects(true);
+			cha.updateVisibleObjects(true);
 		}
 	}
 }

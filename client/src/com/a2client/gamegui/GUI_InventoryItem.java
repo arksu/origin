@@ -27,6 +27,11 @@ public class GUI_InventoryItem extends GUI_Control
 	protected final int _x;
 	protected final int _y;
 
+	/**
+	 * слот с вещью
+	 * @param parent
+	 * @param item
+	 */
 	public GUI_InventoryItem(GUI_Control parent, InventoryItem item)
 	{
 		super(parent);
@@ -38,6 +43,12 @@ public class GUI_InventoryItem extends GUI_Control
 		_y = _item.getY();
 	}
 
+	/**
+	 * пустой слот, без вещи
+	 * @param parent
+	 * @param x
+	 * @param y
+	 */
 	public GUI_InventoryItem(GUI_Control parent, int x, int y)
 	{
 		super(parent);
@@ -60,7 +71,7 @@ public class GUI_InventoryItem extends GUI_Control
 			getSkin().draw("icon_" + _item.getIcon(), abs_pos.x, abs_pos.y, getWidth(), getHeight());
 		}
 
-		// различная информация (ку, прогресс и тд)
+		// todo различная информация (ку, прогресс и тд)
 	}
 
 	public boolean contains(int x, int y)
@@ -85,7 +96,7 @@ public class GUI_InventoryItem extends GUI_Control
 		return false;
 	}
 
-	protected void onClick(int btn)
+	private void onClick(int btn)
 	{
 		int mx = gui._mousePos.x - abs_pos.x;
 		int my = gui._mousePos.y - abs_pos.y;
@@ -94,6 +105,7 @@ public class GUI_InventoryItem extends GUI_Control
 		int ox = _x + mx / (WIDTH + MARGIN);
 		int oy = _y + my / (HEIGHT + MARGIN);
 
+		// это слот инвентаря?
 		if (tagi == 1)
 		{
 			new InventoryClick(
@@ -107,6 +119,7 @@ public class GUI_InventoryItem extends GUI_Control
 					oy
 			).send();
 		}
+		// это эквип слот?
 		else if (tagi == 2)
 		{
 			new EquipClick(

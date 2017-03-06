@@ -1,5 +1,6 @@
 package com.a4server.gameserver.model.position;
 
+import com.a4server.Config;
 import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Human;
 import com.a4server.gameserver.model.MovingObject;
@@ -21,11 +22,6 @@ public abstract class MoveController
 	private static final Logger _log = LoggerFactory.getLogger(MoveController.class.getName());
 
 	/**
-	 * расстояние через которое будет обновлятся позиция в базе данных
-	 */
-	protected static final int UPDATE_DB_DISTANCE = Grid.TILE_SIZE * 5;
-
-	/**
 	 * объект который двигаем
 	 */
 	protected MovingObject _activeObject;
@@ -37,7 +33,7 @@ public abstract class MoveController
 	protected double _currentY;
 
 	/**
-	 * когда было последнее сохранение в базу
+	 * последние координаты в которых было сохранение позиции в базу
 	 */
 	protected double _storedX;
 	protected double _storedY;
@@ -83,7 +79,7 @@ public abstract class MoveController
 	 */
 	public Event getEvent()
 	{
-		return new Event(_activeObject, Event.EventType.MOVE, makeMovePacket());
+		return new Event(_activeObject, Event.EventType.EVT_MOVE, makeMovePacket());
 	}
 
 	/**
@@ -115,7 +111,7 @@ public abstract class MoveController
 				double dx = _currentX - _storedX;
 				double dy = _currentY - _storedY;
 				// если передвинулись достаточно далеко
-				if (Math.pow(UPDATE_DB_DISTANCE, 2) < (Math.pow(dx, 2) + Math.pow(dy, 2)))
+				if (Math.pow(Config.UPDATE_DB_DISTANCE, 2) < (Math.pow(dx, 2) + Math.pow(dy, 2)))
 				{
 					// обновим состояние базе
 					_activeObject.storeInDb();
@@ -138,9 +134,9 @@ public abstract class MoveController
 	 * @return истина если все ок. ложь если не успешно
 	 */
 	protected boolean Process(double toX,
-							  double toY,
-							  Move.MoveType moveType,
-							  VirtualObject virtualObject)
+	                          double toY,
+	                          Move.MoveType moveType,
+	                          VirtualObject virtualObject)
 	{
 		CollisionResult collision = checkColiision(toX, toY, moveType, virtualObject);
 		switch (collision.getResultType())
@@ -157,17 +153,17 @@ public abstract class MoveController
 				// обновим видимые объекты
 				if (_activeObject instanceof Human)
 				{
-					((Human) _activeObject).UpdateVisibleObjects(false);
+					((Human) _activeObject).updateVisibleObjects(false);
 				}
 				return true;
 
 			case COLLISION_FAIL:
-				_activeObject.StopMove(collision, (int) Math.round(_currentX),
-									   (int) Math.round(_currentY));
+				_activeObject.stopMove(collision, (int) Math.round(_currentX),
+				                       (int) Math.round(_currentY));
 				return false;
 
 			default:
-				_activeObject.StopMove(collision, collision.getX(), collision.getY());
+				_activeObject.stopMove(collision, collision.getX(), collision.getY());
 				return false;
 		}
 
@@ -182,9 +178,9 @@ public abstract class MoveController
 	 * @return вернет коллизию или null если была ошибка
 	 */
 	protected CollisionResult checkColiision(double toX,
-											 double toY,
-											 Move.MoveType moveType,
-											 VirtualObject virtualObject)
+	                                         double toY,
+	                                         Move.MoveType moveType,
+	                                         VirtualObject virtualObject)
 	{
 		Grid grid = _activeObject.getPos().getGrid();
 		// а теперь пошла самая магия!)))
@@ -197,13 +193,20 @@ public abstract class MoveController
 				{
 					// пробуем залочить грид, ждем всего 10 мс
 					locked = grid.tryLockSafe(10);
+					if (locked)
 					// обсчитаем коллизию на это передвижение
-					return grid.checkCollision(_activeObject,
-											   (int) Math.round(_currentX),
-											   (int) Math.round(_currentY),
-											   (int) Math.round(toX),
-											   (int) Math.round(toY),
-											   moveType, virtualObject, true);
+					{
+						return grid.checkCollision(_activeObject,
+						                           (int) Math.round(_currentX),
+						                           (int) Math.round(_currentY),
+						                           (int) Math.round(toX),
+						                           (int) Math.round(toY),
+						                           moveType, virtualObject, true);
+					}
+					else
+					{
+						return CollisionResult.FAIL;
+					}
 				}
 				finally
 				{

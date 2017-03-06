@@ -36,7 +36,7 @@ public class ChatMessage extends GameClientPacket
 			{
 				// основной канал - общий чат вокруг объекта
 				case 0:
-					Event event = new Event(player, Event.EventType.CHAT_GENERAL_MESSAGE, _message);
+					Event event = new Event(player, Event.EventType.EVT_CHAT_GENERAL_MESSAGE, _message);
 					event.setPacket(new CreatureSay(player.getObjectId(), _message));
 					player.getPos().getGrid().broadcastEvent(event);
 					break;
