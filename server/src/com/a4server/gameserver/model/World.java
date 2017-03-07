@@ -1,11 +1,11 @@
 package com.a4server.gameserver.model;
 
-import cern.colt.map.tobject.OpenIntObjectHashMap;
 import com.a4server.Config;
 import com.a4server.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
@@ -40,12 +40,10 @@ public class World
 	/**
 	 * список всех игроков которые находятся в игре
 	 */
-	private final OpenIntObjectHashMap _allPlayers;
+	private final Map<Integer, Player> _allPlayers = new ConcurrentHashMap<>();
 
 	public World()
 	{
-		_allPlayers = new OpenIntObjectHashMap();
-
 		_log.info(
 				"World size: " + Config.WORLD_SG_WIDTH + "x" + Config.WORLD_SG_HEIGHT + " supergrids, " + Config.WORLD_LEVELS + " levels");
 
@@ -67,7 +65,7 @@ public class World
 	 */
 	public Player getPlayer(int objectId)
 	{
-		return (Player) _allPlayers.get(objectId);
+		return _allPlayers.get(objectId);
 	}
 
 	/**
@@ -98,7 +96,7 @@ public class World
 
 	public boolean removePlayer(int objectId)
 	{
-		return _allPlayers.removeKey(objectId);
+		return _allPlayers.remove(objectId) != null;
 	}
 
 	/**

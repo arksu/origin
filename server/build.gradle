@@ -1,10 +1,6 @@
 apply plugin: 'java'
 
-
 repositories {
-    flatDir {
-        dirs 'dist/libs'
-    }
     mavenCentral()
 }
 
@@ -16,12 +12,16 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8+'
     compile 'com.zaxxer:HikariCP-java7:2.4+'
     runtime 'mysql:mysql-connector-java:5+'
-
-    compile name: 'parallelcolt-0.9.4'
-    compile name: 'javassist'
 }
 
-task jarGame(type: Jar) {
+def generalManifest = manifest {
+    attributes('Built-By': System.getProperty('user.name'),
+            'Built-Date': new Date().format("yyyy-MM-dd HH:mm:ss"),
+            'Implementation-URL': 'http://www.origin-world.com/',
+            'Class-Path': configurations.compile.collect().join(' '))
+}
+
+task jarGameServer(type: Jar, dependsOn: classes) {
     baseName = "gameserver"
     from(sourceSets.main.output) {
         include 'com/a4server/gameserver/**'
@@ -32,14 +32,16 @@ task jarGame(type: Jar) {
     from('res') {
         include '**'
     }
-
     manifest {
-        attributes 'Implementation-Title': 'Game server',
+        from(generalManifest)
+        attributes(
+                'Implementation-Title': 'Game server',
                 'Main-Class': 'com.a4server.gameserver.GameServer'
+        )
     }
 }
 
-task jarLogin(type: Jar) {
+task jarLoginServer(type: Jar) {
     baseName = "loginserver"
     from(sourceSets.main.output) {
         include 'com/a4server/loginserver/**'
@@ -48,80 +50,74 @@ task jarLogin(type: Jar) {
     }
 
     manifest {
-        attributes 'Implementation-Title': 'Login server',
+        from(generalManifest)
+        attributes(
+                'Implementation-Title': 'Login server',
                 'Main-Class': 'com.a4server.loginserver.LoginServer'
+        )
     }
 }
 
-task jarMapImport(type: Jar) {
+task jarMapImporter(type: Jar) {
     baseName = "mapimport"
     from(sourceSets.main.output) {
         include 'com/a4server/map/**'
     }
 
     manifest {
-        attributes 'Implementation-Title': 'map import',
+        from(generalManifest)
+        attributes(
+                'Implementation-Title': 'Map importer',
                 'Main-Class': 'com.a4server.map.Importer'
+        )
     }
 }
 
-build.doLast {
-    tasks.afterBuild.execute()
-    tasks.jarGame.execute()
-    tasks.jarLogin.execute()
-    tasks.jarMapImport.execute()
-    tasks.makeDist.execute()
-}
-
-task afterBuild(dependsOn: build) {
-    def distDir = new File('build/dist')
-    distDir.mkdirs()
-}
-
-task makeDist(type: Sync) {
-    dependsOn afterBuild
-
-    from 'dist/'
-    into 'build/dist'
-
+task zip(type: Zip, dependsOn: build) {
+    from('dist') {
+        exclude('libs')
+    }
+    into('libs') {
+        from(configurations.runtime)
+    }
     into('game') {
-        from('build/libs/') {
-            include 'gameserver.jar'
-            include 'mapimport.jar'
-        }
+        from(jarGameServer)
+        from(jarMapImporter)
     }
-
     into('login') {
-        from('build/libs/') {
-            include 'loginserver.jar'
-        }
+        from(jarLoginServer)
     }
 
-    into('game/config') {
-        from 'config'
-    }
-    into('login/config') {
-        from 'config'
-    }
+    def fileName = 'Origin_Server_' + new Date().format("yyyy-MM-dd")
+    baseName = fileName
+    println 'Build in build/distributions/' + fileName + '.zip'
 }
 
+build.finalizedBy(zip)
+
+// for debug
+
+// run game server
 task "rg"(type: JavaExec, dependsOn: [classes]) {
     main = 'com.a4server.gameserver.GameServer'
     classpath = sourceSets.main.runtimeClasspath
 }
 
+// run game server with init db
 task "rgi"(type: JavaExec, dependsOn: [classes]) {
     main = 'com.a4server.gameserver.GameServer'
     classpath = sourceSets.main.runtimeClasspath
     args = ['-initdb']
 }
 
+// run map import into game
 task "rg_map"(type: JavaExec, dependsOn: [classes]) {
     main = 'com.a4server.map.Importer'
     classpath = sourceSets.main.runtimeClasspath
     args = ['-m', 'etc/map.bmp', '-sg', '0']
 }
 
+// run login server
 task "rl"(type: JavaExec, dependsOn: [classes]) {
     main = 'com.a4server.loginserver.LoginServer'
     classpath = sourceSets.main.runtimeClasspath

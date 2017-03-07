@@ -44,3 +44,5 @@ task "idea-run" (type: Sync) {
         println "Idea run configurations copied to '$dst'"
     }
 }
+
+defaultTasks('clean', 'build')
