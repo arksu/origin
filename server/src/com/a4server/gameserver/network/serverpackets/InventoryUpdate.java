@@ -2,9 +2,10 @@ package com.a4server.gameserver.network.serverpackets;
 
 import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.inventory.InventoryItem;
-import javolution.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * шлем апдейт инвентаря. если не открыт - надо создать окошко и показать
@@ -33,11 +34,11 @@ public class InventoryUpdate extends GameServerPacket
 		writeD(_inventory.getInvenroyId());
 		writeH(_inventory.getWidth());
 		writeH(_inventory.getHeight());
-		FastList<InventoryItem> items = _inventory.getItems();
+		Map<Integer, InventoryItem> items = _inventory.getItems();
 		writeH(items.size());
 		if (items.size() > 0)
 		{
-			for (InventoryItem item : items)
+			for (InventoryItem item : items.values())
 			{
 				writeD(item.getObjectId());
 				writeD(item.getTemplate().getItemId());

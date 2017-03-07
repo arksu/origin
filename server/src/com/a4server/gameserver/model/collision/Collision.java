@@ -8,10 +8,10 @@ import com.a4server.gameserver.model.World;
 import com.a4server.gameserver.model.objects.CollisionTemplate;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.util.Rect;
-import javolution.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.a4server.gameserver.model.Tile.TileType.TILE_WATER_DEEP;
@@ -43,8 +43,8 @@ public class Collision
 	public static final int WORLD_BUFFER_SIZE = Grid.TILE_SIZE * 5;
 
 	public static CollisionResult checkCollision(GameObject object, int fromX, int fromY, int toX, int toY,
-												 Move.MoveType moveType, VirtualObject virtual, List<Grid> grids,
-												 int targetObjId)
+	                                             Move.MoveType moveType, VirtualObject virtual, List<Grid> grids,
+	                                             int targetObjId)
 	{
 
 		// проверим координаты на выход за пределы мира
@@ -54,7 +54,7 @@ public class Collision
 		}
 
 		// первичный фильтр, создадим буфер объектов которые попадают в возможную зону коллизии
-		FastList<GameObject> objects = new FastList<>(64);
+		List<GameObject> objects = new LinkedList<>();
 		Rect filterRect = new Rect(COLLISION_DISTANCE).move(fromX, fromY);
 		for (Grid grid : grids)
 		{
@@ -62,13 +62,13 @@ public class Collision
 			{
 				// условие отбора объекта
 				if ((filterRect.isPointInside(obj.getPos()._x, obj.getPos()._y) &&
-						// это НЕ я
-						obj.getObjectId() != object.getObjectId() &&
-						// todo то что несем на себе не дает коллизий
-						// дают ли объекты между собой коллизию?
-						getCollision(object, obj, false)) ||
-						// если это цель, она должна давать коллизию
-						(obj.getObjectId() == targetObjId && getCollision(object, obj, true)))
+				     // это НЕ я
+				     obj.getObjectId() != object.getObjectId() &&
+				     // todo то что несем на себе не дает коллизий
+				     // дают ли объекты между собой коллизию?
+				     getCollision(object, obj, false)) ||
+				    // если это цель, она должна давать коллизию
+				    (obj.getObjectId() == targetObjId && getCollision(object, obj, true)))
 				{
 					objects.add(obj);
 				}
@@ -196,9 +196,9 @@ public class Collision
 	private static boolean checkWorldLimit(int x, int y)
 	{
 		return x < WORLD_BUFFER_SIZE ||
-				x > Grid.SUPERGRID_FULL_SIZE * Config.WORLD_SG_WIDTH - WORLD_BUFFER_SIZE ||
-				y < WORLD_BUFFER_SIZE ||
-				y > Grid.SUPERGRID_FULL_SIZE * Config.WORLD_SG_HEIGHT - WORLD_BUFFER_SIZE;
+		       x > Grid.SUPERGRID_FULL_SIZE * Config.WORLD_SG_WIDTH - WORLD_BUFFER_SIZE ||
+		       y < WORLD_BUFFER_SIZE ||
+		       y > Grid.SUPERGRID_FULL_SIZE * Config.WORLD_SG_HEIGHT - WORLD_BUFFER_SIZE;
 	}
 
 	private static Tile checkTileCollision(GameObject object, int x, int y, Move.MoveType moveType, List<Grid> grids)

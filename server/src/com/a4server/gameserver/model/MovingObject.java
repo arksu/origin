@@ -80,7 +80,7 @@ public abstract class MovingObject extends GameObject
 			_moveResult = null;
 			// расскажем всем что мы начали движение, тут же отправится пакет клиенту
 			getPos().getGrid().broadcastEvent(controller.getEvent());
-			GameTimeController.getInstance().AddMovingObject(this);
+			GameTimeController.getInstance().addMovingObject(this);
 		}
 		else
 		{
@@ -110,10 +110,35 @@ public abstract class MovingObject extends GameObject
 	 * прибыли в место назначения при передвижении
 	 * вызывается из потока обработки передвижений
 	 */
-	public void onArrived()
+	protected void onArrived()
 	{
 		// занулим мув контроллер, чтобы корректно завершить движение
 		_moveController = null;
+	}
+
+	/**
+	 * @return True if the movement is finished
+	 */
+	public boolean updatePosition()
+	{
+		// получим контроллера
+		MoveController controller = getMoveController();
+		if (controller != null)
+		{
+			// обновим и узнаем закончено ли движение?
+			if (controller.updateMove())
+			{
+				// скажем объекту что он дошел куда надо
+				onArrived();
+				return true;
+			}
+		}
+		else
+		{
+			// ошибка. объект в списке передвижения но контроллера у него нет.
+			_log.warn("updatePosition, object no controller! " + toString());
+		}
+		return false;
 	}
 
 	public List<Grid> getGrids()

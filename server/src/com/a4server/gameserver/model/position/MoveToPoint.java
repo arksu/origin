@@ -39,7 +39,7 @@ public class MoveToPoint extends MoveController
 	 * @return истина если движение завершилось. ложь если еще надо обновлять
 	 */
 	@Override
-	public boolean MovingImpl(double dt)
+	public boolean movingImpl(double dt)
 	{
 		// вычислим единичный вектор
 		double tdx = _toX - _currentX;
@@ -52,7 +52,7 @@ public class MoveToPoint extends MoveController
 		double tmpX = _currentX + (tdx / td) * d;
 		double tmpY = _currentY + (tdy / td) * d;
 
-		if (Process(tmpX, tmpY, _moveType, null))
+		if (process(tmpX, tmpY, _moveType, null))
 		{
 
 			td = Math.sqrt(Math.pow(_currentX - _toX, 2) + Math.pow(_currentY - _toY, 2));
@@ -85,7 +85,7 @@ public class MoveToPoint extends MoveController
 	@Override
 	public boolean canStartMoving()
 	{
-		// COPYPAST! ^^^ MovingImpl
+		// COPYPAST! ^^^ movingImpl
 
 		// время прошедшее с последнего апдейта. пока тупо захардкодим
 		double dt = 0.1f;

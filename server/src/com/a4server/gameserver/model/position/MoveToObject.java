@@ -38,7 +38,7 @@ public class MoveToObject extends MoveController
 	}
 
 	@Override
-	public boolean MovingImpl(double dt)
+	public boolean movingImpl(double dt)
 	{
 		return false;
 	}

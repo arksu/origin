@@ -2,8 +2,8 @@
 
 subprojects {
     apply plugin: 'java'
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
     apply plugin: 'idea'
     idea {
         module {
@@ -27,8 +27,8 @@ apply plugin: 'idea'
 idea {
     project {
         //if you want to set specific jdk and language level
-        jdkName = '1.7'
-        languageLevel = '1.7'
+        jdkName = '1.8'
+        languageLevel = '1.8'
         vcs = 'Git'
     }
 }

@@ -18,7 +18,6 @@ dependencies {
     runtime 'mysql:mysql-connector-java:5+'
 
     compile name: 'parallelcolt-0.9.4'
-    compile name: 'javolution-5.5.1'
     compile name: 'javassist'
 }
 

@@ -18,6 +18,7 @@
 package com.a2client;
 
 import com.a2client.network.login.Crypt;
+import com.a2client.util.Utils;
 import com.a2client.util.scrypt.SCryptUtil;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -61,7 +62,7 @@ public class Config
 	/**
 	 * порт логин сервера
 	 */
-	@Option(name = "-p", usage = "login server port")
+	@Option(name = "-port", usage = "login server port")
 	public int _loginServerPort = 2040;
 
 	@Option(name = "-d", usage = "debug mode")
@@ -78,6 +79,14 @@ public class Config
 	 */
 	@Option(name = "-q", usage = "quick login")
 	public boolean _quickLoginMode = false;
+
+	/**
+	 * логин и пароль под которым заходит юзер на сервер
+	 */
+	@Option(name = "-u", usage = "account")
+	public String _account;
+	@Option(name = "-p", usage = "password")
+	public String _password;
 
 	/**
 	 * раземры экрана в полноэкранном режиме
@@ -120,12 +129,6 @@ public class Config
 	 * текущий язык
 	 */
 	public String _currentLang;
-
-	/**
-	 * логин и пароль под которым заходит юзер на сервер
-	 */
-	public String _account;
-	public transient String _password;
 
 	/**
 	 * сохранять ли пароль
@@ -238,8 +241,14 @@ public class Config
 		//        zoom_over_mouse = AppSettings.getBool("zoom_over_mouse", true);
 		//        fullscreen_alt_enter = AppSettings.getBool("fullscreen_alt_enter", true);
 		//        minimap_draw_objects = AppSettings.getBool("minimap_draw_objects", false);
-		_account = p.getString("account", "");
-		_password = p.getString("password", "");
+		if (Utils.isEmpty(_account))
+		{
+			_account = p.getString("account", "");
+		}
+		if (Utils.isEmpty(_password))
+		{
+			_password = p.getString("password", "");
+		}
 		//
 		_savePassword = p.getBoolean("save_pass", true);
 

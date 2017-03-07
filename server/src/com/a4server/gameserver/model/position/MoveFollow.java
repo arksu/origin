@@ -31,7 +31,7 @@ public class MoveFollow extends MoveController
 	}
 
 	@Override
-	public boolean MovingImpl(double dt)
+	public boolean movingImpl(double dt)
 	{
 		return false;
 	}

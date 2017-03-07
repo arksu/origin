@@ -1,12 +1,17 @@
 package com.a4server.gameserver.model;
 
+import com.a4server.Config;
 import com.a4server.gameserver.model.ai.AI;
 import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.ObjectPosition;
-import javolution.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * объект описывающий поведение живых, активных объектов (игроки, животные)
@@ -17,7 +22,7 @@ public abstract class Human extends MovingObject
 	private static final Logger _log = LoggerFactory.getLogger(Human.class.getName());
 
 	/**
-	 * мозг объекта который определяет его поведение, реагирует на все события
+	 * ИИ объекта который определяет его поведение, реагирует на все события
 	 */
 	protected AI _ai = null;
 
@@ -26,18 +31,13 @@ public abstract class Human extends MovingObject
 	 * любое добалвение в этот список, а равно как и удаление из него должно быть
 	 * синхронизировано с клиентом
 	 */
-	protected FastList<GameObject> _knownKist = new FastList<GameObject>().shared();
+	protected Map<Integer, GameObject> _knownKist = new ConcurrentHashMap<>();
 
 	/**
 	 * дистанция на которой мы видим объекты
 	 * может изменяться динамически (ночью видим хуже)
 	 */
 	protected int _visibleDistance = 100;
-
-	/**
-	 * дистанция которую нужно пройти чтобы произошел апдейт видимых объектов
-	 */
-	protected static final int VISIBLE_UPDATE_DISTANCE = 5 * Grid.TILE_SIZE;
 
 	/**
 	 * последняя позиция в которой было обновление видимых объектов
@@ -71,19 +71,18 @@ public abstract class Human extends MovingObject
 		if (force || (
 				getPos() != null && _lastVisibleUpdatePos != null &&
 				!getPos().equals(_lastVisibleUpdatePos) &&
-				getPos().getDistance(_lastVisibleUpdatePos) > VISIBLE_UPDATE_DISTANCE
+				getPos().getDistance(_lastVisibleUpdatePos) > Config.VISIBLE_UPDATE_DISTANCE
 		))
 		{
 			_log.debug("updateVisibleObjects " + toString());
 			// запомним те объекты которые видимы при текущем апдейте
-			FastList<GameObject> newList = new FastList<>();
+			List<GameObject> newList = new LinkedList<>();
 
 			// проходим по всем гридам в которых находимся
-			for (Grid g : _grids)
+			for (Grid grid : _grids)
 			{
 				// по всем объектам в гридах
-				FastList<GameObject> objs = g.getObjects();
-				for (GameObject o : objs)
+				for (GameObject o : grid.getObjects())
 				{
 					// только если мы видим объект
 					if (isObjectVisibleForMe(o))
@@ -95,8 +94,8 @@ public abstract class Human extends MovingObject
 				}
 			}
 			// какие объекты больше не видимы?
-			FastList<GameObject> del = new FastList<>();
-			for (GameObject o : _knownKist)
+			List<GameObject> del = new LinkedList<>();
+			for (GameObject o : _knownKist.values())
 			{
 				// если в новом списке нет - значит больше не видим,
 				// пометим на удаление
@@ -120,12 +119,12 @@ public abstract class Human extends MovingObject
 
 	protected void addKnownObject(GameObject object)
 	{
-		_knownKist.add(object);
+		_knownKist.put(object.getObjectId(), object);
 	}
 
 	protected void removeKnownObject(GameObject object)
 	{
-		_knownKist.remove(object);
+		_knownKist.remove(object.getObjectId());
 	}
 
 	/**
@@ -135,12 +134,12 @@ public abstract class Human extends MovingObject
 	 */
 	public boolean isKnownObject(GameObject object)
 	{
-		return _knownKist.contains(object);
+		return _knownKist.containsKey(object.getObjectId());
 	}
 
 	public GameObject isKnownObject(int objectId)
 	{
-		for (GameObject object : _knownKist)
+		for (GameObject object : _knownKist.values())
 		{
 			if (!object.isDeleteing() && object.getObjectId() == objectId)
 			{
@@ -224,7 +223,7 @@ public abstract class Human extends MovingObject
 	}
 
 	@Override
-	public void onArrived()
+	protected void onArrived()
 	{
 		super.onArrived();
 		if (_ai != null)

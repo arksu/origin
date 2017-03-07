@@ -5,7 +5,6 @@ import com.a4server.Database;
 import com.a4server.loginserver.network.serverpackets.LoginFail;
 import com.a4server.util.Rnd;
 import com.a4server.util.scrypt.SCryptUtil;
-import javolution.util.FastMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +14,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by arksu on 03.01.2015.
@@ -25,7 +26,7 @@ public class LoginController
 
 	private static LoginController _instance;
 
-	protected FastMap<String, LoginClient> _loginServerClients = new FastMap<String, LoginClient>().shared();
+	protected Map<String, LoginClient> _loginServerClients = new ConcurrentHashMap<>();
 
 	// SQL Queries
 	private static final String USER_INFO_SELECT = "SELECT password, accessLevel FROM accounts WHERE login=?";
@@ -95,13 +96,11 @@ public class LoginController
 			{
 				ret = AuthLoginResult.USER_NOT_FOUND;
 			}
-			else
+			else if (client.getAccessLevel() < 0)
 			{
-				if (client.getAccessLevel() < 0)
-				{
-					ret = AuthLoginResult.ACCOUNT_BANNED;
-				}
+				ret = AuthLoginResult.ACCOUNT_BANNED;
 			}
+
 		}
 		return ret;
 	}
@@ -114,7 +113,7 @@ public class LoginController
 
 	public boolean loginValid(String user, String hash, LoginClient client)// throws HackingException
 	{
-		boolean ok = false;
+		boolean ok;
 		InetAddress address = client.getInetAddress();
 
 		// player disconnected meanwhile
@@ -130,7 +129,7 @@ public class LoginController
 			int access = 0;
 			String password = "";
 			try (Connection con = Database.getInstance().getConnection();
-				 PreparedStatement ps = con.prepareStatement(USER_INFO_SELECT))
+			     PreparedStatement ps = con.prepareStatement(USER_INFO_SELECT))
 			{
 				ps.setString(1, user);
 				try (ResultSet rset = ps.executeQuery())
@@ -190,7 +189,7 @@ public class LoginController
 				client.setAccessLevel(access);
 				long unixTime = System.currentTimeMillis() / 1000L;
 				try (Connection con = Database.getInstance().getConnection();
-					 PreparedStatement ps = con.prepareStatement(ACCOUNT_INFO_UPDATE))
+				     PreparedStatement ps = con.prepareStatement(ACCOUNT_INFO_UPDATE))
 				{
 					ps.setLong(1, unixTime);
 					ps.setString(2, address.getHostAddress());
@@ -228,7 +227,7 @@ public class LoginController
 		SessionKey key = new SessionKey(Rnd.nextInt(), Rnd.nextInt());
 
 		try (Connection con = Database.getInstance().getConnection();
-			 PreparedStatement ps = con.prepareStatement(ACCOUNT_ASSIGN_SESSIONKEY))
+		     PreparedStatement ps = con.prepareStatement(ACCOUNT_ASSIGN_SESSIONKEY))
 		{
 			ps.setInt(1, key.getId1());
 			ps.setInt(2, key.getId2());

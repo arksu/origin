@@ -325,6 +325,10 @@ public class AbstractItem
 		return _isDeleted;
 	}
 
+	/**
+	 * попадает ли вещь с указанными координатами и размерами в эту вещь? (есть конфликт?)
+	 * находится ли внутри этой вещи
+	 */
 	public boolean contains(int x, int y, int w, int h)
 	{
 		final int tr = _x + _template.getWidth() - 1;

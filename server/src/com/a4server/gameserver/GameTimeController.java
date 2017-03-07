@@ -1,13 +1,13 @@
 package com.a4server.gameserver;
 
-import com.a4server.Config;
 import com.a4server.ThreadPoolManager;
 import com.a4server.gameserver.model.MovingObject;
-import com.a4server.gameserver.model.position.MoveController;
 import com.a4server.util.StackTrace;
-import javolution.util.FastMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * глобальное управление игровым временем
@@ -49,7 +49,7 @@ public class GameTimeController extends Thread
 	/**
 	 * список объектов которые двигаются в данный момент, которые будем обновлять каждый тик
 	 */
-	private final FastMap<Integer, MovingObject> _movingObjects = new FastMap<Integer, MovingObject>().shared();
+	private final Set<MovingObject> _movingObjects = ConcurrentHashMap.newKeySet();
 
 	private GameTimeController()
 	{
@@ -102,60 +102,32 @@ public class GameTimeController extends Thread
 
 	/**
 	 * передвинуть все объекты которые есть в списке
-	 * @throws Exception
 	 */
 	private void moveObjects() throws Exception
 	{
-		MovingObject obj;
-		for (FastMap.Entry<Integer, MovingObject> e = _movingObjects.head(), tail = _movingObjects.tail(); (e = e
-				.getNext()) != tail; )
-		{
-			obj = e.getValue();
-
-			// получим контроллера
-			MoveController controller = obj.getMoveController();
-			if (controller != null)
-			{
-//				long startTime = System.nanoTime();
-				// обновим и узнаем закончено ли движение?
-				if (controller.updateMove())
-				{
-					// удалим из списка передвижений. больше ему не надо никуда двигаться
-					_movingObjects.remove(e.getKey());
-					// скажем объекту что он дошел куда надо
-					obj.onArrived();
-				}
-//				long dd = (System.nanoTime() - startTime) / 1000;
-//                _log.debug("move: "+dd / 1000 + "."+dd % 1000);
-			}
-			else
-			{
-				// ошибка. объект в списке передвижения но контроллера у него нет.
-				_log.warn("moveObjects: object no controller! " + obj.toString());
-			}
-		}
+		_movingObjects.removeIf(MovingObject::updatePosition);
 	}
 
 	/**
 	 * добавим объект который передвгиается
 	 */
-	public void AddMovingObject(MovingObject object)
+	public void addMovingObject(MovingObject object)
 	{
 		// проверим что контроллер есть у объекта, иначе нет смысла добавлять его в очередь передвижения
 		if (object.getMoveController() == null)
 		{
 			return;
 		}
-		_movingObjects.putIfAbsent(object.getObjectId(), object);
+		_movingObjects.add(object);
 	}
 
 	/**
 	 * удалить объект из списка передвижений
 	 * @param object объект
 	 */
-	public void RemoveMovingObject(MovingObject object)
+	public void removeMovingObject(MovingObject object)
 	{
-		_movingObjects.remove(object.getObjectId());
+		_movingObjects.remove(object);
 	}
 
 	/**
@@ -186,12 +158,9 @@ public class GameTimeController extends Thread
 	/**
 	 * сохранить значение тиков в базу
 	 */
-	public void store()
+	private void store()
 	{
-		if (Config.DEBUG)
-		{
-			_log.debug("store time in db: " + _tickCount);
-		}
+		_log.debug("store time in db: " + _tickCount);
 		GlobalVariablesManager.getInstance().saveVarInt("server_time", _tickCount);
 	}
 

@@ -90,7 +90,7 @@ public class InventoryClick extends GameClientPacket
 						{
 							try
 							{
-								InventoryItem taked = item.getParentInventory().takeItem(item) ? item : null;
+								InventoryItem taked = item.getParentInventory().takeItem(item);
 
 								// взяли вещь из инвентаря
 								if (taked != null)
@@ -194,9 +194,9 @@ public class InventoryClick extends GameClientPacket
 	private void setHand(Player player, InventoryItem taked)
 	{
 		player.setHand(new Hand(player, taked,
-								_x - taked.getX(),
-								_y - taked.getY(),
-								_offsetX, _offsetY
+		                        _x - taked.getX(),
+		                        _y - taked.getY(),
+		                        _offsetX, _offsetY
 		));
 	}
 }

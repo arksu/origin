@@ -60,6 +60,11 @@ public class Config
 	 */
 	public static final int UPDATE_DB_DISTANCE = Grid.TILE_SIZE * 5;
 
+	/**
+	 * дистанция которую нужно пройти чтобы произошел апдейт видимых объектов
+	 */
+	public static final int VISIBLE_UPDATE_DISTANCE = 5 * Grid.TILE_SIZE;
+
 	public static void loadGameServerConfig()
 	{
 		DATABASE_CONNECTION_CLOSE_TIME = 1000;

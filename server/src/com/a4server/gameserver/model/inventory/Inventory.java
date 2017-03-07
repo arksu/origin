@@ -3,7 +3,6 @@ package com.a4server.gameserver.model.inventory;
 import com.a4server.Database;
 import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.objects.InventoryTemplate;
-import javolution.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * инвентарь объекта
@@ -49,7 +50,7 @@ public class Inventory
 	/**
 	 * список вещей которые находятся внутри
 	 */
-	protected final FastList<InventoryItem> _items = new FastList<>();
+	protected final Map<Integer, InventoryItem> _items = new ConcurrentHashMap<>();
 
 	/**
 	 * это инвентарь непосредственно объекта
@@ -90,14 +91,15 @@ public class Inventory
 		try
 		{
 			try (Connection con = Database.getInstance().getConnection();
-				 PreparedStatement ps = con.prepareStatement(LOAD_INVENTORY))
+			     PreparedStatement ps = con.prepareStatement(LOAD_INVENTORY))
 			{
 				ps.setInt(1, _invenroyId);
 				try (ResultSet rset = ps.executeQuery())
 				{
 					while (rset.next())
 					{
-						_items.add(new InventoryItem(this, rset));
+						InventoryItem item = new InventoryItem(this, rset);
+						_items.put(item.getObjectId(), item);
 					}
 					_log.debug("loaded " + _items.size() + " items");
 				}
@@ -115,7 +117,7 @@ public class Inventory
 		return _object;
 	}
 
-	public FastList<InventoryItem> getItems()
+	public Map<Integer, InventoryItem> getItems()
 	{
 		return _items;
 	}
@@ -140,18 +142,21 @@ public class Inventory
 	 */
 	public InventoryItem findItem(int objectId)
 	{
-		for (InventoryItem item : _items)
+		// пытаемся найти вещь по ид
+		InventoryItem item = _items.get(objectId);
+		if (item != null)
 		{
-			if (item.getObjectId() == objectId)
+			return item;
+		}
+		// в этом инвентаре указанной вещи нет, ищем во вложенных
+		for (InventoryItem inv : _items.values())
+		{
+			if (inv.getInventory() != null)
 			{
-				return item;
-			}
-			if (item.getInventory() != null)
-			{
-				InventoryItem i = item.getInventory().findItem(objectId);
-				if (i != null)
+				InventoryItem found = inv.getInventory().findItem(objectId);
+				if (found != null)
 				{
-					return i;
+					return found;
 				}
 			}
 		}
@@ -164,7 +169,8 @@ public class Inventory
 	public Inventory findInventory(int invenroyId)
 	{
 		if (_invenroyId == invenroyId) return this;
-		for (InventoryItem item : _items)
+
+		for (InventoryItem item : _items.values())
 		{
 			if (item.getInventory() != null)
 			{
@@ -181,9 +187,9 @@ public class Inventory
 	/**
 	 * взять вещь из инвентаря
 	 */
-	public boolean takeItem(InventoryItem item)
+	public InventoryItem takeItem(InventoryItem item)
 	{
-		return _items.remove(item);
+		return _items.remove(item.getObjectId());
 	}
 
 	/**
@@ -236,24 +242,29 @@ public class Inventory
 	 */
 	protected boolean tryPut(InventoryItem item, int x, int y)
 	{
-		// если вещь влезает в инвентарь
-		if (x + item.getWidth() <= getWidth() && y + item.getHeight() <= getHeight())
+		synchronized (this)
 		{
-			boolean conflict = false;
-			for (InventoryItem i : _items)
+			// если вещь влезает в инвентарь
+			if (x + item.getWidth() <= getWidth() && y + item.getHeight() <= getHeight())
 			{
-				if (i.contains(x, y, item.getWidth(), item.getHeight()))
+				boolean conflict = false;
+				// пройдемся по всем вещам в инвентаре
+				for (InventoryItem i : _items.values())
 				{
-					conflict = true;
-					break;
+					// убедимся что новая вещь не пересекается ни с одной внутри
+					if (i.contains(x, y, item.getWidth(), item.getHeight()))
+					{
+						conflict = true;
+						break;
+					}
 				}
-			}
-			if (!conflict)
-			{
-				_items.add(item);
-				item.setParentInventory(this);
-				item.setXY(x, y);
-				return true;
+				if (!conflict)
+				{
+					_items.put(item.getObjectId(), item);
+					item.setParentInventory(this);
+					item.setXY(x, y);
+					return true;
+				}
 			}
 		}
 		return false;

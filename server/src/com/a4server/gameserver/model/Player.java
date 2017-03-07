@@ -165,7 +165,7 @@ public class Player extends Human
 		Player player = null;
 
 		try (Connection con = Database.getInstance().getConnection();
-			 PreparedStatement statement = con.prepareStatement(LOAD_CHARACTER))
+		     PreparedStatement statement = con.prepareStatement(LOAD_CHARACTER))
 		{
 			statement.setInt(1, objectId);
 			try (ResultSet rset = statement.executeQuery())
@@ -230,7 +230,7 @@ public class Player extends Human
 	protected void addKnownObject(GameObject object)
 	{
 		// такого объекта еще не было в списке
-		if (!_knownKist.contains(object))
+		if (!_knownKist.containsKey(object.getObjectId()))
 		{
 			super.addKnownObject(object);
 			getClient().sendPacket(object.makeAddToWorldPacket());
@@ -244,7 +244,7 @@ public class Player extends Human
 	@Override
 	protected void removeKnownObject(GameObject object)
 	{
-		if (_knownKist.contains(object))
+		if (_knownKist.containsKey(object.getObjectId()))
 		{
 			super.removeKnownObject(object);
 			getClient().sendPacket(object.makeRemoveFromWorldPacket());
@@ -261,9 +261,9 @@ public class Player extends Human
 	{
 		GameServerPacket pkt = new ObjectAdd(this);
 		BaseSendPacket next = pkt
-									  // раз это персонаж, отправим его представление, то как он должен выглядеть
-									  .addNext(new PlayerAppearance(_appearance))
-									  .addNext(new EquipUpdate(_equip));
+				// раз это персонаж, отправим его представление, то как он должен выглядеть
+				.addNext(new PlayerAppearance(_appearance))
+				.addNext(new EquipUpdate(_equip));
 		if (_hand != null)
 		{
 			next.addNext(new PlayerHand(_hand));
@@ -274,7 +274,7 @@ public class Player extends Human
 	public BaseSendPacket makeInitClientPacket()
 	{
 		return new InventoryUpdate(_inventory)
-					   .addNext(new ActionsList(getActions()));
+				.addNext(new ActionsList(getActions()));
 	}
 
 	/**
@@ -324,7 +324,7 @@ public class Player extends Human
 				_moveController.setActiveObject(null);
 				_moveController = null;
 			}
-			GameTimeController.getInstance().RemoveMovingObject(this);
+			GameTimeController.getInstance().removeMovingObject(this);
 		}
 	}
 
@@ -405,7 +405,7 @@ public class Player extends Human
 		try
 		{
 			try (Connection con = Database.getInstance().getConnection();
-				 PreparedStatement ps = con.prepareStatement(UPDATE_CHARACTER))
+			     PreparedStatement ps = con.prepareStatement(UPDATE_CHARACTER))
 			{
 				ps.setInt(1, getPos()._x);
 				ps.setInt(2, getPos()._y);
@@ -427,7 +427,7 @@ public class Player extends Human
 		try
 		{
 			try (Connection con = Database.getInstance().getConnection();
-				 PreparedStatement ps = con.prepareStatement(UPDATE_LAST_CHAR))
+			     PreparedStatement ps = con.prepareStatement(UPDATE_LAST_CHAR))
 			{
 				ps.setInt(1, getObjectId());
 				ps.setString(2, _account);
@@ -469,7 +469,7 @@ public class Player extends Human
 			try
 			{
 				try (Connection con = Database.getInstance().getConnection();
-					 PreparedStatement ps = con.prepareStatement(q))
+				     PreparedStatement ps = con.prepareStatement(q))
 				{
 					ps.setInt(1, ido);
 					ps.setInt(2, grid);

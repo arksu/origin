@@ -3,10 +3,11 @@ package com.a4server.gameserver.model;
 import cern.colt.map.tobject.OpenIntObjectHashMap;
 import com.a4server.Config;
 import com.a4server.Database;
-import javolution.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static com.a4server.gameserver.model.Grid.*;
@@ -24,7 +25,7 @@ public class World
 	 */
 	private Grid[][][] _grids;
 
-	private FastList<Grid> _activeGrids = new FastList<Grid>(9).shared();
+	private Set<Grid> _activeGrids = ConcurrentHashMap.newKeySet(9);
 
 	/**
 	 * лок на создание грида
@@ -171,12 +172,7 @@ public class World
 
 	public void addActiveGrid(Grid g)
 	{
-		// только если в списке еще нет такого грида
-		// нужно соблюдать уникальность
-		if (!_activeGrids.contains(g))
-		{
-			_activeGrids.add(g);
-		}
+		_activeGrids.add(g);
 	}
 
 	public void removeActiveGrid(Grid g)

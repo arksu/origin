@@ -92,7 +92,7 @@ public abstract class MoveController
 	 * внутренняя реализация движения. надо определить куда должны передвинутся за тик
 	 * @return движение завершено? (истина ежели уперлись во чтото или прибыли в пункт назначения)
 	 */
-	public abstract boolean MovingImpl(double dt);
+	public abstract boolean movingImpl(double dt);
 
 	/**
 	 * обработать тик передвижения
@@ -104,7 +104,7 @@ public abstract class MoveController
 		if (_lastMoveTime < currTime)
 		{
 			// узнаем сколько времени прошло между апдейтами
-			boolean result = MovingImpl((double) (currTime - _lastMoveTime) / 1000);
+			boolean result = movingImpl((double) (currTime - _lastMoveTime) / 1000);
 			// если я еще управляю объектом
 			if (_activeObject.getMoveController() == this)
 			{
@@ -133,7 +133,7 @@ public abstract class MoveController
 	 * @param virtualObject виртуальный объект который может дать коллизию
 	 * @return истина если все ок. ложь если не успешно
 	 */
-	protected boolean Process(double toX,
+	protected boolean process(double toX,
 	                          double toY,
 	                          Move.MoveType moveType,
 	                          VirtualObject virtualObject)
@@ -158,12 +158,17 @@ public abstract class MoveController
 				return true;
 
 			case COLLISION_FAIL:
-				_activeObject.stopMove(collision, (int) Math.round(_currentX),
-				                       (int) Math.round(_currentY));
+				_activeObject.stopMove(
+						collision,
+						(int) Math.round(_currentX),
+						(int) Math.round(_currentY));
 				return false;
 
 			default:
-				_activeObject.stopMove(collision, collision.getX(), collision.getY());
+				_activeObject.stopMove(
+						collision,
+						collision.getX(),
+						collision.getY());
 				return false;
 		}
 

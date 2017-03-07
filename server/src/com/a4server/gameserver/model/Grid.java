@@ -20,7 +20,6 @@ import com.a4server.gameserver.model.objects.ObjectsFactory;
 import com.a4server.gameserver.network.serverpackets.MapGrid;
 import com.a4server.util.Rect;
 import com.a4server.util.Rnd;
-import javolution.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +30,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
@@ -132,12 +133,12 @@ public class Grid
 	/**
 	 * список игроков которые поддерживают этот грид активным
 	 */
-	private FastList<Player> _activePlayers = new FastList<Player>().shared();
+	private Queue<Player> _activePlayers = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * список объектов в гриде
 	 */
-	private FastList<GameObject> _objects = new FastList<GameObject>().shared();
+	private Queue<GameObject> _objects = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * создаем грид
@@ -160,7 +161,7 @@ public class Grid
 		_log.debug("grid create " + toString());
 	}
 
-	public FastList<GameObject> getObjects()
+	public Queue<GameObject> getObjects()
 	{
 		return _objects;
 	}

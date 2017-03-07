@@ -13,7 +13,6 @@ import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.*;
 import com.a4server.util.Rect;
 import com.a4server.util.network.BaseSendPacket;
-import javolution.util.FastSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +21,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -82,7 +83,7 @@ public class GameObject
 	 * с кем взаимодействует объект. список двусторонний.
 	 * если у меня тут есть ктото, то и у оного в списке есть я
 	 */
-	protected final FastSet<GameObject> _interactWith = new FastSet<GameObject>().shared();
+	protected final Set<GameObject> _interactWith = ConcurrentHashMap.newKeySet(2);
 
 	/**
 	 * объект в процессе удаления из мира и ни на какие события больше не должен реагировать
@@ -358,7 +359,7 @@ public class GameObject
 		return !_interactWith.isEmpty();
 	}
 
-	public FastSet<GameObject> getInteractWith()
+	public Set<GameObject> getInteractWith()
 	{
 		return _interactWith;
 	}
