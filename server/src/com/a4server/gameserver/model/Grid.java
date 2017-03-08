@@ -14,7 +14,7 @@ import com.a4server.gameserver.model.collision.Collision;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
 import com.a4server.gameserver.model.collision.VirtualObject;
-import com.a4server.gameserver.model.event.Event;
+import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
 import com.a4server.gameserver.network.serverpackets.MapGrid;
@@ -131,9 +131,9 @@ public class Grid
 	private final ReentrantLock _mainLock = new ReentrantLock();
 
 	/**
-	 * список игроков которые поддерживают этот грид активным
+	 * список активных объектов которые поддерживают этот грид активным
 	 */
-	private Queue<Player> _activePlayers = new ConcurrentLinkedQueue<>();
+	private Queue<Human> _activeObjects = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * список объектов в гриде
@@ -170,7 +170,7 @@ public class Grid
 	 * добавить объект в грид
 	 * перед вызовом грид обязательно должен быть залочен!!!
 	 */
-	public void addObject(GameObject object) throws RuntimeException
+	private void addObject(GameObject object) throws RuntimeException
 	{
 		// если грид не залочен - бросим исключение
 		if (!_mainLock.isLocked())
@@ -186,9 +186,9 @@ public class Grid
 			// надо проинформировать всех о добавлении объекта
 			if (isActive())
 			{
-				for (Player player : _activePlayers)
+				for (Human human : _activeObjects)
 				{
-					player.onGridObjectAdded(object);
+					human.onGridObjectAdded(object);
 				}
 			}
 		}
@@ -214,9 +214,9 @@ public class Grid
 			// надо проинформировать всех о добавлении объекта
 			if (isActive())
 			{
-				for (Player player : _activePlayers)
+				for (Human human : _activeObjects)
 				{
-					player.onGridObjectRemoved(object);
+					human.onGridObjectRemoved(object);
 				}
 			}
 		}
@@ -407,7 +407,7 @@ public class Grid
 		try
 		{
 			try (Connection con = Database.getInstance().getConnection();
-				 PreparedStatement ps = con.prepareStatement(query))
+			     PreparedStatement ps = con.prepareStatement(query))
 			{
 				ps.setInt(1, _grid);
 				try (ResultSet rset = ps.executeQuery())
@@ -435,7 +435,7 @@ public class Grid
 		try
 		{
 			try (Connection con = Database.getInstance().getConnection();
-				 PreparedStatement ps = con.prepareStatement(query))
+			     PreparedStatement ps = con.prepareStatement(query))
 			{
 				ps.setInt(1, _grid);
 				try (ResultSet rset = ps.executeQuery())
@@ -528,7 +528,7 @@ public class Grid
 		try
 		{
 			try (Connection con = Database.getInstance().getConnection();
-				 PreparedStatement ps = con.prepareStatement(query))
+			     PreparedStatement ps = con.prepareStatement(query))
 			{
 				ps.setBlob(1, new ByteArrayInputStream(_blob));
 				ps.setInt(2, _grid);
@@ -549,7 +549,7 @@ public class Grid
 		if (update)
 		{
 			updateTiles();
-			broadcastEvent(new Event(null, Event.EventType.EVT_DEFAULT, new MapGrid(this, -1, -1)));
+			broadcastEvent(new GridEvent(null, GridEvent.EventType.EVT_DEFAULT, new MapGrid(this, -1, -1)));
 		}
 	}
 
@@ -570,17 +570,15 @@ public class Grid
 	{
 		if (object.getPos()._level != _level)
 		{
-			_log.warn("trySpawn not in player grid! " + object + " " + this.toString());
-			return null;
+			throw new RuntimeException("trySpawn not in player grid! " + object + " " + this.toString());
 		}
 
 		int x = object.getPos()._x;
 		int y = object.getPos()._y;
 		if (x < (_x * GRID_FULL_SIZE) || x >= ((_x + 1) * GRID_FULL_SIZE) ||
-			y < (_y * GRID_FULL_SIZE) || y >= ((_y + 1) * GRID_FULL_SIZE))
+		    y < (_y * GRID_FULL_SIZE) || y >= ((_y + 1) * GRID_FULL_SIZE))
 		{
-			_log.warn("trySpawn: player coord not in grid! " + object + " " + this.toString());
-			return null;
+			throw new RuntimeException("trySpawn: player coord is not in grid! " + object + " " + this.toString());
 		}
 
 		int toX = x;
@@ -695,11 +693,11 @@ public class Grid
 	 * @return результат обсчета в виде CollisionResult
 	 */
 	public synchronized CollisionResult checkCollision(GameObject object,
-													   int fromX, int fromY,
-													   int toX, int toY,
-													   Move.MoveType moveType,
-													   VirtualObject virtual,
-													   boolean isMove)
+	                                                   int fromX, int fromY,
+	                                                   int toX, int toY,
+	                                                   Move.MoveType moveType,
+	                                                   VirtualObject virtual,
+	                                                   boolean isMove)
 			throws GridLoadException
 	{
 		if (!_mainLock.isLocked())
@@ -803,7 +801,7 @@ public class Grid
 
 			// гриды залочены, проходим итерациями и ищем коллизию
 			CollisionResult result = Collision
-											 .checkCollision(object, fromX, fromY, toX, toY, moveType, virtual, grids, 0);
+					.checkCollision(object, fromX, fromY, toX, toY, moveType, virtual, grids, 0);
 
 			// узнаем переместился ли объект из одного грида в другой
 			// и только в том случае если в передвижении участвует больше 1 грида
@@ -889,7 +887,7 @@ public class Grid
 		}
 
 		// если уже активирован этим игроком - выходим
-		if (_activePlayers.contains(player))
+		if (_activeObjects.contains(player))
 		{
 			return true;
 		}
@@ -908,10 +906,10 @@ public class Grid
 				updateGrid();
 			}
 
-			if (!_activePlayers.contains(player))
+			if (!_activeObjects.contains(player))
 			{
 				_log.debug("activate " + toString() + " " + player.toString());
-				_activePlayers.add(player);
+				_activeObjects.add(player);
 			}
 
 			// скажем миру что этот грид теперь активен. и его надо обновлять
@@ -926,9 +924,9 @@ public class Grid
 
 	public void deactivate(Player player)
 	{
-		_activePlayers.remove(player);
+		_activeObjects.remove(player);
 		// если грид больше не активен
-		if (_activePlayers.isEmpty())
+		if (_activeObjects.isEmpty())
 		{
 			// скажем миру что обновлять этот грид больше не надо
 			World.getInstance().removeActiveGrid(this);
@@ -937,30 +935,33 @@ public class Grid
 
 	public boolean isActive()
 	{
-		return !_activePlayers.isEmpty();
+		return !_activeObjects.isEmpty();
 	}
 
 	/**
-	 * разослать всем игрокам грида событие на которое они должны отреагировать
+	 * разослать ВСЕМ активным объектам грида событие на которое они должны отреагировать
 	 */
-	public void broadcastEvent(Event event)
+	public void broadcastEvent(GridEvent gridEvent)
 	{
-		_log.debug("broadcastEvent " + event);
-		for (Player p : _activePlayers)
+		_log.debug("broadcastEvent " + gridEvent);
+		for (Human h : _activeObjects)
 		{
 			// если игрок обработал это событие. и оно касается его
-			if (!p.isDeleteing() && p.handleEvent(event))
+			if (!h.isDeleteing() && h.handleEvent(gridEvent))
 			{
 				// отправим пакет
-				p.getClient().sendPacket(event.getPacket());
+				if (h instanceof Player)
+				{
+					((Player) h).getClient().sendPacket(gridEvent.getPacket());
+				}
 			}
 
 			// это все была базовая обработка событий связанная с рассылкой пакетов
 			// а теперь разошлем всем мозгам эти же события
 			// также тут потом будет еще проверочка на дистанцию до события... незачем мозгу знать о далеких вещах
-			if (p.getAi() != null)
+			if (h.getAi() != null)
 			{
-				p.getAi().handleEvent(event);
+				h.getAi().handleEvent(gridEvent);
 			}
 		}
 	}

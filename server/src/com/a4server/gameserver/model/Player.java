@@ -4,10 +4,11 @@ import com.a4server.Database;
 import com.a4server.gameserver.GameClient;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.idfactory.IdFactory;
-import com.a4server.gameserver.model.event.Event;
+import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.model.inventory.AbstractItem;
 import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.inventory.InventoryItem;
+import com.a4server.gameserver.model.knownlist.PcKnownList;
 import com.a4server.gameserver.model.objects.*;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.*;
@@ -160,6 +161,12 @@ public class Player extends Human
 		}
 	}
 
+	@Override
+	protected void initKnownList()
+	{
+		_knownKist = new PcKnownList(this);
+	}
+
 	static public Player load(int objectId)
 	{
 		Player player = null;
@@ -199,55 +206,6 @@ public class Player extends Human
 		if (getClient() != null)
 		{
 			getClient().sendPacket(new MapGrid(grid, getPos()._x, getPos()._y));
-		}
-	}
-
-	/**
-	 * добавили объект в грид в котором находится игрок
-	 */
-	public void onGridObjectAdded(GameObject object)
-	{
-		// тут проверим видим ли мы этот объект
-		if (isObjectVisibleForMe(object))
-		{
-			addKnownObject(object);
-		}
-	}
-
-	/**
-	 * грид говорит что какой то объект был удален
-	 */
-	public void onGridObjectRemoved(GameObject object)
-	{
-		removeKnownObject(object);
-	}
-
-	/**
-	 * добавить объект в список видимых объектов
-	 * @param object объект
-	 */
-	@Override
-	protected void addKnownObject(GameObject object)
-	{
-		// такого объекта еще не было в списке
-		if (!_knownKist.containsKey(object.getObjectId()))
-		{
-			super.addKnownObject(object);
-			getClient().sendPacket(object.makeAddToWorldPacket());
-		}
-	}
-
-	/**
-	 * удалить из списка видимых объектов
-	 * @param object объект
-	 */
-	@Override
-	protected void removeKnownObject(GameObject object)
-	{
-		if (_knownKist.containsKey(object.getObjectId()))
-		{
-			super.removeKnownObject(object);
-			getClient().sendPacket(object.makeRemoveFromWorldPacket());
 		}
 	}
 
@@ -489,9 +447,9 @@ public class Player extends Human
 	}
 
 	@Override
-	protected boolean onChatMessage(Event event)
+	protected boolean onChatMessage(GridEvent gridEvent)
 	{
-		String message = (String) event.getInfo();
+		String message = (String) gridEvent.getInfo();
 		if (message.startsWith("/"))
 		{
 			if (_accessLevel >= 100)
@@ -643,10 +601,10 @@ public class Player extends Human
 	 * попытаться создать вещь в инвентаре игрока
 	 * @param typeId ид типа вещи
 	 * @param quality качество создаваемой вещи
-	 * @param cadDrop можно ли бросить на землю если места в инвентаре не оказалось
+	 * @param canDrop можно ли бросить на землю если места в инвентаре не оказалось
 	 * @return
 	 */
-	public boolean generateItem(int typeId, int quality, boolean cadDrop)
+	public boolean generateItem(int typeId, int quality, boolean canDrop)
 	{
 		InventoryItem item = new InventoryItem(this, typeId, quality);
 		// пробуем закинуть вещь в инвентарь
@@ -662,7 +620,7 @@ public class Player extends Human
 		}
 		else
 		{
-			if (cadDrop && dropItem(item))
+			if (canDrop && dropItem(item))
 			{
 				return true;
 			}

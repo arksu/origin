@@ -175,6 +175,7 @@ public class World
 
 	public void removeActiveGrid(Grid g)
 	{
+		_log.debug("grid " + g + " deactivate");
 		_activeGrids.remove(g);
 	}
 

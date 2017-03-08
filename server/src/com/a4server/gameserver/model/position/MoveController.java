@@ -7,7 +7,6 @@ import com.a4server.gameserver.model.MovingObject;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
 import com.a4server.gameserver.model.collision.VirtualObject;
-import com.a4server.gameserver.model.event.Event;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,15 +73,6 @@ public abstract class MoveController
 	public abstract boolean canStartMoving();
 
 	/**
-	 * создать игровое событие о движении объекта
-	 * @return событие
-	 */
-	public Event getEvent()
-	{
-		return new Event(_activeObject, Event.EventType.EVT_MOVE, makeMovePacket());
-	}
-
-	/**
 	 * создать пакет о том как движется объект
 	 * @return пакет
 	 */
@@ -147,8 +137,9 @@ public abstract class MoveController
 				_activeObject.getPos().setXY(toX, toY);
 				_currentX = toX;
 				_currentY = toY;
+
 				// расскажем всем о том что мы передвинулись
-				_activeObject.getPos().getGrid().broadcastEvent(getEvent());
+				_activeObject.updateMove();
 
 				// обновим видимые объекты
 				if (_activeObject instanceof Human)

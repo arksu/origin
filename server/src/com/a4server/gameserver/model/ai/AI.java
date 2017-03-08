@@ -1,7 +1,7 @@
 package com.a4server.gameserver.model.ai;
 
 import com.a4server.gameserver.model.collision.CollisionResult;
-import com.a4server.gameserver.model.event.Event;
+import com.a4server.gameserver.model.event.GridEvent;
 
 /**
  * мозг объекта который "думает"
@@ -23,9 +23,9 @@ public interface AI
 
 	/**
 	 * обработать событие, внешний раздражитель
-	 * @param event событие
+	 * @param gridEvent событие
 	 */
-	void handleEvent(Event event);
+	void handleEvent(GridEvent gridEvent);
 
 	/**
 	 * отключить этот мозг, надо сделать все чтобы корректно перевести объект в нейтральное состояние

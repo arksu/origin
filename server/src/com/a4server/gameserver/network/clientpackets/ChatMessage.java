@@ -1,7 +1,7 @@
 package com.a4server.gameserver.network.clientpackets;
 
 import com.a4server.gameserver.model.Player;
-import com.a4server.gameserver.model.event.Event;
+import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.network.serverpackets.CreatureSay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +36,9 @@ public class ChatMessage extends GameClientPacket
 			{
 				// основной канал - общий чат вокруг объекта
 				case 0:
-					Event event = new Event(player, Event.EventType.EVT_CHAT_GENERAL_MESSAGE, _message);
-					event.setPacket(new CreatureSay(player.getObjectId(), _message));
-					player.getPos().getGrid().broadcastEvent(event);
+					GridEvent gridEvent = new GridEvent(player, GridEvent.EventType.EVT_CHAT_GENERAL_MESSAGE, _message);
+					gridEvent.setPacket(new CreatureSay(player.getObjectId(), _message));
+					player.getPos().getGrid().broadcastEvent(gridEvent);
 					break;
 			}
 		}

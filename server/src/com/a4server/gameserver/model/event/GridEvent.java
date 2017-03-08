@@ -10,7 +10,7 @@ import com.a4server.gameserver.network.serverpackets.GameServerPacket;
  * а также дополнительная информация _info описывающая событие
  * Created by arksu on 11.02.15.
  */
-public class Event
+public class GridEvent
 {
 	public enum EventType
 	{
@@ -18,6 +18,7 @@ public class Event
 		 * тип события по умолчанию. прикрепленный пакет шлется всем у кого он в known списке
 		 */
 		EVT_DEFAULT,
+		EVT_START_MOVE,
 		EVT_MOVE,
 		EVT_STOP_MOVE,
 		EVT_CHAT_GENERAL_MESSAGE,
@@ -46,20 +47,20 @@ public class Event
 	 */
 	protected GameServerPacket _packet = null;
 
-	public Event(GameObject initiator, EventType type)
+	public GridEvent(GameObject initiator, EventType type)
 	{
 		_initiator = initiator;
 		_type = type;
 	}
 
-	public Event(GameObject initiator, EventType type, GameServerPacket pkt)
+	public GridEvent(GameObject initiator, EventType type, GameServerPacket pkt)
 	{
 		_initiator = initiator;
 		_type = type;
 		_packet = pkt;
 	}
 
-	public Event(GameObject initiator, EventType type, Object... info)
+	public GridEvent(GameObject initiator, EventType type, Object... info)
 	{
 		_initiator = initiator;
 		_type = type;

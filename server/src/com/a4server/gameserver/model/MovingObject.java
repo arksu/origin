@@ -3,7 +3,7 @@ package com.a4server.gameserver.model;
 import com.a4server.Config;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.collision.CollisionResult;
-import com.a4server.gameserver.model.event.Event;
+import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.MoveController;
 import com.a4server.gameserver.network.serverpackets.ObjectPos;
@@ -79,7 +79,12 @@ public abstract class MovingObject extends GameObject
 			_moveController = controller;
 			_moveResult = null;
 			// расскажем всем что мы начали движение, тут же отправится пакет клиенту
-			getPos().getGrid().broadcastEvent(controller.getEvent());
+			GridEvent gridEvent = new GridEvent(
+					this,
+					GridEvent.EventType.EVT_START_MOVE,
+					_moveController.makeMovePacket()
+			);
+			getPos().getGrid().broadcastEvent(gridEvent);
 			GameTimeController.getInstance().addMovingObject(this);
 		}
 		else
@@ -89,6 +94,19 @@ public abstract class MovingObject extends GameObject
 				_log.debug("cant start move");
 			}
 		}
+	}
+
+	/**
+	 * очередное обновление позиции в движении
+	 */
+	public void updateMove()
+	{
+		GridEvent gridEvent = new GridEvent(
+				this,
+				GridEvent.EventType.EVT_MOVE,
+				_moveController.makeMovePacket()
+		);
+		getPos().getGrid().broadcastEvent(gridEvent);
 	}
 
 	/**
@@ -102,8 +120,8 @@ public abstract class MovingObject extends GameObject
 		getPos().setXY(x, y);
 		storeInDb();
 		// расскажем всем что мы остановились
-		Event event = new Event(this, Event.EventType.EVT_STOP_MOVE, new ObjectPos(getObjectId(), getPos()._x, getPos()._y));
-		getPos().getGrid().broadcastEvent(event);
+		GridEvent gridEvent = new GridEvent(this, GridEvent.EventType.EVT_STOP_MOVE, new ObjectPos(getObjectId(), getPos()._x, getPos()._y));
+		getPos().getGrid().broadcastEvent(gridEvent);
 	}
 
 	/**
@@ -132,13 +150,13 @@ public abstract class MovingObject extends GameObject
 				onArrived();
 				return true;
 			}
+			return false;
 		}
 		else
 		{
 			// ошибка. объект в списке передвижения но контроллера у него нет.
-			_log.warn("updatePosition, object no controller! " + toString());
+			throw new RuntimeException("updatePosition, object havn't move controller! " + toString());
 		}
-		return false;
 	}
 
 	public List<Grid> getGrids()

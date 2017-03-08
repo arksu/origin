@@ -3,7 +3,7 @@ package com.a4server.gameserver.model.ai.player;
 import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.collision.CollisionResult;
-import com.a4server.gameserver.model.event.Event;
+import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.model.position.MoveToPoint;
 
 /**
@@ -43,17 +43,19 @@ public class MoveActionAI extends PlayerAI
 	}
 
 	@Override
-	public void handleEvent(Event event)
+	public void handleEvent(GridEvent gridEvent)
 	{
 	}
 
 	@Override
 	public void begin()
 	{
-		GameObject object = _player.isKnownObject(_targetObjectId);
-		if (object.getPos().getDistance(_player.getPos()) < 2000)
+		GameObject target = _player.getKnownKist().getKnownObjects().get(_targetObjectId);
+		// TODO move to object
+
+		if (target.getPos().getDistance(_player.getPos()) < 2000)
 		{
-			_player.startMove(new MoveToPoint(object.getPos()._x, object.getPos()._y));
+			_player.startMove(new MoveToPoint(target.getPos()._x, target.getPos()._y));
 		}
 	}
 }

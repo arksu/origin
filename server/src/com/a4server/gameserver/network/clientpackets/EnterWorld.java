@@ -33,6 +33,7 @@ public class EnterWorld extends GameClientPacket
 		if (cha != null)
 		{
 			_log.debug("EnterWorld " + cha.toString());
+
 			// начинаем слать клиенту игровую информацию
 			sendPacket(new WorldInfo());
 			sendPacket(new TimeUpdate());

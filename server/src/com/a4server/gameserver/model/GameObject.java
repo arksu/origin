@@ -4,7 +4,7 @@ import com.a4server.Database;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.ai.player.MoveActionAI;
 import com.a4server.gameserver.model.collision.CollisionResult;
-import com.a4server.gameserver.model.event.Event;
+import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.objects.InventoryTemplate;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
@@ -108,10 +108,11 @@ public class GameObject
 		}
 		_objectId = objectId;
 		_template = template;
-		_boundRect = new Rect(-_template.getWidth() / 2,
-							  -_template.getHeight() / 2,
-							  _template.getWidth() / 2,
-							  _template.getHeight() / 2);
+		_boundRect = new Rect(
+				-_template.getWidth() / 2,
+				-_template.getHeight() / 2,
+				_template.getWidth() / 2,
+				_template.getHeight() / 2);
 	}
 
 	/**
@@ -126,10 +127,11 @@ public class GameObject
 		int typeId = rset.getInt("type");
 		_quality = rset.getInt("q");
 		_template = ObjectsFactory.getInstance().getTemplate(typeId);
-		_boundRect = new Rect(-_template.getWidth() / 2,
-							  -_template.getHeight() / 2,
-							  _template.getWidth() / 2,
-							  _template.getHeight() / 2);
+		_boundRect = new Rect(
+				-_template.getWidth() / 2,
+				-_template.getHeight() / 2,
+				_template.getWidth() / 2,
+				_template.getHeight() / 2);
 		// есть ли у объекта инвентарь?
 		InventoryTemplate inventoryTemplate = _template.getInventory();
 		if (inventoryTemplate != null)
@@ -148,7 +150,7 @@ public class GameObject
 
 		// query queue
 		try (Connection con = Database.getInstance().getConnection();
-			 PreparedStatement statement = con.prepareStatement(query))
+		     PreparedStatement statement = con.prepareStatement(query))
 		{
 			statement.setInt(1, getObjectId());
 			statement.setInt(2, getPos().getGrid().getId());
@@ -183,7 +185,7 @@ public class GameObject
 
 		// query queue
 		try (Connection con = Database.getInstance().getConnection();
-			 PreparedStatement statement = con.prepareStatement(query))
+		     PreparedStatement statement = con.prepareStatement(query))
 		{
 			statement.setInt(1, value ? 1 : 0);
 			statement.setInt(2, _objectId);
@@ -338,7 +340,7 @@ public class GameObject
 	public String toString()
 	{
 		return "(" + getClass().getSimpleName() + ": " + (!_name
-																   .isEmpty() ? _name + " " : "") + "id=" + _objectId + ")";
+				.isEmpty() ? _name + " " : "") + "id=" + _objectId + ")";
 	}
 
 	@Override
@@ -442,7 +444,7 @@ public class GameObject
 	protected void setInteractive(boolean value)
 	{
 		_log.debug("setInteractive " + value);
-		Event evt = new Event(this, Event.EventType.EVT_INTERACT, value);
+		GridEvent evt = new GridEvent(this, GridEvent.EventType.EVT_INTERACT, value);
 		evt.setPacket(new ObjectInteractive(_objectId, value));
 		getPos().getGrid().broadcastEvent(evt);
 	}
@@ -504,7 +506,7 @@ public class GameObject
 				{
 					// убедимся что прибыли к нужному объекту
 					if (moveResult.getResultType() == CollisionResult.CollisionType.COLLISION_OBJECT
-						&& moveResult.getObject().getObjectId() == _objectId)
+					    && moveResult.getObject().getObjectId() == _objectId)
 					// проверим что такой пункт еще реально есть по прибытии к объекту
 					{
 						List<String> contextMenu1 = getContextMenu(player);
