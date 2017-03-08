@@ -6,6 +6,7 @@ import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.model.knownlist.ObjectKnownList;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.ObjectPosition;
+import com.a4server.gameserver.network.clientpackets.ChatMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,10 +71,16 @@ public abstract class Human extends MovingObject
 		_visibleDistance = visibleDistance;
 	}
 
+	public int getVisibleDistance()
+	{
+		return _visibleDistance;
+	}
+
 	/**
 	 * обновить список видимых объектов
 	 * все новые что увидим - отправятся клиенту. старые что перестали видеть - будут удалены
-	 * @param force принудительно
+	 * @param force принудительно,
+	 * иначе проверка будет только если отошли на значительное расстояние от точки последней проверки
 	 */
 	public void updateVisibleObjects(boolean force)
 	{
@@ -84,10 +91,10 @@ public abstract class Human extends MovingObject
 				getPos().getDistance(_lastVisibleUpdatePos) > Config.VISIBLE_UPDATE_DISTANCE
 		))
 		{
-			_log.debug("updateVisibleObjects " + toString());
 			// запомним те объекты которые видимы при текущем апдейте
 			List<GameObject> newList = new LinkedList<>();
 
+			int newCounter = 0;
 			// проходим по всем гридам в которых находимся
 			for (Grid grid : _grids)
 			{
@@ -98,14 +105,17 @@ public abstract class Human extends MovingObject
 					if (isObjectVisibleForMe(o))
 					{
 						// добавим его в список видимых
-						getKnownKist().addKnownObject(o);
+						if (getKnownKist().addKnownObject(o))
+						{
+							newCounter++;
+						}
 						newList.add(o);
 					}
 				}
 			}
 			// какие объекты больше не видимы?
 			List<GameObject> del = new LinkedList<>();
-			for (GameObject o : _knownKist.getKnownObjects().values())
+			for (GameObject o : getKnownKist().getKnownObjects().values())
 			{
 				// если в новом списке нет - значит больше не видим,
 				// пометим на удаление
@@ -124,6 +134,7 @@ public abstract class Human extends MovingObject
 			{
 				_lastVisibleUpdatePos = getPos().clone();
 			}
+			_log.debug("updateVisibleObjects " + toString() + " new=" + newCounter + " vis=" + newList.size() + " del=" + del.size());
 		}
 	}
 
@@ -154,9 +165,22 @@ public abstract class Human extends MovingObject
 	 */
 	public boolean isObjectVisibleForMe(GameObject object)
 	{
+		if (object == null) return false;
 		// по дефолту просто смотрим на расстояние мжеду нами
 		// себя всегда видим!
-		return object.getObjectId() == getObjectId() || (getPos().getDistance(object.getPos()) < _visibleDistance);
+		return object.getObjectId() == getObjectId() || (getPos().getDistance(object.getPos()) < getVisibleDistance());
+	}
+
+	/**
+	 * объект находится в пределах моей видимости?
+	 * НО! при этом я могу его не видеть! стелс...
+	 * @param object объект который проверяем
+	 */
+	public boolean isObjectInMyVisibleRadius(GameObject object)
+	{
+		if (object == null) return false;
+		// себя всегда видим!
+		return object.getObjectId() == getObjectId() || (getPos().getDistance(object.getPos()) < getVisibleDistance());
 	}
 
 	/**
@@ -165,7 +189,7 @@ public abstract class Human extends MovingObject
 	 * @return истина если событие обработано, значит событие нужно переправить клиенту,
 	 * значит к нему уйдет прикрепленный пакет
 	 */
-	public boolean handleEvent(GridEvent event)
+	public boolean handleGridEvent(GridEvent event)
 	{
 		// событие движения
 		switch (event.getType())
@@ -193,9 +217,8 @@ public abstract class Human extends MovingObject
 					if (isObjectVisibleForMe(event.getInitiator()))
 					{
 						// ага. вижу. добавим в список видимых
-						getKnownKist().addKnownObject(event.getInitiator());
 						// мы видим объект, отправим пакет клиенту
-						return true;
+						return getKnownKist().addKnownObject(event.getInitiator());
 					}
 				}
 				break;
@@ -203,12 +226,8 @@ public abstract class Human extends MovingObject
 			case EVT_DEFAULT:
 				return event.getInitiator() == null || getKnownKist().isKnownObject(event.getInitiator());
 
-			case EVT_CHAT_GENERAL_MESSAGE:
+			case EVT_CHAT_MESSAGE:
 				return onChatMessage(event);
-
-			case EVT_INTERACT:
-				// если мы знаем такой объект - пошлем пакет клиенту
-				return getKnownKist().isKnownObject(event.getInitiator());
 		}
 		return false;
 	}
@@ -216,9 +235,15 @@ public abstract class Human extends MovingObject
 	/**
 	 * обработать сообщение в чате
 	 */
-	protected boolean onChatMessage(GridEvent gridEvent)
+	protected boolean onChatMessage(GridEvent event)
 	{
-		return getKnownKist().isKnownObject(gridEvent.getInitiator());
+		Integer channel = (Integer) event.getInfo()[0];
+		if (channel == ChatMessage.GENERAL)
+		{
+			// я могу объекта и не знать (он в инвизе) но сообщение от него получить должен если он рядом
+			return isObjectInMyVisibleRadius(event.getInitiator());
+		}
+		return false;
 	}
 
 	@Override

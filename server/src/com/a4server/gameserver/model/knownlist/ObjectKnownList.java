@@ -1,6 +1,7 @@
 package com.a4server.gameserver.model.knownlist;
 
 import com.a4server.gameserver.model.GameObject;
+import com.a4server.gameserver.model.Player;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +16,7 @@ public class ObjectKnownList
 	private final GameObject _activeObject;
 
 	private final Map<Integer, GameObject> _knownObjects = new ConcurrentHashMap<>();
+	private final Map<Integer, Player> _knownPlayers = new ConcurrentHashMap<>();
 
 	public ObjectKnownList(GameObject activeObject)
 	{
@@ -29,6 +31,11 @@ public class ObjectKnownList
 	public Map<Integer, GameObject> getKnownObjects()
 	{
 		return _knownObjects;
+	}
+
+	public Map<Integer, Player> getKnownPlayers()
+	{
+		return _knownPlayers;
 	}
 
 	public boolean isKnownObject(GameObject object)
@@ -53,8 +60,14 @@ public class ObjectKnownList
 		}
 
 		// проверка дистанции до объекта
+//		if (getActiveObject().)
 
-		return getKnownObjects().put(object.getObjectId(), object) == null;
+		boolean result = getKnownObjects().put(object.getObjectId(), object) == null;
+		if (result && object.isPlayer())
+		{
+			getKnownPlayers().put(object.getObjectId(), object.getActingPlayer());
+		}
+		return result;
 	}
 
 	public boolean removeKnownObject(GameObject object)
@@ -64,6 +77,11 @@ public class ObjectKnownList
 			return false;
 		}
 
-		return getKnownObjects().remove(object.getObjectId()) != null;
+		boolean result = getKnownObjects().remove(object.getObjectId()) != null;
+		if (result && object.isPlayer())
+		{
+			getKnownPlayers().remove(object.getObjectId());
+		}
+		return result;
 	}
 }

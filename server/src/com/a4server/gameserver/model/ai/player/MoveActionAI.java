@@ -43,7 +43,7 @@ public class MoveActionAI extends PlayerAI
 	}
 
 	@Override
-	public void handleEvent(GridEvent gridEvent)
+	public void handleGridEvent(GridEvent gridEvent)
 	{
 	}
 

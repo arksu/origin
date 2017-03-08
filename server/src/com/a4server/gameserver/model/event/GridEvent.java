@@ -21,8 +21,7 @@ public class GridEvent
 		EVT_START_MOVE,
 		EVT_MOVE,
 		EVT_STOP_MOVE,
-		EVT_CHAT_GENERAL_MESSAGE,
-		EVT_INTERACT
+		EVT_CHAT_MESSAGE,
 	}
 
 	/**
@@ -87,7 +86,7 @@ public class GridEvent
 		_packet = pkt;
 	}
 
-	public Object getInfo()
+	public Object[] getInfo()
 	{
 		return _info;
 	}

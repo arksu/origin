@@ -4,7 +4,6 @@ import com.a4server.Database;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.ai.player.MoveActionAI;
 import com.a4server.gameserver.model.collision.CollisionResult;
-import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.objects.InventoryTemplate;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
@@ -372,6 +371,8 @@ public class GameObject
 	 */
 	public void beginInteract(GameObject other)
 	{
+		// TODO убрать interact, слить в одно. различие только в interactImpl(other);
+
 		boolean wasEmpty = _interactWith.isEmpty();
 		if (_interactWith.add(other))
 		{
@@ -444,9 +445,10 @@ public class GameObject
 	protected void setInteractive(boolean value)
 	{
 		_log.debug("setInteractive " + value);
-		GridEvent evt = new GridEvent(this, GridEvent.EventType.EVT_INTERACT, value);
-		evt.setPacket(new ObjectInteractive(_objectId, value));
-		getPos().getGrid().broadcastEvent(evt);
+
+		// TODO !! слать пакет интерактива! см beginInteract
+		new ObjectInteractive(_objectId, value);
+
 	}
 
 	/**
@@ -543,5 +545,13 @@ public class GameObject
 	public boolean isItem()
 	{
 		return _template.getItem() != null;
+	}
+
+	/**
+	 * получить активного игрока (управляющего этим объектом)
+	 */
+	public Player getActingPlayer()
+	{
+		return null;
 	}
 }

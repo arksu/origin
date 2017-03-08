@@ -4,12 +4,14 @@ import com.a4server.Database;
 import com.a4server.gameserver.GameClient;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.idfactory.IdFactory;
-import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.model.inventory.AbstractItem;
 import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.inventory.InventoryItem;
 import com.a4server.gameserver.model.knownlist.PcKnownList;
-import com.a4server.gameserver.model.objects.*;
+import com.a4server.gameserver.model.objects.CollisionTemplate;
+import com.a4server.gameserver.model.objects.InventoryTemplate;
+import com.a4server.gameserver.model.objects.ItemTemplate;
+import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.*;
 import com.a4server.util.Rnd;
@@ -321,6 +323,18 @@ public class Player extends Human
 		return _client;
 	}
 
+	@Override
+	public boolean isPlayer()
+	{
+		return true;
+	}
+
+	@Override
+	public Player getActingPlayer()
+	{
+		return this;
+	}
+
 	public Inventory getInventory()
 	{
 		return _inventory;
@@ -405,6 +419,7 @@ public class Player extends Human
 	@Override
 	public double getMoveSpeed()
 	{
+		// todo getMoveSpeed
 		return 25f;
 	}
 
@@ -444,70 +459,6 @@ public class Player extends Human
 				_log.warn("failed: storeInDb " + e.getMessage());
 			}
 		}
-	}
-
-	@Override
-	protected boolean onChatMessage(GridEvent gridEvent)
-	{
-		String message = (String) gridEvent.getInfo();
-		if (message.startsWith("/"))
-		{
-			if (_accessLevel >= 100)
-			{
-				_log.debug("console command: " + message);
-				if ("/randomgrid".equalsIgnoreCase(message))
-				{
-					randomGrid();
-				}
-				else if ("/nextid".equalsIgnoreCase(message))
-				{
-					IdFactory.getInstance().getNextId();
-					IdFactory.getInstance().getNextId();
-					IdFactory.getInstance().getNextId();
-					int nextId = IdFactory.getInstance().getNextId();
-					getClient().sendPacket(new CreatureSay(getObjectId(), "next id: " + nextId));
-					_log.debug("nextid: " + nextId);
-				}
-				// заспавнить вещь себе в инвентарь
-				else if (message.startsWith("/createitem") || message.startsWith("/ci"))
-				{
-					try
-					{
-						String[] v = message.split(" ");
-						int typeId = Integer.parseInt(v[1]);
-						int count = Integer.parseInt(v[2]);
-						ObjectTemplate template = ObjectsFactory.getInstance().getTemplate(typeId);
-						if (template != null)
-						{
-							while (count > 0)
-							{
-								_log.info("сreate item: " + template.getName() + " count: " + count);
-								if (!generateItem(typeId, 10, true))
-								{
-									break;
-								}
-								count--;
-							}
-						}
-					}
-					catch (NumberFormatException nfe)
-					{
-						getClient().sendPacket(new CreatureSay(getObjectId(), "spawn item: params error"));
-					}
-				}
-			}
-			// тут исполняем обычные команды доступные для всех
-			if ("/online".equalsIgnoreCase(message))
-			{
-				_log.debug("server online: " + World.getInstance().getPlayersCount());
-				// онлайн сервера написать в чат игроку
-				getClient().sendPacket(new CreatureSay(getObjectId(), "online: " + World.getInstance().getPlayersCount()));
-			}
-
-			// консольные команды проглотим
-			return false;
-		}
-		return true;
 	}
 
 	@Override
@@ -553,6 +504,11 @@ public class Player extends Human
 	public Hand getHand()
 	{
 		return _hand;
+	}
+
+	public int getAccessLevel()
+	{
+		return _accessLevel;
 	}
 
 	/**

@@ -947,12 +947,12 @@ public class Grid
 		for (Human h : _activeObjects)
 		{
 			// если игрок обработал это событие. и оно касается его
-			if (!h.isDeleteing() && h.handleEvent(gridEvent))
+			if (!h.isDeleteing() && h.handleGridEvent(gridEvent))
 			{
 				// отправим пакет
-				if (h instanceof Player)
+				if (h.isPlayer())
 				{
-					((Player) h).getClient().sendPacket(gridEvent.getPacket());
+					h.getActingPlayer().getClient().sendPacket(gridEvent.getPacket());
 				}
 			}
 
@@ -961,7 +961,7 @@ public class Grid
 			// также тут потом будет еще проверочка на дистанцию до события... незачем мозгу знать о далеких вещах
 			if (h.getAi() != null)
 			{
-				h.getAi().handleEvent(gridEvent);
+				h.getAi().handleGridEvent(gridEvent);
 			}
 		}
 	}

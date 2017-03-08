@@ -25,7 +25,7 @@ public interface AI
 	 * обработать событие, внешний раздражитель
 	 * @param gridEvent событие
 	 */
-	void handleEvent(GridEvent gridEvent);
+	void handleGridEvent(GridEvent gridEvent);
 
 	/**
 	 * отключить этот мозг, надо сделать все чтобы корректно перевести объект в нейтральное состояние

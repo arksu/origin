@@ -7,7 +7,7 @@ import com.a4server.gameserver.model.Player;
  */
 public class CharInfo extends GameServerPacket
 {
-	Player _player;
+	private final Player _player;
 
 	public CharInfo(Player player)
 	{
@@ -20,6 +20,5 @@ public class CharInfo extends GameServerPacket
 		writeC(0x0D);
 		writeD(_player.getObjectId());
 		writeS(_player.getName());
-//        writeS(_player.);
 	}
 }
