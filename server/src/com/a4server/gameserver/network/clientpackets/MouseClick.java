@@ -27,6 +27,9 @@ public class MouseClick extends GameClientPacket
 	 */
 	private int _button;
 
+	/**
+	 * кнопка нажата?
+	 */
 	private boolean _isDown;
 
 	/**
@@ -142,49 +145,49 @@ public class MouseClick extends GameClientPacket
 				case COLLISION_NONE:
 					// коллизии нет. мы знаем этот объект?
 					object = player.getKnownKist().getKnownObjects().get(objectId);
+
 					// если мы находимся точно в его позиции
 					// этот объект вещь? т.е. вещь валяется на земле
-					if (object.getPos().equals(player.getPos()) && object.getTemplate().getItem() != null)
+					if (object.getPos().equals(player.getPos()) && object.isItem())
 					{
-						// найдем вещь в базе
-						AbstractItem item = AbstractItem.load(player, objectId);
-						if (item != null)
+						Grid grid = player.getGrid();
+						if (grid.tryLock())
 						{
-							// вещь обязательно должна быть помечена как удаленная
-							if (!item.isDeleted())
+							try
 							{
-								throw new RuntimeException("pickup item is not deleted! " + item);
-							}
-
-							// положим вещь в инвентарь игрока
-							InventoryItem putItem = player.getInventory().putItem(item);
-							// сначала пометим объект в базе как удаленный, а с вещи наоборот снимем пометку
-							if (putItem != null && object.markDeleted(true) && putItem.markDeleted(false))
-							{
-								// сохраним в базе
-								putItem.store();
-
-								// разошлем всем пакет с удалением объекта из мира
-								Grid grid = player.getGrid();
-								if (grid.tryLock())
+								// найдем вещь в базе
+								AbstractItem item = AbstractItem.load(player, objectId);
+								if (item != null)
 								{
-									try
+									// вещь обязательно должна быть помечена как удаленная
+									if (!item.isDeleted())
 									{
-										grid.removeObject(object);
+										throw new RuntimeException("pickup item is not deleted! " + item);
 									}
-									finally
+
+									// положим вещь в инвентарь игрока
+									InventoryItem putItem = player.getInventory().putItem(item);
+									// сначала пометим объект в базе как удаленный, а с вещи наоборот снимем пометку
+									if (putItem != null && object.markDeleted(true) && putItem.markDeleted(false))
 									{
-										grid.unlock();
+										// сохраним в базе
+										putItem.store();
+
+										// разошлем всем пакет с удалением объекта из мира
+										grid.removeObject(object);
+
+										player.sendInteractPacket(new InventoryUpdate(player.getInventory()));
 									}
 								}
-
-								player.sendInteractPacket(new InventoryUpdate(player.getInventory()));
+							}
+							finally
+							{
+								grid.unlock();
 							}
 						}
 					}
 					break;
 			}
-
 		}));
 	}
 

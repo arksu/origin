@@ -602,7 +602,6 @@ public class Player extends Human
 	 * @param typeId ид типа вещи
 	 * @param quality качество создаваемой вещи
 	 * @param canDrop можно ли бросить на землю если места в инвентаре не оказалось
-	 * @return
 	 */
 	public boolean generateItem(int typeId, int quality, boolean canDrop)
 	{

@@ -13,8 +13,6 @@ import java.util.Map;
  */
 public class InventoryUpdate extends GameServerPacket
 {
-	private static final Logger _log = LoggerFactory.getLogger(InventoryUpdate.class.getName());
-
 	Inventory _inventory;
 
 	public InventoryUpdate(Inventory inventory)

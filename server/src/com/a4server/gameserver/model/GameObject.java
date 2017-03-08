@@ -499,21 +499,17 @@ public class GameObject
 		List<String> contextMenu = getContextMenu(player);
 		if (contextMenu != null && contextMenu.contains(item))
 		{
-			player.setAi(new MoveActionAI(player, _objectId, new MoveActionAI.ArrivedCallback()
+			player.setAi(new MoveActionAI(player, _objectId, moveResult ->
 			{
-				@Override
-				public void onArrived(CollisionResult moveResult)
+				// убедимся что прибыли к нужному объекту
+				if (moveResult.getResultType() == CollisionResult.CollisionType.COLLISION_OBJECT
+				    && moveResult.getObject().getObjectId() == _objectId)
+				// проверим что такой пункт еще реально есть по прибытии к объекту
 				{
-					// убедимся что прибыли к нужному объекту
-					if (moveResult.getResultType() == CollisionResult.CollisionType.COLLISION_OBJECT
-					    && moveResult.getObject().getObjectId() == _objectId)
-					// проверим что такой пункт еще реально есть по прибытии к объекту
+					List<String> contextMenu1 = getContextMenu(player);
+					if (contextMenu1 != null && contextMenu1.contains(item))
 					{
-						List<String> contextMenu1 = getContextMenu(player);
-						if (contextMenu1 != null && contextMenu1.contains(item))
-						{
-							contextRun(player, item);
-						}
+						contextRun(player, item);
 					}
 				}
 			}));
@@ -537,5 +533,15 @@ public class GameObject
 		{
 			player.getClient().sendPacket(new ContextMenu(_objectId, contextMenu));
 		}
+	}
+
+	public boolean isPlayer()
+	{
+		return false;
+	}
+
+	public boolean isItem()
+	{
+		return _template.getItem() != null;
 	}
 }
