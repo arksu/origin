@@ -28,7 +28,6 @@ task jarGameServer(type: Jar, dependsOn: classes) {
         include 'com/a4server/util/**'
         include 'com/a4server/*'
     }
-
     from('res') {
         include '**'
     }
@@ -48,7 +47,9 @@ task jarLoginServer(type: Jar) {
         include 'com/a4server/util/**'
         include 'com/a4server/*'
     }
-
+    from('res') {
+        include '**'
+    }
     manifest {
         from(generalManifest)
         attributes(
@@ -79,6 +80,12 @@ task zip(type: Zip, dependsOn: build) {
     }
     into('libs') {
         from(configurations.runtime)
+    }
+    into('game/config') {
+        from('config')
+    }
+    into('login/config') {
+        from('config')
     }
     into('game') {
         from(jarGameServer)

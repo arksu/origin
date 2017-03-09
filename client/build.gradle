@@ -1,19 +1,17 @@
 apply plugin: 'java'
 
 repositories {
-    flatDir {
-        dirs 'lib'
-    }
     mavenCentral()
 }
 
+def gdxVersion = "1.9.6"
+
 dependencies {
-    compile name: 'gdx'
-    compile name: 'gdx-freetype'
-    compile name: 'gdx-backend-lwjgl'
-    runtime name: 'gdx-backend-lwjgl-natives'
-    runtime name: 'gdx-natives'
-    runtime name: 'gdx-freetype-natives'
+    compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+    runtime "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    runtime "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 
     compile 'io.netty:netty-all:4.1+'
     compile 'org.slf4j:slf4j-api:1.7+'
@@ -24,39 +22,31 @@ dependencies {
 
 jar {
     manifest {
-        def manifestClasspath = configurations.compile.collect { it.getName() }.join(' ')+' '+configurations.runtime.collect { it.getName() }.join(' ') 
+        def manifestClasspath = configurations.runtime.collect{ "./libs/"+it.getName() }.join(' ')
         attributes (
-            'Implementation-Title': 'Game client',
+            'Implementation-Title': 'Origin game client',
             'Main-Class'          : 'com.a2client.Main',
             'Class-Path'          : manifestClasspath
         )
     }
 }
 
-build.doLast {
-    tasks.afterBuild.execute()
-    tasks.makeDist.execute()
-}
-
-task afterBuild(dependsOn: build) {
-    def distDir = new File('build/dist')
-    distDir.mkdirs()
-}
-
-task makeDist(type: Copy) {
-    dependsOn afterBuild
-
-    from 'lib/'
-    from('build/libs') {
-        include 'client.jar'
+task zip(type: Zip, dependsOn: build) {
+    from('dist')
+    into('assets') {
+        from('assets')
+    }
+    from(jar)
+    into('libs') {
+        from(configurations.runtime)
     }
 
-    into 'build/dist'
-
-    into ('assets') {
-        from 'assets/'
-    }
+    def fileName = 'Origin_Client_' + new Date().format("yyyy-MM-dd")
+    baseName = fileName
+    println 'Build in build/distributions/' + fileName + '.zip'
 }
+
+build.finalizedBy(zip)
 
 task "rc" (type:JavaExec, dependsOn:[classes]) {
     main = 'com.a2client.Main'

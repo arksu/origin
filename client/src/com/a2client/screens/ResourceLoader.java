@@ -182,7 +182,7 @@ public class ResourceLoader implements Screen
 		}
 		catch (Exception e)
 		{
-			_log.warn("failed generate system font with freetype lib");
+			_log.warn("failed generate system font with freetype lib", e);
 		}
 
 		if (systemFont == null)
