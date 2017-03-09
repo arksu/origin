@@ -18,7 +18,7 @@ def generalManifest = manifest {
     attributes('Built-By': System.getProperty('user.name'),
             'Built-Date': new Date().format("yyyy-MM-dd HH:mm:ss"),
             'Implementation-URL': 'http://www.origin-world.com/',
-            'Class-Path': configurations.compile.collect().join(' '))
+            'Class-Path': configurations.runtime.collect{ "../libs/"+it.getName() }.join(' '))
 }
 
 task jarGameServer(type: Jar, dependsOn: classes) {
