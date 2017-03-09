@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.Timer;
@@ -37,17 +36,17 @@ public class ModelManager
 		return _instance;
 	}
 
-	private ObjectMap<Model, IntArray> _modelHitList = new ObjectMap<>();
+//	private ObjectMap<Model, IntArray> _modelHitList = new ObjectMap<>();
 
 	private ObjectMap<Integer, ModelDesc> _modelList = new ObjectMap<>();
 
-	private AssetManager _assets;
+	private AssetManager _assetManager;
 
 	private long current_time = TimeUtils.millis();
 
 	public ModelManager()
 	{
-		_assets = Main.getAssetManager();
+		_assetManager = Main.getAssetManager();
 		loadModelList();
 		Timer.schedule(new UpdateTimer(this), 0, 30);
 	}
@@ -68,7 +67,7 @@ public class ModelManager
 			load(desc);
 		}
 
-		ModelInstance tmp = new ModelInstance(_assets.get(desc._resource, Model.class));
+		ModelInstance tmp = new ModelInstance(_assetManager.get(desc._resource, Model.class));
 		desc._lastUsage = TimeUtils.millis();
 		tmp.transform.scale(desc._scale, desc._scale, desc._scale);
 		return tmp;
@@ -112,38 +111,39 @@ public class ModelManager
 
 	private void load(ModelDesc desc)
 	{
-		if (!_assets.isLoaded(desc._resource))
+		if (!_assetManager.isLoaded(desc._resource))
 		{
-			_assets.load(desc._resource, Model.class);
-			_assets.finishLoadingAsset(desc._resource);
+			_assetManager.load(desc._resource, Model.class);
+			_assetManager.finishLoadingAsset(desc._resource);
 			_log.debug("loaded model: " + desc._resource);
 		}
-		Model model = _assets.get(desc._resource, Model.class);
-		if (!_modelHitList.containsKey(model))
-		{
-			_modelHitList.put(model, new IntArray());
-		}
-//		model.
-		_modelHitList.get(model).add(desc._typeId);
+//		Model model = _assetManager.get(desc._resource, Model.class);
+
+//		if (!_modelHitList.containsKey(model))
+//		{
+//			_modelHitList.put(model, new IntArray());
+//		}
+//		_modelHitList.get(model).add(desc._typeId);
+
 		desc._loaded = true;
 		desc._lastUsage = TimeUtils.millis();
 	}
 
-	private void unload(ModelDesc desc)
-	{
-		Model model = _assets.get(desc._resource, Model.class);
-
-		IntArray hitArray = _modelHitList.get(model);
-		hitArray.removeValue(desc._typeId);
-		if (hitArray.size == 0)
-		{
-			_log.debug("unLoad model: " + desc._resource);
-			_assets.unload(desc._resource);
-			_modelHitList.remove(model);
-		}
-		desc._loaded = false;
-		desc._lastUsage = 0;
-	}
+//	private void unload(ModelDesc desc)
+//	{
+//		Model model = _assetManager.get(desc._resource, Model.class);
+//
+//		IntArray hitArray = _modelHitList.get(model);
+//		hitArray.removeValue(desc._typeId);
+//		if (hitArray.size == 0)
+//		{
+//			_log.debug("unLoad model: " + desc._resource);
+//			_assetManager.unload(desc._resource);
+//			_modelHitList.remove(model);
+//		}
+//		desc._loaded = false;
+//		desc._lastUsage = 0;
+//	}
 
 	public void loadModelList()
 	{

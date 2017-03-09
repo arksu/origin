@@ -6,7 +6,8 @@
 	},
 	{
 		"typeId": 1,
-		"res": "assets/models/trex.obj",
+		"res": "assets/models/some.obj",
+//		"res": "assets/models/trex.obj",
 //		"res": "assets/models/Rabbit.obj",
 //		"res": "assets/models/stone.obj",
 //		"res": "assets/models/unknown.obj",
