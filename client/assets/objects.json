@@ -5,6 +5,7 @@
 		"scale": 0.5
 	},
 	{
+		// player
 		"typeId": 1,
 		"res": "assets/models/some.obj",
 //		"res": "assets/models/trex.obj",
@@ -17,7 +18,8 @@
 	},
 	{
 		"typeId": 2,
-		"res": "assets/debug/invader.obj"
+		"res": "assets/models/fern.obj",
+		"scale": 0.2
 	},
 	{
 		// appleTree
@@ -29,18 +31,18 @@
 		// stone
 		"typeId": 21,
 		"scale": 0.5,
-		"res": "assets/debug/stone.obj"
+		"res": "assets/models/stone.obj"
 	},
 	{
 		// stoneAxe
 		"typeId": 16,
 		"scale": 0.2,
-		"res": "assets/debug/ship.obj"
+		"res": "assets/models/ship.obj"
 	},
 	{
 		// stoneKnife
 		"typeId": 17,
-		"res": "assets/debug/ship.obj"
+		"res": "assets/models/ship.obj"
 	},
 	{
 		// apple

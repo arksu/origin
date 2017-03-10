@@ -74,14 +74,12 @@ public class Render
 	 * объект в который попадает луч из мыши (объект под мышью)
 	 */
 	private GameObject _selected;
-	private static GameObject _oldSelected;
+	private GameObject _oldSelected;
 
 	private float _selectedDist;
 	private int _renderedObjects;
 
 	private FrameBuffer _frameBuffer;
-	private DepthShaderProvider _depthShaderProvider;
-	private ModelBatch _depthModelBatch;
 	private ModelBatch _simpleModelBatch;
 	private ShaderProgram _shadowShader;
 
@@ -102,11 +100,8 @@ public class Render
 		_environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 		_environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
-		_depthShaderProvider = new DepthShaderProvider();
-		_depthModelBatch = new ModelBatch(_depthShaderProvider);
-
 		_simpleModelBatch = new ModelBatch(new ModelShaderProvider());
-		_modelBatch = _depthModelBatch;
+		_modelBatch = _simpleModelBatch;
 
 		_skybox = new Skybox();
 		_terrain = new Terrain(this);
@@ -129,7 +124,7 @@ public class Render
 		testQuad1 = createTestQuad(0.7f, -1, 0.3f);
 		testQuad2 = createTestQuad(0.7f, 0, 0.3f);
 
-		_testModel = ModelManager.getInstance().getModelByType(19);
+		_testModel = ModelManager.getInstance().getModelByType(2);
 
 		Icosahedron.init();
 	}
@@ -270,7 +265,7 @@ public class Render
 //		if (_game.getWorldMousePos() != null)
 //		{
 //			_modelBatch.begin(camera);
-//			_testModel.transform.setTranslation(_game.getWorldMousePos());
+//			_testModel.transform.setTranslation(_game.getTerrainPoint());
 //			_modelBatch.render(_testModel, _environment);
 //			_modelBatch.end();
 //		}
@@ -328,6 +323,7 @@ public class Render
 					_modelBatch.render(model, _environment);
 					_renderedObjects++;
 
+					// найдем текущий выбранный объект (в который попадает мышь)
 					// попадает ли луч из мыши в объект?
 					if (_game.getCamera().getRay() != null && findIntersect)
 					{
@@ -457,11 +453,6 @@ public class Render
 	public GameObject getSelected()
 	{
 		return _selected;
-	}
-
-	public static GameObject getOldSelected()
-	{
-		return _oldSelected;
 	}
 
 	public int getRenderedObjects()

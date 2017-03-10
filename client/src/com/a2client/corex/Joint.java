@@ -21,26 +21,26 @@ import java.io.IOException;
 
 public class Joint
 {
-    public int parent;
-    public DualQuat bind;
-    public DualQuat frame;
+	public int parent;
+	public DualQuat bind;
+	public DualQuat frame;
 
-    public Joint(MyInputStream in)
-    {
-        try
-        {
-            this.parent = in.readInt();
-            this.bind = new DualQuat(in);
-            this.frame = new DualQuat(in);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
+	public Joint(MyInputStream in)
+	{
+		try
+		{
+			this.parent = in.readInt();
+			this.bind = new DualQuat(in);
+			this.frame = new DualQuat(in);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
-    public String toString()
-    {
-        return "(" + parent + " " + bind.toString() + " " + frame.toString();
-    }
+	public String toString()
+	{
+		return "(" + parent + " " + bind.toString() + " " + frame.toString();
+	}
 }

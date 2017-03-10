@@ -18,109 +18,123 @@
 package com.a2client.corex;
 
 import com.a2client.Log;
-import org.lwjgl.opengl.GL11;
 
 public class Mesh
 {
-    public MeshData data;
-    private Skeleton skeleton;
-    private Material material;
-    public DualQuat[] JQuat;
-    public int[] JIndex;
+	public MeshData data;
+	private Skeleton skeleton;
+	private Material material;
+	public DualQuat[] JQuat;
+	public int[] JIndex;
 
+	public Mesh(String name)
+	{
+		data = MeshData.load(name);
 
-    public Mesh(String name)
-    {
-        data = MeshData.load(name);
+		JIndex = new int[data.JName.size()];
+		JQuat = new DualQuat[data.JName.size()];
+	}
 
-        JIndex = new int[data.JName.size()];
-        JQuat = new DualQuat[data.JName.size()];
-    }
+	public void setSkeleton(Skeleton s)
+	{
+		if (skeleton != s)
+		{
+			skeleton = s;
+			if (skeleton != null)
+			{
+				for (int i = 0; i < JIndex.length; i++)
+				{
+					JIndex[i] = skeleton.JointIndex(data.JName.get(i));
+				}
+			}
+		}
+	}
 
-    public void setSkeleton(Skeleton s)
-    {
-        if (skeleton != s)
-        {
-            skeleton = s;
-            if (skeleton != null)
-            {
-                for (int i = 0; i < JIndex.length; i++)
-                {
-                    JIndex[i] = skeleton.JointIndex(data.JName.get(i));
-                }
-            }
-        }
-    }
+	public void setMaterial(Material m)
+	{
+		this.material = m;
+	}
 
-    public void setMaterial(Material m)
-    {
-        this.material = m;
-    }
+	public Material getMaterial()
+	{
+		return material;
+	}
 
-    public Material getMaterial()
-    {
-        return material;
-    }
+	public void Render()
+	{
+		Material mat = material.ModeMat.get(Render.Mode);
+		if (mat == null) return;
+		mat.bind();
 
-    public void Render()
-    {
-        Material mat = material.ModeMat.get(Render.Mode);
-        if (mat == null)
-            return;
-        mat.bind();
+		// collect skin joints
+		if (data.Attrib.contains(Const.MATERIAL_ATTRIB.maJoint) && skeleton != null)
+		{
+			for (int i = 0; i < JIndex.length; i++)
+			{
+				if (JIndex[i] > -1)
+				{
+					skeleton.updateJoint(JIndex[i]);
 
-        // collect skin joints
-        if (data.Attrib.contains(Const.MATERIAL_ATTRIB.maJoint) && skeleton != null)
-        {
-            for (int i = 0; i < JIndex.length; i++)
-            {
-                if (JIndex[i] > -1)
-                {
-                    skeleton.updateJoint(JIndex[i]);
+					if (skeleton.joint[JIndex[i]] == null)
+					{
+						Log.debug("fail1");
+						return;
+					}
+					else
+					{
+						JQuat[i] = skeleton.joint[JIndex[i]].mul(skeleton.data.base[JIndex[i]].bind);
+					}
+				}
+			}
+			mat.uniform[Const.muJoint_idx].setValue(JQuat);
+		}
 
-                    if (skeleton.joint[JIndex[i]] == null)
-                    {
-                        Log.debug("fail1");
-                        return;
-                    }
-                    else
-                        JQuat[i] = skeleton.joint[JIndex[i]].mul(skeleton.data.base[JIndex[i]].bind);
-                }
-            }
-            mat.uniform[Const.muJoint_idx].setValue(JQuat);
-        }
+		// set vertex attributes
+		data.VertexBuf.bind();
+		int offset = 0;
+		for (Const.MATERIAL_ATTRIB ma : data.Attrib)
+		{
+			ShaderAttrib sa = mat.Attrib.get(ma);
+			// enable attrib
+			sa.enable();
+			// set attrib value : data.VertexBuf.stride, data.VertexBuf.data, offset
+			sa.setValue(data.VertexBuf.Stride, 0, offset);
 
-        // set vertex attributes
-        data.VertexBuf.bind();
-        int offset = 0;
-        for (Const.MATERIAL_ATTRIB ma : data.Attrib)
-        {
-            ShaderAttrib sa = mat.Attrib.get(ma);
-            // enable attrib
-            sa.enable();
-            // set attrib value : data.VertexBuf.stride, data.VertexBuf.data, offset
-            sa.setValue(data.VertexBuf.Stride, 0, offset);
+			offset += Const.getAttribSize(ma);
+		}
 
-            offset += Const.getAttribSize(ma);
-        }
+		if (data.IndexBuf != null)
+		{
+			data.IndexBuf.bind();
 
-        if (data.IndexBuf != null)
-        {
-            data.IndexBuf.bind();
+			// TODO glDrawElements
+//			if (test_shader.use_draw_elements)
+//			{
+//				GL11.glDrawElements(
+//						Const.getMeshMode(data.Mode),
+//						data.IndexBuf.Count,
+//						data.IndexBuf.IndexType,
+//						0);
+//			}
+//			else
+//			{
+//				GL12.glDrawRangeElements(
+//						Const.getMeshMode(data.Mode),
+//						0,
+//						data.IndexBuf.Count,
+//						(data.IndexBuf.Count),
+//						data.IndexBuf.IndexType,
+//						0);
+//			}
 
-            //            if (test_shader.use_draw_elements)
-            GL11.glDrawElements(Const.getMeshMode(data.Mode), data.IndexBuf.Count, data.IndexBuf.IndexType, 0);
-            //            else
-            //                GL12.glDrawRangeElements(Const.getMeshMode(data.Mode), 0, data.IndexBuf.Count, (data.IndexBuf.Count), data.IndexBuf.IndexType, 0);
+		}
 
-        }
+		// нужно для нормальной работы буферов (вывод тайлов)
+		for (Const.MATERIAL_ATTRIB ma : data.Attrib)
+		{
+			mat.Attrib.get(ma).disable();
+		}
 
-        // нужно для нормальной работы буферов (вывод тайлов)
-        for (Const.MATERIAL_ATTRIB ma : data.Attrib)
-        {
-            mat.Attrib.get(ma).disable();
-        }
-
-    }
+	}
 
 }

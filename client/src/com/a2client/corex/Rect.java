@@ -19,26 +19,26 @@ package com.a2client.corex;
 
 public class Rect
 {
-    int left, top, right, bottom;
+	int left, top, right, bottom;
 
-    public Rect(int left, int top, int right, int bottom)
-    {
-        this.top = top;
-        this.left = left;
-        this.bottom = bottom;
-        this.right = right;
-    }
+	public Rect(int left, int top, int right, int bottom)
+	{
+		this.top = top;
+		this.left = left;
+		this.bottom = bottom;
+		this.right = right;
+	}
 
-    public Rect clone()
-    {
-        return new Rect(this.left, this.top, this.right, this.bottom);
-    }
+	public Rect clone()
+	{
+		return new Rect(this.left, this.top, this.right, this.bottom);
+	}
 
-    public void Mul(float a)
-    {
-        top *= a;
-        left *= a;
-        bottom *= a;
-        right *= a;
-    }
+	public void Mul(float a)
+	{
+		top *= a;
+		left *= a;
+		bottom *= a;
+		right *= a;
+	}
 }

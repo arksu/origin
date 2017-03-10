@@ -17,14 +17,12 @@
 
 package com.a2client.corex;
 
-
 public class Light
 {
-    public Mat4f matrix;
-    public Vec3f pos = new Vec3f();
-    public Vec3f color = new Vec3f();
-    public float radius = 1;
-    public Texture shadow_map;
-
+	public com.a2client.corex.Mat4f matrix;
+	public Vec3f pos = new Vec3f();
+	public Vec3f color = new Vec3f();
+	public float radius = 1;
+	public Texture shadow_map;
 
 }

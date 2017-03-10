@@ -24,9 +24,10 @@ jar {
     manifest {
         def manifestClasspath = configurations.runtime.collect{ "./libs/"+it.getName() }.join(' ')
         attributes (
-            'Implementation-Title': 'Origin game client',
-            'Main-Class'          : 'com.a2client.Main',
-            'Class-Path'          : manifestClasspath
+                'Implementation-Title': 'Origin game client',
+                'Implementation-URL'  : 'http://www.origin-world.com/',
+                'Main-Class'          : 'com.a2client.Main',
+                'Class-Path'          : manifestClasspath
         )
     }
 }

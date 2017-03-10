@@ -24,22 +24,22 @@ import java.io.FileNotFoundException;
 public class FileSys
 {
 
-    public static MyInputStream getStream(String fname)
-    {
-        try
-        {
-            FileInputStream fin = new FileInputStream(Const.DIR_MEDIA + File.separator + fname);
-            return new MyInputStream(fin);
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
+	public static MyInputStream getStream(String fname)
+	{
+		try
+		{
+			FileInputStream fin = new FileInputStream(Const.DIR_MEDIA + File.separator + fname);
+			return new MyInputStream(fin);
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
 
-    public static long getSize(String fname)
-    {
-        return new File(Const.DIR_MEDIA + File.separator + fname).length();
-    }
+	public static long getSize(String fname)
+	{
+		return new File(Const.DIR_MEDIA + File.separator + fname).length();
+	}
 }

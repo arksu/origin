@@ -21,57 +21,58 @@ import com.a2client.Log;
 
 public class SkeletonData extends ResObject
 {
-    public int jcount;
-    public String[] jname;
-    public Joint[] base;
+	public int jcount;
+	public String[] jname;
+	public Joint[] base;
 
-    static public SkeletonData load(String name)
-    {
-        ResObject r = ResManager.Get(name + Const.EXT_SKELETON);
-        if (r != null && r instanceof SkeletonData)
-        {
-            return (SkeletonData) r;
-        }
+	static public SkeletonData load(String name)
+	{
+		ResObject r = ResManager.Get(name + Const.EXT_SKELETON);
+		if (r != null && r instanceof SkeletonData)
+		{
+			return (SkeletonData) r;
+		}
 
-        SkeletonData a = new SkeletonData(name + Const.EXT_SKELETON);
-        ResManager.Add(a);
-        return a;
-    }
+		SkeletonData a = new SkeletonData(name + Const.EXT_SKELETON);
+		ResManager.Add(a);
+		return a;
+	}
 
+	public SkeletonData(String name)
+	{
+		this.name = name;
+		try
+		{
+			MyInputStream in = FileSys.getStream(name);
+			jcount = in.readWord();
+			jname = new String[jcount];
+			base = new Joint[jcount];
 
-    public SkeletonData(String name)
-    {
-        this.name = name;
-        try
-        {
-            MyInputStream in = FileSys.getStream(name);
-            jcount = in.readWord();
-            jname = new String[jcount];
-            base = new Joint[jcount];
+			for (int i = 0; i < jcount; i++)
+			{
+				jname[i] = in.readAnsiString();
+			}
+			for (int i = 0; i < jcount; i++)
+			{
+				base[i] = new Joint(in);
+			}
+			Log.debug("load skeleton: " + name);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 
-            for (int i = 0; i < jcount; i++)
-            {
-                jname[i] = in.readAnsiString();
-            }
-            for (int i = 0; i < jcount; i++)
-            {
-                base[i] = new Joint(in);
-            }
-            Log.debug("load skeleton: " + name);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public int getIdx(String aname)
-    {
-        for (int i = 0; i < jname.length; i++)
-        {
-            if (jname[i].equals(aname))
-                return i;
-        }
-        return -1;
-    }
+	public int getIdx(String aname)
+	{
+		for (int i = 0; i < jname.length; i++)
+		{
+			if (jname[i].equals(aname))
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
 }

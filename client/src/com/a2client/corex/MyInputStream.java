@@ -23,31 +23,29 @@ import java.io.InputStream;
 
 public class MyInputStream extends DataInputStream
 {
-    /**
-     * Creates a DataInputStream that uses the specified
-     * underlying InputStream.
-     *
-     * @param in the specified input stream
-     */
-    public MyInputStream(InputStream in)
-    {
-        super(in);
-    }
+	/**
+	 * Creates a DataInputStream that uses the specified
+	 * underlying InputStream.
+	 * @param in the specified input stream
+	 */
+	public MyInputStream(InputStream in)
+	{
+		super(in);
+	}
 
-    public int readWord() throws IOException
-    {
-        int c1 = in.read();
-        int c2 = in.read();
-        return c1 + (c2 << 8);
-    }
+	public int readWord() throws IOException
+	{
+		int c1 = in.read();
+		int c2 = in.read();
+		return c1 + (c2 << 8);
+	}
 
-    public String readAnsiString() throws IOException
-    {
-        int len = readWord();
-        if (len == 0)
-            return "";
-        byte[] blob = new byte[len];
-        in.read(blob);
-        return new String(blob, "US-ASCII");
-    }
+	public String readAnsiString() throws IOException
+	{
+		int len = readWord();
+		if (len == 0) return "";
+		byte[] blob = new byte[len];
+		in.read(blob);
+		return new String(blob, "US-ASCII");
+	}
 }

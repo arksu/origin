@@ -20,33 +20,33 @@ package com.a2client.corex;
 public class utils
 {
 
-    public static float lerp(float x, float y, float t)
-    {
-        return x + (y - x) * t;
-    }
+	public static float lerp(float x, float y, float t)
+	{
+		return x + (y - x) * t;
+	}
 
-    public static float min(float x, float y)
-    {
-        return (x < y) ? x : y;
-    }
+	public static float min(float x, float y)
+	{
+		return (x < y) ? x : y;
+	}
 
-    public static int min(int x, int y)
-    {
-        return (x < y) ? x : y;
-    }
+	public static int min(int x, int y)
+	{
+		return (x < y) ? x : y;
+	}
 
-    public static int max(int x, int y)
-    {
-        return (x > y) ? x : y;
-    }
+	public static int max(int x, int y)
+	{
+		return (x > y) ? x : y;
+	}
 
-    public static float max(float x, float y)
-    {
-        return (x > y) ? x : y;
-    }
+	public static float max(float x, float y)
+	{
+		return (x > y) ? x : y;
+	}
 
-    public static float frac(float v)
-    {
-        return v - ((int) v);
-    }
+	public static float frac(float v)
+	{
+		return v - ((int) v);
+	}
 }

@@ -22,25 +22,25 @@ package com.a2client.corex;
  */
 public class Box
 {
-    public Vec3f min, max;
-    static public final Box inf_box = new Box(
-            new Vec3f(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY),
-            new Vec3f(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY));
+	public Vec3f min, max;
+	static public final Box inf_box = new Box(
+			new Vec3f(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY),
+			new Vec3f(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY));
 
-    public Box(MyInputStream in)
-    {
-        this.min = new Vec3f(in);
-        this.max = new Vec3f(in);
-    }
+	public Box(MyInputStream in)
+	{
+		this.min = new Vec3f(in);
+		this.max = new Vec3f(in);
+	}
 
-    public Box(Vec3f min, Vec3f max)
-    {
-        this.min = min;
-        this.max = max;
-    }
+	public Box(Vec3f min, Vec3f max)
+	{
+		this.min = min;
+		this.max = max;
+	}
 
-    public Box clone()
-    {
-        return new Box(min.clone(), max.clone());
-    }
+	public Box clone()
+	{
+		return new Box(min.clone(), max.clone());
+	}
 }

@@ -19,55 +19,55 @@ package com.a2client.corex;
 
 public class Scene
 {
-    Texture shadow_texture;
-    RenderTarget shadow_rt;
-    public Node node;
-    public boolean shadows = false;
+	Texture shadow_texture;
+	RenderTarget shadow_rt;
+	public Node node;
+	public boolean shadows = false;
 
-    public void Init()
-    {
-        node = new Node("root");
+	public void Init()
+	{
+		node = new Node("root");
 
-        // TODO : подготовка к отрисовке теней: создание текстуры и render target
-    }
+		// TODO : подготовка к отрисовке теней: создание текстуры и render target
+	}
 
-    public void onRender()
-    {
-        Camera main = Render.camera;
-        main.UpdateMatrix();
-        main.UpdatePlanes();
+	public void onRender()
+	{
+		Camera main = Render.camera;
+		main.UpdateMatrix();
+		main.UpdatePlanes();
 
-        if (shadows)
-        {
-            // TODO : отрисовка теней
-        }
+		if (shadows)
+		{
+			// TODO : отрисовка теней
+		}
 
-        Render.setDepthTest(true);
-        Render.camera = main;
-        Render.camera.Setup();
+		Render.setDepthTest(true);
+		Render.camera = main;
+		Render.camera.Setup();
 
-        Render.Mode = Const.RENDER_MODE.rmOpaque;
-        node.onRender();
+		Render.Mode = Const.RENDER_MODE.rmOpaque;
+		node.onRender();
 
-        Render.Mode = Const.RENDER_MODE.rmOpacity;
-        node.onRender();
+		Render.Mode = Const.RENDER_MODE.rmOpacity;
+		node.onRender();
 
-        Render.lights[0].shadow_map = null;
-    }
+		Render.lights[0].shadow_map = null;
+	}
 
-    public void onUpdate()
-    {
-        node.onUpdate();
-    }
+	public void onUpdate()
+	{
+		node.onUpdate();
+	}
 
-    // for debug
-    public void onRenderSkeleton()
-    {
-        node.onRenderSkeleton();
-    }
+	// for debug
+	public void onRenderSkeleton()
+	{
+		node.onRenderSkeleton();
+	}
 
-    public void Add(Node node)
-    {
-        this.node.Add(node);
-    }
+	public void Add(Node node)
+	{
+		this.node.Add(node);
+	}
 }

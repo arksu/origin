@@ -21,29 +21,29 @@ import java.io.IOException;
 
 public class Vec2f
 {
-    public float x;
-    public float y;
+	public float x;
+	public float y;
 
-    public static final Vec2f zero = new Vec2f(0, 0);
+	public static final Vec2f zero = new Vec2f(0, 0);
 
-    public Vec2f(float x, float y)
-    {
-        this.x = x;
-        this.y = y;
-    }
+	public Vec2f(float x, float y)
+	{
+		this.x = x;
+		this.y = y;
+	}
 
-    public Vec2f(MyInputStream in)
-    {
-        try
-        {
-            this.x = in.readFloat();
-            this.y = in.readFloat();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            this.x = 0;
-            this.y = 0;
-        }
-    }
+	public Vec2f(MyInputStream in)
+	{
+		try
+		{
+			this.x = in.readFloat();
+			this.y = in.readFloat();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			this.x = 0;
+			this.y = 0;
+		}
+	}
 }

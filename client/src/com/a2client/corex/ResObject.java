@@ -19,14 +19,14 @@ package com.a2client.corex;
 
 public class ResObject
 {
-    public String name;
+	public String name;
 
-    public ResObject(String name)
-    {
-        this.name = name;
-    }
+	public ResObject(String name)
+	{
+		this.name = name;
+	}
 
-    public ResObject()
-    {
-    }
+	public ResObject()
+	{
+	}
 }

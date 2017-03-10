@@ -50,6 +50,7 @@ public class Game extends BaseScreen
 	 * координаты куда указывает мышь. пересечение с ладншафтом.
 	 */
 	private Vec2i _worldMousePos;
+	private Vector3 _terrainPoint;
 	private boolean[] _mouseBtns = new boolean[3];
 
 	private Render _render;
@@ -253,10 +254,10 @@ public class Game extends BaseScreen
 
 			// обновить камеру и позицию куда проецируется мышь
 			_gameCamera.update();
-			Vector3 terrainPoint = _gameCamera.getMousePicker().getCurrentTerrainPoint();
-			if (terrainPoint != null)
+			_terrainPoint = _gameCamera.getMousePicker().getCurrentTerrainPoint();
+			if (_terrainPoint != null)
 			{
-				_worldMousePos = new Vec2i(Math.round(terrainPoint.x * TILE_SIZE), Math.round(terrainPoint.z * TILE_SIZE));
+				_worldMousePos = new Vec2i(Math.round(_terrainPoint.x * TILE_SIZE), Math.round(_terrainPoint.z * TILE_SIZE));
 				_statusText = "mouse coord: " +
 				              _worldMousePos.x + ", " + _worldMousePos.y
 //							 + " : " + Terrain.getTileHeight(_worldMousePos.x / TILE_SIZE, _worldMousePos.y / TILE_SIZE)
@@ -307,6 +308,11 @@ public class Game extends BaseScreen
 	public Vec2i getWorldMousePos()
 	{
 		return _worldMousePos;
+	}
+
+	public Vector3 getTerrainPoint()
+	{
+		return _terrainPoint;
 	}
 
 	public Render getRender()

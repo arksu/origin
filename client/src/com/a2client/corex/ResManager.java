@@ -23,22 +23,22 @@ import java.util.Map;
 
 public class ResManager
 {
-    static public Map<Const.RES_TYPE, Object> Active = new EnumMap<Const.RES_TYPE, Object>(Const.RES_TYPE.class);
-    static private Map<String, ResObject> items = new HashMap<String, ResObject>();
+	static public Map<Const.RES_TYPE, Object> Active = new EnumMap<Const.RES_TYPE, Object>(Const.RES_TYPE.class);
+	static private Map<String, ResObject> items = new HashMap<String, ResObject>();
 
-    static public ResObject Get(String name)
-    {
-        return items.get(name);
-    }
+	static public ResObject Get(String name)
+	{
+		return items.get(name);
+	}
 
-    static public void Add(ResObject r)
-    {
-        items.put(r.name, r);
-    }
+	static public void Add(ResObject r)
+	{
+		items.put(r.name, r);
+	}
 
-    static public void Delete(ResObject r)
-    {
-        items.remove(r);
-    }
+	static public void Delete(ResObject r)
+	{
+		items.remove(r);
+	}
 
 }

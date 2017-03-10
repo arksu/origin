@@ -24,73 +24,73 @@ import java.util.Map;
 
 public class Model extends Node
 {
-    public Skeleton skeleton;
-    public List<Mesh> meshes = new ArrayList<Mesh>();
-    public Map<String, Anim> anims = new HashMap<String, Anim>();
+	public Skeleton skeleton;
+	public List<Mesh> meshes = new ArrayList<Mesh>();
+	public Map<String, Anim> anims = new HashMap<String, Anim>();
 
-    public Model(String name)
-    {
-        super(name);
-        matrix = new Mat4f();
-        matrix.identity();
-    }
+	public Model(String name)
+	{
+		super(name);
+		matrix = new Mat4f();
+		matrix.identity();
+	}
 
-    public void load_skeleton(String name)
-    {
-        skeleton = new Skeleton(name);
-    }
+	public void load_skeleton(String name)
+	{
+		skeleton = new Skeleton(name);
+	}
 
-    //    public void load_anim(String fname) {
-    //        try {
-    //            Anim anim = new Anim(fname, skeleton);
-    //            anims.put(fname, anim);
-    //
-    //
-    //        } catch (Exception e) {
-    //            e.printStackTrace();
-    //        }
-    //
-    //    }
+//    public void load_anim(String fname) {
+//        try {
+//            Anim anim = new Anim(fname, skeleton);
+//            anims.put(fname, anim);
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
-    public void play_anim(String name)
-    {
-        play_anim(name, 1, 1, Anim.LOOP_MODE.lmRepeat);
-    }
+	public void play_anim(String name)
+	{
+		play_anim(name, 1, 1, Anim.LOOP_MODE.lmRepeat);
+	}
 
-    public void play_anim(String name, float blendWeight, float blendTime, Anim.LOOP_MODE loop_mode)
-    {
-        Anim a = anims.get(name);
-        if (a != null)
-        {
-            //            a.
-            skeleton.addAnim(a);
-            a.play(blendWeight, blendTime, loop_mode);
-        }
-    }
+	public void play_anim(String name, float blendWeight, float blendTime, Anim.LOOP_MODE loop_mode)
+	{
+		Anim a = anims.get(name);
+		if (a != null)
+		{
+//            a.
+			skeleton.addAnim(a);
+			a.play(blendWeight, blendTime, loop_mode);
+		}
+	}
 
-    public void render_mesh()
-    {
-        for (Mesh m : meshes)
-        {
-            m.Render();
-        }
-    }
+	public void render_mesh()
+	{
+		for (Mesh m : meshes)
+		{
+			m.Render();
+		}
+	}
 
-    protected void Update()
-    {
-        skeleton.update();
-    }
+	protected void Update()
+	{
+		skeleton.update();
+	}
 
-    protected void Render()
-    {
-        Render.ModelMatrix = matrix;
-        render_mesh();
-    }
+	protected void Render()
+	{
+		Render.ModelMatrix = matrix;
+		render_mesh();
+	}
 
-    public void add_mesh(Mesh mesh)
-    {
-        mesh.setSkeleton(this.skeleton);
-        meshes.add(mesh);
-    }
+	public void add_mesh(Mesh mesh)
+	{
+		mesh.setSkeleton(this.skeleton);
+		meshes.add(mesh);
+	}
 }
 

@@ -24,19 +24,19 @@ public class Texture extends ResObject
     //    public org.newdawn.slick.opengl.Texture texture;
     public int sampler = GL11.GL_TEXTURE_2D;
 
-    public static Texture load(String name)
-    {
-        // имя идет уже с расширением файла (.png)
-        ResObject r = ResManager.Get(name);
-        if (r != null && r instanceof Texture)
-        {
-            return (Texture) r;
-        }
+	public static Texture load(String name)
+	{
+		// имя идет уже с расширением файла (.png)
+		ResObject r = ResManager.Get(name);
+		if (r != null && r instanceof Texture)
+		{
+			return (Texture) r;
+		}
 
-        Texture a = new Texture(name);
-        ResManager.Add(a);
-        return a;
-    }
+		Texture a = new Texture(name);
+		ResManager.Add(a);
+		return a;
+	}
 
     public Texture(String fname)
     {

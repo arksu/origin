@@ -22,85 +22,85 @@ import java.util.List;
 
 public class MeshData extends ResObject
 {
-    public Box BBox;
-    public List<Const.MATERIAL_ATTRIB> Attrib = new ArrayList<Const.MATERIAL_ATTRIB>();
-    public List<String> JName = new ArrayList<String>();
-    public Const.MESH_MODE Mode;
-    public MeshBuffer IndexBuf;
-    public MeshBuffer VertexBuf;
+	public Box BBox;
+	public List<Const.MATERIAL_ATTRIB> Attrib = new ArrayList<Const.MATERIAL_ATTRIB>();
+	public List<String> JName = new ArrayList<String>();
+	public Const.MESH_MODE Mode;
+	public MeshBuffer IndexBuf;
+	public MeshBuffer VertexBuf;
 
-    static public MeshData load(String name)
-    {
-        ResObject r = ResManager.Get(name + Const.EXT_MESH);
-        if (r != null && r instanceof MeshData)
-        {
-            return (MeshData) r;
-        }
+	static public MeshData load(String name)
+	{
+		ResObject r = ResManager.Get(name + Const.EXT_MESH);
+		if (r != null && r instanceof MeshData)
+		{
+			return (MeshData) r;
+		}
 
-        MeshData a = new MeshData(name + Const.EXT_MESH);
-        ResManager.Add(a);
-        return a;
-    }
+		MeshData a = new MeshData(name + Const.EXT_MESH);
+		ResManager.Add(a);
+		return a;
+	}
 
-    public MeshData(String name)
-    {
-        this.name = name;
-        MyInputStream in = FileSys.getStream(name);
-        BBox = new Box(in);
-        try
-        {
-            // mode
-            byte bmode = in.readByte();
-            switch (bmode)
-            {
-                case 0:
-                    Mode = Const.MESH_MODE.mmTriList;
-                    break;
-                case 1:
-                    Mode = Const.MESH_MODE.mmTriStrip;
-                    break;
-                case 2:
-                    Mode = Const.MESH_MODE.mmLine;
-                    break;
-                default:
-                    throw new Exception("wrong mesh mode! " + bmode);
-            }
+	public MeshData(String name)
+	{
+		this.name = name;
+		MyInputStream in = FileSys.getStream(name);
+		BBox = new Box(in);
+		try
+		{
+			// mode
+			byte bmode = in.readByte();
+			switch (bmode)
+			{
+				case 0:
+					Mode = Const.MESH_MODE.mmTriList;
+					break;
+				case 1:
+					Mode = Const.MESH_MODE.mmTriStrip;
+					break;
+				case 2:
+					Mode = Const.MESH_MODE.mmLine;
+					break;
+				default:
+					throw new Exception("wrong mesh mode! " + bmode);
+			}
 
-            // attribs
-            Attrib.clear();
-            Const.MATERIAL_ATTRIB[] attrs = Const.MATERIAL_ATTRIB.values();
-            int atr_count = in.readInt();
-            if (atr_count != attrs.length)
-            {
-                throw new Exception("wrong attrs len!" + atr_count);
-            }
-            int i;
-            for (i = 0; i < atr_count; i++)
-            {
-                if (in.readByte() == 1)
-                {
-                    Attrib.add(attrs[i]);
-                }
-            }
+			// attribs
+			Attrib.clear();
+			Const.MATERIAL_ATTRIB[] attrs = Const.MATERIAL_ATTRIB.values();
+			int atr_count = in.readInt();
+			if (atr_count != attrs.length)
+			{
+				throw new Exception("wrong attrs len!" + atr_count);
+			}
+			int i;
+			for (i = 0; i < atr_count; i++)
+			{
+				if (in.readByte() == 1)
+				{
+					Attrib.add(attrs[i]);
+				}
+			}
 
-            // buffers
-            IndexBuf = new MeshBuffer();
-            IndexBuf.load(Const.BUFFER_TYPE.btIndex, in);
+			// buffers
+			IndexBuf = new MeshBuffer();
+			IndexBuf.load(Const.BUFFER_TYPE.btIndex, in);
 
-            VertexBuf = new MeshBuffer();
-            VertexBuf.load(Const.BUFFER_TYPE.btVertex, in);
+			VertexBuf = new MeshBuffer();
+			VertexBuf.load(Const.BUFFER_TYPE.btVertex, in);
 
-            // joint names
-            int jcount = in.readInt();
-            JName.clear();
-            for (i = 0; i < jcount; i++)
-            {
-                JName.add(in.readAnsiString());
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
+			// joint names
+			int jcount = in.readInt();
+			JName.clear();
+			for (i = 0; i < jcount; i++)
+			{
+				JName.add(in.readAnsiString());
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 }

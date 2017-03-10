@@ -19,6 +19,6 @@ package com.a2client.corex;
 
 public class TSphere
 {
-    public Vec3f center;
-    public float radius;
+	public Vec3f center;
+	public float radius;
 }

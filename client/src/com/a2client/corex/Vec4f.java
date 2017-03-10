@@ -21,53 +21,53 @@ import java.io.IOException;
 
 public class Vec4f
 {
-    public float x;
-    public float y;
-    public float z;
-    public float w;
+	public float x;
+	public float y;
+	public float z;
+	public float w;
 
-    public Vec4f()
-    {
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
-        this.w = 0;
-    }
+	public Vec4f()
+	{
+		this.x = 0;
+		this.y = 0;
+		this.z = 0;
+		this.w = 0;
+	}
 
-    public Vec4f(float x, float y, float z, float w)
-    {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
-    }
+	public Vec4f(float x, float y, float z, float w)
+	{
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
+	}
 
-    public Vec4f(MyInputStream in)
-    {
-        try
-        {
-            this.x = in.readFloat();
-            this.y = in.readFloat();
-            this.z = in.readFloat();
-            this.w = in.readFloat();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            this.x = 0;
-            this.y = 0;
-            this.z = 0;
-            this.w = 0;
-        }
-    }
+	public Vec4f(MyInputStream in)
+	{
+		try
+		{
+			this.x = in.readFloat();
+			this.y = in.readFloat();
+			this.z = in.readFloat();
+			this.w = in.readFloat();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			this.x = 0;
+			this.y = 0;
+			this.z = 0;
+			this.w = 0;
+		}
+	}
 
-    public Vec4f clone()
-    {
-        return new Vec4f(this.x, this.y, this.z, this.w);
-    }
+	public Vec4f clone()
+	{
+		return new Vec4f(this.x, this.y, this.z, this.w);
+	}
 
-    public float dot(Vec3f v)
-    {
-        return x * v.x + y * v.y + z * v.z + w;
-    }
+	public float dot(Vec3f v)
+	{
+		return x * v.x + y * v.y + z * v.z + w;
+	}
 }
