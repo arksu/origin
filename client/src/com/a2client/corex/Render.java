@@ -27,6 +27,8 @@ import static com.a2client.corex.Const.MAX_LIGHTS;
 
 public class Render
 {
+	public static boolean use_draw_elements = true;
+
 	static public Const.RENDER_MODE Mode = Const.RENDER_MODE.rmOpaque;
 	static public Const.CULL_FACE cull_face = Const.CULL_FACE.cfNone;
 	static public boolean depth_write = false;

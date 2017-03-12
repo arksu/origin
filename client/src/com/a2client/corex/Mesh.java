@@ -18,6 +18,8 @@
 package com.a2client.corex;
 
 import com.a2client.Log;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 public class Mesh
 {
@@ -107,25 +109,24 @@ public class Mesh
 		{
 			data.IndexBuf.bind();
 
-			// TODO glDrawElements
-//			if (test_shader.use_draw_elements)
-//			{
-//				GL11.glDrawElements(
-//						Const.getMeshMode(data.Mode),
-//						data.IndexBuf.Count,
-//						data.IndexBuf.IndexType,
-//						0);
-//			}
-//			else
-//			{
-//				GL12.glDrawRangeElements(
-//						Const.getMeshMode(data.Mode),
-//						0,
-//						data.IndexBuf.Count,
-//						(data.IndexBuf.Count),
-//						data.IndexBuf.IndexType,
-//						0);
-//			}
+			if (Render.use_draw_elements)
+			{
+				GL11.glDrawElements(
+						Const.getMeshMode(data.Mode),
+						data.IndexBuf.Count,
+						data.IndexBuf.IndexType,
+						0);
+			}
+			else
+			{
+				GL12.glDrawRangeElements(
+						Const.getMeshMode(data.Mode),
+						0,
+						data.IndexBuf.Count,
+						(data.IndexBuf.Count),
+						data.IndexBuf.IndexType,
+						0);
+			}
 
 		}
 
