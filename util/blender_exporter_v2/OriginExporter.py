@@ -150,7 +150,7 @@ def write_mesh(fw, me, use_ASCII):
         fw('optimized vert count %d\n' % len(vert_list))
         fw('tri count %d\n' % len(me.polygons))
     else:
-        fw(struct.pack('<I', len(vert_list)))
+        fw(struct.pack('>I', len(vert_list)))
 
 
     for i in range(len(vert_list)):
@@ -159,20 +159,20 @@ def write_mesh(fw, me, use_ASCII):
             fw('normal %f %f %f\n' % normal_list[i][:])
             fw('uv %f %f\n' % uv_list[i][:])
         else:
-            fw(struct.pack('<fff', vert_list[i][0], vert_list[i][1], vert_list[i][2]))
-            fw(struct.pack('<fff', normal_list[i][0], normal_list[i][1], normal_list[i][2]))
-            fw(struct.pack('<ff', uv_list[i][0], uv_list[i][1]))
+            fw(struct.pack('>fff', vert_list[i][0], vert_list[i][1], vert_list[i][2]))
+            fw(struct.pack('>fff', normal_list[i][0], normal_list[i][1], normal_list[i][2]))
+            fw(struct.pack('>ff', uv_list[i][0], 1-uv_list[i][1]))
 
     if use_ASCII:
         fw('index\n')
     else:
-        fw(struct.pack('<I', len(index_list)))
+        fw(struct.pack('>I', len(index_list)))
 
     for i in index_list:
         if use_ASCII:
             fw('   %i %i %i\n' % (i[0], i[1], i[2]))
         else:
-            fw(struct.pack('<III', i[0], i[1], i[2]))
+            fw(struct.pack('>HHH', i[0], i[1], i[2]))
 
 
 def mesh_triangulate(me):

@@ -64,6 +64,7 @@ public class GridChunk
 	private float _maxHeight;
 	private float _minHeight;
 
+	// 8 = 3 coord + 3 normal + 2 uv; 4 = вершины для тайла
 	private static int VERTEX_SIZE = 8;
 	private static int VERTEX_COUNT = SHOW_NORMALS ? 8 : 4;
 

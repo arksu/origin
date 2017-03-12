@@ -60,7 +60,9 @@ public class Icosahedron
 		}
 		_mesh = new Mesh(
 				true, _vertices.size(), 0,
-				new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE)
+				new VertexAttribute(
+						VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE
+				)
 //				new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE)
 		);
 

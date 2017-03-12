@@ -225,22 +225,22 @@ void main() {
 
 	// shadows
 	if (shadowCoords.w > 0) {
-	float totalShadowWeight = 0.0;
+		float totalShadowWeight = 0.0;
 
-	for (int x = -pcfCount; x <= pcfCount; x++) {
-		for (int y = -pcfCount; y <= pcfCount; y++) {
-			float objectNearestLihgt = texture(u_shadowMap, shadowCoords.xy + vec2(x, y) * texelSize).r;
-			if (shadowCoords.z > objectNearestLihgt + 0.005) {
-				totalShadowWeight += 1.0;
+		for (int x = -pcfCount; x <= pcfCount; x++) {
+			for (int y = -pcfCount; y <= pcfCount; y++) {
+				float objectNearestLihgt = texture(u_shadowMap, shadowCoords.xy + vec2(x, y) * texelSize).r;
+				if (shadowCoords.z > objectNearestLihgt + 0.005) {
+					totalShadowWeight += 1.0;
+				}
 			}
 		}
-	}
-	totalShadowWeight /= totalTexels;
-	float lightFactor = 1.0 - (totalShadowWeight * shadowCoords.w);
-	lightFactor = lightFactor * 0.5 + 0.8;
+		totalShadowWeight /= totalTexels;
+		float lightFactor = 1.0 - (totalShadowWeight * shadowCoords.w);
+		lightFactor = lightFactor * 0.5 + 0.8;
 
-		fragColor.xyz = fragColor.xyz * lightFactor;
-//		fragColor.xyz = vec3(1,1,1) * lightFactor;
+			fragColor.xyz = fragColor.xyz * lightFactor;
+	//		fragColor.xyz = vec3(1,1,1) * lightFactor;
 	}
 
 	fragColor.xyz = fragColor.xyz * shadeIntensity;

@@ -85,19 +85,19 @@ public class GameCamera extends PerspectiveCamera
 			com.a2client.Input.MouseWheel = 0;
 		}
 
+		// установим верх
+		up.set(0, 1, 0);
+
+		// обнулим позицию
+		position.setZero();
+		// установим камеру на нужную нам дистанцию
+		position.add(0, _cameraDistance, 0);
+		// а теперь повернем как надо
+		position.rotate(Vector3.X, _angleX);
+		position.rotate(Vector3.Y, _angleY);
+
 		if (_chaseObj != null)
 		{
-			// установим верх
-			up.set(0, 1, 0);
-
-			// обнулим позицию
-			position.setZero();
-			// установим камеру на нужную нам дистанцию
-			position.add(0, _cameraDistance, 0);
-			// а теперь повернем как надо
-			position.rotate(Vector3.X, _angleX);
-			position.rotate(Vector3.Y, _angleY);
-
 			// и сместим до положения игрока
 			position.add(_chaseObj.getWorldCoord());
 
@@ -107,13 +107,15 @@ public class GameCamera extends PerspectiveCamera
 
 			// скажем смотреть на игрока
 			lookAt(_chaseObj.getWorldCoord());
-//			lookAt(0,0,0);
 
-			normalizeUp();
-
-			position.add(_offset);
 //			position.add(0,5,0);
 		}
+		else
+		{
+			lookAt(0, 0, 0);
+		}
+		normalizeUp();
+		position.add(_offset);
 
 		super.update();
 	}

@@ -23,7 +23,6 @@ import java.io.FileNotFoundException;
 
 public class FileSys
 {
-
 	public static MyInputStream getStream(String fname)
 	{
 		try

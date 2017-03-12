@@ -34,7 +34,7 @@ public class Const
 	public static final String EXT_ANIMATION = ".aan";
 	public static final String EXT_SHADER = ".ash";
 	public static final String EXT_XML = ".xml";
-	public static final String DIR_MEDIA = "media";
+	public static final String DIR_MEDIA = "assets/models";
 	public static final String PATH_DELIM = "/";
 
 	public enum SHADER_ATTRIB_TYPE

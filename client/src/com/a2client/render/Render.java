@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.a2client.Terrain.WATER_LEVEL;
+import static org.lwjgl.opengl.GL30.GL_CLIP_DISTANCE0;
 
 /**
  * примитивный рендер, пока один. может еще добавим других
@@ -46,11 +47,6 @@ public class Render
 	 * где лежат все шейдеры
 	 */
 	public static final String SHADER_DIR = "assets/shaders/";
-
-	/**
-	 * ну нету этого определения в libgdx, корявая поделка....
-	 */
-	private static final int GL_CLIP_DISTANCE0 = 0x3000;
 
 	/**
 	 * задаем плоскость отсечения (нужно для воды)
