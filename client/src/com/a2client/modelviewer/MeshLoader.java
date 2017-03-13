@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
@@ -25,56 +26,48 @@ public class MeshLoader
 	 */
 	private static final int ELEMENTS_COUNT = 8;
 
-	public static Mesh load(MyInputStream in)
+	public static Mesh load(MyInputStream in) throws IOException
 	{
-		try
+		int vertCount = in.readInt();
+		int total = vertCount * ELEMENTS_COUNT * FLOAT_SIZE;
+		float[] vertices = new float[vertCount * ELEMENTS_COUNT];
+
+		byte[] bytes = new byte[total];
+		int readed = in.read(bytes);
+		if (readed != total)
 		{
-			int vertCount = in.readInt();
-			int total = vertCount * ELEMENTS_COUNT * FLOAT_SIZE;
-			float[] vertices = new float[vertCount * ELEMENTS_COUNT];
-
-			byte[] bytes = new byte[total];
-			int readed = in.read(bytes);
-			if (readed != total)
-			{
-				throw new RuntimeException("MeshLoader load wrong bytes, total=" + total + " readed=" + readed);
-			}
-			ByteBuffer buf = ByteBuffer.allocate(total);
-			buf.clear();
-			buf.put(bytes);
-			buf.rewind();
-			buf.asFloatBuffer().get(vertices);
-
-			int indexCount = in.readInt();
-			short[] index = new short[indexCount * 3];
-			total = indexCount * 3 * INDEX_SIZE;
-			bytes = new byte[total];
-			readed = in.read(bytes);
-			if (readed != total)
-			{
-				throw new RuntimeException("MeshLoader load wrong bytes, total=" + total + " readed=" + readed);
-			}
-			buf = ByteBuffer.allocate(total);
-			buf.clear();
-			buf.put(bytes);
-			buf.rewind();
-			buf.asShortBuffer().get(index);
-
-			Mesh mesh = new Mesh(
-					true, vertCount,
-					index.length,
-					new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
-					new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
-					new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0")
-			);
-			mesh.setVertices(vertices);
-			mesh.setIndices(index);
-			return mesh;
+			throw new RuntimeException("MeshLoader load wrong bytes, total=" + total + " readed=" + readed);
 		}
-		catch (Exception e)
+		ByteBuffer buf = ByteBuffer.allocate(total);
+		buf.clear();
+		buf.put(bytes);
+		buf.rewind();
+		buf.asFloatBuffer().get(vertices);
+
+		int indexCount = in.readInt();
+		short[] index = new short[indexCount * 3];
+		total = indexCount * 3 * INDEX_SIZE;
+		bytes = new byte[total];
+		readed = in.read(bytes);
+		if (readed != total)
 		{
-			_log.error("failed load mesh", e);
+			throw new RuntimeException("MeshLoader load wrong bytes, total=" + total + " readed=" + readed);
 		}
-		return null;
+		buf = ByteBuffer.allocate(total);
+		buf.clear();
+		buf.put(bytes);
+		buf.rewind();
+		buf.asShortBuffer().get(index);
+
+		Mesh mesh = new Mesh(
+				true, vertCount,
+				index.length,
+				new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+				new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
+				new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0")
+		);
+		mesh.setVertices(vertices);
+		mesh.setIndices(index);
+		return mesh;
 	}
 }

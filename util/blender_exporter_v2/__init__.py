@@ -45,6 +45,11 @@ class OriginExportClass(bpy.types.Operator, ExportHelper, IOMDLOrientationHelper
         default=True,
     )
 
+    do_mesh_modifers = BoolProperty(
+        name="Apply mesh modifers",
+        default=False,
+    )
+
     do_skeleton = BoolProperty(
         name="Export Skeleton",
         description="Export skeleton (armature)",
@@ -83,7 +88,10 @@ class OriginExportClass(bpy.types.Operator, ExportHelper, IOMDLOrientationHelper
                                         to_up=self.axis_up,
                                         ).to_4x4() * Matrix.Scale(global_scale, 4)
 
-        return OriginExporter.run(self.filepath, global_matrix, context, self.scaleFactor, self.do_mesh, self.do_skeleton, self.do_anims, self.do_select_only)
+        return OriginExporter.run(self.filepath, global_matrix, context,
+                                  self.scaleFactor, self.do_mesh, self.do_skeleton, self.do_anims, self.do_select_only,
+                                  self.do_mesh_modifers
+                                  )
 
 
 def menu_func(self, context):

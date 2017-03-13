@@ -8,12 +8,12 @@ import com.a2client.gui.GUIGDX;
 import com.a2client.render.GameCamera;
 import com.a2client.render.skybox.Skybox;
 import com.a2client.screens.BaseScreen;
+import com.a2client.util.Keys;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
@@ -29,14 +29,20 @@ import static com.a2client.render.Render.makeShader;
  */
 public class ViewScreen extends BaseScreen
 {
-	private Mesh _mesh;
+	private Model _model;
 	private GameCamera _gameCamera;
 	private ShaderProgram _shader;
 	private Texture _texture;
 	private AssetManager _assetManager = new AssetManager();
 	private boolean _cameraDrag = false;
 	private boolean[] _oldMouseButtons = new boolean[3];
-	private float _rotate = 0f;
+	private float _rotateAngle = 0f;
+	private boolean _isRotate = true;
+	private float _yOffset = -5;
+
+		private String MODEL_NAME = "rifle";
+//	private String MODEL_NAME = "handgun";
+//	private String MODEL_NAME = "untitled";
 
 	public ViewScreen()
 	{
@@ -45,17 +51,13 @@ public class ViewScreen extends BaseScreen
 		_gameCamera = new GameCamera();
 		_shader = makeShader("modelView");
 
-		MyInputStream in = FileSys.getStream("untitled.mdl");
-		_mesh = MeshLoader.load(in);
+		MyInputStream in = FileSys.getStream(MODEL_NAME + ".mdl");
+		_model = new Model(in);
 
-//		Matrix4 tmp = new Matrix4();
-//		tmp.translate(0, -5, 0);
-//		_mesh.transform(tmp);
-
-		_assetManager.load(RESOURCE_DIR + "untitled.png", Texture.class);
+		_assetManager.load(RESOURCE_DIR + "models/" + MODEL_NAME + ".jpg", Texture.class);
 		_assetManager.finishLoading();
 
-		_texture = _assetManager.get(Config.RESOURCE_DIR + "untitled.png", Texture.class);
+		_texture = _assetManager.get(Config.RESOURCE_DIR + "models/" + MODEL_NAME + ".jpg", Texture.class);
 
 	}
 
@@ -79,7 +81,24 @@ public class ViewScreen extends BaseScreen
 		}
 
 		_gameCamera.update();
-		_rotate += 60 * ModelViewer.deltaTime;
+
+		if (Input.KeyDown(Keys.W))
+		{
+			_yOffset += 0.1f;
+		}
+		if (Input.KeyDown(Keys.S))
+		{
+			_yOffset -= 0.1f;
+		}
+		if (Input.KeyHit(Keys.SPACE))
+		{
+			_isRotate = !_isRotate;
+		}
+
+		if (_isRotate)
+		{
+			_rotateAngle += 60 * ModelViewer.deltaTime;
+		}
 
 		super.onUpdate();
 	}
@@ -108,7 +127,7 @@ public class ViewScreen extends BaseScreen
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
 		_texture.bind();
 
-		_mesh.render(_shader, GL20.GL_TRIANGLES);
+		_model.render(_shader, GL20.GL_TRIANGLES);
 
 		_shader.end();
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
@@ -129,8 +148,8 @@ public class ViewScreen extends BaseScreen
 		_shader.setUniformf("u_cameraDirection", _gameCamera.direction);
 
 		tmp = new Matrix4();
-		tmp.translate(0, -5, 0);
-		tmp.rotate(0, 1, 0, _rotate);
+		tmp.translate(0, _yOffset, 0);
+		tmp.rotate(0, 1, 0, _rotateAngle);
 		_shader.setUniformMatrix("u_worldTrans", tmp);
 
 		_shader.setUniformf("u_ambient", Color.WHITE);

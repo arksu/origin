@@ -17,7 +17,8 @@ class Error(Exception):
 def vertkey(v, n, uv):
     return round(v.x, 4), round(v.y, 4), round(v.z, 4), round(n.x, 4), round(n.y, 4), round(n.z, 4), round(uv[0], 4), round(uv[1], 4),
 
-def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_anims, do_select_only):
+def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_anims,
+        do_select_only, do_mesh_modifers):
     scene = context.scene
 
     if do_select_only:
@@ -54,8 +55,9 @@ def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_
     with open(filepath, mode) as data:
         fw = data.write
 
+        fw(struct.pack('>I', len(meshObjects)))
         for ob in meshObjects:
-            me = ob.to_mesh(scene, False, 'PREVIEW', calc_tessface=False)
+            me = ob.to_mesh(scene, do_mesh_modifers, 'PREVIEW', calc_tessface=False)
             me.transform(global_matrix * ob.matrix_world)
             mesh_triangulate(me)
             me.calc_normals()
