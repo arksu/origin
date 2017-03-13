@@ -62,6 +62,7 @@ def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_
             mesh_triangulate(me)
             me.calc_normals()
 
+            write_string(fw, ob.name)
             write_mesh(fw, me, use_ASCII)
 
             bpy.data.meshes.remove(me)
@@ -184,3 +185,17 @@ def mesh_triangulate(me):
     bmesh.ops.triangulate(bm, faces=bm.faces)
     bm.to_mesh(me)
     bm.free()
+
+
+def write_string(fw, str):
+    l = len(str)
+    fw(struct.pack('<H', l))
+    fw(bytearray(str, 'ascii'))
+
+
+def write_matrix(file, m):
+    # transpose in converter
+    file.write(struct.pack('<ffff', m[0][0], m[0][1], m[0][2], m[0][3]))
+    file.write(struct.pack('<ffff', m[1][0], m[1][1], m[1][2], m[1][3]))
+    file.write(struct.pack('<ffff', m[2][0], m[2][1], m[2][2], m[2][3]))
+    file.write(struct.pack('<ffff', m[3][0], m[3][1], m[3][2], m[3][3]))

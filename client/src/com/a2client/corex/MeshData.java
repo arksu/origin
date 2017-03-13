@@ -45,7 +45,7 @@ public class MeshData extends ResObject
 	public MeshData(String name)
 	{
 		this.name = name;
-		MyInputStream in = FileSys.getStream(name);
+		MyInputStream in = MyInputStream.fromFile(name);
 		BBox = new Box(in);
 		try
 		{

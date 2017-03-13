@@ -45,7 +45,7 @@ public class AnimData extends ResObject
 		this.name = name;
 		try
 		{
-			MyInputStream in = FileSys.getStream(name);
+			MyInputStream in = MyInputStream.fromFile(name);
 			jcount = in.readInt();
 			count = in.readInt();
 			fps = in.readInt();

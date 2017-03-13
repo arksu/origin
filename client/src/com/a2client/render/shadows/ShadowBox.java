@@ -4,8 +4,6 @@ import com.a2client.render.GameCamera;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static com.a2client.render.GameCamera.FOV;
 import static com.a2client.render.GameCamera.NEAR;
@@ -17,8 +15,6 @@ import static com.a2client.render.GameCamera.NEAR;
  */
 public class ShadowBox
 {
-	private static final Logger _log = LoggerFactory.getLogger(ShadowBox.class.getName());
-
 	/**
 	 * отступ от края области до объектов. чем больше - тем больше вероятность
 	 * что в куоид попадет объект которого не видно, но тень от него должна быть в области камеры
@@ -57,7 +53,7 @@ public class ShadowBox
 	 * world's axis to being in terms of the light's local axis).
 	 * @param camera - the in-game camera.
 	 */
-	protected ShadowBox(GameCamera camera)
+	ShadowBox(GameCamera camera)
 	{
 		this.cam = camera;
 		calculateWidthsAndHeights();
@@ -131,7 +127,7 @@ public class ShadowBox
 	 * converts this to world space using the inverse light's view matrix.
 	 * @return The center of the "view cuboid" in world space.
 	 */
-	public Vector3 getCenter()
+	Vector3 getCenter()
 	{
 		float x = (minX + maxX) / 2f;
 		float y = (minY + maxY) / 2f;
@@ -247,7 +243,7 @@ public class ShadowBox
 		return (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
 	}
 
-	public Matrix4 getLightViewMatrix()
+	Matrix4 getLightViewMatrix()
 	{
 		return lightViewMatrix;
 	}

@@ -50,7 +50,7 @@ public class XML extends ResObject
         try
         {
             byte[] buffer = new byte[(int) FileSys.getSize(fname)];
-            MyInputStream in = FileSys.getStream(fname);
+            MyInputStream in = MyInputStream.fromFile(fname);
             BufferedInputStream f = new BufferedInputStream(in);
             f.read(buffer);
             XML xml = new XML(new String(buffer, "UTF-8"), 0);

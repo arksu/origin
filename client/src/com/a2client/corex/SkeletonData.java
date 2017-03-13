@@ -43,7 +43,7 @@ public class SkeletonData extends ResObject
 		this.name = name;
 		try
 		{
-			MyInputStream in = FileSys.getStream(name);
+			MyInputStream in = MyInputStream.fromFile(name);
 			jcount = in.readWord();
 			jname = new String[jcount];
 			base = new Joint[jcount];

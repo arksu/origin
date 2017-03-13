@@ -1,0 +1,14 @@
+{
+	"meshgroups": {
+		"male": {
+			"names": ["1", "2"],
+			"material": {
+				"diffuse": "player_male.png"
+			}
+		},
+		"female": {
+			"names": ["f1", "f2"],
+			"diffuse": "player_female.png"
+		}
+	}
+}

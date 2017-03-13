@@ -21,21 +21,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import static com.a2client.Config.MODELS_DIR;
+
 public class FileSys
 {
-	public static MyInputStream getStream(String fname)
-	{
-		try
-		{
-			FileInputStream fin = new FileInputStream(Const.DIR_MEDIA + File.separator + fname);
-			return new MyInputStream(fin);
-		}
-		catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		return null;
-	}
+
 
 	public static long getSize(String fname)
 	{

@@ -34,6 +34,7 @@ public class Config
 	private static final Logger _log = LoggerFactory.getLogger(Config.class.getName());
 
 	static public final String RESOURCE_DIR = "assets/";
+	static public final String MODELS_DIR = RESOURCE_DIR + "models/";
 
 	/**
 	 * имя конфиг файла в каталоге с клиентом

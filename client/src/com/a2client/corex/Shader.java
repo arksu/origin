@@ -62,7 +62,7 @@ public class Shader extends ResObject
 			defstr += s;
 		}
 		this.name = name + Const.EXT_SHADER + "*" + defstr;
-		MyInputStream in = FileSys.getStream(name + Const.EXT_SHADER);
+		MyInputStream in = MyInputStream.fromFile(name + Const.EXT_SHADER);
 		Log.debug("load shader: " + name);
 		Log.debug("defines: " + defines.toString());
 		String DEFINE = "#define";

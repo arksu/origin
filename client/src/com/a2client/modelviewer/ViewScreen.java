@@ -2,8 +2,6 @@ package com.a2client.modelviewer;
 
 import com.a2client.Config;
 import com.a2client.Input;
-import com.a2client.corex.FileSys;
-import com.a2client.corex.MyInputStream;
 import com.a2client.gui.GUIGDX;
 import com.a2client.render.GameCamera;
 import com.a2client.render.skybox.Skybox;
@@ -12,6 +10,7 @@ import com.a2client.util.Keys;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -29,7 +28,7 @@ import static com.a2client.render.Render.makeShader;
  */
 public class ViewScreen extends BaseScreen
 {
-	private Model _model;
+	private ModelData _modelData;
 	private GameCamera _gameCamera;
 	private ShaderProgram _shader;
 	private Texture _texture;
@@ -40,8 +39,9 @@ public class ViewScreen extends BaseScreen
 	private boolean _isRotate = true;
 	private float _yOffset = -5;
 
-		private String MODEL_NAME = "rifle";
-//	private String MODEL_NAME = "handgun";
+//		private String MODEL_NAME = "rifle";
+	private String MODEL_NAME = "handgun";
+//	private String MODEL_NAME = "player";
 //	private String MODEL_NAME = "untitled";
 
 	public ViewScreen()
@@ -51,14 +51,23 @@ public class ViewScreen extends BaseScreen
 		_gameCamera = new GameCamera();
 		_shader = makeShader("modelView");
 
-		MyInputStream in = FileSys.getStream(MODEL_NAME + ".mdl");
-		_model = new Model(in);
+		_modelData = new ModelData(MODEL_NAME);
 
-		_assetManager.load(RESOURCE_DIR + "models/" + MODEL_NAME + ".jpg", Texture.class);
+		TextureLoader.TextureParameter parameter = new TextureLoader.TextureParameter();
+		parameter.minFilter = Texture.TextureFilter.Linear;
+		parameter.magFilter = Texture.TextureFilter.Linear;
+
+		_assetManager.load(RESOURCE_DIR + "models/" + MODEL_NAME + ".jpg", Texture.class, parameter);
 		_assetManager.finishLoading();
 
 		_texture = _assetManager.get(Config.RESOURCE_DIR + "models/" + MODEL_NAME + ".jpg", Texture.class);
+	}
 
+	@Override
+	public void resize(int width, int height)
+	{
+		_gameCamera.onResize(width, height);
+		super.resize(width, height);
 	}
 
 	@Override
@@ -127,7 +136,7 @@ public class ViewScreen extends BaseScreen
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
 		_texture.bind();
 
-		_model.render(_shader, GL20.GL_TRIANGLES);
+		_modelData.render(_shader, GL20.GL_TRIANGLES);
 
 		_shader.end();
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
@@ -162,6 +171,5 @@ public class ViewScreen extends BaseScreen
 		_shader.setUniformf("u_shadowDistance", -1);
 
 		_shader.setUniformi("u_texture", 0);
-
 	}
 }

@@ -1,0 +1,7 @@
+{
+	"material": {
+		"diffuse": "handgun.png",
+		"normal": "handgun_N.png",
+		"specular": "handgun_S.png"
+	}
+}

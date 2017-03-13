@@ -36,7 +36,7 @@ public class ModelManager
 		return _instance;
 	}
 
-//	private ObjectMap<Model, IntArray> _modelHitList = new ObjectMap<>();
+//	private ObjectMap<ModelData, IntArray> _modelHitList = new ObjectMap<>();
 
 	private ObjectMap<Integer, ModelDesc> _modelList = new ObjectMap<>();
 
@@ -117,7 +117,7 @@ public class ModelManager
 			_assetManager.finishLoadingAsset(desc._resource);
 			_log.debug("loaded model: " + desc._resource);
 		}
-//		Model model = _assetManager.get(desc._resource, Model.class);
+//		ModelData model = _assetManager.get(desc._resource, ModelData.class);
 
 //		if (!_modelHitList.containsKey(model))
 //		{
@@ -131,7 +131,7 @@ public class ModelManager
 
 //	private void unload(ModelDesc desc)
 //	{
-//		Model model = _assetManager.get(desc._resource, Model.class);
+//		ModelData model = _assetManager.get(desc._resource, ModelData.class);
 //
 //		IntArray hitArray = _modelHitList.get(model);
 //		hitArray.removeValue(desc._typeId);

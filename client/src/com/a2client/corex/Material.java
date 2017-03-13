@@ -59,7 +59,7 @@ public class Material extends ResObject
 	{
 		this.name = name;
 		String prefix = GetPrefix();
-		MyInputStream in = FileSys.getStream(name);
+		MyInputStream in = MyInputStream.fromFile(name);
 		try
 		{
 			// read params

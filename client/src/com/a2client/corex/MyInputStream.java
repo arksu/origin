@@ -17,9 +17,10 @@
 
 package com.a2client.corex;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import com.a2client.Config;
+import com.badlogic.gdx.Gdx;
+
+import java.io.*;
 
 public class MyInputStream extends DataInputStream
 {
@@ -47,5 +48,20 @@ public class MyInputStream extends DataInputStream
 		byte[] blob = new byte[len];
 		in.read(blob);
 		return new String(blob, "US-ASCII");
+	}
+
+	public static MyInputStream fromFile(String name)
+	{
+		try
+		{
+			File file = Gdx.files.internal(Config.MODELS_DIR + name).file();
+			FileInputStream fin = new FileInputStream(file);
+			return new MyInputStream(fin);
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
