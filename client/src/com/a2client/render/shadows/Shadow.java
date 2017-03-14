@@ -5,7 +5,6 @@ import com.a2client.render.Render;
 import com.a2client.render.ShadowShaderProvider;
 import com.a2client.render.framebuffer.DepthFrameBuffer;
 import com.a2client.render.skybox.Skybox;
-import com.a2client.util.vector.Vector2f;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -93,7 +92,8 @@ public class Shadow
 		center.y = -center.y;
 		center.z = -center.z;
 
-		float pitch = (float) Math.toDegrees(Math.acos(new Vector2f(direction.x, direction.z).length()));
+		double len = Math.sqrt(direction.x * direction.x + direction.z * direction.z);
+		float pitch = (float) Math.toDegrees(Math.acos(len));
 		float yaw = (float) Math.toDegrees(((float) Math.atan(direction.x / direction.z)));
 		yaw = direction.z > 0 ? yaw - 180 : yaw;
 
