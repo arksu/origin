@@ -38,7 +38,7 @@ public class Main extends com.badlogic.gdx.Game
 	 */
 	private static long _last_tick;
 
-	private static AssetManager _assetManager;
+	private static AssetManager _assetManager = new AssetManager();
 	private static Main _instance;
 
 	@Override
@@ -51,7 +51,6 @@ public class Main extends com.badlogic.gdx.Game
 	public void create()
 	{
 		_instance = this;
-		_assetManager = new AssetManager();
 		_last_tick = System.currentTimeMillis();
 		_input = new Input();
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);

@@ -1,6 +1,5 @@
 package com.a2client.modelviewer;
 
-import com.a2client.Config;
 import com.a2client.Input;
 import com.a2client.gui.GUIGDX;
 import com.a2client.render.GameCamera;
@@ -9,17 +8,13 @@ import com.a2client.screens.BaseScreen;
 import com.a2client.util.Keys;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import org.lwjgl.opengl.GL13;
 
-import static com.a2client.Config.RESOURCE_DIR;
 import static com.a2client.render.Render.makeShader;
 
 /**
@@ -31,8 +26,6 @@ public class ViewScreen extends BaseScreen
 	private ModelData _modelData;
 	private GameCamera _gameCamera;
 	private ShaderProgram _shader;
-	private Texture _texture;
-	private AssetManager _assetManager = new AssetManager();
 	private boolean _cameraDrag = false;
 	private boolean[] _oldMouseButtons = new boolean[3];
 	private float _rotateAngle = 0f;
@@ -52,15 +45,6 @@ public class ViewScreen extends BaseScreen
 		_shader = makeShader("modelView");
 
 		_modelData = new ModelData(MODEL_NAME);
-
-		TextureLoader.TextureParameter parameter = new TextureLoader.TextureParameter();
-		parameter.minFilter = Texture.TextureFilter.Linear;
-		parameter.magFilter = Texture.TextureFilter.Linear;
-
-		_assetManager.load(RESOURCE_DIR + "models/" + MODEL_NAME + ".jpg", Texture.class, parameter);
-		_assetManager.finishLoading();
-
-		_texture = _assetManager.get(Config.RESOURCE_DIR + "models/" + MODEL_NAME + ".jpg", Texture.class);
 	}
 
 	@Override
@@ -133,13 +117,15 @@ public class ViewScreen extends BaseScreen
 
 		prepareShader();
 
-		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
-		_texture.bind();
+//		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
+//		_texture.bind();
 
 		_modelData.render(_shader, GL20.GL_TRIANGLES);
 
 		_shader.end();
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
+
+		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
 	}
 
 	private void prepareShader()

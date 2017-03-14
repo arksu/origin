@@ -5,19 +5,16 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
+ * загрузка мешей из файла в память и создание необходимых буферов в gpu
  * Created by arksu on 12.03.17.
  */
 public class MeshLoader
 {
-	private static final Logger _log = LoggerFactory.getLogger(MeshLoader.class.getName());
-
 	private static final int FLOAT_SIZE = 4;
 	private static final int INDEX_SIZE = 2;
 

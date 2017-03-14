@@ -22,6 +22,7 @@ public class ModelDesc
 		String diffuse;
 		String normal;
 		String specular;
+		String filter;
 		boolean castShadows = true;
 		boolean receiveShadows = true;
 	}

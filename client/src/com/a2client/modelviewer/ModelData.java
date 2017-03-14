@@ -69,7 +69,7 @@ public class ModelData
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			_log.error("failed load model " + name, e);
 		}
 	}
 
