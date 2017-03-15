@@ -4,7 +4,6 @@ import com.a2client.Config;
 import com.a2client.corex.MyInputStream;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,6 +84,8 @@ public class ModelData
 		{
 			String name = in.readAnsiString().toLowerCase();
 			Mesh mesh = MeshLoader.load(in);
+			// для моделей используем батчинг. поэтому бинд буферов будет только там
+			mesh.setAutoBind(false);
 
 			tmpList.add(mesh);
 			map.put(name, mesh);
@@ -138,25 +139,28 @@ public class ModelData
 	/**
 	 * рендер без указания группы. выводим ВСЕ возможное (все группы)
 	 */
-	public void render(ShaderProgram shader, int mode)
+	public void render(ModelBatch modelBatch, int primitiveType)
 	{
 		if (_defaultGroup != null)
 		{
-			_defaultMaterial.bind(shader);
+			modelBatch.bindMaterial(_defaultMaterial);
 			for (Mesh mesh : _defaultGroup)
 			{
-				mesh.render(shader, mode);
+				// биндим меш через батчер, там проверим текущий меш и только тогда будет бинд если реально нужно
+				modelBatch.bindMesh(mesh);
+				mesh.render(modelBatch.getShader(), primitiveType);
 			}
 		}
 		else
 		{
 			for (Map.Entry<String, List<Mesh>> entry : _meshGroups.entrySet())
 			{
-				Material material = _meshMaterials.get(entry.getKey());
-				material.bind(shader);
+				modelBatch.bindMaterial(_meshMaterials.get(entry.getKey()));
 				for (Mesh mesh : entry.getValue())
 				{
-					mesh.render(shader, mode);
+					// биндим меш через батчер, там проверим текущий меш и только тогда будет бинд если реально нужно
+					modelBatch.bindMesh(mesh);
+					mesh.render(modelBatch.getShader(), primitiveType);
 				}
 			}
 		}

@@ -23,8 +23,10 @@ import static com.a2client.render.Render.makeShader;
  */
 public class ViewScreen extends BaseScreen
 {
+	private Model _model;
 	private ModelData _modelData;
 	private GameCamera _gameCamera;
+	private ModelBatch _modelBatch;
 	private ShaderProgram _shader;
 	private boolean _cameraDrag = false;
 	private boolean[] _oldMouseButtons = new boolean[3];
@@ -32,7 +34,7 @@ public class ViewScreen extends BaseScreen
 	private boolean _isRotate = true;
 	private float _yOffset = -5;
 
-//		private String MODEL_NAME = "rifle";
+	//		private String MODEL_NAME = "rifle";
 	private String MODEL_NAME = "handgun";
 //	private String MODEL_NAME = "player";
 //	private String MODEL_NAME = "untitled";
@@ -44,7 +46,9 @@ public class ViewScreen extends BaseScreen
 		_gameCamera = new GameCamera();
 		_shader = makeShader("modelView");
 
+		_modelBatch = new ModelBatch();
 		_modelData = new ModelData(MODEL_NAME);
+		_model = new Model(_modelData);
 	}
 
 	@Override
@@ -113,18 +117,15 @@ public class ViewScreen extends BaseScreen
 
 		_gameCamera.update(false);
 
-		_shader.begin();
+		// ======================================================
 
+		_modelBatch.begin(_gameCamera, _shader);
 		prepareShader();
+		_modelBatch.render(_model);
+		_modelBatch.end();
 
-//		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
-//		_texture.bind();
-
-		_modelData.render(_shader, GL20.GL_TRIANGLES);
-
-		_shader.end();
+		// ======================================================
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
-
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
 	}
 
