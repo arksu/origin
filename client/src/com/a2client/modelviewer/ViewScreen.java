@@ -15,6 +15,10 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import org.lwjgl.opengl.GL13;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import static com.a2client.render.Render.makeShader;
 
 /**
@@ -23,7 +27,8 @@ import static com.a2client.render.Render.makeShader;
  */
 public class ViewScreen extends BaseScreen
 {
-	private Model _model;
+	private List<Model> _models = new ArrayList<>();
+
 	private ModelData _modelData;
 	private GameCamera _gameCamera;
 	private ModelBatch _modelBatch;
@@ -34,7 +39,7 @@ public class ViewScreen extends BaseScreen
 	private boolean _isRotate = true;
 	private float _yOffset = -5;
 
-	//		private String MODEL_NAME = "rifle";
+//	private String MODEL_NAME = "rifle";
 	private String MODEL_NAME = "handgun";
 //	private String MODEL_NAME = "player";
 //	private String MODEL_NAME = "untitled";
@@ -48,7 +53,28 @@ public class ViewScreen extends BaseScreen
 
 		_modelBatch = new ModelBatch();
 		_modelData = new ModelData(MODEL_NAME);
-		_model = new Model(_modelData);
+
+		Model rotatingModel = new Model(_modelData);
+		_models.add(rotatingModel);
+
+		Random random = new Random();
+		for (int i = 0; i < 1000; i++)
+		{
+			Model model = new Model(_modelData);
+			final int range = 10;
+			float x = random.nextInt(range) - range / 2;
+			float y = random.nextInt(range) - range / 2;
+			float z = random.nextInt(range) - range / 2;
+			model.setPos(x, y, z);
+			if (random.nextInt(2) == 0)
+			{
+				rotatingModel.addChild(model);
+			}
+			else
+			{
+				_models.add(model);
+			}
+		}
 	}
 
 	@Override
@@ -97,6 +123,13 @@ public class ViewScreen extends BaseScreen
 			_rotateAngle += 60 * ModelViewer.deltaTime;
 		}
 
+		Matrix4 tmp = new Matrix4();
+		tmp.translate(0, _yOffset, 0);
+		tmp.rotate(0, 1, 0, _rotateAngle);
+//		tmp.scale(3, 3, 3);
+
+		_models.get(0).setTransform(tmp);
+
 		super.onUpdate();
 	}
 
@@ -121,7 +154,10 @@ public class ViewScreen extends BaseScreen
 
 		_modelBatch.begin(_gameCamera, _shader);
 		prepareShader();
-		_modelBatch.render(_model);
+		for (Model model : _models)
+		{
+			_modelBatch.render(model);
+		}
 		_modelBatch.end();
 
 		// ======================================================
@@ -135,18 +171,13 @@ public class ViewScreen extends BaseScreen
 		_shader.setUniformMatrix("u_viewTrans", _gameCamera.view);
 		_shader.setUniformMatrix("u_projViewTrans", _gameCamera.combined);
 
-		Matrix4 tmp = new Matrix4();
-		tmp.set(_gameCamera.combined.cpy()).mul(new Matrix4().idt());
-		_shader.setUniformMatrix("u_projViewWorldTrans", tmp);
+//		Matrix4 tmp = new Matrix4();
+//		tmp.set(_gameCamera.combined.cpy()).mul(new Matrix4().idt());
+//		_shader.setUniformMatrix("u_projViewWorldTrans", tmp);
 
 		_shader.setUniformf("u_cameraPosition", _gameCamera.position.x, _gameCamera.position.y, _gameCamera.position.z,
 		                    1.1881f / (_gameCamera.far * _gameCamera.far));
 		_shader.setUniformf("u_cameraDirection", _gameCamera.direction);
-
-		tmp = new Matrix4();
-		tmp.translate(0, _yOffset, 0);
-		tmp.rotate(0, 1, 0, _rotateAngle);
-		_shader.setUniformMatrix("u_worldTrans", tmp);
 
 		_shader.setUniformf("u_ambient", Color.WHITE);
 

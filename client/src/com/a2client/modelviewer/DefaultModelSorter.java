@@ -46,6 +46,7 @@ public class DefaultModelSorter implements ModelSorter, Comparator<Model>
 	@Override
 	public int compare(Model o1, Model o2)
 	{
+		// прозрачность
 //		final boolean b1 = o1.material.has(BlendingAttribute.Type) && ((BlendingAttribute) o1.material.get(BlendingAttribute.Type)).blended;
 //		final boolean b2 = o2.material.has(BlendingAttribute.Type) && ((BlendingAttribute) o2.material.get(BlendingAttribute.Type)).blended;
 //		if (b1 != b2) return b1 ? 1 : -1;
@@ -53,6 +54,9 @@ public class DefaultModelSorter implements ModelSorter, Comparator<Model>
 		// FIXME implement better sorting algorithm
 		// final boolean same = o1.shader == o2.shader && o1.mesh == o2.mesh && (o1.lights == null) == (o2.lights == null) &&
 		// o1.material.equals(o2.material);
+
+		// TODO по количеству меш групп. то есть вообще есть больше одной или нет
+		// модели где нету групп должны идти вместе и уже их сортировать по мешам. чтобы не было переключений vbo
 
 //		getTranslation(o1.worldTransform, o1.meshPart.center, tmpV1);
 //		getTranslation(o2.worldTransform, o2.meshPart.center, tmpV2);

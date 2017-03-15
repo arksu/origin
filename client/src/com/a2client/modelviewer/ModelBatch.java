@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
+import java.util.List;
+
 /**
  * свеой велосипедик для батчинга моделей
  * один единый шейдер для всех моделей со статическим батчингом (кастомные условия для моделей передаем через униформ)
@@ -72,6 +74,14 @@ public class ModelBatch
 	public void render(Model model)
 	{
 		_renderables.add(model);
+		List<Model> childs = model.getChilds();
+		if (childs != null)
+		{
+			for (Model child : childs)
+			{
+				render(child);
+			}
+		}
 	}
 
 	public void end()

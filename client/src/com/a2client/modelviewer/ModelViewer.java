@@ -47,7 +47,7 @@ public class ModelViewer extends com.badlogic.gdx.Game
 		cfg.title = "Origin model viewer";
 		cfg.useGL30 = true;
 		cfg.vSyncEnabled = true;
-		cfg.foregroundFPS = 60;
+//		cfg.foregroundFPS = 60;
 		cfg.backgroundFPS = 5;
 //		cfg.samples = config._MSAASamples;
 		cfg.width = 1024;

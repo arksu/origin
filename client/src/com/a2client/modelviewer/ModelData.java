@@ -44,9 +44,13 @@ public class ModelData
 	private List<Mesh> _defaultGroup;
 	private Material _defaultMaterial;
 
+	private int _totalTriCount;
+	private final String _name;
+
 	public ModelData(String name)
 	{
 		_log.debug("load model: " + name);
+		_name = name;
 		File file = Gdx.files.internal(Config.MODELS_DIR + name + ".json").file();
 		try
 		{
@@ -74,6 +78,7 @@ public class ModelData
 
 	private void loadMesh(MyInputStream in) throws IOException
 	{
+		_totalTriCount = 0;
 		int meshCount = in.readInt();
 		List<Mesh> tmpList = new LinkedList<>();
 
@@ -84,6 +89,7 @@ public class ModelData
 		{
 			String name = in.readAnsiString().toLowerCase();
 			Mesh mesh = MeshLoader.load(in);
+			_totalTriCount += mesh.getNumIndices() / 3;
 			// для моделей используем батчинг. поэтому бинд буферов будет только там
 			mesh.setAutoBind(false);
 
@@ -92,6 +98,7 @@ public class ModelData
 
 			meshCount--;
 		}
+		_log.debug("total tri couunt: " + _totalTriCount + " [" + tmpList.size() + " mesh]");
 
 		// если группы для этой модели есть. надо их сформировать
 		if (_desc.meshgroups != null)
@@ -126,9 +133,15 @@ public class ModelData
 			ModelDesc.Material descMaterial = _desc.material;
 			if (descMaterial == null)
 			{
-				throw new RuntimeException("no default material");
+				ModelDesc.Material desc = new ModelDesc.Material();
+				desc.diffuse = _name + ".jpg";
+				_defaultMaterial = new Material(desc);
+//				throw new RuntimeException("no default material");
 			}
-			_defaultMaterial = new Material(descMaterial);
+			else
+			{
+				_defaultMaterial = new Material(descMaterial);
+			}
 			for (Mesh mesh : tmpList)
 			{
 				_defaultGroup.add(mesh);

@@ -2,7 +2,9 @@ package com.a2client.modelviewer;
 
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector3;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -16,12 +18,12 @@ public class Model
 	/**
 	 * положение относительно родителя
 	 */
-	private Matrix4 _localTransform;
+	private Matrix4 _localTransform = new Matrix4();
 
 	/**
 	 * абсолютное положение в мире, апдейтится на основе иерархии
 	 */
-	private Matrix4 _worldTransform;
+	private Matrix4 _worldTransform = new Matrix4();
 
 	/**
 	 * модель родитель к которой привязана эта
@@ -45,12 +47,73 @@ public class Model
 
 	public void render(ModelBatch modelBatch)
 	{
+		modelBatch.getShader().setUniformMatrix("u_worldTrans", _worldTransform);
+
 		_data.render(modelBatch, _primitiveType);
 	}
 
 	public ModelData getData()
 	{
 		return _data;
+	}
+
+	private void setParent(Model parent)
+	{
+		_parent = parent;
+	}
+
+	public void addChild(Model model)
+	{
+		if (_childs == null)
+		{
+			_childs = new LinkedList<>();
+		}
+		_childs.add(model);
+		model.setParent(this);
+	}
+
+	public List<Model> getChilds()
+	{
+		return _childs;
+	}
+
+	public void setTransform(Matrix4 transform)
+	{
+		_localTransform = transform.cpy();
+		updateWorldTransform();
+	}
+
+	public void setPos(Vector3 position)
+	{
+		_localTransform.setTranslation(position);
+		updateWorldTransform();
+	}
+
+	public void setPos(float x, float y, float z)
+	{
+		_localTransform.setTranslation(x, y, z);
+		updateWorldTransform();
+	}
+
+	private void updateWorldTransform()
+	{
+		if (_parent == null)
+		{
+			_worldTransform.set(_localTransform);
+		}
+		else
+		{
+			_worldTransform.set(_parent._worldTransform);
+			_worldTransform.mul(_localTransform);
+		}
+
+		if (_childs != null)
+		{
+			for (Model child : _childs)
+			{
+				child.updateWorldTransform();
+			}
+		}
 	}
 
 }
