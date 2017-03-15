@@ -10,6 +10,9 @@ uniform vec4 u_ambient;
 uniform vec3 u_skyColor;
 uniform sampler2D u_shadowMap;
 
+uniform float u_specularMap;
+uniform float u_normalMap;
+
 in vec2 texCoords;
 in float visibility;
 in vec3 normal;
@@ -37,10 +40,20 @@ void main() {
     vec3 rViewVec = normalize(v_viewVec);
 	float rVdotN = dot(rViewVec, rNormal);
 
+	vec4 rSpecular = vec4(0.3);// uMaterial[cSpecular];
+	if (u_specularMap > 0) {
+		rSpecular *= texture(u_textureSpecular, texCoords);
+	} else if (u_normalMap > 0) {
+		rSpecular.xyz *= rTexN.x;
+	}
+
 	float intensity = max(rVdotN, 0.45);
 //	float intensity = max(NdotL, 0.45);
 //    outColor = intensity * texture(u_texture, texCoords);
     outColor = intensity * texture(u_texture, texCoords);
+
+    outColor += rSpecular;
+
 //	outColor = vec4(intensity);
 //	outColor = mix(vec4(u_skyColor, 1.0), outColor, visibility);
 
