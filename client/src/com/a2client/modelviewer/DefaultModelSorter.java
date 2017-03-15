@@ -55,8 +55,14 @@ public class DefaultModelSorter implements ModelSorter, Comparator<Model>
 		// final boolean same = o1.shader == o2.shader && o1.mesh == o2.mesh && (o1.lights == null) == (o2.lights == null) &&
 		// o1.material.equals(o2.material);
 
+		// сортируем по данным (меш и материал).
+		if (o1.getData() != o2.getData()) return o1.getData().hashCode() > o2.getData().hashCode() ? 1 : -1;
+
 		// TODO по количеству меш групп. то есть вообще есть больше одной или нет
 		// модели где нету групп должны идти вместе и уже их сортировать по мешам. чтобы не было переключений vbo
+		final boolean d1 = o1.getData().isOneMesh();
+		final boolean d2 = o2.getData().isOneMesh();
+		if (d1 != d2) return d1 ? 1 : -1;
 
 //		getTranslation(o1.worldTransform, o1.meshPart.center, tmpV1);
 //		getTranslation(o2.worldTransform, o2.meshPart.center, tmpV2);

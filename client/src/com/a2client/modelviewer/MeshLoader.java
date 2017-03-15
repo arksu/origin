@@ -29,33 +29,50 @@ public class MeshLoader
 		int total = vertCount * ELEMENTS_COUNT * FLOAT_SIZE;
 		float[] vertices = new float[vertCount * ELEMENTS_COUNT];
 
+		// читаем все вершины в буфер
 		byte[] bytes = new byte[total];
-		int readed = in.read(bytes);
-		if (readed != total)
+		int totalReaded = 0;
+		do
 		{
-			throw new RuntimeException("MeshLoader load wrong bytes, total=" + total + " readed=" + readed);
+			int r = in.read(bytes, totalReaded, total - totalReaded);
+			if (r < 0)
+			{
+				throw new RuntimeException("error read vertex buffer");
+			}
+			totalReaded += r;
 		}
+		while (totalReaded < total);
+
 		ByteBuffer buf = ByteBuffer.allocate(total);
 		buf.clear();
 		buf.put(bytes);
 		buf.rewind();
 		buf.asFloatBuffer().get(vertices);
 
+		// читаем все индексы в буфер
 		int indexCount = in.readInt();
 		short[] index = new short[indexCount * 3];
 		total = indexCount * 3 * INDEX_SIZE;
 		bytes = new byte[total];
-		readed = in.read(bytes);
-		if (readed != total)
+		totalReaded = 0;
+		do
 		{
-			throw new RuntimeException("MeshLoader load wrong bytes, total=" + total + " readed=" + readed);
+			int r = in.read(bytes, totalReaded, total - totalReaded);
+			if (r < 0)
+			{
+				throw new RuntimeException("error read index buffer");
+			}
+			totalReaded += r;
 		}
+		while (totalReaded < total);
+
 		buf = ByteBuffer.allocate(total);
 		buf.clear();
 		buf.put(bytes);
 		buf.rewind();
 		buf.asShortBuffer().get(index);
 
+		// создаем меш - передаем туда буферы
 		Mesh mesh = new Mesh(
 				true, vertCount,
 				index.length,

@@ -4,6 +4,8 @@ import com.a2client.Config;
 import com.a2client.corex.MyInputStream;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,6 +152,14 @@ public class ModelData
 	}
 
 	/**
+	 * есть только один меш?
+	 */
+	public boolean isOneMesh()
+	{
+		return _defaultGroup != null && _defaultGroup.size() == 1;
+	}
+
+	/**
 	 * рендер без указания группы. выводим ВСЕ возможное (все группы)
 	 */
 	public void render(ModelBatch modelBatch, int primitiveType)
@@ -174,6 +184,27 @@ public class ModelData
 					// биндим меш через батчер, там проверим текущий меш и только тогда будет бинд если реально нужно
 					modelBatch.bindMesh(mesh);
 					mesh.render(modelBatch.getShader(), primitiveType);
+				}
+			}
+		}
+	}
+
+	public void extendBoundingBox(BoundingBox boundingBox, Matrix4 worldTransform)
+	{
+		if (_defaultGroup != null)
+		{
+			for (Mesh mesh : _defaultGroup)
+			{
+				mesh.extendBoundingBox(boundingBox, 0, mesh.getNumIndices(), worldTransform);
+			}
+		}
+		else
+		{
+			for (Map.Entry<String, List<Mesh>> entry : _meshGroups.entrySet())
+			{
+				for (Mesh mesh : entry.getValue())
+				{
+					mesh.extendBoundingBox(boundingBox, 0, mesh.getNumIndices(), worldTransform);
 				}
 			}
 		}

@@ -2,6 +2,7 @@ package com.a2client.model;
 
 import com.a2client.ModelManager;
 import com.a2client.Terrain;
+import com.a2client.modelviewer.Model;
 import com.a2client.network.game.serverpackets.ObjectAdd;
 import com.a2client.util.Utils;
 import com.a2client.util.Vec2i;
@@ -35,6 +36,7 @@ public class GameObject
 	private BoundingBox _boundingBox;
 
 	private ModelInstance _model = null;
+	private Model _modelNew = null;
 
 	private AnimationController _animation = null;
 

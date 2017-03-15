@@ -29,7 +29,6 @@ public class ViewScreen extends BaseScreen
 {
 	private List<Model> _models = new ArrayList<>();
 
-	private ModelData _modelData;
 	private GameCamera _gameCamera;
 	private ModelBatch _modelBatch;
 	private ShaderProgram _shader;
@@ -39,7 +38,7 @@ public class ViewScreen extends BaseScreen
 	private boolean _isRotate = true;
 	private float _yOffset = -5;
 
-//	private String MODEL_NAME = "rifle";
+	//	private String MODEL_NAME = "rifle";
 	private String MODEL_NAME = "handgun";
 //	private String MODEL_NAME = "player";
 //	private String MODEL_NAME = "untitled";
@@ -52,20 +51,34 @@ public class ViewScreen extends BaseScreen
 		_shader = makeShader("modelView");
 
 		_modelBatch = new ModelBatch();
-		_modelData = new ModelData(MODEL_NAME);
+		ModelData modelData = new ModelData(MODEL_NAME);
+		ModelData modelData2 = new ModelData("rifle");
 
-		Model rotatingModel = new Model(_modelData);
+		Model rotatingModel = new Model(modelData);
 		_models.add(rotatingModel);
 
 		Random random = new Random();
 		for (int i = 0; i < 1000; i++)
 		{
-			Model model = new Model(_modelData);
+			Model model;
+			if (random.nextInt(2) == 0)
+			{
+				model = new Model(modelData);
+			}
+			else
+			{
+				model = new Model(modelData2);
+			}
 			final int range = 10;
 			float x = random.nextInt(range) - range / 2;
 			float y = random.nextInt(range) - range / 2;
 			float z = random.nextInt(range) - range / 2;
+
 			model.setPos(x, y, z);
+			float a = random.nextFloat() * 360;
+			model.getTransform().rotate(0, 1, 0, a);
+			model.updateWorldTransform();
+
 			if (random.nextInt(2) == 0)
 			{
 				rotatingModel.addChild(model);
@@ -137,12 +150,14 @@ public class ViewScreen extends BaseScreen
 	public void onRender()
 	{
 		GUIGDX.Text("", 5, 5, "FPS: " + Gdx.graphics.getFramesPerSecond());
+		GUIGDX.Text("", 5, 25, "mesh switch: " + _modelBatch.getSwitchMeshCounter());
+		GUIGDX.Text("", 5, 45, "material switch: " + _modelBatch.getSwitchMaterialCounter());
+		GUIGDX.Text("", 5, 65, "render objects: " + _modelBatch.getRenderedCounter());
 	}
 
 	@Override
 	public void onRender3D()
 	{
-
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glCullFace(GL20.GL_BACK);

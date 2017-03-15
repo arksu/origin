@@ -3,6 +3,7 @@ package com.a2client.modelviewer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +27,17 @@ public class Model
 	private Matrix4 _worldTransform = new Matrix4();
 
 	/**
+	 * баунд бокс (ограничение видимости в камере для модели)
+	 */
+	private BoundingBox _boundingBox = new BoundingBox();
+
+	/**
+	 * время последнего обновления баунд бокса, обновляем с небольшой задержкой.
+	 * т.к. операция дорогая - нет смысла каждый кадр обсчитывать.
+	 */
+	private long _lastTimeUpdateBoundingBox = 0;
+
+	/**
 	 * модель родитель к которой привязана эта
 	 */
 	private Model _parent;
@@ -36,7 +48,7 @@ public class Model
 	private List<Model> _childs;
 
 	/**
-	 * see {@link GL20#GL_LINE_STRIP}, {@link GL20#GL_TRIANGLE_STRIP}
+	 * see {@link GL20#GL_TRIANGLES}, {@link GL20#GL_TRIANGLE_STRIP}
 	 */
 	private int _primitiveType = GL20.GL_TRIANGLES;
 
@@ -60,6 +72,7 @@ public class Model
 	private void setParent(Model parent)
 	{
 		_parent = parent;
+		updateWorldTransform();
 	}
 
 	public void addChild(Model model)
@@ -83,6 +96,11 @@ public class Model
 		updateWorldTransform();
 	}
 
+	public Matrix4 getTransform()
+	{
+		return _localTransform;
+	}
+
 	public void setPos(Vector3 position)
 	{
 		_localTransform.setTranslation(position);
@@ -95,7 +113,12 @@ public class Model
 		updateWorldTransform();
 	}
 
-	private void updateWorldTransform()
+	public BoundingBox getBoundingBox()
+	{
+		return _boundingBox;
+	}
+
+	public void updateWorldTransform()
 	{
 		if (_parent == null)
 		{
@@ -103,9 +126,9 @@ public class Model
 		}
 		else
 		{
-			_worldTransform.set(_parent._worldTransform);
-			_worldTransform.mul(_localTransform);
+			_worldTransform.set(_parent._worldTransform).mul(_localTransform);
 		}
+		updateBoundingBox();
 
 		if (_childs != null)
 		{
@@ -113,6 +136,22 @@ public class Model
 			{
 				child.updateWorldTransform();
 			}
+		}
+	}
+
+	private void updateBoundingBox()
+	{
+		updateBoundingBox(false);
+	}
+
+	public void updateBoundingBox(boolean force)
+	{
+		long time = System.currentTimeMillis();
+		if (time - _lastTimeUpdateBoundingBox > 3000 || force)
+		{
+			_boundingBox.inf();
+			_data.extendBoundingBox(_boundingBox, _worldTransform);
+			_lastTimeUpdateBoundingBox = time;
 		}
 	}
 

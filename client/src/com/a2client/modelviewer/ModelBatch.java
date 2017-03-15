@@ -20,13 +20,17 @@ public class ModelBatch
 
 	private ShaderProgram _shader;
 
-	protected final ModelSorter _sorter;
+	private final ModelSorter _sorter;
 
-	protected Camera _camera;
+	private Camera _camera;
 
-	protected Material _currentMaterial;
+	private Material _currentMaterial;
 
-	protected Mesh _currentMesh;
+	private Mesh _currentMesh;
+
+	private int _switchMeshCounter;
+	private int _switchMaterialCounter;
+	private int _renderedCounter;
 
 	public ModelBatch()
 	{
@@ -63,17 +67,40 @@ public class ModelBatch
 		_currentMesh = currentMesh;
 	}
 
+	public int getSwitchMeshCounter()
+	{
+		return _switchMeshCounter;
+	}
+
+	public int getSwitchMaterialCounter()
+	{
+		return _switchMaterialCounter;
+	}
+
+	public int getRenderedCounter()
+	{
+		return _renderedCounter;
+	}
+
 	public void begin(final Camera cam, ShaderProgram shader)
 	{
 		if (_camera != null) throw new GdxRuntimeException("Call end() first.");
 		_camera = cam;
 		_shader = shader;
 		_shader.begin();
+		_renderedCounter = 0;
 	}
 
 	public void render(Model model)
 	{
-		_renderables.add(model);
+		// если объект попадает в поле зрения камеры - отрендерим его
+		if (_camera.frustum.boundsInFrustum(model.getBoundingBox()))
+		{
+			_renderables.add(model);
+			_renderedCounter++;
+		}
+
+		// пройдем по всем подчиненным объектам
 		List<Model> childs = model.getChilds();
 		if (childs != null)
 		{
@@ -96,6 +123,8 @@ public class ModelBatch
 		_sorter.sort(_camera, _renderables);
 		_currentMaterial = null;
 		_currentMesh = null;
+		_switchMeshCounter = 0;
+		_switchMaterialCounter = 0;
 
 		for (int i = 0; i < _renderables.size; i++)
 		{
@@ -117,6 +146,7 @@ public class ModelBatch
 	{
 		if (_currentMesh != mesh)
 		{
+			_switchMeshCounter++;
 			mesh.bind(_shader);
 			_currentMesh = mesh;
 		}
@@ -126,6 +156,7 @@ public class ModelBatch
 	{
 		if (_currentMaterial != material)
 		{
+			_switchMaterialCounter++;
 			// TODO if null?
 			if (material != null)
 			{
