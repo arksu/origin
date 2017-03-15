@@ -52,13 +52,13 @@ public class ViewScreen extends BaseScreen
 
 		_modelBatch = new ModelBatch();
 		ModelData modelData = new ModelData(MODEL_NAME);
-		ModelData modelData2 = new ModelData("rifle");
+		ModelData modelData2 = null;// new ModelData("rifle");
 
 		Model rotatingModel = new Model(modelData);
 		_models.add(rotatingModel);
 
 		Random random = new Random();
-		for (int i = 0; i < 1000; i++)
+		for (int i = 0; i < 0; i++)
 		{
 			Model model;
 			if (random.nextInt(2) == 0)
@@ -204,5 +204,7 @@ public class ViewScreen extends BaseScreen
 		_shader.setUniformf("u_shadowDistance", -1);
 
 		_shader.setUniformi("u_texture", 0);
+		_shader.setUniformi("u_textureNormal", 1);
+		_shader.setUniformi("u_textureSpecular", 2);
 	}
 }

@@ -22,12 +22,15 @@ public class MeshLoader
 	 * сколько чисел хранится на одну вершину? coord, norm, uv; 3 + 3 + 2 = 8
 	 */
 	private static final int ELEMENTS_COUNT = 8;
+	private static final int ELEMENTS_BINORMAL_COUNT = 12;
 
 	public static Mesh load(MyInputStream in) throws IOException
 	{
+		boolean useBinormal = in.readByte() == 1;
 		int vertCount = in.readInt();
-		int total = vertCount * ELEMENTS_COUNT * FLOAT_SIZE;
-		float[] vertices = new float[vertCount * ELEMENTS_COUNT];
+		int elemCount = useBinormal ? ELEMENTS_BINORMAL_COUNT : ELEMENTS_COUNT;
+		int total = vertCount * elemCount * FLOAT_SIZE;
+		float[] vertices = new float[vertCount * elemCount];
 
 		// читаем все вершины в буфер
 		byte[] bytes = new byte[total];
@@ -73,13 +76,28 @@ public class MeshLoader
 		buf.asShortBuffer().get(index);
 
 		// создаем меш - передаем туда буферы
-		Mesh mesh = new Mesh(
-				true, vertCount,
-				index.length,
-				new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
-				new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
-				new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0")
-		);
+		Mesh mesh;
+		if (useBinormal)
+		{
+			mesh = new Mesh(
+					true, vertCount,
+					index.length,
+					new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+					new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
+					new VertexAttribute(VertexAttributes.Usage.BiNormal, 4, ShaderProgram.BINORMAL_ATTRIBUTE),
+					new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0")
+			);
+		}
+		else
+		{
+			mesh = new Mesh(
+					true, vertCount,
+					index.length,
+					new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+					new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
+					new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0")
+			);
+		}
 		mesh.setVertices(vertices);
 		mesh.setIndices(index);
 		return mesh;

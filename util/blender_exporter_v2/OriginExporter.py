@@ -18,7 +18,7 @@ def vertkey(v, n, uv):
     return round(v.x, 4), round(v.y, 4), round(v.z, 4), round(n.x, 4), round(n.y, 4), round(n.z, 4), round(uv[0], 4), round(uv[1], 4),
 
 def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_anims,
-        do_select_only, do_mesh_modifers):
+        do_select_only, do_mesh_modifers, do_binormals):
     scene = context.scene
 
     if do_select_only:
@@ -63,7 +63,7 @@ def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_
             me.calc_normals()
 
             write_string(fw, ob.name)
-            write_mesh(fw, me, use_ASCII)
+            write_mesh(fw, me, use_ASCII, do_binormals)
 
             bpy.data.meshes.remove(me)
 
@@ -73,7 +73,7 @@ def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_
 
     return {'FINISHED'}
 
-def write_mesh(fw, me, use_ASCII):
+def write_mesh(fw, me, use_ASCII, do_binormals):
     face_index_pairs = [(face, index) for index, face in enumerate(me.polygons)]
 
 
@@ -83,6 +83,8 @@ def write_mesh(fw, me, use_ASCII):
 
     # нужно отсортировать грани по use_smooth
     if haveUV:
+        if do_binormals:
+            me.calc_tangents()
         uv_texture = me.uv_textures.active.data[:]
         uv_layer = me.uv_layers.active.data[:]
 
@@ -98,6 +100,7 @@ def write_mesh(fw, me, use_ASCII):
 
     vert_list = []
     normal_list = []
+    bitangent_list = []
     uv_list = []
 
     index_list = []
@@ -112,12 +115,19 @@ def write_mesh(fw, me, use_ASCII):
             vi = me.loops[loop_index].vertex_index
             co = me.vertices[vi].co
 
+
             # сглажена ли грань? надо брать нормали из вершин. все ок
             if face.use_smooth:
                 no = me.vertices[vi].normal
             else:
                 # print("is flat")
                 no = face.normal
+
+            if do_binormals:
+                tangent = me.loops[loop_index].tangent
+                bitangent = me.loops[loop_index].bitangent_sign * no.cross(tangent)
+                bitangent_sign = me.loops[loop_index].bitangent_sign
+                bitangent = Vector((bitangent.x, bitangent.y, bitangent.z, bitangent_sign))
 
             if haveUV:
                 uv = uv_layer[loop_index].uv
@@ -138,6 +148,8 @@ def write_mesh(fw, me, use_ASCII):
                 vert_list.append(co)
                 normal_list.append(no)
                 uv_list.append(uv)
+                if do_binormals:
+                    bitangent_list.append(bitangent)
 
                 new_vi = len(vert_list) - 1
                 vert_map[key] = new_vi
@@ -153,6 +165,11 @@ def write_mesh(fw, me, use_ASCII):
         fw('optimized vert count %d\n' % len(vert_list))
         fw('tri count %d\n' % len(me.polygons))
     else:
+        if do_binormals:
+            fw(struct.pack('>B', 1))
+        else:
+            fw(struct.pack('>B', 0))
+
         fw(struct.pack('>I', len(vert_list)))
 
 
@@ -164,6 +181,8 @@ def write_mesh(fw, me, use_ASCII):
         else:
             fw(struct.pack('>fff', vert_list[i][0], vert_list[i][1], vert_list[i][2]))
             fw(struct.pack('>fff', normal_list[i][0], normal_list[i][1], normal_list[i][2]))
+            if do_binormals:
+                fw(struct.pack('>ffff', bitangent_list[i][0], bitangent_list[i][1], bitangent_list[i][2], bitangent_list[i][3]))
             fw(struct.pack('>ff', uv_list[i][0], 1-uv_list[i][1]))
 
     if use_ASCII:

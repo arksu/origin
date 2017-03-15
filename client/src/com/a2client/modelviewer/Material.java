@@ -85,13 +85,25 @@ public class Material
 		{
 			Gdx.gl.glActiveTexture(GL13.GL_TEXTURE1);
 			_normal.bind();
+			shader.setUniformf("u_normalMap", 1f);
+		}
+		else
+		{
+			shader.setUniformf("u_normalMap", 0f);
 		}
 
 		if (_specular != null)
 		{
 			Gdx.gl.glActiveTexture(GL13.GL_TEXTURE2);
 			_specular.bind();
+			shader.setUniformf("u_specularMap", 1f);
+
 		}
+		else
+		{
+			shader.setUniformf("u_specularMap", 0f);
+		}
+
 		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
 		_diffuse.bind();
 

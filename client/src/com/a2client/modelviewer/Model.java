@@ -14,6 +14,11 @@ import java.util.List;
  */
 public class Model
 {
+	/**
+	 * интервал обновления баунд бокса
+	 */
+	private static final int UPDATE_BBOX_TIMEOUT = 2000;
+
 	private ModelData _data;
 
 	/**
@@ -147,7 +152,7 @@ public class Model
 	public void updateBoundingBox(boolean force)
 	{
 		long time = System.currentTimeMillis();
-		if (time - _lastTimeUpdateBoundingBox > 3000 || force)
+		if (time - _lastTimeUpdateBoundingBox > UPDATE_BBOX_TIMEOUT || force)
 		{
 			_boundingBox.inf();
 			_data.extendBoundingBox(_boundingBox, _worldTransform);

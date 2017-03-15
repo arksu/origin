@@ -45,6 +45,12 @@ class OriginExportClass(bpy.types.Operator, ExportHelper, IOMDLOrientationHelper
         default=True,
     )
 
+    do_binormals = BoolProperty(
+        name="Export Mesh binormals",
+        description="Export mesh binormals for normal map",
+        default=True,
+    )
+
     do_mesh_modifers = BoolProperty(
         name="Apply mesh modifers",
         default=False,
@@ -90,7 +96,7 @@ class OriginExportClass(bpy.types.Operator, ExportHelper, IOMDLOrientationHelper
 
         return OriginExporter.run(self.filepath, global_matrix, context,
                                   self.scaleFactor, self.do_mesh, self.do_skeleton, self.do_anims, self.do_select_only,
-                                  self.do_mesh_modifers
+                                  self.do_mesh_modifers, self.do_binormals
                                   )
 
 
