@@ -35,8 +35,14 @@ const float texelSize = 1.0 / shadowMapSize;
 
 void main() {
 
-    vec4 rTexN = texture(u_textureNormal, texCoords);
-    vec3 rNormal = normalize(mat3(v_tangent, v_binormal, v_normal) * (rTexN.xyz * 2.0 - 1.0)); // wyz
+	vec3 rNormal;
+	vec4 rTexN;
+	if (u_normalMap > 0) {
+		rTexN = texture(u_textureNormal, texCoords);
+		rNormal = normalize(mat3(v_tangent, v_binormal, v_normal) * (rTexN.xyz * 2.0 - 1.0)); // wyz
+    } else {
+    	rNormal = normalize(v_normal);
+    }
     vec3 rViewVec = normalize(v_viewVec);
 	float rVdotN = dot(rViewVec, rNormal);
 
@@ -52,7 +58,7 @@ void main() {
 //    outColor = intensity * texture(u_texture, texCoords);
     outColor = intensity * texture(u_texture, texCoords);
 
-    outColor += rSpecular;
+//    outColor += rSpecular;
 
 //	outColor = vec4(intensity);
 //	outColor = mix(vec4(u_skyColor, 1.0), outColor, visibility);

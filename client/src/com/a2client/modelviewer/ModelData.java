@@ -46,7 +46,14 @@ public class ModelData
 	private List<Mesh> _defaultGroup;
 	private Material _defaultMaterial;
 
+	/**
+	 * сколько всего полигонов
+	 */
 	private int _totalTriCount;
+
+	/**
+	 * имя которое указали при загрузке
+	 */
 	private final String _name;
 
 	public ModelData(String name)
@@ -78,6 +85,9 @@ public class ModelData
 		}
 	}
 
+	/**
+	 * загрузить меш из потока
+	 */
 	private void loadMesh(MyInputStream in) throws IOException
 	{
 		_totalTriCount = 0;
@@ -189,6 +199,9 @@ public class ModelData
 		}
 	}
 
+	/**
+	 * обсчитать bound box
+	 */
 	public void extendBoundingBox(BoundingBox boundingBox, Matrix4 worldTransform)
 	{
 		if (_defaultGroup != null)
