@@ -97,6 +97,7 @@ public class ModelData
 		// грузим сначала все меши из файла
 		Map<String, Mesh> map = new HashMap<>();
 
+		_log.debug("mesh count: " + meshCount);
 		while (meshCount > 0)
 		{
 			String name = in.readAnsiString().toLowerCase();

@@ -38,7 +38,7 @@ public class MyInputStream extends DataInputStream
 	{
 		int c1 = in.read();
 		int c2 = in.read();
-		return c1 + (c2 << 8);
+		return c2 + (c1 << 8);
 	}
 
 	public String readAnsiString() throws IOException

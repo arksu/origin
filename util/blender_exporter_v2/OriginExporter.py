@@ -17,16 +17,19 @@ class Error(Exception):
 def vertkey(v, n, uv):
     return round(v.x, 4), round(v.y, 4), round(v.z, 4), round(n.x, 4), round(n.y, 4), round(n.z, 4), round(uv[0], 4), round(uv[1], 4),
 
+bind_pose = {}
+
 def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_anims,
         do_select_only, do_mesh_modifers, do_binormals):
     scene = context.scene
+    bind_pose.clear()
 
     if do_select_only:
         data_seq = context.selected_objects
     else:
         data_seq = scene.objects
 
-    armature = None
+    armatureObject = None
     meshObjects = []
 
     """
@@ -37,14 +40,14 @@ def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_
     if do_skeleton:
         all_armatures = [obj for obj in data_seq if obj.type == 'ARMATURE']
         if len(all_armatures) == 1:
-            armature = all_armatures[0]
+            armatureObject = all_armatures[0]
         elif len(all_armatures) > 1:
             raise Error("Please select an armature in the scene")
         else:
             raise Error("No armatures in scene")
 
         if do_mesh:
-            meshObjects = [obj for obj in armature.children if obj.type == 'MESH']
+            meshObjects = [obj for obj in armatureObject.children if obj.type == 'MESH']
     else:
         if do_mesh:
             meshObjects = [obj for obj in data_seq if obj.type == 'MESH']
@@ -55,6 +58,7 @@ def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_
     with open(filepath, mode) as data:
         fw = data.write
 
+        # сколько всго мешей
         fw(struct.pack('>I', len(meshObjects)))
         for ob in meshObjects:
             me = ob.to_mesh(scene, do_mesh_modifers, 'PREVIEW', calc_tessface=False)
@@ -62,14 +66,22 @@ def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_
             mesh_triangulate(me)
             me.calc_normals()
 
+            # запишем имя меша
             write_string(fw, ob.name)
             write_mesh(fw, me, use_ASCII, do_binormals)
 
             bpy.data.meshes.remove(me)
 
-        if armature != None:
-            for a in armature:
-                print ("armature ", a)
+        # сначала запишем флаг наличия скелета
+        if armatureObject != None and do_skeleton:
+            print ("armature obj ", armatureObject)
+            fw(struct.pack('>B', 1))
+            write_skeleton(fw, armatureObject, use_ASCII)
+
+            # todo write anims
+        else:
+            fw(struct.pack('>B', 0))
+
 
     return {'FINISHED'}
 
@@ -196,6 +208,60 @@ def write_mesh(fw, me, use_ASCII, do_binormals):
         else:
             fw(struct.pack('>HHH', i[0], i[1], i[2]))
 
+def write_skeleton(fw, obj, use_ASCII):
+    armature = bpy.data.armatures[obj.name]
+    arm_mw = obj.matrix_world
+    print ("arm ", armature)
+
+    bones = armature.bones
+    if not bones:
+        raise Error("no bones")
+
+    # ищем кости у которых родитель не в списке костей
+    abandonedBones = [i for i in bones
+                          if i.parent and i.parent not in bones[:]]
+    if abandonedBones:
+        boneList = []
+        for ab in abandonedBones:
+            boneList.append("- " + str(ab.name))
+        raise Error("bones missing parents : "+ boneList)
+
+    fw(struct.pack('>H', len(bones)))
+    for b in bones:
+
+        if not b.use_deform:
+            print ("not deformable bone!: ", b.name)
+            fw(struct.pack('>B', 0))
+            continue
+
+        fw(struct.pack('>B', 1))
+
+        bone_parent = b.parent
+        while bone_parent:
+            if bone_parent.use_deform:
+                break
+            bone_parent = bone_parent.parent
+
+        if bone_parent:
+            parent_name = bone_parent.name
+        else:
+            parent_name = ''
+
+        mw = arm_mw * b.matrix_local  # точно
+
+        if bone_parent:
+            ml = bone_parent.matrix_local.inverted() * b.matrix_local
+        else:
+            ml = mw
+
+        write_string(fw, b.name)
+        write_string(fw, parent_name)
+        write_matrix(fw, ml)
+        write_matrix(fw, mw)
+
+        bind_pose[b.name] = ml
+
+
 
 def mesh_triangulate(me):
     import bmesh
@@ -208,13 +274,13 @@ def mesh_triangulate(me):
 
 def write_string(fw, str):
     l = len(str)
-    fw(struct.pack('<H', l))
+    fw(struct.pack('>H', l))
     fw(bytearray(str, 'ascii'))
 
 
-def write_matrix(file, m):
+def write_matrix(fw, m):
     # transpose in converter
-    file.write(struct.pack('<ffff', m[0][0], m[0][1], m[0][2], m[0][3]))
-    file.write(struct.pack('<ffff', m[1][0], m[1][1], m[1][2], m[1][3]))
-    file.write(struct.pack('<ffff', m[2][0], m[2][1], m[2][2], m[2][3]))
-    file.write(struct.pack('<ffff', m[3][0], m[3][1], m[3][2], m[3][3]))
+    fw(struct.pack('>ffff', m[0][0], m[0][1], m[0][2], m[0][3]))
+    fw(struct.pack('>ffff', m[1][0], m[1][1], m[1][2], m[1][3]))
+    fw(struct.pack('>ffff', m[2][0], m[2][1], m[2][2], m[2][3]))
+    fw(struct.pack('>ffff', m[3][0], m[3][1], m[3][2], m[3][3]))

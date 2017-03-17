@@ -39,8 +39,8 @@ public class ViewScreen extends BaseScreen
 	private float _yOffset = -5;
 
 //		private String MODEL_NAME = "rifle";
-	private String MODEL_NAME = "handgun";
-//	private String MODEL_NAME = "player";
+//	private String MODEL_NAME = "handgun";
+	private String MODEL_NAME = "cube";
 //	private String MODEL_NAME = "untitled";
 
 	public ViewScreen()
@@ -52,13 +52,13 @@ public class ViewScreen extends BaseScreen
 
 		_modelBatch = new ModelBatch();
 		ModelData modelData = new ModelData(MODEL_NAME);
-		ModelData modelData2 = new ModelData("rifle");
+		ModelData modelData2 = null;// new ModelData("rifle");
 
 		Model rotatingModel = new Model(modelData);
 		_models.add(rotatingModel);
 
 		Random random = new Random();
-		for (int i = 0; i < 2000; i++)
+		for (int i = 0; i < 0; i++)
 		{
 			Model model;
 			if (random.nextInt(1) == 0)
