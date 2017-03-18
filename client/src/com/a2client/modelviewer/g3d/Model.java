@@ -1,5 +1,6 @@
-package com.a2client.modelviewer;
+package com.a2client.modelviewer.g3d;
 
+import com.a2client.modelviewer.ModelBatch;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;

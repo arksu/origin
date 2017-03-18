@@ -1,5 +1,7 @@
 package com.a2client.modelviewer;
 
+import com.a2client.modelviewer.g3d.Material;
+import com.a2client.modelviewer.g3d.Model;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;

@@ -19,6 +19,7 @@ package com.a2client.corex;
 
 import com.a2client.Config;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Matrix4;
 
 import java.io.*;
 
@@ -50,6 +51,16 @@ public class MyInputStream extends DataInputStream
 		return new String(blob, "US-ASCII");
 	}
 
+	public Matrix4 readMatrix() throws IOException
+	{
+		float[] values = new float[16];
+		for (int i = 0; i < 16; i++)
+		{
+			values[i] = readFloat();
+		}
+		return new Matrix4(values);
+	}
+
 	public static MyInputStream fromFile(String name)
 	{
 		try
@@ -60,8 +71,7 @@ public class MyInputStream extends DataInputStream
 		}
 		catch (FileNotFoundException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException("file not found: " + name);
 		}
-		return null;
 	}
 }

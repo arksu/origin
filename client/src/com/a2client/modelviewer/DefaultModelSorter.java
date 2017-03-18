@@ -1,5 +1,6 @@
 package com.a2client.modelviewer;
 
+import com.a2client.modelviewer.g3d.Model;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultRenderableSorter;
 import com.badlogic.gdx.math.Matrix4;

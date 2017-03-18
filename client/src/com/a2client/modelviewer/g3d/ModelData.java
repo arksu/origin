@@ -1,7 +1,8 @@
-package com.a2client.modelviewer;
+package com.a2client.modelviewer.g3d;
 
 import com.a2client.Config;
 import com.a2client.corex.MyInputStream;
+import com.a2client.modelviewer.ModelBatch;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.math.Matrix4;
@@ -56,6 +57,8 @@ public class ModelData
 	 */
 	private final String _name;
 
+	private Skeleton _skeleton;
+
 	public ModelData(String name)
 	{
 		_log.debug("load model: " + name);
@@ -75,14 +78,21 @@ public class ModelData
 		{
 			MyInputStream in = MyInputStream.fromFile(name + ".mdl");
 			loadMesh(in);
-
-			// TODO
-//			loadSkeleton(in);
+			if (in.readByte() > 0)
+			{
+				loadSkeleton(in);
+			}
+			// todo load anims
 		}
 		catch (Exception e)
 		{
 			_log.error("failed load model " + name, e);
 		}
+	}
+
+	private void loadSkeleton(MyInputStream in) throws IOException
+	{
+		_skeleton = SkeletonLoader.load(in);
 	}
 
 	/**

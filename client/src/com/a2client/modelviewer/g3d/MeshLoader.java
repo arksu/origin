@@ -1,4 +1,4 @@
-package com.a2client.modelviewer;
+package com.a2client.modelviewer.g3d;
 
 import com.a2client.corex.MyInputStream;
 import com.badlogic.gdx.graphics.Mesh;

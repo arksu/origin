@@ -1,5 +1,6 @@
 package com.a2client.modelviewer;
 
+import com.a2client.modelviewer.g3d.Model;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.utils.Array;
 
