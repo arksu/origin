@@ -7,4 +7,6 @@ public class Const
 {
 	public static final double EPS = 1.E-05;
 
+	public static final int MAX_WEIGHTS = 2;
+
 }

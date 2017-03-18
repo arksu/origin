@@ -19,7 +19,7 @@ public class DualQuat
 		this.dual = new Quat(in);
 	}
 
-	public DualQuat(Quat qrot, Vector3 qpos)
+	public DualQuat(Quat qrot, Vec3f qpos)
 	{
 		this.real = qrot.clone();
 		this.dual = new Quat(qpos.x, qpos.y, qpos.z, 0).mul(qrot.mul(0.5f));

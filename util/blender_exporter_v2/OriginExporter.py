@@ -47,7 +47,7 @@ class BoneClass:
         # frame
         write_matrix(fw, self.ml)
 
-
+MAX_WEIGHTS = 2
 bind_pose = {}
 bones_list = []
 
@@ -149,6 +149,7 @@ def write_mesh(fw, me, object, use_ASCII, do_binormals, do_weights):
     normal_list = []
     bitangent_list = []
     uv_list = []
+    weights_list = []
 
     index_list = []
 
@@ -185,18 +186,56 @@ def write_mesh(fw, me, object, use_ASCII, do_binormals, do_weights):
                 uv = Vector([0,0])
 
             if do_weights:
+                # print("calc weights ============")
+                # weights
+                ws = []
                 groups = me.vertices[vi].groups
                 for vgroup in groups:
                     wg = vertex_groups[vgroup.group]
                     vertex_weight = vgroup.weight
                     bone_name = wg.name
+                    bone = get_bone(bone_name)
 
-                    print ("bone_name ", bone_name)
-                    print ("w ", vertex_weight)
-                    print ("-----")
+                    # print ("bone_name ", bone_name)
+                    # print ("w ", vertex_weight)
+                    # print ("idx ", bone.getIndex())
+                    # print ("-----")
+
+                    ws.append((vertex_weight, bone.getIndex()))
+
                     # write_string(file, bone_name)
                     # file.write(struct.pack('<f', vertex_weight))
 
+                lenws = len(ws)
+                # если нашли костей которые действуют на эту вершину больше чем допустимо
+                if lenws >= MAX_WEIGHTS:
+                    # отсортируем по весу. так чтобы в начале шли кости с большим весом
+                    ws = sorted(ws, key=lambda w: w[0], reverse=True)
+                    # до тех пор пока костей больше чем допустимо - будем удалять с конца списка
+                    while len(ws) > MAX_WEIGHTS:
+                        ws.pop()
+                    totalW = 0
+                    for w in ws:
+                        totalW += w[0]
+                    w1 = ws[0][0] / totalW
+                    w2 = 1 - w1
+                    ws[0] = (w1, ws[0][1])
+                    ws[1] = (w2, ws[1][1])
+
+                    # print("len! ", len(ws))
+                    # for w in ws:
+                    #     print ("w ", w[0])
+                    #     print ("w idx ", w[1])
+                    # print ("-----")
+                else:
+                    if lenws == 0:
+                        print("LEN 0!")
+                    # если костей меньше чем положено
+                    if lenws < MAX_WEIGHTS:
+                        # print ("w count low: ", len(ws))
+                        # добавляем нулевые веса пока не заполним массив
+                        while len(ws) < MAX_WEIGHTS:
+                            ws.append((0, 0))
 
             key = vertkey(co, no, uv)
 
@@ -210,6 +249,8 @@ def write_mesh(fw, me, object, use_ASCII, do_binormals, do_weights):
                 uv_list.append(uv)
                 if do_binormals:
                     bitangent_list.append(bitangent)
+                if do_weights:
+                    weights_list.append(ws)
 
                 new_vi = len(vert_list) - 1
                 vert_map[key] = new_vi
@@ -225,6 +266,7 @@ def write_mesh(fw, me, object, use_ASCII, do_binormals, do_weights):
         fw('optimized vert count %d\n' % len(vert_list))
         fw('tri count %d\n' % len(me.polygons))
     else:
+        # в начале пишем флаги присутствующих данных
         if do_binormals:
             fw(struct.pack('>B', 1))
         else:
@@ -249,6 +291,10 @@ def write_mesh(fw, me, object, use_ASCII, do_binormals, do_weights):
             if do_binormals:
                 fw(struct.pack('>ffff', bitangent_list[i][0], bitangent_list[i][1], bitangent_list[i][2], bitangent_list[i][3]))
             fw(struct.pack('>ff', uv_list[i][0], 1-uv_list[i][1]))
+            if do_weights:
+                for ws in weights_list[i]:
+                    # weight, index
+                    fw(struct.pack('>ff', ws[0], ws[1]))
 
     if use_ASCII:
         fw('index\n')
@@ -311,8 +357,10 @@ def write_skeleton(fw, obj, use_ASCII):
 
         bind_pose[b.name] = ml
 
+    print("bones_list ", len(bones_list))
     fw(struct.pack('>H', len(bones_list)))
     for bone in bones_list:
+        print("bone ", bone.getName())
         bone.write(fw)
 
 
@@ -324,6 +372,11 @@ def mesh_triangulate(me):
     bm.to_mesh(me)
     bm.free()
 
+def get_bone(bone_name):
+    for b in bones_list:
+        if b.getName() == bone_name:
+            return b
+    raise Error("bone not found "+bone_name)
 
 def write_string(fw, str):
     l = len(str)

@@ -21,7 +21,25 @@ public class SkeletonLoader
 			idx++;
 		}
 
+		for (Joint joint : joints)
+		{
+			joint.setParentIndex(getJointIndex(joint.getParentName(), joints));
+		}
+
 		Skeleton skeleton = new Skeleton(joints);
 		return skeleton;
+	}
+
+	private static int getJointIndex(String name, Joint[] list)
+	{
+		for (int i = 0; i < list.length; i++)
+		{
+			Joint j = list[i];
+			if (j.getName().equalsIgnoreCase(name))
+			{
+				return i;
+			}
+		}
+		return -1;
 	}
 }

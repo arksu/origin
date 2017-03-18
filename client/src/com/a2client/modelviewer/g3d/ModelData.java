@@ -185,6 +185,16 @@ public class ModelData
 	 */
 	public void render(ModelBatch modelBatch, int primitiveType)
 	{
+		if (_skeleton != null)
+		{
+			modelBatch.getShader().setUniformf("u_skinMode", 1f);
+			_skeleton.bind(modelBatch.getShader());
+		}
+		else
+		{
+			modelBatch.getShader().setUniformf("u_skinMode", 0f);
+		}
+
 		if (_defaultGroup != null)
 		{
 			modelBatch.bindMaterial(_defaultMaterial);

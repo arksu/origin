@@ -18,6 +18,7 @@
 package com.a2client.corex;
 
 import com.a2client.Config;
+import com.a2client.modelviewer.g3d.math.Mat4f;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Matrix4;
 
@@ -59,6 +60,32 @@ public class MyInputStream extends DataInputStream
 			values[i] = readFloat();
 		}
 		return new Matrix4(values);
+	}
+
+	public com.a2client.modelviewer.g3d.math.Mat4f readMat4f() throws IOException
+	{
+		com.a2client.modelviewer.g3d.math.Mat4f m = new Mat4f();
+		m.e00 = readFloat();
+		m.e10 = readFloat();
+		m.e20 = readFloat();
+		m.e30 = readFloat();
+
+		m.e01 = readFloat();
+		m.e11 = readFloat();
+		m.e21 = readFloat();
+		m.e31 = readFloat();
+
+		m.e02 = readFloat();
+		m.e12 = readFloat();
+		m.e22 = readFloat();
+		m.e32 = readFloat();
+
+		m.e03 = readFloat();
+		m.e13 = readFloat();
+		m.e23 = readFloat();
+		m.e33 = readFloat();
+
+		return m;
 	}
 
 	public static MyInputStream fromFile(String name)

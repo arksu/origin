@@ -32,6 +32,10 @@ public class MeshLoader
 
 		int vertCount = in.readInt();
 		int elemCount = useBinormal ? ELEMENTS_BINORMAL_COUNT : ELEMENTS_COUNT;
+
+		// если есть веса для костей - добавим еще элементов
+		elemCount += useWeights ? Const.MAX_WEIGHTS * 2 : 0;
+
 		int total = vertCount * elemCount * FLOAT_SIZE;
 		float[] vertices = new float[vertCount * elemCount];
 
@@ -82,24 +86,57 @@ public class MeshLoader
 		Mesh mesh;
 		if (useBinormal)
 		{
-			mesh = new Mesh(
-					true, vertCount,
-					index.length,
-					new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
-					new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
-					new VertexAttribute(VertexAttributes.Usage.BiNormal, 4, ShaderProgram.BINORMAL_ATTRIBUTE),
-					new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0")
-			);
+			if (useWeights)
+			{
+				mesh = new Mesh(
+						true, vertCount,
+						index.length,
+						new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+						new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
+						new VertexAttribute(VertexAttributes.Usage.BiNormal, 4, ShaderProgram.BINORMAL_ATTRIBUTE),
+						new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0"),
+						new VertexAttribute(VertexAttributes.Usage.BoneWeight, 2, "a_bone0"),
+						new VertexAttribute(VertexAttributes.Usage.BoneWeight, 2, "a_bone1")
+//						new VertexAttribute(VertexAttributes.Usage.BoneWeight, 2, "a_bone2")
+				);
+			}
+			else
+			{
+				mesh = new Mesh(
+						true, vertCount,
+						index.length,
+						new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+						new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
+						new VertexAttribute(VertexAttributes.Usage.BiNormal, 4, ShaderProgram.BINORMAL_ATTRIBUTE),
+						new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0")
+				);
+			}
 		}
 		else
 		{
-			mesh = new Mesh(
-					true, vertCount,
-					index.length,
-					new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
-					new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
-					new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0")
-			);
+			if (useWeights)
+			{
+				mesh = new Mesh(
+						true, vertCount,
+						index.length,
+						new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+						new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
+						new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0"),
+						new VertexAttribute(VertexAttributes.Usage.BoneWeight, 2, "a_bone0"),
+						new VertexAttribute(VertexAttributes.Usage.BoneWeight, 2, "a_bone1")
+//						new VertexAttribute(VertexAttributes.Usage.BoneWeight, 2, "a_bone2")
+				);
+			}
+			else
+			{
+				mesh = new Mesh(
+						true, vertCount,
+						index.length,
+						new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+						new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
+						new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0")
+				);
+			}
 		}
 		mesh.setVertices(vertices);
 		mesh.setIndices(index);

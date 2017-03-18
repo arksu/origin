@@ -10,6 +10,8 @@ uniform vec4 u_ambient;
 uniform vec3 u_skyColor;
 uniform sampler2D u_shadowMap;
 
+//uniform vec4 u_joints[128];
+
 uniform float u_specularMap;
 uniform float u_normalMap;
 
@@ -32,6 +34,10 @@ const int pcfCount = 1;
 const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
 const float shadowMapSize = 2048.0;
 const float texelSize = 1.0 / shadowMapSize;
+
+// temp
+in float w1;
+in float w2;
 
 void main() {
 
@@ -60,9 +66,11 @@ void main() {
 
 //    outColor += rSpecular;
 
-//	outColor = vec4(intensity);
+//	outColor = vec4(rVdotN);
 //	outColor = mix(vec4(u_skyColor, 1.0), outColor, visibility);
 
-//	outColor = vec4(1);
+	outColor = vec4(w1);
 //    outColor2 = vec4(0);
+
+//	outColor = vec4(u_joints[0].x);
 }
