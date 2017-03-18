@@ -5,4 +5,10 @@ package com.a2client.modelviewer.g3d;
  */
 public class Skeleton
 {
+	private final Joint[] _joints;
+
+	public Skeleton(Joint[] joints)
+	{
+		_joints = joints;
+	}
 }

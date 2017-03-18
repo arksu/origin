@@ -77,12 +77,12 @@ public class ModelData
 		try
 		{
 			MyInputStream in = MyInputStream.fromFile(name + ".mdl");
-			loadMesh(in);
 			if (in.readByte() > 0)
 			{
 				loadSkeleton(in);
 			}
 			// todo load anims
+			loadMesh(in);
 		}
 		catch (Exception e)
 		{

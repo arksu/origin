@@ -26,7 +26,10 @@ public class MeshLoader
 
 	public static Mesh load(MyInputStream in) throws IOException
 	{
+		// flags
 		boolean useBinormal = in.readByte() == 1;
+		boolean useWeights = in.readByte() == 1;
+
 		int vertCount = in.readInt();
 		int elemCount = useBinormal ? ELEMENTS_BINORMAL_COUNT : ELEMENTS_COUNT;
 		int total = vertCount * elemCount * FLOAT_SIZE;

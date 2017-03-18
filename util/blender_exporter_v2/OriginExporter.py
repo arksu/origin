@@ -17,12 +17,45 @@ class Error(Exception):
 def vertkey(v, n, uv):
     return round(v.x, 4), round(v.y, 4), round(v.z, 4), round(n.x, 4), round(n.y, 4), round(n.z, 4), round(uv[0], 4), round(uv[1], 4),
 
+
+class BoneClass:
+    def __init__(self, name, mw, ml, index, parent_name):
+        self.name = name
+        self.mw = mw
+        self.ml = ml
+        self.index = index
+        self.parent_name = parent_name
+
+    def getName(self):
+        return self.name
+
+    def getMW(self):
+        return self.mw
+
+    def getML(self):
+        return self.ml
+
+    def getIndex(self):
+        return self.index
+
+    def write(self, fw):
+        write_string(fw, self.name)
+
+        write_string(fw, self.parent_name)
+        # bind
+        write_matrix(fw, self.mw)
+        # frame
+        write_matrix(fw, self.ml)
+
+
 bind_pose = {}
+bones_list = []
 
 def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_anims,
         do_select_only, do_mesh_modifers, do_binormals):
     scene = context.scene
     bind_pose.clear()
+    bones_list.clear()
 
     if do_select_only:
         data_seq = context.selected_objects
@@ -52,26 +85,13 @@ def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_
         if do_mesh:
             meshObjects = [obj for obj in data_seq if obj.type == 'MESH']
 
-
+    do_weights = armatureObject != None and do_skeleton
     use_ASCII = False
     mode = 'w' if use_ASCII else 'bw'
     with open(filepath, mode) as data:
         fw = data.write
 
-        # сколько всго мешей
-        fw(struct.pack('>I', len(meshObjects)))
-        for ob in meshObjects:
-            me = ob.to_mesh(scene, do_mesh_modifers, 'PREVIEW', calc_tessface=False)
-            me.transform(global_matrix * ob.matrix_world)
-            mesh_triangulate(me)
-            me.calc_normals()
-
-            # запишем имя меша
-            write_string(fw, ob.name)
-            write_mesh(fw, me, use_ASCII, do_binormals)
-
-            bpy.data.meshes.remove(me)
-
+        # SKELETON & ANIMATIONS
         # сначала запишем флаг наличия скелета
         if armatureObject != None and do_skeleton:
             print ("armature obj ", armatureObject)
@@ -82,13 +102,28 @@ def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_
         else:
             fw(struct.pack('>B', 0))
 
+        # MESHES
+        # сколько всго мешей
+        fw(struct.pack('>I', len(meshObjects)))
+        for ob in meshObjects:
+            me = ob.to_mesh(scene, do_mesh_modifers, 'PREVIEW', calc_tessface=False)
+            me.transform(global_matrix * ob.matrix_world)
+            mesh_triangulate(me)
+            me.calc_normals()
+
+            # запишем имя меша
+            write_string(fw, ob.name)
+            write_mesh(fw, me, ob, use_ASCII, do_binormals, do_weights)
+
+            bpy.data.meshes.remove(me)
+
 
     return {'FINISHED'}
 
-def write_mesh(fw, me, use_ASCII, do_binormals):
+def write_mesh(fw, me, object, use_ASCII, do_binormals, do_weights):
     face_index_pairs = [(face, index) for index, face in enumerate(me.polygons)]
 
-
+    vertex_groups = object.vertex_groups
     haveUV = len(me.uv_textures) > 0
     if use_ASCII:
         fw('uv %i\n' % haveUV)
@@ -127,7 +162,6 @@ def write_mesh(fw, me, use_ASCII, do_binormals):
             vi = me.loops[loop_index].vertex_index
             co = me.vertices[vi].co
 
-
             # сглажена ли грань? надо брать нормали из вершин. все ок
             if face.use_smooth:
                 no = me.vertices[vi].normal
@@ -149,6 +183,20 @@ def write_mesh(fw, me, use_ASCII, do_binormals):
                 if (uv[1] > 1): uv[1] = 1
             else:
                 uv = Vector([0,0])
+
+            if do_weights:
+                groups = me.vertices[vi].groups
+                for vgroup in groups:
+                    wg = vertex_groups[vgroup.group]
+                    vertex_weight = vgroup.weight
+                    bone_name = wg.name
+
+                    print ("bone_name ", bone_name)
+                    print ("w ", vertex_weight)
+                    print ("-----")
+                    # write_string(file, bone_name)
+                    # file.write(struct.pack('<f', vertex_weight))
+
 
             key = vertkey(co, no, uv)
 
@@ -182,6 +230,11 @@ def write_mesh(fw, me, use_ASCII, do_binormals):
         else:
             fw(struct.pack('>B', 0))
 
+        if do_weights:
+            fw(struct.pack('>B', 1))
+        else:
+            fw(struct.pack('>B', 0))
+
         fw(struct.pack('>I', len(vert_list)))
 
 
@@ -208,6 +261,7 @@ def write_mesh(fw, me, use_ASCII, do_binormals):
         else:
             fw(struct.pack('>HHH', i[0], i[1], i[2]))
 
+
 def write_skeleton(fw, obj, use_ASCII):
     armature = bpy.data.armatures[obj.name]
     arm_mw = obj.matrix_world
@@ -226,15 +280,11 @@ def write_skeleton(fw, obj, use_ASCII):
             boneList.append("- " + str(ab.name))
         raise Error("bones missing parents : "+ boneList)
 
-    fw(struct.pack('>H', len(bones)))
     for b in bones:
 
         if not b.use_deform:
             print ("not deformable bone!: ", b.name)
-            fw(struct.pack('>B', 0))
             continue
-
-        fw(struct.pack('>B', 1))
 
         bone_parent = b.parent
         while bone_parent:
@@ -254,13 +304,16 @@ def write_skeleton(fw, obj, use_ASCII):
         else:
             ml = mw
 
-        write_string(fw, b.name)
-        write_string(fw, parent_name)
-        write_matrix(fw, ml)
-        write_matrix(fw, mw)
+        idx = len(bones_list)
+        bone = BoneClass(b.name, mw.inverted(), ml, idx, parent_name)
+        bones_list.append(bone)
+
 
         bind_pose[b.name] = ml
 
+    fw(struct.pack('>H', len(bones_list)))
+    for bone in bones_list:
+        bone.write(fw)
 
 
 def mesh_triangulate(me):

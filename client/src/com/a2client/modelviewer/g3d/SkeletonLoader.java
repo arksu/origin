@@ -1,7 +1,6 @@
 package com.a2client.modelviewer.g3d;
 
 import com.a2client.corex.MyInputStream;
-import com.badlogic.gdx.math.Matrix4;
 
 import java.io.IOException;
 
@@ -12,22 +11,17 @@ public class SkeletonLoader
 {
 	public static Skeleton load(MyInputStream in) throws IOException
 	{
-		Skeleton skeleton = new Skeleton();
-
 		int bonesCount = in.readWord();
+		Joint[] joints = new Joint[bonesCount];
+		int idx = 0;
 		while (bonesCount > 0)
 		{
-			// skip flag
-			if (in.readByte() == 0) continue;
-
-			String boneName = in.readAnsiString();
-			String parentName = in.readAnsiString();
-			Matrix4 ml = in.readMatrix();
-			Matrix4 mw = in.readMatrix();
-
+			joints[idx] = new Joint(in);
 			bonesCount--;
+			idx++;
 		}
 
+		Skeleton skeleton = new Skeleton(joints);
 		return skeleton;
 	}
 }

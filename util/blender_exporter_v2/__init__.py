@@ -59,7 +59,7 @@ class OriginExportClass(bpy.types.Operator, ExportHelper, IOMDLOrientationHelper
     do_skeleton = BoolProperty(
         name="Export Skeleton",
         description="Export skeleton (armature)",
-        default=False,
+        default=True,
     )
 
     do_anims = BoolProperty(
