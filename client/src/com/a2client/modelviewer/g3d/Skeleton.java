@@ -60,7 +60,7 @@ public class Skeleton
 
 	public void updateJoint(int idx)
 	{
-		float w = 1;
+		float w = 1f;
 		DualQuat cjoint = _joints[idx].getFrame();
 		// идем с последней добавленной анимации и смотрим на ее вес.
 		// с каждой пройденной анимацией вычитаем вес
@@ -88,10 +88,13 @@ public class Skeleton
 			ac++;
 		}*/
 
-		_animation.lerpJoint(idx);
-		if (_animation.joint[idx] != null)
+		if (idx > -1)
 		{
-			cjoint = cjoint.lerp(_animation.joint[idx], w);
+			_animation.lerpJoint(idx);
+			if (_animation.joint[idx] != null)
+			{
+				cjoint = cjoint.lerp(_animation.joint[idx], w);
+			}
 		}
 
 //        if (parent != null) {
@@ -131,18 +134,18 @@ public class Skeleton
 		}
 		else
 		{
-			if (_parent != null)
-			{
-				_parent.updateJoint(_parent_joint);
-				if (_parent._joint[_parent_joint] != null)
-				{
-					_joint[idx] = _parent._joint[_parent_joint].mul(cjoint);
-				}
-			}
-			else
-			{
+//			if (_parent != null)
+//			{
+//				_parent.updateJoint(_parent_joint);
+//				if (_parent._joint[_parent_joint] != null)
+//				{
+//					_joint[idx] = _parent._joint[_parent_joint].mul(cjoint);
+//				}
+//			}
+//			else
+//			{
 				_joint[idx] = cjoint;
-			}
+//			}
 		}
 
 	}

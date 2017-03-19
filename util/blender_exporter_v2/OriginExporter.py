@@ -346,6 +346,7 @@ def write_skeleton(fw, obj, use_ASCII):
 
         mw = arm_mw * b.matrix_local  # точно
 
+        # frame
         if bone_parent:
             ml = bone_parent.matrix_local.inverted() * b.matrix_local
         else:
@@ -421,11 +422,23 @@ def write_anim(fw, obj):
 
             pBoneMatrix = pBone.matrix
 
+            # if bone_parent:
+            #     diffMatrix = bone_parent.matrix.inverted() * (pBoneMatrix)
+            # else:
+            #     diffMatrix = obj.matrix_world * pBoneMatrix
+
             if bone_parent:
                 diffMatrix = bone_parent.matrix.inverted() * (pBoneMatrix)
             else:
                 diffMatrix = obj.matrix_world * pBoneMatrix
             # diffMatrix = orientationTweak * diffMatrix
+
+            # frame
+            # if bone_parent:
+            #     ml = bone_parent.matrix_local.inverted() * b.matrix_local
+            # else:
+            #     ml = mw
+            # mw = obj.matrix_world * b.matrix_local
 
             # print ("bind_pose ", b.name, "=", bind_pose[b.name])
             # print ("frame matrix=", diffMatrix)

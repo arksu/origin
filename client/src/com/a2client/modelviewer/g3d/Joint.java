@@ -26,28 +26,25 @@ public class Joint
 		Mat4f bind = in.readMat4f();
 		Mat4f frame = in.readMat4f();
 
-		bind = bind.transpose();
-		frame = frame.transpose();
-
+		Vec3f pos = bind.getPos();
+		_bind = new DualQuat(bind.getRot(), pos);
+		Vec3f pos1 = frame.getPos();
+		_frame = new DualQuat(frame.getRot(), pos1);
 
 //		Matrix4 bind = in.readMatrix();
 //		Matrix4 frame = in.readMatrix();
-
 //		bind.tra();
 //		frame.tra();
-
 //		Vector3 p = new Vector3();
 //		Quaternion q = new Quaternion();
-
+//
 //		q.setFromMatrix(true, bind);
 //		bind.getTranslation(p);
-		Vec3f pos = bind.getPos();
-		_bind = new DualQuat(bind.getRot(), pos);
-
+//		_bind = new DualQuat(new Quat(q), p);
+//
 //		q.setFromMatrix(true, frame);
 //		frame.getTranslation(p);
-		Vec3f pos1 = frame.getPos();
-		_frame = new DualQuat(frame.getRot(), pos1);
+//		_frame = new DualQuat(new Quat(q), p);
 	}
 
 	public int getParentIndex()

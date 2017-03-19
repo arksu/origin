@@ -25,11 +25,14 @@ public class DualQuat
 		this.dual = new Quat(qpos.x, qpos.y, qpos.z, 0).mul(qrot.mul(0.5f));
 	}
 
+	public DualQuat(Quat qrot, Vector3 qpos)
+	{
+		this.real = qrot.clone();
+		this.dual = new Quat(qpos.x, qpos.y, qpos.z, 0).mul(qrot.mul(0.5f));
+	}
+
 	public DualQuat lerp(DualQuat dq, float t)
 	{
-//        if (real == null || dq == null || dq.real == null) {
-//            System.out.print("222");
-//        }
 		if (real.dot(dq.real) < 0)
 		{
 			return new DualQuat(real.sub(dq.real.add(real).mul(t)), dual.sub(dq.dual.add(dual).mul(t)));

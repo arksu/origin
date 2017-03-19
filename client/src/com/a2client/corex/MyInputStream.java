@@ -64,6 +64,25 @@ public class MyInputStream extends DataInputStream
 
 	public com.a2client.modelviewer.g3d.math.Mat4f readMat4f() throws IOException
 	{
+		Mat4f ZM = new Mat4f();
+		ZM.e00 = -1;
+		ZM.e10 = 0;
+		ZM.e20 = 0;
+		ZM.e30 = 0;
+		ZM.e01 = 0;
+		ZM.e11 = 0;
+		ZM.e21 = 1;
+		ZM.e31 = 0;
+		ZM.e02 = 0;
+		ZM.e12 = 1;
+		ZM.e22 = 0;
+		ZM.e32 = 0;
+		ZM.e03 = 0;
+		ZM.e13 = 0;
+		ZM.e23 = 0;
+		ZM.e33 = 1;
+//		ZM = ZM.transpose();
+
 		com.a2client.modelviewer.g3d.math.Mat4f m = new Mat4f();
 		m.e00 = readFloat();
 		m.e10 = readFloat();
@@ -85,6 +104,8 @@ public class MyInputStream extends DataInputStream
 		m.e23 = readFloat();
 		m.e33 = readFloat();
 
+		m = ZM.mul(m).mul(ZM.inverse());
+		m = m.transpose();
 		return m;
 	}
 

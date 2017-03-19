@@ -35,7 +35,7 @@ public class SkeletonLoader
 		for (int i = 0; i < list.length; i++)
 		{
 			Joint j = list[i];
-			if (j.getName().equalsIgnoreCase(name))
+			if (j.getName().equals(name))
 			{
 				return i;
 			}

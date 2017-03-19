@@ -25,6 +25,8 @@ public class Animation
 	public float FrameDelta;
 	long StartTime;
 
+	public static boolean LEPR = true;
+
 	public Animation(MyInputStream in, Skeleton skeleton) throws IOException
 	{
 		skeleton._animation = this;
@@ -45,11 +47,21 @@ public class Animation
 					throw new RuntimeException("wrong index " + index);
 				}
 				Mat4f m = in.readMat4f();
-				m = m.transpose();
-
 				Quat rot = m.getRot();
+				if (rot.w < 0)
+				{
+					rot = rot.mul(-1f);
+				}
 				Vec3f pos = m.getPos();
-				_frames[i][j] = new DualQuat(rot, pos);
+				_frames[i][index] = new DualQuat(rot, pos);
+
+//				Matrix4 m = in.readMatrix();
+//				m = m.tra();
+//				Quaternion q = new Quaternion();
+//				Vector3 p = new Vector3();
+//				q.setFromMatrix(m);
+//				m.getTranslation(p);
+//				_frames[i][index] = new DualQuat(new Quat(q), p);
 			}
 		}
 	}
@@ -58,7 +70,14 @@ public class Animation
 	{
 //		if (state[idx] != Render.frame_flag)
 //		{
-		joint[idx] = _frames[FramePrev][idx].lerp(_frames[FrameNext][idx], FrameDelta);
+		if (LEPR)
+		{
+			joint[idx] = _frames[FramePrev][idx].lerp(_frames[FrameNext][idx], FrameDelta);
+		}
+		else
+		{
+			joint[idx] = _frames[FramePrev][idx];//.lerp(_frames[FrameNext][idx], FrameDelta);
+		}
 //			state[idx] = Render.frame_flag;
 //		}
 	}
