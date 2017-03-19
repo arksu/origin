@@ -79,12 +79,17 @@ public class ModelData
 		try
 		{
 			MyInputStream in = MyInputStream.fromFile(name + ".mdl");
+			// flag skeleton
 			if (in.readByte() > 0)
 			{
 				loadSkeleton(in);
-				loadAnimation(in);
+				// flag anims
+				if (in.readByte() > 0)
+				{
+					loadAnimation(in);
+				}
 			}
-			// todo load anims
+			// mesh exists anyway
 			loadMesh(in);
 		}
 		catch (Exception e)
@@ -100,7 +105,11 @@ public class ModelData
 
 	private void loadAnimation(MyInputStream in) throws IOException
 	{
-		_animation = new Animation(in, _skeleton);
+		AnimationData data = AnimationLoader.load(in, _skeleton);
+		_animation = new Animation(data);
+
+		// todo del
+		_skeleton._animation = _animation;
 	}
 
 	/**

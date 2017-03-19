@@ -88,7 +88,7 @@ public class Skeleton
 			ac++;
 		}*/
 
-		if (idx > -1)
+		if (idx > -1 && _animation != null)
 		{
 			_animation.lerpJoint(idx);
 			if (_animation.joint[idx] != null)

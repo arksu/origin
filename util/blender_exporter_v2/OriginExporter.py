@@ -98,8 +98,11 @@ def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_
             fw(struct.pack('>B', 1))
             write_skeleton(fw, armatureObject, use_ASCII)
 
-            # todo write anims
-            write_anim(fw, armatureObject)
+            if do_anims:
+                fw(struct.pack('>B', 1))
+                write_anim(fw, armatureObject)
+            else:
+                fw(struct.pack('>B', 0))
         else:
             fw(struct.pack('>B', 0))
 

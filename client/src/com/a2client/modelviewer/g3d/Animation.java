@@ -1,69 +1,54 @@
 package com.a2client.modelviewer.g3d;
 
-import com.a2client.corex.MyInputStream;
 import com.a2client.corex.utils;
 import com.a2client.modelviewer.g3d.math.DualQuat;
-import com.a2client.modelviewer.g3d.math.Mat4f;
-import com.a2client.modelviewer.g3d.math.Quat;
-import com.a2client.modelviewer.g3d.math.Vec3f;
 
 import java.io.IOException;
 
 /**
+ * анимации скелета
  * Created by arksu on 19.03.17.
  */
 public class Animation
 {
-	private DualQuat[][] _frames;
-	private final int _framesCount;
-	private final int _fps;
+	/**
+	 * кадры анимации и другое
+	 */
+	private final AnimationData _data;
 
+	/**
+	 * расчитанные позиции костей для текущего кадра анимации (в настоящий момент времени)
+	 */
 	public DualQuat[] joint;
-	public int FramePrev;
+
 	public int FrameStart;
+
+	/**
+	 * предыщущий кадр
+	 */
+	public int FramePrev;
+
+	/**
+	 * следующий кадр
+	 */
 	public int FrameNext;
+
+	/**
+	 * сколько прошло между предыдущим кадром и следующим (интерполяция кадров)
+	 */
 	public float FrameDelta;
+
+	/**
+	 * время начала анимации (тик)
+	 */
 	long StartTime;
 
 	public static boolean LEPR = true;
 
-	public Animation(MyInputStream in, Skeleton skeleton) throws IOException
+	public Animation(AnimationData data) throws IOException
 	{
-		skeleton._animation = this;
-		_framesCount = in.readWord();
-		_fps = in.readWord();
-		int jointsCount = skeleton.getJointsCount();
-		_frames = new DualQuat[_framesCount][jointsCount];
-
-		joint = new DualQuat[jointsCount];
-
-		for (int i = 0; i < _framesCount; i++)
-		{
-			for (int j = 0; j < jointsCount; j++)
-			{
-				int index = in.readWord();
-				if (index >= jointsCount)
-				{
-					throw new RuntimeException("wrong index " + index);
-				}
-				Mat4f m = in.readMat4f();
-				Quat rot = m.getRot();
-				if (rot.w < 0)
-				{
-					rot = rot.mul(-1f);
-				}
-				Vec3f pos = m.getPos();
-				_frames[i][index] = new DualQuat(rot, pos);
-
-//				Matrix4 m = in.readMatrix();
-//				m = m.tra();
-//				Quaternion q = new Quaternion();
-//				Vector3 p = new Vector3();
-//				q.setFromMatrix(m);
-//				m.getTranslation(p);
-//				_frames[i][index] = new DualQuat(new Quat(q), p);
-			}
-		}
+		_data = data;
+		joint = new DualQuat[_data.getSkeleton().getJointsCount()];
 	}
 
 	public void lerpJoint(int idx)
@@ -72,11 +57,11 @@ public class Animation
 //		{
 		if (LEPR)
 		{
-			joint[idx] = _frames[FramePrev][idx].lerp(_frames[FrameNext][idx], FrameDelta);
+			joint[idx] = _data.getFrames()[FramePrev][idx].lerp(_data.getFrames()[FrameNext][idx], FrameDelta);
 		}
 		else
 		{
-			joint[idx] = _frames[FramePrev][idx];//.lerp(_frames[FrameNext][idx], FrameDelta);
+			joint[idx] = _data.getFrames()[FramePrev][idx];//.lerp(_data.getFrames()[FrameNext][idx], FrameDelta);
 		}
 //			state[idx] = Render.frame_flag;
 //		}
@@ -86,8 +71,8 @@ public class Animation
 	{
 		float dt = (float) (System.currentTimeMillis() - StartTime);
 
-		FrameDelta = utils.frac(dt * _fps / 1000);
-		FramePrev = (int) (System.currentTimeMillis() - StartTime) * _fps / 1000;
+		FrameDelta = utils.frac(dt * _data.getFps() / 1000);
+		FramePrev = (int) (System.currentTimeMillis() - StartTime) * _data.getFps() / 1000;
 
 		boolean is_reverse = false;
 		if (is_reverse)
@@ -99,9 +84,9 @@ public class Animation
 			FramePrev = FrameStart + FramePrev;
 		}
 
-		FrameNext = (FramePrev + 1) % _framesCount;
+		FrameNext = (FramePrev + 1) % _data.getFramesCount();
 
-		FramePrev = FramePrev % _framesCount;
+		FramePrev = FramePrev % _data.getFramesCount();
 
 		FrameNext = utils.max(FrameNext, 0);
 		FramePrev = utils.max(FramePrev, 0);

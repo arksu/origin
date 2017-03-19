@@ -8,14 +8,34 @@ import com.a2client.modelviewer.g3d.math.Vec3f;
 import java.io.IOException;
 
 /**
+ * кость в скелете
  * Created by arksu on 17.03.17.
  */
 public class Joint
 {
+	/**
+	 * имя кости
+	 */
 	private final String _name;
+
+	/**
+	 * имя родительской кости
+	 */
 	private final String _parentName;
+
+	/**
+	 * индекс родительской кости или -1 если нет родителя (корневая кость)
+	 */
 	private int _parentIndex;
+
+	/**
+	 * исходная поза
+	 */
 	private final DualQuat _bind;
+
+	/**
+	 * world transform
+	 */
 	private final DualQuat _frame;
 
 	public Joint(MyInputStream in) throws IOException
@@ -30,21 +50,6 @@ public class Joint
 		_bind = new DualQuat(bind.getRot(), pos);
 		Vec3f pos1 = frame.getPos();
 		_frame = new DualQuat(frame.getRot(), pos1);
-
-//		Matrix4 bind = in.readMatrix();
-//		Matrix4 frame = in.readMatrix();
-//		bind.tra();
-//		frame.tra();
-//		Vector3 p = new Vector3();
-//		Quaternion q = new Quaternion();
-//
-//		q.setFromMatrix(true, bind);
-//		bind.getTranslation(p);
-//		_bind = new DualQuat(new Quat(q), p);
-//
-//		q.setFromMatrix(true, frame);
-//		frame.getTranslation(p);
-//		_frame = new DualQuat(new Quat(q), p);
 	}
 
 	public int getParentIndex()
