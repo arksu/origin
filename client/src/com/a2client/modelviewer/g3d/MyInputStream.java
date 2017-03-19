@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.a2client.corex;
+package com.a2client.modelviewer.g3d;
 
 import com.a2client.Config;
 import com.a2client.modelviewer.g3d.math.Mat4f;

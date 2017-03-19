@@ -1,6 +1,6 @@
 package com.a2client.modelviewer.g3d.math;
 
-import com.a2client.corex.MyInputStream;
+import com.a2client.modelviewer.g3d.MyInputStream;
 import com.a2client.modelviewer.g3d.Const;
 import com.badlogic.gdx.math.Quaternion;
 

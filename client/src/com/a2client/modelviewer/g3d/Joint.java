@@ -1,6 +1,5 @@
 package com.a2client.modelviewer.g3d;
 
-import com.a2client.corex.MyInputStream;
 import com.a2client.modelviewer.g3d.math.DualQuat;
 import com.a2client.modelviewer.g3d.math.Mat4f;
 import com.a2client.modelviewer.g3d.math.Vec3f;

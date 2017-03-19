@@ -1,6 +1,5 @@
 package com.a2client.modelviewer.g3d;
 
-import com.a2client.corex.MyInputStream;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;

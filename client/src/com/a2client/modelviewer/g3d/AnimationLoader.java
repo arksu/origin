@@ -1,6 +1,5 @@
 package com.a2client.modelviewer.g3d;
 
-import com.a2client.corex.MyInputStream;
 import com.a2client.modelviewer.g3d.math.DualQuat;
 import com.a2client.modelviewer.g3d.math.Mat4f;
 import com.a2client.modelviewer.g3d.math.Quat;
@@ -43,7 +42,7 @@ public class AnimationLoader
 				Vec3f pos = m.getPos();
 				frames[i][index] = new DualQuat(rot, pos);
 			}
-			System.out.println("frame [" + i + "] jointDiffCounter = " + jointDiffCounter);
+//			System.out.println("frame [" + i + "] jointDiffCounter = " + jointDiffCounter);
 		}
 		return new AnimationData(frames, framesCount, fps, skeleton);
 	}

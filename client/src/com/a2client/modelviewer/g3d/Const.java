@@ -9,4 +9,6 @@ public class Const
 
 	public static final int MAX_WEIGHTS = 2;
 
+	public static final double deg2rad = Math.PI / 180;
+
 }

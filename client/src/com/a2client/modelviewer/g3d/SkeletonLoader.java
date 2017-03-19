@@ -1,7 +1,5 @@
 package com.a2client.modelviewer.g3d;
 
-import com.a2client.corex.MyInputStream;
-
 import java.io.IOException;
 
 /**

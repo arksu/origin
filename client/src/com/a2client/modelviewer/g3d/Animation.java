@@ -1,7 +1,7 @@
 package com.a2client.modelviewer.g3d;
 
-import com.a2client.corex.utils;
 import com.a2client.modelviewer.g3d.math.DualQuat;
+import com.a2client.util.Utils;
 
 import java.io.IOException;
 
@@ -78,7 +78,7 @@ public class Animation
 	{
 		float dt = (float) (System.currentTimeMillis() - StartTime);
 
-		FrameDelta = utils.frac(dt * _data.getFps() / 1000);
+		FrameDelta = Utils.frac(dt * _data.getFps() / 1000);
 		FramePrev = (int) (System.currentTimeMillis() - StartTime) * _data.getFps() / 1000;
 
 		boolean is_reverse = false;
@@ -95,8 +95,8 @@ public class Animation
 
 		FramePrev = FramePrev % _data.getFramesCount();
 
-		FrameNext = utils.max(FrameNext, 0);
-		FramePrev = utils.max(FramePrev, 0);
+		FrameNext = Utils.max(FrameNext, 0);
+		FramePrev = Utils.max(FramePrev, 0);
 
 	}
 

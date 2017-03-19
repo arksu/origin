@@ -17,9 +17,9 @@
 
 package com.a2client.modelviewer.g3d.math;
 
-import com.a2client.corex.Const;
-import com.a2client.corex.MyInputStream;
-import com.a2client.corex.utils;
+import com.a2client.modelviewer.g3d.Const;
+import com.a2client.modelviewer.g3d.MyInputStream;
+import com.a2client.util.Utils;
 
 import java.io.IOException;
 
@@ -148,12 +148,12 @@ public class Vec3f
 
 	public Vec3f min(Vec3f v)
 	{
-		return new Vec3f(utils.min(x, v.x), utils.min(y, v.y), utils.min(z, v.z));
+		return new Vec3f(Utils.min(x, v.x), Utils.min(y, v.y), Utils.min(z, v.z));
 	}
 
 	public Vec3f max(Vec3f v)
 	{
-		return new Vec3f(utils.max(x, v.x), utils.max(y, v.y), utils.max(z, v.z));
+		return new Vec3f(Utils.max(x, v.x), Utils.max(y, v.y), Utils.max(z, v.z));
 	}
 
 	public String toString()

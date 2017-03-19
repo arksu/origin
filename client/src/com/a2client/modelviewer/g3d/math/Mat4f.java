@@ -17,7 +17,7 @@
 
 package com.a2client.modelviewer.g3d.math;
 
-import com.a2client.corex.Const;
+import com.a2client.modelviewer.g3d.Const;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

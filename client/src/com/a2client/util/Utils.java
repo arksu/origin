@@ -131,6 +131,7 @@ public class Utils
 	{
 		return a > b ? a : b;
 	}
+
 	public static float max(float a, float b)
 	{
 		return a > b ? a : b;
@@ -140,6 +141,7 @@ public class Utils
 	{
 		return a < b ? a : b;
 	}
+
 	public static float min(float a, float b)
 	{
 		return a < b ? a : b;
@@ -161,6 +163,16 @@ public class Utils
 		m = c < m ? c : m;
 		m = e < m ? e : m;
 		return d < m ? d : m;
+	}
+
+	public static float lerp(float x, float y, float t)
+	{
+		return x + (y - x) * t;
+	}
+
+	public static float frac(float v)
+	{
+		return v - ((int) v);
 	}
 
 	public static String data2string(long data)
