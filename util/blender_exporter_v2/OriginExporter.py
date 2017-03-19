@@ -99,6 +99,7 @@ def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_
             write_skeleton(fw, armatureObject, use_ASCII)
 
             # todo write anims
+            write_anim(fw, armatureObject)
         else:
             fw(struct.pack('>B', 0))
 
@@ -362,6 +363,83 @@ def write_skeleton(fw, obj, use_ASCII):
     for bone in bones_list:
         print("bone ", bone.getName())
         bone.write(fw)
+
+
+def write_anim(fw, obj):
+    #    global orientationTweak
+    # print ("save animation...  name: ", Name, " range: ", frameRange)
+
+    # write_string(file, "a1anim")
+    # if frameRange == None:
+    startFrame = bpy.context.scene.frame_start
+    endFrame = bpy.context.scene.frame_end
+    # else:
+    #     startFrame, endFrame = frameRange
+
+    armature = bpy.data.armatures[obj.name]
+
+    # armature = bpy.context.object.find_armature()
+    # armature = bpy.data.armatures[0]
+    # bones = armature.bones
+    # armObj = [o for o in bpy.data.objects if o.data == bones[0].id_data][0]
+    pBones = obj.pose.bones
+
+    print ("arm :", obj, " pbones: ", pBones, " frames: ", startFrame, " - ", endFrame)
+
+    # anim name
+    # if Name:
+    #     write_string(file, Name)
+    # else:
+    #     write_string(file, '')
+
+    # frames count
+    fcount = endFrame - startFrame + 1
+    fw(struct.pack('>H', fcount))
+    fps = bpy.context.scene.render.fps
+    fw(struct.pack('>H', fps))
+
+    # bones names
+    # fw(struct.pack('<H', len(bones)))
+    # for b in bones:
+    #     write_string(file, b.name)
+
+    # print ("orientationTweak ", orientationTweak)
+    # frames
+    print ("process frames...")
+    for frame in range(startFrame, endFrame + 1):
+        bpy.context.scene.frame_set(frame)
+        print("set frame ", frame)
+        for b in bones_list:
+            fw(struct.pack('>H', b.getIndex()))
+
+            pBone = pBones[b.getName()]
+            bone_parent = pBone.parent
+            while bone_parent:
+                if bone_parent.bone.use_deform:
+                    break
+                bone_parent = bone_parent.parent
+
+            pBoneMatrix = pBone.matrix
+
+            if bone_parent:
+                diffMatrix = bone_parent.matrix.inverted() * (pBoneMatrix)
+            else:
+                diffMatrix = obj.matrix_world * pBoneMatrix
+            # diffMatrix = orientationTweak * diffMatrix
+
+            # print ("bind_pose ", b.name, "=", bind_pose[b.name])
+            # print ("frame matrix=", diffMatrix)
+
+            # одинаковые матрицы. запишем флаг для пропуска этой кости по флагам
+            # if cmp_matrix(bind_pose[b.name], diffMatrix):
+            #     print("equal matrix ", b.name)
+            #     write_skip(file, True)
+            # else:
+            #     write_skip(file, False)
+
+            write_matrix(fw, diffMatrix)
+
+    print ("animation saved")
 
 
 def mesh_triangulate(me):

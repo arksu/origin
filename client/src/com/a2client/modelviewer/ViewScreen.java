@@ -90,6 +90,8 @@ public class ViewScreen extends BaseScreen
 				_models.add(model);
 			}
 		}
+
+		_models.get(0).getData().getAnimation().play();
 	}
 
 	@Override
@@ -144,6 +146,8 @@ public class ViewScreen extends BaseScreen
 //		tmp.scale(3, 3, 3);
 
 		_models.get(0).setTransform(tmp);
+
+		_models.get(0).getData().getAnimation().update();
 
 		super.onUpdate();
 	}

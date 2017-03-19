@@ -59,6 +59,8 @@ public class ModelData
 
 	private Skeleton _skeleton;
 
+	private Animation _animation;
+
 	public ModelData(String name)
 	{
 		_log.debug("load model: " + name);
@@ -80,6 +82,7 @@ public class ModelData
 			if (in.readByte() > 0)
 			{
 				loadSkeleton(in);
+				loadAnimation(in);
 			}
 			// todo load anims
 			loadMesh(in);
@@ -93,6 +96,11 @@ public class ModelData
 	private void loadSkeleton(MyInputStream in) throws IOException
 	{
 		_skeleton = SkeletonLoader.load(in);
+	}
+
+	private void loadAnimation(MyInputStream in) throws IOException
+	{
+		_animation = new Animation(in, _skeleton);
 	}
 
 	/**
@@ -242,5 +250,15 @@ public class ModelData
 				}
 			}
 		}
+	}
+
+	public Skeleton getSkeleton()
+	{
+		return _skeleton;
+	}
+
+	public Animation getAnimation()
+	{
+		return _animation;
 	}
 }

@@ -15,6 +15,11 @@ public class Skeleton
 	private Skeleton _parent;
 	private int _parent_joint;
 
+	public Animation _animation;
+
+	/**
+	 * кости описывающие скелет (бинд позу)
+	 */
 	private final Joint[] _joints;
 
 	private DualQuat[] _joint;
@@ -82,6 +87,13 @@ public class Skeleton
 			}
 			ac++;
 		}*/
+
+		_animation.lerpJoint(idx);
+		if (_animation.joint[idx] != null)
+		{
+			cjoint = cjoint.lerp(_animation.joint[idx], w);
+		}
+
 //        if (parent != null) {
 //        Log.debug("anim count : "+ac);
 //        }
@@ -176,5 +188,10 @@ public class Skeleton
 			tmp[idx++] = dq.dual.w;
 		}
 		return tmp;
+	}
+
+	public int getJointsCount()
+	{
+		return _joints.length;
 	}
 }
