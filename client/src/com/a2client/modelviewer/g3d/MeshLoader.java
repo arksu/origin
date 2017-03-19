@@ -97,7 +97,6 @@ public class MeshLoader
 						new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0"),
 						new VertexAttribute(VertexAttributes.Usage.BoneWeight, 2, "a_bone0"),
 						new VertexAttribute(VertexAttributes.Usage.BoneWeight, 2, "a_bone1")
-//						new VertexAttribute(VertexAttributes.Usage.BoneWeight, 2, "a_bone2")
 				);
 			}
 			else
@@ -124,7 +123,6 @@ public class MeshLoader
 						new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0"),
 						new VertexAttribute(VertexAttributes.Usage.BoneWeight, 2, "a_bone0"),
 						new VertexAttribute(VertexAttributes.Usage.BoneWeight, 2, "a_bone1")
-//						new VertexAttribute(VertexAttributes.Usage.BoneWeight, 2, "a_bone2")
 				);
 			}
 			else

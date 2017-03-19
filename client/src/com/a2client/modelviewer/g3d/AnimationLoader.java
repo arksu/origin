@@ -23,14 +23,18 @@ public class AnimationLoader
 
 		for (int i = 0; i < framesCount; i++)
 		{
+			int jointDiffCounter = 0;
 			for (int j = 0; j < jointsCount; j++)
 			{
+				// flag no diff in transform
+				if (in.readByte() == 0) continue;
+				jointDiffCounter++;
 				int index = in.readWord();
 				if (index >= jointsCount)
 				{
 					throw new RuntimeException("wrong index " + index);
 				}
-				Mat4f m = in.readMat4f();
+				Mat4f m = in.readBlenderMat4f();
 				Quat rot = m.getRot();
 				if (rot.w < 0)
 				{
@@ -39,6 +43,7 @@ public class AnimationLoader
 				Vec3f pos = m.getPos();
 				frames[i][index] = new DualQuat(rot, pos);
 			}
+			System.out.println("frame [" + i + "] jointDiffCounter = " + jointDiffCounter);
 		}
 		return new AnimationData(frames, framesCount, fps, skeleton);
 	}

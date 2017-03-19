@@ -20,7 +20,6 @@ package com.a2client.corex;
 import com.a2client.Config;
 import com.a2client.modelviewer.g3d.math.Mat4f;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Matrix4;
 
 import java.io.*;
 
@@ -31,7 +30,7 @@ public class MyInputStream extends DataInputStream
 	 * underlying InputStream.
 	 * @param in the specified input stream
 	 */
-	public MyInputStream(InputStream in)
+	private MyInputStream(InputStream in)
 	{
 		super(in);
 	}
@@ -52,18 +51,9 @@ public class MyInputStream extends DataInputStream
 		return new String(blob, "US-ASCII");
 	}
 
-	public Matrix4 readMatrix() throws IOException
+	public com.a2client.modelviewer.g3d.math.Mat4f readBlenderMat4f() throws IOException
 	{
-		float[] values = new float[16];
-		for (int i = 0; i < 16; i++)
-		{
-			values[i] = readFloat();
-		}
-		return new Matrix4(values);
-	}
-
-	public com.a2client.modelviewer.g3d.math.Mat4f readMat4f() throws IOException
-	{
+		// matrix for convert
 		Mat4f ZM = new Mat4f();
 		ZM.e00 = -1;
 		ZM.e10 = 0;
@@ -81,7 +71,6 @@ public class MyInputStream extends DataInputStream
 		ZM.e13 = 0;
 		ZM.e23 = 0;
 		ZM.e33 = 1;
-//		ZM = ZM.transpose();
 
 		com.a2client.modelviewer.g3d.math.Mat4f m = new Mat4f();
 		m.e00 = readFloat();
@@ -105,7 +94,7 @@ public class MyInputStream extends DataInputStream
 		m.e33 = readFloat();
 
 		m = ZM.mul(m).mul(ZM.inverse());
-		m = m.transpose();
+//		m = m.transpose();
 		return m;
 	}
 

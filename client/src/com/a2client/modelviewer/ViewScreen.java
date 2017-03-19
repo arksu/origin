@@ -142,7 +142,7 @@ public class ViewScreen extends BaseScreen
 
 		if (Input.KeyHit(Keys.L))
 		{
-			Animation.LEPR = !Animation.LEPR;
+			Animation.LERP = !Animation.LERP;
 		}
 
 		if (_isRotate)

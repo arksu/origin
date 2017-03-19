@@ -171,7 +171,6 @@ def write_mesh(fw, me, object, use_ASCII, do_binormals, do_weights):
             if face.use_smooth:
                 no = me.vertices[vi].normal
             else:
-                # print("is flat")
                 no = face.normal
 
             if do_binormals:
@@ -190,7 +189,6 @@ def write_mesh(fw, me, object, use_ASCII, do_binormals, do_weights):
                 uv = Vector([0,0])
 
             if do_weights:
-                # print("calc weights ============")
                 # weights
                 ws = []
                 groups = me.vertices[vi].groups
@@ -200,15 +198,7 @@ def write_mesh(fw, me, object, use_ASCII, do_binormals, do_weights):
                     bone_name = wg.name
                     bone = get_bone(bone_name)
 
-                    # print ("bone_name ", bone_name)
-                    # print ("w ", vertex_weight)
-                    # print ("idx ", bone.getIndex())
-                    # print ("-----")
-
                     ws.append((vertex_weight, bone.getIndex()))
-
-                    # write_string(file, bone_name)
-                    # file.write(struct.pack('<f', vertex_weight))
 
                 lenws = len(ws)
                 # если нашли костей которые действуют на эту вершину больше чем допустимо
@@ -225,18 +215,11 @@ def write_mesh(fw, me, object, use_ASCII, do_binormals, do_weights):
                     w2 = 1 - w1
                     ws[0] = (w1, ws[0][1])
                     ws[1] = (w2, ws[1][1])
-
-                    # print("len! ", len(ws))
-                    # for w in ws:
-                    #     print ("w ", w[0])
-                    #     print ("w idx ", w[1])
-                    # print ("-----")
                 else:
                     if lenws == 0:
                         print("LEN 0!")
                     # если костей меньше чем положено
                     if lenws < MAX_WEIGHTS:
-                        # print ("w count low: ", len(ws))
                         # добавляем нулевые веса пока не заполним массив
                         while len(ws) < MAX_WEIGHTS:
                             ws.append((0, 0))
@@ -359,7 +342,6 @@ def write_skeleton(fw, obj, use_ASCII):
         bone = BoneClass(b.name, mw.inverted(), ml, idx, parent_name)
         bones_list.append(bone)
 
-
         bind_pose[b.name] = ml
 
     print("bones_list ", len(bones_list))
@@ -370,10 +352,6 @@ def write_skeleton(fw, obj, use_ASCII):
 
 
 def write_anim(fw, obj):
-    #    global orientationTweak
-    # print ("save animation...  name: ", Name, " range: ", frameRange)
-
-    # write_string(file, "a1anim")
     # if frameRange == None:
     startFrame = bpy.context.scene.frame_start
     endFrame = bpy.context.scene.frame_end
@@ -382,19 +360,9 @@ def write_anim(fw, obj):
 
     armature = bpy.data.armatures[obj.name]
 
-    # armature = bpy.context.object.find_armature()
-    # armature = bpy.data.armatures[0]
-    # bones = armature.bones
-    # armObj = [o for o in bpy.data.objects if o.data == bones[0].id_data][0]
     pBones = obj.pose.bones
 
     print ("arm :", obj, " pbones: ", pBones, " frames: ", startFrame, " - ", endFrame)
-
-    # anim name
-    # if Name:
-    #     write_string(file, Name)
-    # else:
-    #     write_string(file, '')
 
     # frames count
     fcount = endFrame - startFrame + 1
@@ -402,20 +370,12 @@ def write_anim(fw, obj):
     fps = bpy.context.scene.render.fps
     fw(struct.pack('>H', fps))
 
-    # bones names
-    # fw(struct.pack('<H', len(bones)))
-    # for b in bones:
-    #     write_string(file, b.name)
-
-    # print ("orientationTweak ", orientationTweak)
     # frames
     print ("process frames...")
     for frame in range(startFrame, endFrame + 1):
         bpy.context.scene.frame_set(frame)
         print("set frame ", frame)
         for b in bones_list:
-            fw(struct.pack('>H', b.getIndex()))
-
             pBone = pBones[b.getName()]
             bone_parent = pBone.parent
             while bone_parent:
@@ -425,38 +385,18 @@ def write_anim(fw, obj):
 
             pBoneMatrix = pBone.matrix
 
-            # if bone_parent:
-            #     diffMatrix = bone_parent.matrix.inverted() * (pBoneMatrix)
-            # else:
-            #     diffMatrix = obj.matrix_world * pBoneMatrix
-
             if bone_parent:
                 diffMatrix = bone_parent.matrix.inverted() * (pBoneMatrix)
             else:
                 diffMatrix = obj.matrix_world * pBoneMatrix
-            # diffMatrix = orientationTweak * diffMatrix
-
-            # frame
-            # if bone_parent:
-            #     ml = bone_parent.matrix_local.inverted() * b.matrix_local
-            # else:
-            #     ml = mw
-            # mw = obj.matrix_world * b.matrix_local
-
-            # print ("bind_pose ", b.name, "=", bind_pose[b.name])
-            # print ("frame matrix=", diffMatrix)
 
             # одинаковые матрицы. запишем флаг для пропуска этой кости по флагам
-            # if cmp_matrix(bind_pose[b.name], diffMatrix):
-            #     print("equal matrix ", b.name)
-            #     write_skip(file, True)
-            # else:
-            #     write_skip(file, False)
-
-            write_matrix(fw, diffMatrix)
-
-    print ("animation saved")
-
+            if cmp_matrix(bind_pose[b.name], diffMatrix) and bone_parent:
+                fw(struct.pack('>B', 0))
+            else:
+                fw(struct.pack('>B', 1))
+                fw(struct.pack('>H', b.getIndex()))
+                write_matrix(fw, diffMatrix)
 
 def mesh_triangulate(me):
     import bmesh
@@ -472,15 +412,27 @@ def get_bone(bone_name):
             return b
     raise Error("bone not found "+bone_name)
 
+
+def eps_num(n1, n2):
+    return (n1 - n2) < 0.00001
+
+def cmp_matrix(m1, m2):
+    if \
+    eps_num(m1[0][0], m2[0][0]) and eps_num(m1[0][1], m2[0][1]) and eps_num(m1[0][2], m2[0][2]) and eps_num(m1[0][3],m2[0][3]) and \
+    eps_num(m1[1][0], m2[1][0]) and eps_num(m1[1][1], m2[1][1]) and eps_num(m1[1][2], m2[1][2]) and eps_num(m1[1][3],m2[1][3]) and \
+    eps_num(m1[2][0], m2[2][0]) and eps_num(m1[2][1], m2[2][1]) and eps_num(m1[2][2], m2[2][2]) and eps_num(m1[2][3],m2[2][3]) and \
+    eps_num(m1[3][0], m2[3][0]) and eps_num(m1[3][1], m2[3][1]) and eps_num(m1[3][2], m2[3][2]) and eps_num(m1[3][3],m2[3][3]):
+        return True
+    else:
+        return False
+
 def write_string(fw, str):
     l = len(str)
     fw(struct.pack('>H', l))
     fw(bytearray(str, 'ascii'))
 
-
 def write_matrix(fw, m):
-    # transpose in converter
-    fw(struct.pack('>ffff', m[0][0], m[0][1], m[0][2], m[0][3]))
-    fw(struct.pack('>ffff', m[1][0], m[1][1], m[1][2], m[1][3]))
-    fw(struct.pack('>ffff', m[2][0], m[2][1], m[2][2], m[2][3]))
-    fw(struct.pack('>ffff', m[3][0], m[3][1], m[3][2], m[3][3]))
+    fw(struct.pack('>ffff', m[0][0], m[1][0], m[2][0], m[3][0]))
+    fw(struct.pack('>ffff', m[0][1], m[1][1], m[2][1], m[3][1]))
+    fw(struct.pack('>ffff', m[0][2], m[1][2], m[2][2], m[3][2]))
+    fw(struct.pack('>ffff', m[0][3], m[1][3], m[2][3], m[3][3]))

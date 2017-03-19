@@ -35,10 +35,6 @@ const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
 const float shadowMapSize = 2048.0;
 const float texelSize = 1.0 / shadowMapSize;
 
-// temp
-in float w1;
-in float w2;
-
 void main() {
 
 	vec3 rNormal;

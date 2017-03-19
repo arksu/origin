@@ -65,7 +65,7 @@ class OriginExportClass(bpy.types.Operator, ExportHelper, IOMDLOrientationHelper
     do_anims = BoolProperty(
         name="Export Animations",
         description="Export all anims (anim actions)",
-        default=False,
+        default=True,
     )
 
     scaleFactor = FloatProperty(

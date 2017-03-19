@@ -43,8 +43,8 @@ public class Joint
 		_name = in.readAnsiString();
 		_parentName = in.readAnsiString();
 
-		Mat4f bind = in.readMat4f();
-		Mat4f frame = in.readMat4f();
+		Mat4f bind = in.readBlenderMat4f();
+		Mat4f frame = in.readBlenderMat4f();
 
 		Vec3f pos = bind.getPos();
 		_bind = new DualQuat(bind.getRot(), pos);

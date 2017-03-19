@@ -44,10 +44,6 @@ const vec4 diffuse = vec4(1,1,1,1);
 
 const float transitionDistance = 10.0;
 
-// temp
-out float w1;
-out float w2;
-
 vec3 qrot(vec4 q, vec3 v) {
 	return v + 2.0 * cross(vec3(q), cross(vec3(q), v) + q.w * v);
 }
@@ -61,7 +57,6 @@ void main() {
 		// unpack weight
 //		rWeight.x = aJoint.z * (1.0 / 255.0);
 		rWeight.x = a_bone0.x;
-		w1 = rWeight.x;
 
 		rWeight.y = 1.0 - rWeight.x;
 //		rWeight.y = a_bone1.x;
@@ -70,7 +65,6 @@ void main() {
 		ivec2 rJoint = ivec2(a_bone0.y * 2 , a_bone1.y * 2);
 
 		rWeight.y *= step(0.0, dot(u_joints[rJoint.x], u_joints[rJoint.y])) * 2.0 - 1.0;
-		w2 = rWeight.y;
 
 		qq0 = u_joints[rJoint.x] * rWeight.x + u_joints[rJoint.y] * rWeight.y;
 		vec4 qq1 = u_joints[rJoint.x + 1] * rWeight.x + u_joints[rJoint.y + 1] * rWeight.y;
@@ -93,7 +87,7 @@ void main() {
     mat3 MM = mat3(vec3(u_worldTrans[0]), vec3(u_worldTrans[1]), vec3(u_worldTrans[2]));
 	vec3 n = a_normal;// * 2.0 - 1.0;
 	vec4 b = a_binormal;// * 2.0 - 1.0;
-//
+
 	if (u_skinMode > 0) {
 		if (u_normalMap > 0) {
 			v_tangent = MM * qrot(qq0, (cross(n, vec3(b)) * b.w));
@@ -116,7 +110,7 @@ void main() {
     float distance = length(u_cameraPosition.xyz - worldPosition.xyz);
     visibility = exp(-pow((distance * u_density), u_gradient));
 
-    gl_Position = u_projViewTrans * vec4(worldPosition, 1.0);//u_worldTrans * vec4(a_position, 1.0);
+    gl_Position = u_projViewTrans * vec4(worldPosition, 1.0);
 
     texCoords = a_texCoord0;
 }

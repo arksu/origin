@@ -43,7 +43,7 @@ public class Animation
 	 */
 	long StartTime;
 
-	public static boolean LEPR = true;
+	public static boolean LERP = true;
 
 	public Animation(AnimationData data) throws IOException
 	{
@@ -55,9 +55,16 @@ public class Animation
 	{
 //		if (state[idx] != Render.frame_flag)
 //		{
-		if (LEPR)
+		if (LERP)
 		{
-			joint[idx] = _data.getFrames()[FramePrev][idx].lerp(_data.getFrames()[FrameNext][idx], FrameDelta);
+			if (_data.getFrames()[FramePrev][idx] != null && _data.getFrames()[FrameNext][idx] != null)
+			{
+				joint[idx] = _data.getFrames()[FramePrev][idx].lerp(_data.getFrames()[FrameNext][idx], FrameDelta);
+			}
+			else
+			{
+				joint[idx] = null;
+			}
 		}
 		else
 		{
