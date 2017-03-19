@@ -69,7 +69,7 @@ void main() {
 //	outColor = vec4(rVdotN);
 //	outColor = mix(vec4(u_skyColor, 1.0), outColor, visibility);
 
-	outColor = vec4(w1);
+//	outColor = vec4(w1);
 //    outColor2 = vec4(0);
 
 //	outColor = vec4(u_joints[0].x);

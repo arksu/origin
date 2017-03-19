@@ -67,7 +67,7 @@ void main() {
 //		rWeight.y = a_bone1.x;
 
 		// joint idex
-		ivec2 rJoint = ivec2(a_bone0.y, a_bone1.y);
+		ivec2 rJoint = ivec2(a_bone0.y * 2 , a_bone1.y * 2);
 
 		rWeight.y *= step(0.0, dot(u_joints[rJoint.x], u_joints[rJoint.y])) * 2.0 - 1.0;
 		w2 = rWeight.y;
