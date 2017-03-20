@@ -34,20 +34,20 @@ class OriginExportClass(bpy.types.Operator, ExportHelper, IOMDLOrientationHelper
     filename_ext = ".mdl"
 
     do_select_only = BoolProperty(
-        name="Selection Only",
+        name="Selection only",
         description="Export selected objects only",
         default=False,
     )
 
     do_mesh = BoolProperty(
-        name="Export Mesh",
+        name="Export mesh",
         description="Export mesh data",
         default=True,
     )
 
     do_binormals = BoolProperty(
-        name="Export Mesh binormals",
-        description="Export mesh binormals for normal map",
+        name="Export mesh binormals",
+        description="Export mesh binormals for normal map, use only with normal map",
         default=True,
     )
 
@@ -57,14 +57,20 @@ class OriginExportClass(bpy.types.Operator, ExportHelper, IOMDLOrientationHelper
     )
 
     do_skeleton = BoolProperty(
-        name="Export Skeleton",
+        name="Export skeleton",
         description="Export skeleton (armature)",
         default=True,
     )
 
     do_anims = BoolProperty(
-        name="Export Animations",
-        description="Export all anims (anim actions)",
+        name="Export animations",
+        description="Export animations",
+        default=True,
+    )
+
+    do_all_anims = BoolProperty(
+        name="Export ALL animation actions",
+        description="Export all anims (anim actions), else export only current animation",
         default=True,
     )
 
@@ -96,7 +102,7 @@ class OriginExportClass(bpy.types.Operator, ExportHelper, IOMDLOrientationHelper
 
         return OriginExporter.run(self.filepath, global_matrix, context,
                                   self.scaleFactor, self.do_mesh, self.do_skeleton, self.do_anims, self.do_select_only,
-                                  self.do_mesh_modifers, self.do_binormals
+                                  self.do_mesh_modifers, self.do_binormals, self.do_all_anims
                                   )
 
 

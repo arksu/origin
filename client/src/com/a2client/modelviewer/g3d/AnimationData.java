@@ -23,13 +23,16 @@ public class AnimationData
 	 */
 	private final int _fps;
 
+	private final String _name;
+
 	/**
 	 * скелет к которому загружена анимация
 	 */
 	private final Skeleton _skeleton;
 
-	public AnimationData(DualQuat[][] frames, int framesCount, int fps, Skeleton skeleton)
+	public AnimationData(DualQuat[][] frames, int framesCount, int fps, String name, Skeleton skeleton)
 	{
+		_name = name;
 		_frames = frames;
 		_framesCount = framesCount;
 		_fps = fps;
@@ -54,5 +57,10 @@ public class AnimationData
 	public Skeleton getSkeleton()
 	{
 		return _skeleton;
+	}
+
+	public String getName()
+	{
+		return _name;
 	}
 }

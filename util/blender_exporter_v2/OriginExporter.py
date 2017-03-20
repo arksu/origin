@@ -52,7 +52,7 @@ bind_pose = {}
 bones_list = []
 
 def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_anims,
-        do_select_only, do_mesh_modifers, do_binormals):
+        do_select_only, do_mesh_modifers, do_binormals, do_all_anims):
     scene = context.scene
     bind_pose.clear()
     bones_list.clear()
@@ -100,7 +100,7 @@ def run(filepath, global_matrix, context, scaleFactor, do_mesh, do_skeleton, do_
 
             if do_anims:
                 fw(struct.pack('>B', 1))
-                write_anim(fw, armatureObject)
+                write_all_anims(fw, armatureObject, do_all_anims)
             else:
                 fw(struct.pack('>B', 0))
         else:
@@ -350,6 +350,23 @@ def write_skeleton(fw, obj, use_ASCII):
         print("bone ", bone.getName())
         bone.write(fw)
 
+def write_all_anims(fw, obj, do_all_anims):
+    anim_count = len(bpy.data.actions)
+    fw(struct.pack('>H', anim_count))
+    default_action = obj.animation_data.action
+    if do_all_anims and anim_count > 1:
+        for a in bpy.data.actions:
+            bpy.context.scene.frame_start = a.frame_range.x
+            bpy.context.scene.frame_end = a.frame_range.y
+            obj.animation_data.action = a
+            write_string(fw, a.name)
+            write_anim(fw, obj)
+        obj.animation_data.action = default_action
+    else:
+        write_string(fw, default_action.name)
+        write_anim(fw, obj)
+
+    return 1
 
 def write_anim(fw, obj):
     # if frameRange == None:

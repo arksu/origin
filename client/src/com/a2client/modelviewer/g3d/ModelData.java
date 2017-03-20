@@ -62,7 +62,7 @@ public class ModelData
 
 	public ModelData(String name)
 	{
-		_log.debug("load model: " + name);
+		_log.debug("loading model: " + name);
 		_name = name;
 		File file = Gdx.files.internal(Config.MODELS_DIR + name + ".json").file();
 		try
@@ -85,7 +85,12 @@ public class ModelData
 				// flag anims
 				if (in.readByte() > 0)
 				{
-					loadAnimation(in);
+					int animationsCount = in.readWord();
+					while (animationsCount > 0)
+					{
+						loadAnimation(in);
+						animationsCount--;
+					}
 				}
 			}
 			// mesh exists anyway
@@ -105,10 +110,15 @@ public class ModelData
 	private void loadAnimation(MyInputStream in) throws IOException
 	{
 		AnimationData data = AnimationLoader.load(in, _skeleton);
-		_animation = new Animation(data);
+		_log.debug("loaded anim: " + data.getName());
 
-		// todo del
-		_skeleton._animation = _animation;
+		if (_animation == null)
+		{
+			_animation = new Animation(data);
+
+			// todo del
+			_skeleton._animation = _animation;
+		}
 	}
 
 	/**
@@ -123,7 +133,6 @@ public class ModelData
 		// грузим сначала все меши из файла
 		Map<String, Mesh> map = new HashMap<>();
 
-		_log.debug("mesh count: " + meshCount);
 		while (meshCount > 0)
 		{
 			String name = in.readAnsiString().toLowerCase();
@@ -137,7 +146,7 @@ public class ModelData
 
 			meshCount--;
 		}
-		_log.debug("total tri couunt: " + _totalTriCount + " [" + tmpList.size() + " mesh]");
+		_log.debug("total tri couunt: " + _totalTriCount + " in " + tmpList.size() + " mesh]");
 
 		// если группы для этой модели есть. надо их сформировать
 		if (_desc.meshgroups != null)

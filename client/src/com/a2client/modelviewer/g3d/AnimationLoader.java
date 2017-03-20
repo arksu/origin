@@ -15,6 +15,7 @@ public class AnimationLoader
 {
 	public static AnimationData load(MyInputStream in, Skeleton skeleton) throws IOException
 	{
+		String name = in.readAnsiString();
 		int jointsCount = skeleton.getJointsCount();
 		int framesCount = in.readWord();
 		int fps = in.readWord();
@@ -44,6 +45,6 @@ public class AnimationLoader
 			}
 //			System.out.println("frame [" + i + "] jointDiffCounter = " + jointDiffCounter);
 		}
-		return new AnimationData(frames, framesCount, fps, skeleton);
+		return new AnimationData(frames, framesCount, fps, name, skeleton);
 	}
 }
