@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class AnimationLoader
 {
-	public static AnimationData load(MyInputStream in, Skeleton skeleton) throws IOException
+	public static AnimationData load(MyInputStream in, SkeletonData skeleton) throws IOException
 	{
 		String name = in.readAnsiString();
 		int jointsCount = skeleton.getJointsCount();

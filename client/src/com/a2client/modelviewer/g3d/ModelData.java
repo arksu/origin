@@ -56,9 +56,9 @@ public class ModelData
 	 */
 	private final String _name;
 
-	private Skeleton _skeleton;
+	private SkeletonData _skeleton;
 
-	private Animation _animation;
+	private final Map<String, AnimationData> _animations = new HashMap<>();
 
 	public ModelData(String name)
 	{
@@ -111,14 +111,7 @@ public class ModelData
 	{
 		AnimationData data = AnimationLoader.load(in, _skeleton);
 		_log.debug("loaded anim: " + data.getName());
-
-		if (_animation == null)
-		{
-			_animation = new Animation(data);
-
-			// todo del
-			_skeleton._animation = _animation;
-		}
+		_animations.put(data.getName(), data);
 	}
 
 	/**
@@ -210,16 +203,6 @@ public class ModelData
 	 */
 	public void render(ModelBatch modelBatch, int primitiveType)
 	{
-		if (_skeleton != null)
-		{
-			modelBatch.getShader().setUniformf("u_skinMode", 1f);
-			_skeleton.bind(modelBatch.getShader());
-		}
-		else
-		{
-			modelBatch.getShader().setUniformf("u_skinMode", 0f);
-		}
-
 		if (_defaultGroup != null)
 		{
 			modelBatch.bindMaterial(_defaultMaterial);
@@ -269,13 +252,13 @@ public class ModelData
 		}
 	}
 
-	public Skeleton getSkeleton()
+	public SkeletonData getSkeletonData()
 	{
 		return _skeleton;
 	}
 
-	public Animation getAnimation()
+	public AnimationData getAnimation(String name)
 	{
-		return _animation;
+		return _animations.get(name);
 	}
 }

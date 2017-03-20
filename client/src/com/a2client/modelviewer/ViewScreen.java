@@ -92,11 +92,11 @@ public class ViewScreen extends BaseScreen
 			}
 		}
 
-		Animation animation = _models.get(0).getData().getAnimation();
-		if (animation != null)
-		{
-			animation.play();
-		}
+//		Animation animation = _models.get(0).getData().getAnimation();
+//		if (animation != null)
+//		{
+//			animation.play();
+//		}
 	}
 
 	@Override
@@ -157,11 +157,11 @@ public class ViewScreen extends BaseScreen
 
 		_models.get(0).setTransform(tmp);
 
-		Animation animation = _models.get(0).getData().getAnimation();
-		if (animation != null)
-		{
-			animation.update();
-		}
+//		Animation animation = _models.get(0).getData().getAnimation();
+//		if (animation != null)
+//		{
+//			animation.update();
+//		}
 
 		super.onUpdate();
 	}

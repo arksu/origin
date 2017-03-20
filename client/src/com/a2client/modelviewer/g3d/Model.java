@@ -22,6 +22,8 @@ public class Model
 
 	private ModelData _data;
 
+	private Skeleton _skeleton;
+
 	/**
 	 * положение относительно родителя
 	 */
@@ -66,6 +68,16 @@ public class Model
 	public void render(ModelBatch modelBatch)
 	{
 		modelBatch.getShader().setUniformMatrix("u_worldTrans", _worldTransform);
+
+		if (_skeleton != null)
+		{
+			modelBatch.getShader().setUniformf("u_skinMode", 1f);
+			_skeleton.bind(modelBatch.getShader());
+		}
+		else
+		{
+			modelBatch.getShader().setUniformf("u_skinMode", 0f);
+		}
 
 		_data.render(modelBatch, _primitiveType);
 	}

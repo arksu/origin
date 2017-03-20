@@ -28,9 +28,9 @@ public class AnimationData
 	/**
 	 * скелет к которому загружена анимация
 	 */
-	private final Skeleton _skeleton;
+	private final SkeletonData _skeleton;
 
-	public AnimationData(DualQuat[][] frames, int framesCount, int fps, String name, Skeleton skeleton)
+	public AnimationData(DualQuat[][] frames, int framesCount, int fps, String name, SkeletonData skeleton)
 	{
 		_name = name;
 		_frames = frames;
@@ -54,7 +54,7 @@ public class AnimationData
 		return _fps;
 	}
 
-	public Skeleton getSkeleton()
+	public SkeletonData getSkeleton()
 	{
 		return _skeleton;
 	}

@@ -7,7 +7,7 @@ import java.io.IOException;
  */
 public class SkeletonLoader
 {
-	public static Skeleton load(MyInputStream in) throws IOException
+	public static SkeletonData load(MyInputStream in) throws IOException
 	{
 		int bonesCount = in.readWord();
 		Joint[] joints = new Joint[bonesCount];
@@ -24,8 +24,7 @@ public class SkeletonLoader
 			joint.setParentIndex(getJointIndex(joint.getParentName(), joints));
 		}
 
-		Skeleton skeleton = new Skeleton(joints);
-		return skeleton;
+		return new SkeletonData(joints);
 	}
 
 	private static int getJointIndex(String name, Joint[] list)

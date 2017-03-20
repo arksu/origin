@@ -12,34 +12,31 @@ import java.nio.FloatBuffer;
  */
 public class Skeleton
 {
+	private final SkeletonData _data;
+
 	private Skeleton _parent;
 	private int _parent_joint;
 
 	public Animation _animation;
 
-	/**
-	 * кости описывающие скелет (бинд позу)
-	 */
-	private final Joint[] _joints;
-
 	private DualQuat[] _joint;
 	private DualQuat[] _jquat;
 
-	public Skeleton(Joint[] joints)
+	public Skeleton(SkeletonData data)
 	{
-		_joints = joints;
-		_jquat = new DualQuat[joints.length];
-		_joint = new DualQuat[joints.length];
+		_data = data;
+		_jquat = new DualQuat[_data.getJointsCount()];
+		_joint = new DualQuat[_data.getJointsCount()];
 	}
 
 	public void bind(ShaderProgram shader)
 	{
-		DualQuat[] jquat = new DualQuat[_joints.length];
+		DualQuat[] jquat = new DualQuat[_data.getJointsCount()];
 
-		for (int i = 0; i < _joints.length; i++)
+		for (int i = 0; i < _data.getJointsCount(); i++)
 		{
 			updateJoint(i);
-			jquat[i] = _joint[i].mul(_joints[i].getBind());
+			jquat[i] = _joint[i].mul(_data.getJoints()[i].getBind());
 		}
 
 		FloatBuffer jquatFloatBuffer = getFloatBuffer(jquat);
@@ -61,7 +58,7 @@ public class Skeleton
 	public void updateJoint(int idx)
 	{
 		float w = 1f;
-		DualQuat cjoint = _joints[idx].getFrame();
+		DualQuat cjoint = _data.getJoints()[idx].getFrame();
 		// идем с последней добавленной анимации и смотрим на ее вес.
 		// с каждой пройденной анимацией вычитаем вес
 		int ac = 0;
@@ -127,10 +124,10 @@ public class Skeleton
 
 //		cjoint =  cjoint.mul(new DualQuat(new Quat(-10, -10, -10, -2), new Quat(-10, -10, -4, -3)));
 
-		if (_joints[idx].getParentIndex() > -1)
+		if (_data.getJoints()[idx].getParentIndex() > -1)
 		{
-			updateJoint(_joints[idx].getParentIndex());
-			_joint[idx] = _joint[_joints[idx].getParentIndex()].mul(cjoint);
+			updateJoint(_data.getJoints()[idx].getParentIndex());
+			_joint[idx] = _joint[_data.getJoints()[idx].getParentIndex()].mul(cjoint);
 		}
 		else
 		{
@@ -144,7 +141,7 @@ public class Skeleton
 //			}
 //			else
 //			{
-				_joint[idx] = cjoint;
+			_joint[idx] = cjoint;
 //			}
 		}
 
@@ -195,6 +192,6 @@ public class Skeleton
 
 	public int getJointsCount()
 	{
-		return _joints.length;
+		return _data.getJointsCount();
 	}
 }
