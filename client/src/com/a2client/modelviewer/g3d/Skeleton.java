@@ -1,6 +1,7 @@
 package com.a2client.modelviewer.g3d;
 
 import com.a2client.modelviewer.g3d.math.DualQuat;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 import java.nio.ByteBuffer;
@@ -39,19 +40,17 @@ public class Skeleton
 			jquat[i] = _joint[i].mul(_data.getJoints()[i].getBind());
 		}
 
-//		FloatBuffer jquatFloatBuffer = getFloatBuffer(jquat);
 		float[] floatArray = getFloatArray(jquat);
 
-		String name = "u_joints";
-//		int location = shader.fetchUniformLocation(name, true);
-		shader.setUniform4fv(name, floatArray, 0, floatArray.length);
+//		shader.setUniform4fv(name, floatArray, 0, floatArray.length);
 
 //		shader.setUniform4fv("u_joints[0]", new float[]{1, 0.5f, 0, 0}, 0, 4);
 //		shader.setUniform4fv("u_joints[1]", new float[]{1, 0.5f, 0, 1}, 0, 4);
 
 //		ARBShaderObjects.glUniform3ARB(location, jquatFloatBuffer);
 
-//		Gdx.gl20.glUniform4fv(location, 0, jquatFloatBuffer);
+		int location = shader.fetchUniformLocation("u_joints", true);
+		Gdx.gl20.glUniform4fv(location, 0, getFloatBuffer(jquat));
 //		Gdx.gl20.glUniform3fv(location, jquat.length * 8, floatArray, 0);
 	}
 
@@ -87,7 +86,7 @@ public class Skeleton
 
 		if (idx > -1 && _animation != null)
 		{
-			_animation.lerpJoint(idx);
+			_animation.lerpJoint(cjoint, idx);
 			if (_animation.joint[idx] != null)
 			{
 				cjoint = cjoint.lerp(_animation.joint[idx], w);
@@ -105,7 +104,7 @@ public class Skeleton
 			{// || merge_anims.get(i).isStopped()) {
 				// удаляем анимации уже отыгравшие свое
 				Anim aa = merge_anims.get(i);
-				Log.debug("merge anim remove: " + aa.name + " prev=" + aa.FramePrev + " next=" + aa.FrameNext + " start=" + aa.FrameStart);
+				Log.debug("merge anim remove: " + aa.name + " prev=" + aa._framePrev + " next=" + aa._frameNext + " start=" + aa._frameStart);
 				merge_anims.remove(i);
 			}
 			else

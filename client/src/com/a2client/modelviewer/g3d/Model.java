@@ -181,6 +181,7 @@ public class Model
 
 	public void update()
 	{
+		// todo
 		if (_animation != null)
 		{
 			_animation.update();
@@ -190,7 +191,9 @@ public class Model
 	// todo del
 	public void play()
 	{
-		AnimationData animationData = _data.getAnimation("run");
+//		AnimationData animationData = _data.getAnimation("run");
+//		AnimationData animationData = _data.getAnimation("arms_up");
+		AnimationData animationData = _data.getAnimation("signal1");
 		_animation = new Animation(animationData);
 		_animation.play();
 

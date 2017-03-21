@@ -139,7 +139,7 @@ public class ModelData
 
 			meshCount--;
 		}
-		_log.debug("total tri couunt: " + _totalTriCount + " in " + tmpList.size() + " mesh]");
+		_log.debug("total tri count: " + _totalTriCount + " in " + tmpList.size() + " mesh");
 
 		// если группы для этой модели есть. надо их сформировать
 		if (_desc.meshgroups != null)

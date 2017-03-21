@@ -27,7 +27,11 @@ public class AnimationLoader
 			for (int j = 0; j < jointsCount; j++)
 			{
 				// flag no diff in transform
-				if (in.readByte() == 0) continue;
+				if (in.readByte() == 0)
+				{
+//					frames[i][j] = new DualQuat(new Quat(0, 0, 0, 1f), new Vec3f(0, 0, 0));
+					continue;
+				}
 				jointDiffCounter++;
 				int index = in.readWord();
 				if (index >= jointsCount)
@@ -41,7 +45,7 @@ public class AnimationLoader
 					rot = rot.mul(-1f);
 				}
 				Vec3f pos = m.getPos();
-				frames[i][index] = new DualQuat(rot, pos);
+				frames[i][j] = new DualQuat(rot, pos);
 			}
 //			System.out.println("frame [" + i + "] jointDiffCounter = " + jointDiffCounter);
 		}

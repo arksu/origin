@@ -2,7 +2,6 @@ package com.a2client.modelviewer;
 
 import com.a2client.Input;
 import com.a2client.gui.GUIGDX;
-import com.a2client.modelviewer.g3d.Animation;
 import com.a2client.modelviewer.g3d.Model;
 import com.a2client.modelviewer.g3d.ModelData;
 import com.a2client.render.GameCamera;
@@ -139,11 +138,6 @@ public class ViewScreen extends BaseScreen
 		if (Input.KeyHit(Keys.SPACE))
 		{
 			_isRotate = !_isRotate;
-		}
-
-		if (Input.KeyHit(Keys.L))
-		{
-			Animation.LERP = !Animation.LERP;
 		}
 
 		if (_isRotate)
