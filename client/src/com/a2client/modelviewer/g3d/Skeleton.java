@@ -39,11 +39,11 @@ public class Skeleton
 			jquat[i] = _joint[i].mul(_data.getJoints()[i].getBind());
 		}
 
-		FloatBuffer jquatFloatBuffer = getFloatBuffer(jquat);
+//		FloatBuffer jquatFloatBuffer = getFloatBuffer(jquat);
 		float[] floatArray = getFloatArray(jquat);
 
 		String name = "u_joints";
-		int location = shader.fetchUniformLocation(name, true);
+//		int location = shader.fetchUniformLocation(name, true);
 		shader.setUniform4fv(name, floatArray, 0, floatArray.length);
 
 //		shader.setUniform4fv("u_joints[0]", new float[]{1, 0.5f, 0, 0}, 0, 4);
@@ -167,7 +167,6 @@ public class Skeleton
 					  put(dq.dual.w);
 		}
 		fb.flip();
-//		fb.position(0);
 		return fb;
 	}
 

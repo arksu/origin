@@ -56,7 +56,7 @@ public class ModelData
 	 */
 	private final String _name;
 
-	private SkeletonData _skeleton;
+	private SkeletonData _skeletonData;
 
 	private final Map<String, AnimationData> _animations = new HashMap<>();
 
@@ -104,12 +104,12 @@ public class ModelData
 
 	private void loadSkeleton(MyInputStream in) throws IOException
 	{
-		_skeleton = SkeletonLoader.load(in);
+		_skeletonData = SkeletonLoader.load(in);
 	}
 
 	private void loadAnimation(MyInputStream in) throws IOException
 	{
-		AnimationData data = AnimationLoader.load(in, _skeleton);
+		AnimationData data = AnimationLoader.load(in, _skeletonData);
 		_log.debug("loaded anim: " + data.getName());
 		_animations.put(data.getName(), data);
 	}
@@ -254,7 +254,7 @@ public class ModelData
 
 	public SkeletonData getSkeletonData()
 	{
-		return _skeleton;
+		return _skeletonData;
 	}
 
 	public AnimationData getAnimation(String name)

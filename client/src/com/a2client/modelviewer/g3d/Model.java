@@ -24,13 +24,15 @@ public class Model
 
 	private Skeleton _skeleton;
 
+	private Animation _animation;
+
 	/**
 	 * положение относительно родителя
 	 */
 	private Matrix4 _localTransform = new Matrix4();
 
 	/**
-	 * абсолютное положение в мире, апдейтится на основе иерархии
+	 * абсолютное положение в мире, апдейтится на основе иерархии и _localTransform
 	 */
 	private Matrix4 _worldTransform = new Matrix4();
 
@@ -63,6 +65,10 @@ public class Model
 	public Model(ModelData data)
 	{
 		_data = data;
+		if (_data.getSkeletonData() != null)
+		{
+			_skeleton = new Skeleton(_data.getSkeletonData());
+		}
 	}
 
 	public void render(ModelBatch modelBatch)
@@ -173,4 +179,21 @@ public class Model
 		}
 	}
 
+	public void update()
+	{
+		if (_animation != null)
+		{
+			_animation.update();
+		}
+	}
+
+	// todo del
+	public void play()
+	{
+		AnimationData animationData = _data.getAnimation("run");
+		_animation = new Animation(animationData);
+		_animation.play();
+
+		_skeleton._animation = _animation;
+	}
 }

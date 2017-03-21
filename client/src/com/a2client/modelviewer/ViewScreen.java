@@ -97,6 +97,7 @@ public class ViewScreen extends BaseScreen
 //		{
 //			animation.play();
 //		}
+		_models.get(0).play();
 	}
 
 	@Override
@@ -156,6 +157,8 @@ public class ViewScreen extends BaseScreen
 //		tmp.scale(3, 3, 3);
 
 		_models.get(0).setTransform(tmp);
+
+		_models.get(0).update();
 
 //		Animation animation = _models.get(0).getData().getAnimation();
 //		if (animation != null)

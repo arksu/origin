@@ -3,8 +3,6 @@ package com.a2client.modelviewer.g3d;
 import com.a2client.modelviewer.g3d.math.DualQuat;
 import com.a2client.util.Utils;
 
-import java.io.IOException;
-
 /**
  * анимации скелета
  * Created by arksu on 19.03.17.
@@ -45,7 +43,7 @@ public class Animation
 
 	public static boolean LERP = true;
 
-	public Animation(AnimationData data) throws IOException
+	public Animation(AnimationData data)
 	{
 		_data = data;
 		joint = new DualQuat[_data.getSkeleton().getJointsCount()];
