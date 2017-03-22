@@ -175,9 +175,8 @@ public class ModelData
 			if (descMaterial == null)
 			{
 				ModelDesc.Material desc = new ModelDesc.Material();
-				desc.diffuse = _name + ".jpg";
+				desc.diffuse = _name + ".png";
 				_defaultMaterial = new Material(desc);
-//				throw new RuntimeException("no default material");
 			}
 			else
 			{

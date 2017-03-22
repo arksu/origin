@@ -1,65 +1,65 @@
 [
 	{
 		"typeId": 0,
-		"res": "assets/models/unknown.obj",
+		"model": "assets/models/unknown",
 		"scale": 0.5
 	},
 	{
 		// player
 		"typeId": 1,
-		"res": "assets/models/some.obj",
-//		"res": "assets/models/trex.obj",
-//		"res": "assets/models/Rabbit.obj",
-//		"res": "assets/models/stone.obj",
-//		"res": "assets/models/unknown.obj",
-//		"res": "assets/models/pine_tree_1.obj",
-//		"res": "assets/models/rabbit.g3dj",
+		"model": "assets/models/cube",
+//		"model": "assets/models/trex",
+//		"model": "assets/models/Rabbit",
+//		"model": "assets/models/stone",
+//		"model": "assets/models/unknown",
+//		"model": "assets/models/pine_tree_1",
+//		"model": "assets/models/rabbit.g3dj",
 		"scale": 1
 	},
 	{
 		"typeId": 2,
-		"res": "assets/models/fern.obj",
+		"model": "assets/models/fern",
 		"scale": 0.2
 	},
 	{
 		// appleTree
 		"typeId": 11,
 		"scale": 0.2,
-		"res": "assets/models/pine.obj"
+		"model": "assets/models/pine"
 	},
 	{
 		// stone
 		"typeId": 21,
 		"scale": 0.5,
-		"res": "assets/models/stone.obj"
+		"model": "assets/models/stone"
 	},
 	{
 		// stoneAxe
 		"typeId": 16,
 		"scale": 0.2,
-		"res": "assets/models/ship.obj"
+		"model": "assets/models/unknown"
 	},
 	{
 		// stoneKnife
 		"typeId": 17,
-		"res": "assets/models/ship.obj"
+		"model": "assets/models/unknown"
 	},
 	{
 		// apple
 		"typeId": 19,
 		"scale": 0.3,
-		"res": "assets/models/apple.obj"
+		"model": "assets/models/apple"
 	},
 	{
 		// board
 		"typeId": 20,
 		"scale": 0.5,
-		"res": "assets/models/board.obj"
+		"model": "assets/models/board"
 	},
 	{
 		// branch
 		"typeId": 22,
 		"scale": 0.1,
-		"res": "assets/models/branch.obj"
+		"model": "assets/models/branch"
 	}
 ]

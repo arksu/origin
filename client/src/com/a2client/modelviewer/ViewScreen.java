@@ -42,7 +42,7 @@ public class ViewScreen extends BaseScreen
 
 	//		private String MODEL_NAME = "rifle";
 //	private String MODEL_NAME = "handgun";
-	private String MODEL_NAME = "cube";
+	private String MODEL_NAME = "rabbit";
 //	private String MODEL_NAME = "untitled";
 
 	public ViewScreen()
@@ -216,7 +216,7 @@ public class ViewScreen extends BaseScreen
 		_shader.setUniformf("u_skyColor", Skybox.fogColor.r, Skybox.fogColor.g, Skybox.fogColor.b);
 		_shader.setUniformf("u_density", Skybox.fogEnabled ? Skybox.fogDensity : 0f);
 		_shader.setUniformf("u_gradient", Skybox.fogGradient);
-		_shader.setUniformf("u_lightPosition", new Vector3(1000, 1500, 100));
+		_shader.setUniformf("u_lightPosition", new Vector3(100, 1500, 100));
 
 		_shader.setUniformf("u_shadowDistance", -1);
 

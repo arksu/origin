@@ -1,0 +1,7 @@
+{
+	"material": {
+		"diffuse": "Rabbit_D.tga",
+		"normal": "Rabbit_N.tga",
+		"specular": "Rabbit_S.tga"
+	}
+}

@@ -194,9 +194,12 @@ public class Model
 //		AnimationData animationData = _data.getAnimation("run");
 //		AnimationData animationData = _data.getAnimation("arms_up");
 		AnimationData animationData = _data.getAnimation("signal1");
-		_animation = new Animation(animationData);
-		_animation.play();
+		if (animationData != null)
+		{
+			_animation = new Animation(animationData);
+			_animation.play();
 
-		_skeleton._animation = _animation;
+			_skeleton._animation = _animation;
+		}
 	}
 }

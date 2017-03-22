@@ -55,7 +55,7 @@ void main() {
 		rSpecular.xyz *= rTexN.x;
 	}
 
-	float intensity = max(rVdotN, 0.45);
+	float intensity = max(rVdotN, 0.35);
 //	float intensity = max(NdotL, 0.45);
 //    outColor = intensity * texture(u_texture, texCoords);
     outColor = intensity * texture(u_texture, texCoords);
