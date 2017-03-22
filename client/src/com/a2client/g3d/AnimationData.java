@@ -1,6 +1,6 @@
-package com.a2client.modelviewer.g3d;
+package com.a2client.g3d;
 
-import com.a2client.modelviewer.g3d.math.DualQuat;
+import com.a2client.g3d.math.DualQuat;
 
 /**
  * исходные данные анимации (кадры)

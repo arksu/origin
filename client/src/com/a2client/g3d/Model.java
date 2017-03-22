@@ -1,5 +1,6 @@
-package com.a2client.modelviewer.g3d;
+package com.a2client.g3d;
 
+import com.a2client.Main;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -26,7 +27,19 @@ public class Model
 	private Animation _animation;
 
 	/**
-	 * положение относительно родителя
+	 * поворот в градусах
+	 */
+	private float _heading;
+	private float _currentHeading;
+	private float _headingSpeed = 5f;
+
+	/**
+	 * положение в пространстве относителльно родителя
+	 */
+	private Vector3 _localPosition;
+
+	/**
+	 * положение относительно родителя (расчитывается из позиции и вращения)
 	 */
 	private Matrix4 _localTransform = new Matrix4();
 
@@ -131,26 +144,59 @@ public class Model
 		return _childs;
 	}
 
-	public void setTransform(Matrix4 transform)
-	{
-		_localTransform = transform.cpy();
-		updateWorldTransform();
-	}
+//	public void setTransform(Matrix4 transform)
+//	{
+//		_localTransform = transform.cpy();
+//		updateWorldTransform();
+//	}
 
 	public Matrix4 getTransform()
 	{
 		return _localTransform;
 	}
 
+	public float getHeading()
+	{
+		return _heading;
+	}
+
+	public void setHeading(float heading, boolean force)
+	{
+		_heading = heading;
+		while (_heading > 180)
+		{
+			_heading -= 360;
+		}
+		while (_heading < -180)
+		{
+			_heading += 360;
+		}
+
+		if (force)
+		{
+			_currentHeading = _heading;
+		}
+		_localTransform.idt();
+		_localTransform.setToRotation(0, 1, 0, _currentHeading);
+		_localTransform.setTranslation(_localPosition);
+		updateWorldTransform();
+	}
+
 	public void setPos(Vector3 position)
 	{
-		_localTransform.setTranslation(position);
+		_localPosition = position.cpy();
+		_localTransform.idt();
+		_localTransform.setToRotation(0, 1, 0, _currentHeading);
+		_localTransform.setTranslation(_localPosition);
 		updateWorldTransform();
 	}
 
 	public void setPos(float x, float y, float z)
 	{
-		_localTransform.setTranslation(x, y, z);
+		_localPosition = new Vector3(x, y, z);
+		_localTransform.idt();
+		_localTransform.setToRotation(0, 1, 0, _currentHeading);
+		_localTransform.setTranslation(_localPosition);
 		updateWorldTransform();
 	}
 
@@ -169,6 +215,7 @@ public class Model
 		{
 			_worldTransform.set(_parent._worldTransform).mul(_localTransform);
 		}
+		_worldTransform.scale(0.4f, 0.4f, 0.4f);
 		updateBoundingBox();
 
 		if (_childs != null)
@@ -203,14 +250,53 @@ public class Model
 		{
 			_animation.update();
 		}
+
+		if (_currentHeading != _heading)
+		{
+			float a = _heading;
+
+			if (_currentHeading < -90 && a > 90)
+			{
+				a -= 360;
+			}
+
+			if (_currentHeading > 90 && a < -90)
+			{
+				a += 360;
+			}
+
+			float dx = a - _currentHeading;
+			if (Math.abs(dx) < 0.01f)
+			{
+				_currentHeading = _heading;
+			}
+			else
+			{
+				_currentHeading += dx * (Main.deltaTime * _headingSpeed);
+			}
+
+			while (_currentHeading > 180)
+			{
+				_currentHeading -= 360;
+			}
+			while (_currentHeading < -180)
+			{
+				_currentHeading += 360;
+			}
+
+			_localTransform.idt();
+			_localTransform.setToRotation(0, 1, 0, _currentHeading);
+			_localTransform.setTranslation(_localPosition);
+			updateWorldTransform();
+		}
 	}
 
 	// todo del
 	public void play()
 	{
-//		AnimationData animationData = _data.getAnimation("run");
+		AnimationData animationData = _data.getAnimation("run");
 //		AnimationData animationData = _data.getAnimation("arms_up");
-		AnimationData animationData = _data.getAnimation("signal1");
+//		AnimationData animationData = _data.getAnimation("signal1");
 		if (animationData != null)
 		{
 			_animation = new Animation(animationData);

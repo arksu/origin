@@ -5,8 +5,8 @@ import com.a2client.ObjectCache;
 import com.a2client.Player;
 import com.a2client.Terrain;
 import com.a2client.model.GameObject;
-import com.a2client.modelviewer.g3d.Model;
-import com.a2client.modelviewer.g3d.ModelBatch;
+import com.a2client.g3d.Model;
+import com.a2client.g3d.ModelBatch;
 import com.a2client.render.postprocess.OutlineEffect;
 import com.a2client.render.postprocess.PostProcess;
 import com.a2client.render.shadows.Shadow;
@@ -61,7 +61,6 @@ public class Render
 	private Game _game;
 	private Environment _environment;
 
-	private ShaderProgram _modelShader;
 	private ModelBatch _modelBatch;
 
 	private Terrain _terrain;
@@ -79,7 +78,9 @@ public class Render
 	private float _selectedDist;
 
 	private FrameBuffer _frameBuffer;
+	private ShaderProgram _modelShader;
 	private ShaderProgram _shadowShader;
+	private ShaderProgram _defaultShader;
 
 	private Mesh fullScreenQuad;
 	private Mesh testQuad1;
@@ -98,7 +99,8 @@ public class Render
 		_environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 		_environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
-		_modelShader = makeShader("modelView");
+		_defaultShader = makeShader("modelView");
+		_modelShader = _defaultShader;
 		_modelBatch = new ModelBatch();
 
 		_skybox = new Skybox();
@@ -154,7 +156,9 @@ public class Render
 			Gdx.gl.glCullFace(GL20.GL_BACK);
 
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+			_modelShader = _shadowShader;
 			renderObjects(camera, false);
+			_modelShader = _defaultShader;
 
 			_shadow.getFrameBuffer().end();
 

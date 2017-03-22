@@ -1,6 +1,6 @@
-package com.a2client.modelviewer.g3d;
+package com.a2client.g3d;
 
-import com.a2client.modelviewer.g3d.math.DualQuat;
+import com.a2client.g3d.math.DualQuat;
 import com.a2client.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -197,7 +197,7 @@ public class Animation
 
 	public void play()
 	{
-		play(1, 0, LoopMode.PingPong);
+		play(1, 0, LoopMode.Repeat);
 	}
 
 	public void play(float blendWeight, float blendTime, LoopMode loopMode)

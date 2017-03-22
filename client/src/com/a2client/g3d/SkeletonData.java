@@ -1,4 +1,4 @@
-package com.a2client.modelviewer.g3d;
+package com.a2client.g3d;
 
 /**
  * Created by arksu on 20.03.17.

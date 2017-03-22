@@ -154,7 +154,7 @@ public class Config
 	/**
 	 * отрисовывать тени?
 	 */
-	public boolean _renderShadows = false;
+	public boolean _renderShadows = true;
 
 	/**
 	 * пост процессинг финального кадра

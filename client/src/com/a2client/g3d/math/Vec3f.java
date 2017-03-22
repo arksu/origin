@@ -15,10 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.a2client.modelviewer.g3d.math;
+package com.a2client.g3d.math;
 
-import com.a2client.modelviewer.g3d.Const;
-import com.a2client.modelviewer.g3d.MyInputStream;
+import com.a2client.g3d.Const;
+import com.a2client.g3d.MyInputStream;
 import com.a2client.util.Utils;
 
 import java.io.IOException;

@@ -21,6 +21,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Utils
 {
@@ -275,5 +277,13 @@ public class Utils
 		float l2 = ((p3.z - p1.z) * (pos.x - p3.x) + (p1.x - p3.x) * (pos.y - p3.z)) / det;
 		float l3 = 1.0f - l1 - l2;
 		return l1 * p1.y + l2 * p2.y + l3 * p3.y;
+	}
+
+	/**
+	 * округление до двух знаков после запятой
+	 */
+	public static double round2(double d)
+	{
+		return new BigDecimal(d).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 }

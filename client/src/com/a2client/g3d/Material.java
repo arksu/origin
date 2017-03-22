@@ -1,4 +1,4 @@
-package com.a2client.modelviewer.g3d;
+package com.a2client.g3d;
 
 import com.a2client.Config;
 import com.a2client.Main;

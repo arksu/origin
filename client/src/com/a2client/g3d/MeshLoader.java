@@ -1,4 +1,4 @@
-package com.a2client.modelviewer.g3d;
+package com.a2client.g3d;
 
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;

@@ -1,9 +1,9 @@
-package com.a2client.modelviewer.g3d;
+package com.a2client.g3d;
 
-import com.a2client.modelviewer.g3d.math.DualQuat;
-import com.a2client.modelviewer.g3d.math.Mat4f;
-import com.a2client.modelviewer.g3d.math.Quat;
-import com.a2client.modelviewer.g3d.math.Vec3f;
+import com.a2client.g3d.math.DualQuat;
+import com.a2client.g3d.math.Mat4f;
+import com.a2client.g3d.math.Quat;
+import com.a2client.g3d.math.Vec3f;
 
 import java.io.IOException;
 

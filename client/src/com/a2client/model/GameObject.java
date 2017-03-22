@@ -2,12 +2,10 @@ package com.a2client.model;
 
 import com.a2client.ModelManager;
 import com.a2client.Terrain;
-import com.a2client.modelviewer.g3d.Model;
+import com.a2client.g3d.Model;
 import com.a2client.network.game.serverpackets.ObjectAdd;
 import com.a2client.util.Utils;
 import com.a2client.util.Vec2i;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -33,8 +31,6 @@ public class GameObject
 	private Mover _mover = null;
 
 	private Model _model = null;
-
-	private AnimationController _animation = null;
 
 	private boolean _needInit = true;
 
@@ -118,19 +114,6 @@ public class GameObject
 		_interactive = interactive;
 	}
 
-	public void setAnimation(String id)
-	{
-		setAnimation(id, -1);
-	}
-
-	public void setAnimation(String id, int loop)
-	{
-		if (_animation != null)
-		{
-			_animation.setAnimation(id, loop);
-		}
-	}
-
 	public boolean isInteractive()
 	{
 		return _interactive;
@@ -174,10 +157,7 @@ public class GameObject
 			initModel();
 		}
 
-		if (_animation != null)
-		{
-			_animation.update(Gdx.graphics.getDeltaTime());
-		}
+		_model.update();
 
 		if (_mover != null)
 		{
@@ -185,7 +165,6 @@ public class GameObject
 			if (_mover._arrived)
 			{
 				_mover = null;
-				setAnimation(null);
 			}
 		}
 	}
@@ -196,6 +175,10 @@ public class GameObject
 		if (_model != null)
 		{
 			updateCoord();
+
+			if (_typeId == 1) {
+				_model.play();
+			}
 		}
 	}
 

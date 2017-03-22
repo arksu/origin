@@ -1,7 +1,7 @@
-package com.a2client.modelviewer.g3d.math;
+package com.a2client.g3d.math;
 
-import com.a2client.modelviewer.g3d.MyInputStream;
-import com.a2client.modelviewer.g3d.Const;
+import com.a2client.g3d.MyInputStream;
+import com.a2client.g3d.Const;
 import com.badlogic.gdx.math.Quaternion;
 
 import java.io.IOException;

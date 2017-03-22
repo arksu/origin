@@ -1,7 +1,7 @@
 package com.a2client;
 
-import com.a2client.modelviewer.g3d.Model;
-import com.a2client.modelviewer.g3d.ModelData;
+import com.a2client.g3d.Model;
+import com.a2client.g3d.ModelData;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.TimeUtils;

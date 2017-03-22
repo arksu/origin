@@ -1,6 +1,6 @@
-package com.a2client.modelviewer.g3d.math;
+package com.a2client.g3d.math;
 
-import com.a2client.modelviewer.g3d.MyInputStream;
+import com.a2client.g3d.MyInputStream;
 import com.badlogic.gdx.math.Vector3;
 
 public class DualQuat

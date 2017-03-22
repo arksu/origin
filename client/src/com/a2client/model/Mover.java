@@ -126,6 +126,8 @@ public class Mover
 			Vector2 dv = new Vector2(_end).sub(_start);
 			_current = new Vector2((float) ((dv.x / d) * _len), (float) ((dv.y / d) * _len));
 			_current.add(_start);
+			float angle = -_end.cpy().sub(_current).angle() - 90f;
+			_object.getModel().setHeading(angle, false);
 		}
 
 //        _log.info("dt= " + dt + " cur=" + _current.toString() + " cur_len=" + _len + " speed=" + _speed);

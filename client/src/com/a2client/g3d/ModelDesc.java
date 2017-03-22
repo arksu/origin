@@ -1,4 +1,4 @@
-package com.a2client.modelviewer.g3d;
+package com.a2client.g3d;
 
 import java.util.List;
 import java.util.Map;

@@ -1,10 +1,10 @@
 package com.a2client.modelviewer;
 
 import com.a2client.Input;
+import com.a2client.g3d.Model;
+import com.a2client.g3d.ModelBatch;
+import com.a2client.g3d.ModelData;
 import com.a2client.gui.GUIGDX;
-import com.a2client.modelviewer.g3d.Model;
-import com.a2client.modelviewer.g3d.ModelBatch;
-import com.a2client.modelviewer.g3d.ModelData;
 import com.a2client.render.GameCamera;
 import com.a2client.render.skybox.Skybox;
 import com.a2client.screens.BaseScreen;
@@ -39,7 +39,7 @@ public class ViewScreen extends BaseScreen
 	private boolean[] _oldMouseButtons = new boolean[3];
 	private float _rotateAngle = 0f;
 	private boolean _isRotate = true;
-	private float _yOffset = -5;
+	private float _yOffset = 0;
 
 	//		private String MODEL_NAME = "rifle";
 //	private String MODEL_NAME = "handgun";
@@ -143,7 +143,7 @@ public class ViewScreen extends BaseScreen
 
 		if (_isRotate)
 		{
-			_rotateAngle += 60 * ModelViewer.deltaTime;
+			_rotateAngle += 50 * ModelViewer.deltaTime;
 		}
 
 		Matrix4 tmp = new Matrix4();
@@ -151,7 +151,8 @@ public class ViewScreen extends BaseScreen
 		tmp.rotate(0, 1, 0, _rotateAngle);
 //		tmp.scale(3, 3, 3);
 
-		_models.get(0).setTransform(tmp);
+		_models.get(0).setPos(0, _yOffset, 0);
+		_models.get(0).setHeading(_rotateAngle, true);
 
 		_models.get(0).update();
 

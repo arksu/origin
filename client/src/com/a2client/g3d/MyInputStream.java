@@ -15,10 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.a2client.modelviewer.g3d;
+package com.a2client.g3d;
 
 import com.a2client.Config;
-import com.a2client.modelviewer.g3d.math.Mat4f;
+import com.a2client.g3d.math.Mat4f;
 import com.badlogic.gdx.Gdx;
 
 import java.io.*;
@@ -51,7 +51,7 @@ public class MyInputStream extends DataInputStream
 		return new String(blob, "US-ASCII");
 	}
 
-	public com.a2client.modelviewer.g3d.math.Mat4f readBlenderMat4f() throws IOException
+	public Mat4f readBlenderMat4f() throws IOException
 	{
 		// matrix for convert
 		Mat4f ZM = new Mat4f();
@@ -72,7 +72,7 @@ public class MyInputStream extends DataInputStream
 		ZM.e23 = 0;
 		ZM.e33 = 1;
 
-		com.a2client.modelviewer.g3d.math.Mat4f m = new Mat4f();
+		Mat4f m = new Mat4f();
 		m.e00 = readFloat();
 		m.e10 = readFloat();
 		m.e20 = readFloat();
