@@ -1,7 +1,5 @@
-package com.a2client.modelviewer;
+package com.a2client.modelviewer.g3d;
 
-import com.a2client.modelviewer.g3d.Material;
-import com.a2client.modelviewer.g3d.Model;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -93,13 +91,19 @@ public class ModelBatch
 		_renderedCounter = 0;
 	}
 
-	public void render(Model model)
+	/**
+	 * поставить модель в очередь отрисовки
+	 * @return истина если модель реально будет отрисована (попадает в поле зрение камеры)
+	 */
+	public boolean render(Model model)
 	{
+		boolean result = false;
 		// если объект попадает в поле зрения камеры - отрендерим его
 		if (_camera.frustum.boundsInFrustum(model.getBoundingBox()))
 		{
 			_renderables.add(model);
 			_renderedCounter++;
+			result = true;
 		}
 
 		// пройдем по всем подчиненным объектам
@@ -111,6 +115,7 @@ public class ModelBatch
 				render(child);
 			}
 		}
+		return result;
 	}
 
 	public void end()

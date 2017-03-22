@@ -37,6 +37,7 @@ out vec3 v_viewVec;
 out vec3 v_normal;
 out vec3 v_binormal;
 out vec3 v_tangent;
+out float v_depth;
 
 out float NdotL;
 
@@ -103,9 +104,10 @@ void main() {
     }
 
     vec3 lightPos = u_lightPosition;
-    lightPos = (vec4(lightPos, 1) * u_worldTrans).xyz;
+//    lightPos = (vec4(lightPos, 1) * u_worldTrans).xyz;
     vec3 lightDir = normalize(lightPos);
-    NdotL = max(dot(normal, lightDir), 0.0);
+//    NdotL = max(dot(normal, lightDir), 0.0);
+    v_viewVec = lightDir;
 
     float distance = length(u_cameraPosition.xyz - worldPosition.xyz);
     visibility = exp(-pow((distance * u_density), u_gradient));
@@ -113,4 +115,8 @@ void main() {
     gl_Position = u_projViewTrans * vec4(worldPosition, 1.0);
 
     texCoords = a_texCoord0;
+
+    float z = -gl_Position.z-1;
+	z /= 1900;
+	v_depth = (z);
 }

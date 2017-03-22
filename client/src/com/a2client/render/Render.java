@@ -1,7 +1,12 @@
 package com.a2client.render;
 
-import com.a2client.*;
+import com.a2client.Config;
+import com.a2client.ObjectCache;
+import com.a2client.Player;
+import com.a2client.Terrain;
 import com.a2client.model.GameObject;
+import com.a2client.modelviewer.g3d.Model;
+import com.a2client.modelviewer.g3d.ModelBatch;
 import com.a2client.render.postprocess.OutlineEffect;
 import com.a2client.render.postprocess.PostProcess;
 import com.a2client.render.shadows.Shadow;
@@ -12,8 +17,6 @@ import com.a2client.screens.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
@@ -58,6 +61,7 @@ public class Render
 	private Game _game;
 	private Environment _environment;
 
+	private ShaderProgram _modelShader;
 	private ModelBatch _modelBatch;
 
 	private Terrain _terrain;
@@ -73,17 +77,15 @@ public class Render
 	private GameObject _oldSelected;
 
 	private float _selectedDist;
-	private int _renderedObjects;
 
 	private FrameBuffer _frameBuffer;
-	private ModelBatch _simpleModelBatch;
 	private ShaderProgram _shadowShader;
 
 	private Mesh fullScreenQuad;
 	private Mesh testQuad1;
 	private Mesh testQuad2;
 
-	ModelInstance _testModel;
+//	ModelInstance _testModel;
 
 	public static Matrix4 toShadowMapSpace;
 
@@ -96,8 +98,8 @@ public class Render
 		_environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 		_environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
-		_simpleModelBatch = new ModelBatch(new ModelShaderProvider());
-		_modelBatch = _simpleModelBatch;
+		_modelShader = makeShader("modelView");
+		_modelBatch = new ModelBatch();
 
 		_skybox = new Skybox();
 		_terrain = new Terrain(this);
@@ -120,7 +122,7 @@ public class Render
 		testQuad1 = createTestQuad(0.7f, -1, 0.3f);
 		testQuad2 = createTestQuad(0.7f, 0, 0.3f);
 
-		_testModel = ModelManager.getInstance().getModelByType(2);
+//		_testModel = ModelManager.getInstance().getModelByType(2);
 
 		Icosahedron.init();
 	}
@@ -139,7 +141,8 @@ public class Render
 			{
 				_shadow = new Shadow(_game.getCamera(), this);
 			}
-			_modelBatch = _shadow.getModelBatch();
+			// todo
+//			_modelBatch = _shadow.getModelBatch();
 			_terrain._shader = getShadowShader();
 
 			_shadow.update();
@@ -164,7 +167,7 @@ public class Render
 			Gdx.gl.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		}
 
-		_modelBatch = _simpleModelBatch;
+//		_modelBatch = _simpleModelBatch;
 		_terrain._shader = _terrain._shaderTerrain;
 
 		// WATER 1 REFLECTION ==========================================================================================
@@ -296,7 +299,6 @@ public class Render
 
 	protected void renderObjects(Camera camera, boolean findIntersect)
 	{
-		_renderedObjects = 0;
 		if (ObjectCache.getInstance() != null)
 		{
 			// ????
@@ -308,16 +310,15 @@ public class Render
 				_selected = null;
 				_selectedDist = 100500;
 			}
-			_modelBatch.begin(camera);
+			_modelBatch.begin(camera, _modelShader);
+			prepareModelShader(camera);
 			for (GameObject o : ObjectCache.getInstance().getObjects())
 			{
-				ModelInstance model = o.getModel();
+				Model model = o.getModel();
 				// если объект попадает в поле зрения камеры
-				if (model != null && camera.frustum.boundsInFrustum(o.getBoundingBox()))
+				if (_modelBatch.render(model))
 				{
-					model.userData = o == _oldSelected && o.getObjectId() != Player.getInstance().getObjectId() && findIntersect ? Boolean.TRUE : Boolean.FALSE;
-					_modelBatch.render(model, _environment);
-					_renderedObjects++;
+					model.setUserData(o == _oldSelected && o.getObjectId() != Player.getInstance().getObjectId() && findIntersect ? Boolean.TRUE : Boolean.FALSE);
 
 					// найдем текущий выбранный объект (в который попадает мышь)
 					// попадает ли луч из мыши в объект?
@@ -325,7 +326,7 @@ public class Render
 					{
 						Vector3 intersection = new Vector3();
 						if (Intersector.intersectRayBounds(_game.getCamera().getRay(), o.getBoundingBox(),
-						                                   intersection))
+						                                    intersection))
 						{
 							// дистанция до объекта
 							float dist = intersection.dst(camera.position);
@@ -340,6 +341,8 @@ public class Render
 				}
 			}
 			_modelBatch.end();
+			Gdx.gl.glDisable(GL20.GL_CULL_FACE);
+			Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
 		}
 	}
 
@@ -453,7 +456,7 @@ public class Render
 
 	public int getRenderedObjects()
 	{
-		return _renderedObjects;
+		return _modelBatch.getRenderedCounter();
 	}
 
 	public WaterFrameBuffers getWaterFrameBuffers()
@@ -494,5 +497,30 @@ public class Render
 	{
 		_postProcess.dispose();
 		if (_frameBuffer != null) _frameBuffer.dispose();
+	}
+
+	private void prepareModelShader(Camera camera)
+	{
+		_modelShader.setUniformMatrix("u_projTrans", camera.projection);
+		_modelShader.setUniformMatrix("u_viewTrans", camera.view);
+		_modelShader.setUniformMatrix("u_projViewTrans", camera.combined);
+
+		_modelShader.setUniformf("ucameraPosition", camera.position.x, camera.position.y, camera.position.z,
+		                         1.1881f / (camera.far * camera.far));
+		_modelShader.setUniformf("ucameraDirection", camera.direction);
+
+		_modelShader.setUniformf("u_ambient", Color.WHITE);
+
+		_modelShader.setUniformf("u_skyColor", Skybox.fogColor.r, Skybox.fogColor.g, Skybox.fogColor.b);
+		_modelShader.setUniformf("u_density", Skybox.fogEnabled ? Skybox.fogDensity : 0f);
+		_modelShader.setUniformf("u_gradient", Skybox.fogGradient);
+//		_modelShader.setUniformf("u_lightPosition", new Vector3(1000, 1500, 100));
+		_modelShader.setUniformf("u_lightPosition", Skybox.sunPosition);
+
+		_modelShader.setUniformf("u_shadowDistance", -1);
+
+		_modelShader.setUniformi("u_texture", 0);
+		_modelShader.setUniformi("u_textureNormal", 1);
+		_modelShader.setUniformi("u_textureSpecular", 2);
 	}
 }

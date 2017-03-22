@@ -7,7 +7,6 @@ import com.a2client.network.game.serverpackets.ObjectAdd;
 import com.a2client.util.Utils;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -32,15 +31,12 @@ public class GameObject
 	private String _title;
 	private boolean _interactive;
 	private Mover _mover = null;
-	private BoundingBox _modelBoundingBox;
-	private BoundingBox _boundingBox;
 
-	private ModelInstance _model = null;
-	private Model _modelNew = null;
+	private Model _model = null;
 
 	private AnimationController _animation = null;
 
-	private boolean _needUpdate = true;
+	private boolean _needInit = true;
 
 	private Vector3 _worldCoord;
 
@@ -53,9 +49,6 @@ public class GameObject
 		_objectId = pkt._objectId;
 		_typeId = pkt._typeId;
 		_interactive = false;
-		_modelBoundingBox = new BoundingBox(new Vector3(-1, 0, -1),
-											new Vector3(+1, 1, +1));
-		_boundingBox = new BoundingBox();
 	}
 
 	public int getObjectId()
@@ -85,10 +78,10 @@ public class GameObject
 
 	public BoundingBox getBoundingBox()
 	{
-		return _boundingBox;
+		return _model.getBoundingBox();
 	}
 
-	public ModelInstance getModel()
+	public Model getModel()
 	{
 		return _model;
 	}
@@ -97,7 +90,7 @@ public class GameObject
 	{
 		_coord.x = x;
 		_coord.y = y;
-		updateWorldCoord();
+		updateCoord();
 	}
 
 	public void setCoord(Vec2i c)
@@ -175,14 +168,11 @@ public class GameObject
 
 	public void update()
 	{
-		if (_needUpdate)
+		if (_needInit)
 		{
-			_needUpdate = false;
+			_needInit = false;
 			initModel();
-
 		}
-
-		ModelManager.getInstance().updateModelTime(_typeId);
 
 		if (_animation != null)
 		{
@@ -205,36 +195,22 @@ public class GameObject
 		_model = ModelManager.getInstance().getModelByType(_typeId);
 		if (_model != null)
 		{
-			updateCoordAndBB();
-
-			if (_model.animations.size > 0)
-			{
-				_animation = new AnimationController(_model);
-			}
+			updateCoord();
 		}
 	}
 
-	public void updateCoordAndBB()
+	public void updateCoord()
 	{
 		updateWorldCoord();
-
-		_model.transform.setTranslation(_worldCoord);
-		_model.model.calculateBoundingBox(_modelBoundingBox);
-		ModelManager.ModelDesc desc = ModelManager.getInstance().getDescByType(_typeId);
-
-		_modelBoundingBox.min.scl(desc._scale);
-		_modelBoundingBox.max.scl(desc._scale);
-
-		_boundingBox.min.set(_worldCoord).add(_modelBoundingBox.min);
-		_boundingBox.max.set(_worldCoord).add(_modelBoundingBox.max);
+		_model.setPos(_worldCoord);
 	}
 
 	@Override
 	public String toString()
 	{
 		return "("
-			   + (!Utils.isEmpty(_name) ? "\"" + _name + "\" " : "")
-			   + "id=" + _objectId
-			   + " type=" + _typeId + ")";
+		       + (!Utils.isEmpty(_name) ? "\"" + _name + "\" " : "")
+		       + "id=" + _objectId
+		       + " type=" + _typeId + ")";
 	}
 }

@@ -130,6 +130,6 @@ public class Mover
 
 //        _log.info("dt= " + dt + " cur=" + _current.toString() + " cur_len=" + _len + " speed=" + _speed);
 		_object.setCoord(_current);
-		_object.updateCoordAndBB();
+		_object.updateCoord();
 	}
 }

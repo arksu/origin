@@ -3,6 +3,7 @@ package com.a2client.modelviewer;
 import com.a2client.Input;
 import com.a2client.gui.GUIGDX;
 import com.a2client.modelviewer.g3d.Model;
+import com.a2client.modelviewer.g3d.ModelBatch;
 import com.a2client.modelviewer.g3d.ModelData;
 import com.a2client.render.GameCamera;
 import com.a2client.render.skybox.Skybox;
@@ -202,10 +203,6 @@ public class ViewScreen extends BaseScreen
 		_shader.setUniformMatrix("u_projTrans", _gameCamera.projection);
 		_shader.setUniformMatrix("u_viewTrans", _gameCamera.view);
 		_shader.setUniformMatrix("u_projViewTrans", _gameCamera.combined);
-
-//		Matrix4 tmp = new Matrix4();
-//		tmp.set(_gameCamera.combined.cpy()).mul(new Matrix4().idt());
-//		_shader.setUniformMatrix("u_projViewWorldTrans", tmp);
 
 		_shader.setUniformf("u_cameraPosition", _gameCamera.position.x, _gameCamera.position.y, _gameCamera.position.z,
 		                    1.1881f / (_gameCamera.far * _gameCamera.far));

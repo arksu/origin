@@ -1,6 +1,6 @@
 //layout (location = 0)
 out vec4 outColor;
-//layout (location = 1) out vec4 outColor2;
+layout (location = 1) out vec4 fragColor2;
 
 uniform sampler2D u_texture;
 uniform sampler2D u_textureNormal;
@@ -9,6 +9,7 @@ uniform sampler2D u_textureSpecular;
 uniform vec4 u_ambient;
 uniform vec3 u_skyColor;
 uniform sampler2D u_shadowMap;
+uniform int u_selected;
 
 //uniform vec4 u_joints[128];
 
@@ -26,7 +27,7 @@ in vec3 v_normal;
 in vec3 v_binormal;
 in vec3 v_tangent;
 
-
+in float v_depth;
 
 const float numShades = 16.0;
 
@@ -34,6 +35,20 @@ const int pcfCount = 1;
 const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
 const float shadowMapSize = 2048.0;
 const float texelSize = 1.0 / shadowMapSize;
+
+vec4 pack_depth(const in float depth){
+    const vec4 bit_shift =
+        vec4(256.0*256.0*256.0, 256.0*256.0, 256.0, 1.0);
+    const vec4 bit_mask  =
+        vec4(0.0, 1.0/256.0, 1.0/256.0, 1.0/256.0);
+    vec4 res = fract(depth * bit_shift);
+    res -= res.xxyz * bit_mask;
+
+	res.x = clamp(res.x / 2.0, 0, 0.5);
+    if (u_selected == 1) res.x = res.x + 0.51;
+
+    return res;
+}
 
 void main() {
 
@@ -69,4 +84,6 @@ void main() {
 //    outColor2 = vec4(0);
 
 //	outColor = vec4(u_joints[0].x);
+
+	fragColor2 = pack_depth(v_depth);
 }

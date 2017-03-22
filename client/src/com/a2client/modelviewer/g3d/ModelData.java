@@ -1,7 +1,6 @@
 package com.a2client.modelviewer.g3d;
 
 import com.a2client.Config;
-import com.a2client.modelviewer.ModelBatch;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.math.Matrix4;

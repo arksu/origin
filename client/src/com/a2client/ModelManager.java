@@ -1,12 +1,10 @@
 package com.a2client;
 
+import com.a2client.modelviewer.g3d.Model;
+import com.a2client.modelviewer.g3d.ModelData;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.Timer;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import org.slf4j.Logger;
@@ -40,18 +38,14 @@ public class ModelManager
 
 	private ObjectMap<Integer, ModelDesc> _modelList = new ObjectMap<>();
 
-	private AssetManager _assetManager;
-
 	private long current_time = TimeUtils.millis();
 
 	public ModelManager()
 	{
-		_assetManager = Main.getAssetManager();
 		loadModelList();
-		Timer.schedule(new UpdateTimer(this), 0, 30);
 	}
 
-	public ModelInstance getModelByType(int typeId)
+	public Model getModelByType(int typeId)
 	{
 
 		ModelDesc desc = _modelList.get(typeId);
@@ -67,10 +61,7 @@ public class ModelManager
 			load(desc);
 		}
 
-		ModelInstance tmp = new ModelInstance(_assetManager.get(desc._resource, Model.class));
-		desc._lastUsage = TimeUtils.millis();
-		tmp.transform.scale(desc._scale, desc._scale, desc._scale);
-		return tmp;
+		return new Model(desc._modelData);
 	}
 
 	public ModelDesc getDescByType(int typeId)
@@ -83,67 +74,17 @@ public class ModelManager
 		return desc;
 	}
 
-	public void updateModelTime(int typeId)
-	{
-		ModelDesc meta = _modelList.get(typeId);
-
-		if (meta == null)
-		{
-			return;
-		}
-
-		meta._lastUsage = current_time;
-	}
-
-	public void update()
-	{
-		current_time = TimeUtils.millis();
-		long out_time = TimeUtils.millis() - MODEL_TIMEOUT;
-
-//		for (ModelDesc meta : _modelList.values())
-//		{
-//			if (meta._loaded && meta._lastUsage < out_time)
-//			{
-//				unload(meta);
-//			}
-//		}
-	}
-
 	private void load(ModelDesc desc)
 	{
-		if (!_assetManager.isLoaded(desc._resource))
+		if (desc._modelData == null)
 		{
-			_assetManager.load(desc._resource, Model.class);
-			_assetManager.finishLoadingAsset(desc._resource);
-			_log.debug("loaded model: " + desc._resource);
+			desc._modelData = new ModelData(desc._model);
+			_log.debug("loaded model: " + desc._model);
 		}
-//		ModelData model = _assetManager.get(desc._resource, ModelData.class);
-
-//		if (!_modelHitList.containsKey(model))
-//		{
-//			_modelHitList.put(model, new IntArray());
-//		}
-//		_modelHitList.get(model).add(desc._typeId);
 
 		desc._loaded = true;
 		desc._lastUsage = TimeUtils.millis();
 	}
-
-//	private void unload(ModelDesc desc)
-//	{
-//		ModelData model = _assetManager.get(desc._resource, ModelData.class);
-//
-//		IntArray hitArray = _modelHitList.get(model);
-//		hitArray.removeValue(desc._typeId);
-//		if (hitArray.size == 0)
-//		{
-//			_log.debug("unLoad model: " + desc._resource);
-//			_assetManager.unload(desc._resource);
-//			_modelHitList.remove(model);
-//		}
-//		desc._loaded = false;
-//		desc._lastUsage = 0;
-//	}
 
 	public void loadModelList()
 	{
@@ -160,8 +101,8 @@ public class ModelManager
 		catch (FileNotFoundException e)
 		{
 			_log.error("objects config not found", e);
+			System.exit(-1);
 		}
-
 	}
 
 	public static class ModelDesc
@@ -172,27 +113,12 @@ public class ModelManager
 		@SerializedName("typeId")
 		public int _typeId;
 
-		@SerializedName("res")
-		public String _resource;
+		@SerializedName("model")
+		public String _model;
 
 		@SerializedName("scale")
 		public float _scale = 1f;
-	}
 
-	private class UpdateTimer extends Timer.Task
-	{
-		private ModelManager _manager;
-
-		UpdateTimer(ModelManager manager)
-		{
-			_manager = manager;
-		}
-
-		@Override
-		public void run()
-		{
-			_manager.update();
-		}
-
+		private transient ModelData _modelData;
 	}
 }
