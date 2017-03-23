@@ -38,6 +38,7 @@ out vec3 v_normal;
 out vec3 v_binormal;
 out vec3 v_tangent;
 out float v_depth;
+out vec4 shadowCoords;
 
 out float NdotL;
 
@@ -120,4 +121,15 @@ void main() {
     float z = -gl_Position.z-1;
 	z /= 1900;
 	v_depth = (z);
+
+	// shadow
+	if (u_shadowDistance > 0) {
+		vec4 worldPosition1 = u_worldTrans * vec4(a_position, 1.0);
+		shadowCoords = u_toShadowMapSpace * worldPosition1;
+		distance = distance - (u_shadowDistance - transitionDistance);
+		distance = distance / transitionDistance;
+		shadowCoords.w = clamp(1.0 - distance, 0.0, 1.0);
+	} else {
+		shadowCoords.w = -1.0;
+	}
 }

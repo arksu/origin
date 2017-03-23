@@ -203,24 +203,31 @@ public class ModelData
 	{
 		if (_defaultGroup != null)
 		{
-			modelBatch.bindMaterial(_defaultMaterial);
-			for (Mesh mesh : _defaultGroup)
+			if (!modelBatch.isShadowMode() || _defaultMaterial.isCastShadows())
 			{
-				// биндим меш через батчер, там проверим текущий меш и только тогда будет бинд если реально нужно
-				modelBatch.bindMesh(mesh);
-				mesh.render(modelBatch.getShader(), primitiveType);
+				modelBatch.bindMaterial(_defaultMaterial);
+				for (Mesh mesh : _defaultGroup)
+				{
+					// биндим меш через батчер, там проверим текущий меш и только тогда будет бинд если реально нужно
+					modelBatch.bindMesh(mesh);
+					mesh.render(modelBatch.getShader(), primitiveType);
+				}
 			}
 		}
 		else
 		{
 			for (Map.Entry<String, List<Mesh>> entry : _meshGroups.entrySet())
 			{
-				modelBatch.bindMaterial(_meshMaterials.get(entry.getKey()));
-				for (Mesh mesh : entry.getValue())
+				Material material = _meshMaterials.get(entry.getKey());
+				if (!modelBatch.isShadowMode() || material.isCastShadows())
 				{
-					// биндим меш через батчер, там проверим текущий меш и только тогда будет бинд если реально нужно
-					modelBatch.bindMesh(mesh);
-					mesh.render(modelBatch.getShader(), primitiveType);
+					modelBatch.bindMaterial(material);
+					for (Mesh mesh : entry.getValue())
+					{
+						// биндим меш через батчер, там проверим текущий меш и только тогда будет бинд если реально нужно
+						modelBatch.bindMesh(mesh);
+						mesh.render(modelBatch.getShader(), primitiveType);
+					}
 				}
 			}
 		}

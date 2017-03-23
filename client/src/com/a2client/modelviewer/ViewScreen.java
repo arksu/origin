@@ -186,7 +186,7 @@ public class ViewScreen extends BaseScreen
 
 		// ======================================================
 
-		_modelBatch.begin(_gameCamera, _shader);
+		_modelBatch.begin(_gameCamera, _shader, false);
 		prepareShader();
 		for (Model model : _models)
 		{

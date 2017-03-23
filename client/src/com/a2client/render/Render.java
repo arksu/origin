@@ -10,6 +10,7 @@ import com.a2client.model.GameObject;
 import com.a2client.render.postprocess.OutlineEffect;
 import com.a2client.render.postprocess.PostProcess;
 import com.a2client.render.shadows.Shadow;
+import com.a2client.render.shadows.ShadowBox;
 import com.a2client.render.skybox.Icosahedron;
 import com.a2client.render.skybox.Skybox;
 import com.a2client.render.water.WaterFrameBuffers;
@@ -157,7 +158,7 @@ public class Render
 
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 			_modelShader = _shadowShader;
-			renderObjects(camera, false);
+			renderObjects(camera, false, true);
 			_modelShader = _defaultShader;
 
 			_shadow.getFrameBuffer().end();
@@ -201,7 +202,7 @@ public class Render
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 			renderTerrain(camera, toShadowMapSpace);
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-			renderObjects(camera, false);
+			renderObjects(camera, false, false);
 
 			_waterFrameBuffers.getReflectionFrameBuffer().end();
 
@@ -223,7 +224,7 @@ public class Render
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 			renderTerrain(camera, toShadowMapSpace);
 			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-			renderObjects(camera, false);
+			renderObjects(camera, false, false);
 
 			_waterFrameBuffers.getRefractionFrameBuffer().end();
 		}
@@ -258,7 +259,7 @@ public class Render
 		renderTerrain(camera, toShadowMapSpace);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		renderObjects(camera, true);
+		renderObjects(camera, true, false);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		renderWater(camera);
@@ -301,7 +302,7 @@ public class Render
 		}
 	}
 
-	protected void renderObjects(Camera camera, boolean findIntersect)
+	protected void renderObjects(Camera camera, boolean findIntersect, boolean shadowMode)
 	{
 		if (ObjectCache.getInstance() != null)
 		{
@@ -314,7 +315,7 @@ public class Render
 				_selected = null;
 				_selectedDist = 100500;
 			}
-			_modelBatch.begin(camera, _modelShader);
+			_modelBatch.begin(camera, _modelShader, shadowMode);
 			prepareModelShader(camera);
 			for (GameObject o : ObjectCache.getInstance().getObjects())
 			{
@@ -514,9 +515,9 @@ public class Render
 		_modelShader.setUniformMatrix("u_viewTrans", camera.view);
 		_modelShader.setUniformMatrix("u_projViewTrans", camera.combined);
 
-		_modelShader.setUniformf("ucameraPosition", camera.position.x, camera.position.y, camera.position.z,
+		_modelShader.setUniformf("u_cameraPosition", camera.position.x, camera.position.y, camera.position.z,
 		                         1.1881f / (camera.far * camera.far));
-		_modelShader.setUniformf("ucameraDirection", camera.direction);
+		_modelShader.setUniformf("u_cameraDirection", camera.direction);
 
 		_modelShader.setUniformf("u_ambient", Color.WHITE);
 
@@ -526,7 +527,12 @@ public class Render
 //		_modelShader.setUniformf("u_lightPosition", new Vector3(1000, 1500, 100));
 		_modelShader.setUniformf("u_lightPosition", Skybox.sunPosition);
 
-		_modelShader.setUniformf("u_shadowDistance", -1);
+		if (Config.getInstance()._renderShadows)
+		{
+			_modelShader.setUniformMatrix("u_toShadowMapSpace", Render.toShadowMapSpace);
+			_modelShader.setUniformi("u_shadowMap", 6);
+		}
+
 		_modelShader.setUniformf("u_clipPlane", Render.clipNormal.x, Render.clipNormal.y, Render.clipNormal.z, Render.clipHeight);
 
 		_modelShader.setUniformi("u_texture", 0);

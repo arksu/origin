@@ -1,5 +1,4 @@
-//layout (location = 0)
-out vec4 outColor;
+layout (location = 0) out vec4 outColor;
 layout (location = 1) out vec4 fragColor2;
 
 uniform sampler2D u_texture;
@@ -28,6 +27,7 @@ in vec3 v_binormal;
 in vec3 v_tangent;
 
 in float v_depth;
+in vec4 shadowCoords;
 
 const float numShades = 16.0;
 
@@ -85,6 +85,28 @@ void main() {
 //    outColor2 = vec4(0);
 
 //	outColor = vec4(u_joints[0].x);
+
+// shadows
+	if (shadowCoords.w >= 0) {
+		float totalShadowWeight = 0.0;
+
+		for (int x = -pcfCount; x <= pcfCount; x++) {
+			for (int y = -pcfCount; y <= pcfCount; y++) {
+				float objectNearestLihgt = texture(u_shadowMap, shadowCoords.xy + vec2(x, y) * texelSize).r;
+				if (shadowCoords.z > objectNearestLihgt + 0.005) {
+					totalShadowWeight += 1.0;
+				}
+			}
+		}
+		totalShadowWeight /= totalTexels;
+		float lightFactor = 1.0 - (totalShadowWeight * shadowCoords.w);
+		lightFactor = lightFactor * 0.5 + 0.8;
+
+		outColor.xyz = outColor.xyz * lightFactor;
+//			outColor.xyz = vec3(1,1,1) * lightFactor;
+	}
+
+//	outColor = vec4(shadowCoords);
 
 	fragColor2 = pack_depth(v_depth);
 }

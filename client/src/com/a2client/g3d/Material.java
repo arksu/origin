@@ -2,6 +2,7 @@ package com.a2client.g3d;
 
 import com.a2client.Config;
 import com.a2client.Main;
+import com.a2client.render.shadows.ShadowBox;
 import com.a2client.util.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
@@ -108,9 +109,16 @@ public class Material
 		_diffuse.bind();
 
 		// TODO
-		if (!_receiveShadows)
-		{
-//			shader.setUniformf("", -1);
-		}
+		shader.setUniformf("u_shadowDistance", Config.getInstance()._renderShadows && _receiveShadows ? ShadowBox.SHADOW_DISTANCE : -1f);
+	}
+
+	public boolean isCastShadows()
+	{
+		return _castShadows;
+	}
+
+	public boolean isReceiveShadows()
+	{
+		return _receiveShadows;
 	}
 }

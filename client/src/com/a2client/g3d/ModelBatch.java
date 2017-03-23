@@ -28,6 +28,8 @@ public class ModelBatch
 
 	private Mesh _currentMesh;
 
+	private boolean _shadowMode;
+
 	private int _switchMeshCounter;
 	private int _switchMaterialCounter;
 	private int _renderedCounter;
@@ -82,13 +84,19 @@ public class ModelBatch
 		return _renderedCounter;
 	}
 
-	public void begin(final Camera cam, ShaderProgram shader)
+	public boolean isShadowMode()
+	{
+		return _shadowMode;
+	}
+
+	public void begin(final Camera cam, ShaderProgram shader, boolean shadowMode)
 	{
 		if (_camera != null) throw new GdxRuntimeException("Call end() first.");
 		_camera = cam;
 		_shader = shader;
 		_shader.begin();
 		_renderedCounter = 0;
+		_shadowMode = shadowMode;
 	}
 
 	/**

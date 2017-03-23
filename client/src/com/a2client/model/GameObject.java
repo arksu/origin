@@ -180,7 +180,7 @@ public class GameObject
 
 			if (_typeId == 1)
 			{
-				_model.play();
+//				_model.play();
 			}
 		}
 	}
