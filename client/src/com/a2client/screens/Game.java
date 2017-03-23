@@ -38,6 +38,7 @@ public class Game extends BaseScreen
 
 	private GUI_GameArea _gameArea;
 	private GUI_Label _lblStatus;
+	private GUI_Label _lblStatus2;
 	private GUI_Button _btnExit;
 	public GUI_Memo _chatMemo;
 	private GUI_Edit _chatEdit;
@@ -73,6 +74,9 @@ public class Game extends BaseScreen
 		_gameArea.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		_lblStatus = new GUI_Label(GUI.rootNormal());
 		_lblStatus.setPos(10, 10);
+
+		_lblStatus2 = new GUI_Label(GUI.rootNormal());
+		_lblStatus2.setPos(10, 30);
 
 		_btnExit = new GUI_Button(GUI.rootNormal())
 		{
@@ -278,6 +282,10 @@ public class Game extends BaseScreen
 //				" cam: " + _gameCamera.getCameraDistance()+
 				" gui: " + GUI.getInstance()._mouseInControl
 		;
+
+		_lblStatus2.caption =
+				" mesh switch=" + _render.getModelBatch().getSwitchMeshCounter() +
+				" material switch=" + _render.getModelBatch().getSwitchMaterialCounter();
 
 //		_lblStatus.caption =
 //				" sun: " + Skybox.sunTime +

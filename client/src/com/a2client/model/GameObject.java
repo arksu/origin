@@ -41,7 +41,8 @@ public class GameObject
 		_name = pkt._name;
 		_title = pkt._title;
 		_coord = new Vector2(pkt._x, pkt._y);
-		updateWorldCoord();
+//		updateWorldCoord();
+		updateCoord();
 		_objectId = pkt._objectId;
 		_typeId = pkt._typeId;
 		_interactive = false;
@@ -99,6 +100,7 @@ public class GameObject
 	{
 		_coord.x = c.x;
 		_coord.y = c.y;
+		updateCoord();
 	}
 
 	public void updateWorldCoord()
@@ -176,7 +178,8 @@ public class GameObject
 		{
 			updateCoord();
 
-			if (_typeId == 1) {
+			if (_typeId == 1)
+			{
 				_model.play();
 			}
 		}
@@ -185,7 +188,10 @@ public class GameObject
 	public void updateCoord()
 	{
 		updateWorldCoord();
-		_model.setPos(_worldCoord);
+		if (_model != null)
+		{
+			_model.setPos(_worldCoord);
+		}
 	}
 
 	@Override

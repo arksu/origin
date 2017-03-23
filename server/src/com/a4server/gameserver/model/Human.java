@@ -37,7 +37,7 @@ public abstract class Human extends MovingObject
 	 * дистанция на которой мы видим объекты
 	 * может изменяться динамически (ночью видим хуже)
 	 */
-	protected int _visibleDistance = 100;
+	protected int _visibleDistance = 500;
 
 	/**
 	 * последняя позиция в которой было обновление видимых объектов

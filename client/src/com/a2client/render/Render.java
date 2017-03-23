@@ -4,9 +4,9 @@ import com.a2client.Config;
 import com.a2client.ObjectCache;
 import com.a2client.Player;
 import com.a2client.Terrain;
-import com.a2client.model.GameObject;
 import com.a2client.g3d.Model;
 import com.a2client.g3d.ModelBatch;
+import com.a2client.model.GameObject;
 import com.a2client.render.postprocess.OutlineEffect;
 import com.a2client.render.postprocess.PostProcess;
 import com.a2client.render.shadows.Shadow;
@@ -330,7 +330,7 @@ public class Render
 					{
 						Vector3 intersection = new Vector3();
 						if (Intersector.intersectRayBounds(_game.getCamera().getRay(), o.getBoundingBox(),
-						                                    intersection))
+						                                   intersection))
 						{
 							// дистанция до объекта
 							float dist = intersection.dst(camera.position);
@@ -374,6 +374,11 @@ public class Render
 			_shadowShader = makeShader("shadow");
 		}
 		return _shadowShader;
+	}
+
+	public ModelBatch getModelBatch()
+	{
+		return _modelBatch;
 	}
 
 	/**
@@ -522,6 +527,7 @@ public class Render
 		_modelShader.setUniformf("u_lightPosition", Skybox.sunPosition);
 
 		_modelShader.setUniformf("u_shadowDistance", -1);
+		_modelShader.setUniformf("u_clipPlane", Render.clipNormal.x, Render.clipNormal.y, Render.clipNormal.z, Render.clipHeight);
 
 		_modelShader.setUniformi("u_texture", 0);
 		_modelShader.setUniformi("u_textureNormal", 1);

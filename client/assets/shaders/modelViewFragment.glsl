@@ -74,7 +74,8 @@ void main() {
 //	float intensity = max(NdotL, 0.45);
 //    outColor = intensity * texture(u_texture, texCoords);
     outColor = intensity * texture(u_texture, texCoords);
-
+	if (outColor.a <= 0.01)
+		discard;
 //    outColor += rSpecular;
 
 //	outColor = vec4(rVdotN);

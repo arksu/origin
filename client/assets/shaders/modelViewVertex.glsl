@@ -113,6 +113,7 @@ void main() {
     visibility = exp(-pow((distance * u_density), u_gradient));
 
     gl_Position = u_projViewTrans * vec4(worldPosition, 1.0);
+	gl_ClipDistance[0] = dot(worldPosition, u_clipPlane.xyz);
 
     texCoords = a_texCoord0;
 

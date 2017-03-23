@@ -93,7 +93,7 @@ public class Player extends Human
 			e.printStackTrace();
 		}
 
-		setVisibleDistance(500);
+		setVisibleDistance(900);
 
 		// сначала грузим папердоллл! от него может зависеть размер инвентаря
 		_equip = new Equip(this);
