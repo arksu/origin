@@ -82,6 +82,15 @@ public class Animation
 		joint = new DualQuat[_data.getSkeleton().getJointsCount()];
 	}
 
+	public float getWeight()
+	{
+		return _weight;
+	}
+
+	/**
+	 * @param c default joint if frame does not exist
+	 * @param idx index joint
+	 */
 	public void lerpJoint(DualQuat c, int idx)
 	{
 //		if (state[idx] != Render.frame_flag)
@@ -192,17 +201,17 @@ public class Animation
 
 	protected void onEnd()
 	{
-		_log.debug("animation end: " + _data.getName());
+//		_log.debug("animation end: " + _data.getName());
 	}
 
 	public void play()
 	{
-		play(1, 0, LoopMode.Repeat);
+		play(1f, 0.3f, LoopMode.Repeat);
 	}
 
 	public void play(float blendWeight, float blendTime, LoopMode loopMode)
 	{
-		_blendWeight = blendWeight;
+		_blendWeight = Utils.min(blendWeight, 1f);
 		_startWeight = _weight;
 		_blendTime = blendTime;
 		_loopMode = loopMode;

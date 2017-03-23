@@ -43,7 +43,7 @@ public class ViewScreen extends BaseScreen
 
 	//		private String MODEL_NAME = "rifle";
 //	private String MODEL_NAME = "handgun";
-	private String MODEL_NAME = "rabbit";
+	private String MODEL_NAME = "cube";
 //	private String MODEL_NAME = "untitled";
 
 	public ViewScreen()
@@ -97,7 +97,7 @@ public class ViewScreen extends BaseScreen
 //		{
 //			animation.play();
 //		}
-		_models.get(0).play();
+		_models.get(0).playAnimation("run");
 	}
 
 	@Override
@@ -139,6 +139,14 @@ public class ViewScreen extends BaseScreen
 		if (Input.KeyHit(Keys.SPACE))
 		{
 			_isRotate = !_isRotate;
+		}
+		if (Input.KeyHit(Keys.G))
+		{
+			_models.get(0).playAnimation("idle");
+		}
+		if (Input.KeyHit(Keys.H))
+		{
+			_models.get(0).playAnimation("run");
 		}
 
 		if (_isRotate)

@@ -139,11 +139,20 @@ public class GameObject
 			_mover = new Mover(this, cx, cy, vx, vy, speed);
 //			setAnimation(_model.animations.first().id, -1);
 		}
+		if (!isMoving)
+		{
+			_model.playAnimation("run");
+			isMoving = true;
+		}
 	}
+
+	boolean isMoving = false;
 
 	public void stopMove()
 	{
 		_mover = null;
+		_model.playAnimation("idle");
+		isMoving = false;
 	}
 
 	public boolean isMoving()

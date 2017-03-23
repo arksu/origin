@@ -420,7 +420,7 @@ public class Player extends Human
 	public double getMoveSpeed()
 	{
 		// todo getMoveSpeed
-		return 25f;
+		return 65f;
 	}
 
 	// нагенерить объектов в гриде

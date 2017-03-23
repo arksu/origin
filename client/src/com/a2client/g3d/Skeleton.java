@@ -7,24 +7,25 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.List;
 
 /**
  * Created by arksu on 17.03.17.
  */
 public class Skeleton
 {
+	private final Model _model;
 	private final SkeletonData _data;
 
 	private Skeleton _parent;
-	private int _parent_joint;
-
-	public Animation _animation;
+	private int _parentJoint;
 
 	private DualQuat[] _joint;
 	private DualQuat[] _jquat;
 
-	public Skeleton(SkeletonData data)
+	public Skeleton(SkeletonData data, Model model)
 	{
+		_model = model;
 		_data = data;
 		_jquat = new DualQuat[_data.getJointsCount()];
 		_joint = new DualQuat[_data.getJointsCount()];
@@ -40,24 +41,14 @@ public class Skeleton
 			jquat[i] = _joint[i].mul(_data.getJoints()[i].getBind());
 		}
 
-		float[] floatArray = getFloatArray(jquat);
-
-//		shader.setUniform4fv(name, floatArray, 0, floatArray.length);
-
-//		shader.setUniform4fv("u_joints[0]", new float[]{1, 0.5f, 0, 0}, 0, 4);
-//		shader.setUniform4fv("u_joints[1]", new float[]{1, 0.5f, 0, 1}, 0, 4);
-
-//		ARBShaderObjects.glUniform3ARB(location, jquatFloatBuffer);
-
 		int location = shader.fetchUniformLocation("u_joints", true);
 		Gdx.gl20.glUniform4fv(location, 0, getFloatBuffer(jquat));
-//		Gdx.gl20.glUniform3fv(location, jquat.length * 8, floatArray, 0);
 	}
 
 	public void updateJoint(int idx)
 	{
-		float w = 1f;
 		DualQuat cjoint = _data.getJoints()[idx].getFrame();
+		DualQuat defaultJoint = new DualQuat(cjoint);
 		// идем с последней добавленной анимации и смотрим на ее вес.
 		// с каждой пройденной анимацией вычитаем вес
 		int ac = 0;
@@ -84,13 +75,32 @@ public class Skeleton
 			ac++;
 		}*/
 
-		if (idx > -1 && _animation != null)
+		float w = 1f;
+		List<Animation> list = _model.getAnimations();
+		if (idx > -1 && list.size() > 0)
 		{
-			_animation.lerpJoint(cjoint, idx);
-			if (_animation.joint[idx] != null)
+			int i = 0;
+			while (i < list.size())
 			{
-				cjoint = cjoint.lerp(_animation.joint[idx], w);
+				Animation animation = list.get(i);
+				if (w < Const.EPS)
+				{
+					list.remove(i);
+					continue;
+				}
+				else
+				{
+					animation.lerpJoint(defaultJoint, idx);
+					cjoint = cjoint.lerp(animation.joint[idx], w);
+					w -= animation.getWeight();
+				}
+				i++;
 			}
+//			_animation.lerpJoint(cjoint, idx);
+//			if (_animation.joint[idx] != null)
+//			{
+//				cjoint = cjoint.lerp(_animation.joint[idx], w);
+//			}
 		}
 
 //        if (parent != null) {
@@ -132,10 +142,10 @@ public class Skeleton
 		{
 //			if (_parent != null)
 //			{
-//				_parent.updateJoint(_parent_joint);
-//				if (_parent._joint[_parent_joint] != null)
+//				_parent.updateJoint(_parentJoint);
+//				if (_parent._joint[_parentJoint] != null)
 //				{
-//					_joint[idx] = _parent._joint[_parent_joint].mul(cjoint);
+//					_joint[idx] = _parent._joint[_parentJoint].mul(cjoint);
 //				}
 //			}
 //			else
@@ -167,25 +177,6 @@ public class Skeleton
 		}
 		fb.flip();
 		return fb;
-	}
-
-	public float[] getFloatArray(DualQuat[] d)
-	{
-		float[] tmp = new float[d.length * 8];
-
-		int idx = 0;
-		for (DualQuat dq : d)
-		{
-			tmp[idx++] = dq.real.x;
-			tmp[idx++] = dq.real.y;
-			tmp[idx++] = dq.real.z;
-			tmp[idx++] = dq.real.w;
-			tmp[idx++] = dq.dual.x;
-			tmp[idx++] = dq.dual.y;
-			tmp[idx++] = dq.dual.z;
-			tmp[idx++] = dq.dual.w;
-		}
-		return tmp;
 	}
 
 	public int getJointsCount()

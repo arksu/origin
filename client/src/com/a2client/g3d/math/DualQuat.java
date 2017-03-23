@@ -13,6 +13,12 @@ public class DualQuat
 		this.dual = d;
 	}
 
+	public DualQuat(DualQuat d)
+	{
+		this.real = new Quat(d.real);
+		this.dual = new Quat(d.dual);
+	}
+
 	public DualQuat(MyInputStream in)
 	{
 		this.real = new Quat(in);

@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,7 +25,15 @@ public class Model
 
 	private Skeleton _skeleton;
 
-	private Animation _animation;
+	/**
+	 * текущие анимации которые проигрываются в данный момент
+	 */
+	private final List<Animation> _animations = new ArrayList<>(4);
+
+	/**
+	 * наложенные анимации на список сверху
+	 */
+	private final List<Animation> _mergeAnimations = new ArrayList<>(4);
 
 	/**
 	 * поворот в градусах
@@ -81,7 +90,7 @@ public class Model
 		_data = data;
 		if (_data.getSkeletonData() != null)
 		{
-			_skeleton = new Skeleton(_data.getSkeletonData());
+			_skeleton = new Skeleton(_data.getSkeletonData(), this);
 		}
 	}
 
@@ -116,6 +125,16 @@ public class Model
 	public void setUserData(Object userData)
 	{
 		_userData = userData;
+	}
+
+	public List<Animation> getAnimations()
+	{
+		return _animations;
+	}
+
+	public List<Animation> getMergeAnimations()
+	{
+		return _mergeAnimations;
 	}
 
 	public ModelData getData()
@@ -245,10 +264,14 @@ public class Model
 
 	public void update()
 	{
-		// todo
-		if (_animation != null)
+		// обновим анимации
+		for (Animation animation : _animations)
 		{
-			_animation.update();
+			animation.update();
+		}
+		for (Animation animation : _mergeAnimations)
+		{
+			animation.update();
 		}
 
 		if (_currentHeading != _heading)
@@ -291,18 +314,14 @@ public class Model
 		}
 	}
 
-	// todo del
-	public void play()
+	public void playAnimation(String name)
 	{
-		AnimationData animationData = _data.getAnimation("run");
-//		AnimationData animationData = _data.getAnimation("arms_up");
-//		AnimationData animationData = _data.getAnimation("signal1");
+		AnimationData animationData = _data.getAnimation(name);
 		if (animationData != null)
 		{
-			_animation = new Animation(animationData);
-			_animation.play();
-
-			_skeleton._animation = _animation;
+			Animation animation = new Animation(animationData);
+			animation.play();
+			_animations.add(0, animation);
 		}
 	}
 }

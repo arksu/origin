@@ -1,7 +1,5 @@
 {
 	"material": {
-		"diffuse": "cube.png",
-		"castShadows": false,
-		"receiveShadows": false
+		"diffuse": "cube.png"
 	}
 }

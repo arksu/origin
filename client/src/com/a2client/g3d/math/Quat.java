@@ -1,7 +1,7 @@
 package com.a2client.g3d.math;
 
-import com.a2client.g3d.MyInputStream;
 import com.a2client.g3d.Const;
+import com.a2client.g3d.MyInputStream;
 import com.badlogic.gdx.math.Quaternion;
 
 import java.io.IOException;
@@ -16,6 +16,14 @@ public class Quat
 		this.y = y;
 		this.z = z;
 		this.w = w;
+	}
+
+	public Quat(Quat q)
+	{
+		this.x = q.x;
+		this.y = q.y;
+		this.z = q.z;
+		this.w = q.w;
 	}
 
 	public Quat(Quaternion quaternion)

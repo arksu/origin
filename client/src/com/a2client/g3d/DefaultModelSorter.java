@@ -64,6 +64,7 @@ public class DefaultModelSorter implements ModelSorter, Comparator<Model>
 		final boolean d2 = o2.getData().isOneMesh();
 		if (d1 != d2) return d1 ? 1 : -1;
 
+		// сортировка по расстоянию от камеры
 //		getTranslation(o1.worldTransform, o1.meshPart.center, tmpV1);
 //		getTranslation(o2.worldTransform, o2.meshPart.center, tmpV2);
 //		final float dst = (int) (1000f * camera.position.dst2(tmpV1)) - (int) (1000f * camera.position.dst2(tmpV2));
