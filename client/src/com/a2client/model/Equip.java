@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * экипировка
+ * окно экипировки
  * Created by arksu on 17.09.15.
  */
 public class Equip

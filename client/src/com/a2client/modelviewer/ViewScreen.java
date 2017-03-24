@@ -156,18 +156,14 @@ public class ViewScreen extends BaseScreen
 		}
 		if (Input.KeyHit(Keys.G))
 		{
-//			_models.get(0).playAnimation("idle");
 			_equip.bindTo(_models.get(0), "EquipHand.L");
-//			_equip.bindTo(_models.get(0), "Hand.R");
-//			_models.get(0).bindTo(_equip, "Bone");
 		}
 		if (Input.KeyHit(Keys.B))
 		{
-			_equip.bindTo(_models.get(0), "Hand.L");
+			_equip.unbind();
 		}
 		if (Input.KeyHit(Keys.H))
 		{
-//			_models.get(0).playAnimation("run");
 			_equip.playAnimation("ArmatureAction");
 		}
 
@@ -186,12 +182,6 @@ public class ViewScreen extends BaseScreen
 
 		_equip.update();
 		_models.get(0).update();
-
-//		Animation animation = _models.get(0).getData().getAnimation();
-//		if (animation != null)
-//		{
-//			animation.update();
-//		}
 
 		super.onUpdate();
 	}

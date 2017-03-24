@@ -159,8 +159,20 @@ public class Model
 		{
 			_childs = new LinkedList<>();
 		}
+		if (_childs.contains(model)) return;
 		_childs.add(model);
 		model.setParent(this);
+	}
+
+	public void removeChild(Model model)
+	{
+		if (_childs != null)
+		{
+			if (_childs.remove(model))
+			{
+				model.setParent(null);
+			}
+		}
 	}
 
 	public List<Model> getChilds()
@@ -316,6 +328,14 @@ public class Model
 			_localTransform.setTranslation(_localPosition);
 			updateWorldTransform();
 		}
+
+		if (_childs != null)
+		{
+			for (Model child : _childs)
+			{
+				child.update();
+			}
+		}
 	}
 
 	public void playAnimation(String name)
@@ -342,7 +362,6 @@ public class Model
 
 	public void bindTo(Model other, String boneName)
 	{
-		setParent(other);
 		other.addChild(this);
 
 		if (_skeleton != null)
@@ -355,6 +374,14 @@ public class Model
 			}
 			_skeleton.setParent(otherSkeleton, index);
 			_skeleton.resetState();
+		}
+	}
+
+	public void unbind()
+	{
+		if (_parent != null)
+		{
+			_parent.removeChild(this);
 		}
 	}
 }

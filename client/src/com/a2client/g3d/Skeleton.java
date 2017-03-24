@@ -22,7 +22,6 @@ public class Skeleton
 	private int _parentJoint;
 
 	private DualQuat[] _joint;
-	private DualQuat[] _jquat;
 	private boolean[] _state;
 
 	public Skeleton(SkeletonData data, Model model)
@@ -30,7 +29,6 @@ public class Skeleton
 		_model = model;
 		_data = data;
 		int jointsCount = _data.getJointsCount();
-		_jquat = new DualQuat[jointsCount];
 		_joint = new DualQuat[jointsCount];
 		_state = new boolean[jointsCount];
 		resetState();
