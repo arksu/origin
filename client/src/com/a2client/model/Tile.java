@@ -17,7 +17,7 @@ public class Tile
 
 	public static Vector2 getTileUV(byte tile)
 	{
-		int idx = getTileIndex(tile);
+		int idx = getTileIndexUV(tile);
 		int x = idx % ATLAS_WIDTH;
 		int y = idx / ATLAS_WIDTH;
 
@@ -41,7 +41,7 @@ public class Tile
 	public static final int TILE_CELLAR = 75;
 	public static final int TILE_CAVE = 80;
 
-	public static int getTileIndex(byte tile)
+	private static int getTileIndexUV(byte tile)
 	{
 		switch (tile)
 		{

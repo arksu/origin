@@ -148,6 +148,11 @@ public class Model
 		updateWorldTransform();
 	}
 
+	public Skeleton getSkeleton()
+	{
+		return _skeleton;
+	}
+
 	public void addChild(Model model)
 	{
 		if (_childs == null)
@@ -234,7 +239,6 @@ public class Model
 		{
 			_worldTransform.set(_parent._worldTransform).mul(_localTransform);
 		}
-		_worldTransform.scale(0.4f, 0.4f, 0.4f);
 		updateBoundingBox();
 
 		if (_childs != null)
@@ -333,6 +337,24 @@ public class Model
 			Animation animation = new Animation(animationData);
 			animation.play(Animation.LoopMode.Last);
 			_mergeAnimations.add(0, animation);
+		}
+	}
+
+	public void bindTo(Model other, String boneName)
+	{
+		setParent(other);
+		other.addChild(this);
+
+		if (_skeleton != null)
+		{
+			Skeleton otherSkeleton = other.getSkeleton();
+			int index = otherSkeleton.getJointIndex(boneName);
+			if (index < -1)
+			{
+				throw new RuntimeException("bone not found");
+			}
+			_skeleton.setParent(otherSkeleton, index);
+			_skeleton.resetState();
 		}
 	}
 }

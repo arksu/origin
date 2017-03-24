@@ -36,6 +36,17 @@ public class Skeleton
 		resetState();
 	}
 
+	public Skeleton getParent()
+	{
+		return _parent;
+	}
+
+	public void setParent(Skeleton parent, int parentJoint)
+	{
+		_parent = parent;
+		_parentJoint = parentJoint;
+	}
+
 	public void bind(ShaderProgram shader)
 	{
 		DualQuat[] jquat = new DualQuat[_data.getJointsCount()];
@@ -116,7 +127,10 @@ public class Skeleton
 				_parent.updateJoint(_parentJoint);
 				if (_parent._joint[_parentJoint] != null)
 				{
-					_joint[idx] = _parent._joint[_parentJoint].mul(cjoint);
+					// множить для сохранения оригинального оффсета
+//					_joint[idx] = _parent._joint[_parentJoint].mul(cjoint);
+					// просто ставим - если надо забиндить точно кость в кость
+					_joint[idx] = _parent._joint[_parentJoint];
 				}
 			}
 			else
@@ -165,5 +179,18 @@ public class Skeleton
 	public int getJointsCount()
 	{
 		return _data.getJointsCount();
+	}
+
+	public int getJointIndex(String name)
+	{
+		for (int i = 0; i < _data.getJoints().length; i++)
+		{
+			Joint joint = _data.getJoints()[i];
+			if (joint.getName().equalsIgnoreCase(name))
+			{
+				return i;
+			}
+		}
+		return -2;
 	}
 }

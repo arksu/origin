@@ -47,6 +47,8 @@ public class ViewScreen extends BaseScreen
 	private String MODEL_NAME = "cube";
 //	private String MODEL_NAME = "untitled";
 
+	private Model _equip;
+
 	public ViewScreen()
 	{
 		ShaderProgram.pedantic = false;
@@ -60,6 +62,9 @@ public class ViewScreen extends BaseScreen
 
 		Model rotatingModel = new Model(modelData);
 		_models.add(rotatingModel);
+
+		_equip = new Model(new ModelData("handgun"));
+		_equip.setPos(0, 0, 0);
 
 		Random random = new Random();
 		for (int i = 0; i < 0; i++)
@@ -93,11 +98,6 @@ public class ViewScreen extends BaseScreen
 			}
 		}
 
-//		Animation animation = _models.get(0).getData().getAnimation();
-//		if (animation != null)
-//		{
-//			animation.play();
-//		}
 		_models.get(0).playAnimation("run");
 	}
 
@@ -142,14 +142,33 @@ public class ViewScreen extends BaseScreen
 		{
 			_isRotate = !_isRotate;
 		}
+		if (Input.KeyHit(Keys.R))
+		{
+			_models.get(0).playAnimation("run");
+		}
+		if (Input.KeyHit(Keys.T))
+		{
+			_models.get(0).playAnimation("idle");
+		}
+		if (Input.KeyHit(Keys.F))
+		{
+			_models.get(0).playMergeAnimation("arms_up");
+		}
 		if (Input.KeyHit(Keys.G))
 		{
 //			_models.get(0).playAnimation("idle");
-			_models.get(0).playMergeAnimation("arms_up");
+			_equip.bindTo(_models.get(0), "EquipHand.L");
+//			_equip.bindTo(_models.get(0), "Hand.R");
+//			_models.get(0).bindTo(_equip, "Bone");
+		}
+		if (Input.KeyHit(Keys.B))
+		{
+			_equip.bindTo(_models.get(0), "Hand.L");
 		}
 		if (Input.KeyHit(Keys.H))
 		{
-			_models.get(0).playAnimation("run");
+//			_models.get(0).playAnimation("run");
+			_equip.playAnimation("ArmatureAction");
 		}
 
 		if (_isRotate)
@@ -165,6 +184,7 @@ public class ViewScreen extends BaseScreen
 		_models.get(0).setPos(0, _yOffset, 0);
 		_models.get(0).setHeading(_rotateAngle, true);
 
+		_equip.update();
 		_models.get(0).update();
 
 //		Animation animation = _models.get(0).getData().getAnimation();
@@ -203,6 +223,7 @@ public class ViewScreen extends BaseScreen
 		{
 			_modelBatch.render(model);
 		}
+//		_modelBatch.render(_equip);
 		_modelBatch.end();
 
 		// ======================================================

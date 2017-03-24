@@ -352,7 +352,10 @@ def write_skeleton(fw, obj, use_ASCII):
 
 def write_all_anims(fw, obj, do_all_anims):
     anim_count = len(bpy.data.actions)
-    fw(struct.pack('>H', anim_count))
+    if do_all_anims:
+        fw(struct.pack('>H', anim_count))
+    else:
+        fw(struct.pack('>H', 1))
     default_action = obj.animation_data.action
     if do_all_anims and anim_count > 1:
         for a in bpy.data.actions:

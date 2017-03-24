@@ -1,8 +1,8 @@
 package com.a2client.g3d;
 
-import com.a2client.g3d.math.Vec3f;
 import com.a2client.g3d.math.DualQuat;
 import com.a2client.g3d.math.Mat4f;
+import com.a2client.g3d.math.Vec3f;
 
 import java.io.IOException;
 
@@ -79,5 +79,11 @@ public class Joint
 	public DualQuat getFrame()
 	{
 		return _frame;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "(" + _name + " -> " + _parentName + " [" + _parentIndex + "])";
 	}
 }
