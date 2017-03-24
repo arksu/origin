@@ -29,8 +29,9 @@ public class GameObject
 	private String _title;
 	private boolean _interactive;
 	private Mover _mover = null;
+	boolean _isMoving = false;
 
-	private Model _model = null;
+	protected Model _model = null;
 
 	private boolean _needInit = true;
 
@@ -41,7 +42,6 @@ public class GameObject
 		_name = pkt._name;
 		_title = pkt._title;
 		_coord = new Vector2(pkt._x, pkt._y);
-//		updateWorldCoord();
 		updateCoord();
 		_objectId = pkt._objectId;
 		_typeId = pkt._typeId;
@@ -137,27 +137,24 @@ public class GameObject
 		else
 		{
 			_mover = new Mover(this, cx, cy, vx, vy, speed);
-//			setAnimation(_model.animations.first().id, -1);
 		}
-		if (!isMoving)
+
+		if (!_isMoving)
 		{
-			_model.playAnimation("run");
-			isMoving = true;
+			setMoving(true);
 		}
 	}
-
-	boolean isMoving = false;
 
 	public void stopMove()
 	{
 		_mover = null;
-		_model.playAnimation("idle");
-		isMoving = false;
+		setMoving(false);
 	}
 
-	public boolean isMoving()
+	public void setMoving(boolean moving)
 	{
-		return _mover != null;
+		if (moving == _isMoving) return;
+		_isMoving = moving;
 	}
 
 	public void update()
@@ -176,6 +173,7 @@ public class GameObject
 			if (_mover._arrived)
 			{
 				_mover = null;
+//				setMoving(false);
 			}
 		}
 	}
@@ -189,7 +187,7 @@ public class GameObject
 
 			if (_typeId == 1)
 			{
-//				_model.play();
+				_model.playAnimation("idle");
 			}
 		}
 	}

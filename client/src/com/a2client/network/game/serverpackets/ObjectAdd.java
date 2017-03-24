@@ -1,6 +1,7 @@
 package com.a2client.network.game.serverpackets;
 
 import com.a2client.ObjectCache;
+import com.a2client.model.Character;
 import com.a2client.model.GameObject;
 import com.a2client.network.game.GamePacketHandler;
 import org.slf4j.Logger;
@@ -40,6 +41,15 @@ public class ObjectAdd extends GameServerPacket
 	public void run()
 	{
 //		_log.debug("ObjectAdd " + _objectId + " type=" + _typeId + " (" + _x + ", " + _y + ")");
-		ObjectCache.getInstance().addObject(new GameObject(this));
+		GameObject object;
+		if (_typeId == 1)
+		{
+			object = new Character(this);
+		}
+		else
+		{
+			object = new GameObject(this);
+		}
+		ObjectCache.getInstance().addObject(object);
 	}
 }

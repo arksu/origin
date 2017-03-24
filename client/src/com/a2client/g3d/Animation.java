@@ -209,6 +209,11 @@ public class Animation
 		play(1f, 0.3f, LoopMode.Repeat);
 	}
 
+	public void play(LoopMode loopMode)
+	{
+		play(1f, 0.5f, loopMode);
+	}
+
 	public void play(float blendWeight, float blendTime, LoopMode loopMode)
 	{
 		_blendWeight = Utils.min(blendWeight, 1f);

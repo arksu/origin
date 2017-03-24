@@ -186,7 +186,7 @@ public class Render
 			camera.position.y -= camDistance;
 			camera.direction.y = -camera.direction.y;
 			camera.up.set(0, 1, 0);
-			camera.update(false);
+			camera.update(true);
 			clipNormal = new Vector3(0, 1, 0);
 			clipHeight = -WATER_LEVEL;
 
@@ -208,7 +208,7 @@ public class Render
 
 			camera.position.y += camDistance;
 			camera.direction.y = -camera.direction.y;
-			camera.update(false);
+			camera.update(true);
 
 			// WATER 2 REFRACTION, UNDER WATER =============================================================================
 			clipNormal = new Vector3(0, -1, 0);

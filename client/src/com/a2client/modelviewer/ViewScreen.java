@@ -142,7 +142,8 @@ public class ViewScreen extends BaseScreen
 		}
 		if (Input.KeyHit(Keys.G))
 		{
-			_models.get(0).playAnimation("idle");
+//			_models.get(0).playAnimation("idle");
+			_models.get(0).playMergeAnimation("arms_up");
 		}
 		if (Input.KeyHit(Keys.H))
 		{

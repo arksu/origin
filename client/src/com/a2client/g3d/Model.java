@@ -324,4 +324,15 @@ public class Model
 			_animations.add(0, animation);
 		}
 	}
+
+	public void playMergeAnimation(String name)
+	{
+		AnimationData animationData = _data.getAnimation(name);
+		if (animationData != null)
+		{
+			Animation animation = new Animation(animationData);
+			animation.play(Animation.LoopMode.Last);
+			_mergeAnimations.add(0, animation);
+		}
+	}
 }

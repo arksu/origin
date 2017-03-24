@@ -105,6 +105,8 @@ void main() {
 		outColor.xyz = outColor.xyz * lightFactor;
 //			outColor.xyz = vec3(1,1,1) * lightFactor;
 	}
+	outColor = mix(vec4(u_skyColor, 1.0), outColor, visibility);
+
 
 //	outColor = vec4(shadowCoords);
 

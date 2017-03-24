@@ -49,32 +49,9 @@ public class Skeleton
 	{
 		DualQuat cjoint = _data.getJoints()[idx].getFrame();
 		DualQuat defaultJoint = new DualQuat(cjoint);
+
 		// идем с последней добавленной анимации и смотрим на ее вес.
 		// с каждой пройденной анимацией вычитаем вес
-		int ac = 0;
-		/*for (int i = anims.size() - 1; i >= 0; i--)
-		{
-			if (w < Const.EPS)
-			{
-//                удаляем анимации уже отыгравшие свое
-				Log.debug("anim remove: " + anims.get(i).name);
-				anims.remove(i);
-			}
-			else
-			{
-				Anim anim = anims.get(i);
-				if ((anim.map[idx] > -1))
-				{
-					anim.lerpJoint(anim.map[idx]);
-					if (anim.joint[anim.map[idx]] != null)
-						cjoint = cjoint.lerp(anim.joint[anim.map[idx]], w);
-					w -= anim.weight;
-				}
-//            if (w < Const.EPS) break;
-			}
-			ac++;
-		}*/
-
 		float w = 1f;
 		List<Animation> list = _model.getAnimations();
 		if (idx > -1 && list.size() > 0)
@@ -96,42 +73,29 @@ public class Skeleton
 				}
 				i++;
 			}
-//			_animation.lerpJoint(cjoint, idx);
-//			if (_animation.joint[idx] != null)
-//			{
-//				cjoint = cjoint.lerp(_animation.joint[idx], w);
-//			}
 		}
-
-//        if (parent != null) {
-//        Log.debug("anim count : "+ac);
-//        }
-
-		/*w = 1;
-		for (int i = merge_anims.size() - 1; i >= 0; i--)
+		w = 1f;
+		list = _model.getMergeAnimations();
+		if (idx > -1 && list.size() > 0)
 		{
-			if (w < Const.EPS)
-			{// || merge_anims.get(i).isStopped()) {
-				// удаляем анимации уже отыгравшие свое
-				Anim aa = merge_anims.get(i);
-				Log.debug("merge anim remove: " + aa.name + " prev=" + aa._framePrev + " next=" + aa._frameNext + " start=" + aa._frameStart);
-				merge_anims.remove(i);
-			}
-			else
+			int i = 0;
+			while (i < list.size())
 			{
-				Anim anim = merge_anims.get(i);
-				if ((anim.map[idx] > -1) && (anim.weight > Const.EPS))
+				Animation animation = list.get(i);
+				if (w < Const.EPS)
 				{
-					anim.lerpJoint(anim.map[idx]);
-					if (anim.joint[anim.map[idx]] != null)
-						cjoint = cjoint.lerp(anim.joint[anim.map[idx]], w * anim.weight);
-					w -= anim.weight;
+					list.remove(i);
+					continue;
 				}
+				else
+				{
+					animation.lerpJoint(cjoint, idx);
+					cjoint = cjoint.lerp(animation.joint[idx], w * animation.getWeight());
+					w -= animation.getWeight();
+				}
+				i++;
 			}
 		}
-*/
-
-//		cjoint =  cjoint.mul(new DualQuat(new Quat(-10, -10, -10, -2), new Quat(-10, -10, -4, -3)));
 
 		if (_data.getJoints()[idx].getParentIndex() > -1)
 		{
@@ -140,20 +104,19 @@ public class Skeleton
 		}
 		else
 		{
-//			if (_parent != null)
-//			{
-//				_parent.updateJoint(_parentJoint);
-//				if (_parent._joint[_parentJoint] != null)
-//				{
-//					_joint[idx] = _parent._joint[_parentJoint].mul(cjoint);
-//				}
-//			}
-//			else
-//			{
-			_joint[idx] = cjoint;
-//			}
+			if (_parent != null)
+			{
+				_parent.updateJoint(_parentJoint);
+				if (_parent._joint[_parentJoint] != null)
+				{
+					_joint[idx] = _parent._joint[_parentJoint].mul(cjoint);
+				}
+			}
+			else
+			{
+				_joint[idx] = cjoint;
+			}
 		}
-
 	}
 
 	public FloatBuffer getFloatBuffer(DualQuat[] d)
