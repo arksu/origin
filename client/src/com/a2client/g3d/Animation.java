@@ -1,6 +1,7 @@
 package com.a2client.g3d;
 
 import com.a2client.g3d.math.DualQuat;
+import com.a2client.render.Render;
 import com.a2client.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,8 @@ public class Animation
 	 */
 	private boolean _isEnded = false;
 
+	private boolean[] _state;
+
 	public enum LoopMode
 	{
 		None, Last, Repeat, PingPong
@@ -79,7 +82,10 @@ public class Animation
 	public Animation(AnimationData data)
 	{
 		_data = data;
-		joint = new DualQuat[_data.getSkeleton().getJointsCount()];
+		int jointsCount = _data.getSkeleton().getJointsCount();
+		joint = new DualQuat[jointsCount];
+		_state = new boolean[jointsCount];
+		resetState();
 	}
 
 	public float getWeight()
@@ -93,8 +99,6 @@ public class Animation
 	 */
 	public void lerpJoint(DualQuat c, int idx)
 	{
-//		if (state[idx] != Render.frame_flag)
-//		{
 		DualQuat prev = _data.getFrames()[_framePrev][idx];
 		DualQuat next = _data.getFrames()[_frameNext][idx];
 
@@ -104,13 +108,15 @@ public class Animation
 		}
 		else
 		{
-			if (prev == null) prev = c;
-			if (next == null) next = c;
+			if (_state[idx] != Render.frameFlag || joint[idx] == null)
+			{
+				if (prev == null) prev = c;
+				if (next == null) next = c;
 
-			joint[idx] = prev.lerp(next, _frameDelta);
+				joint[idx] = prev.lerp(next, _frameDelta);
+			}
 		}
-//			state[idx] = Render.frame_flag;
-//		}
+		_state[idx] = Render.frameFlag;
 	}
 
 	public void update()
@@ -225,5 +231,13 @@ public class Animation
 		_frameStart = 0;
 		_isEnded = false;
 		_isReverse = false;
+	}
+
+	public void resetState()
+	{
+		for (int i = 0; i < _state.length; i++)
+		{
+			_state[i] = !Render.frameFlag;
+		}
 	}
 }

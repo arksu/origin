@@ -10,7 +10,6 @@ import com.a2client.model.GameObject;
 import com.a2client.render.postprocess.OutlineEffect;
 import com.a2client.render.postprocess.PostProcess;
 import com.a2client.render.shadows.Shadow;
-import com.a2client.render.shadows.ShadowBox;
 import com.a2client.render.skybox.Icosahedron;
 import com.a2client.render.skybox.Skybox;
 import com.a2client.render.water.WaterFrameBuffers;
@@ -58,6 +57,11 @@ public class Render
 	 */
 	public static Vector3 clipNormal = new Vector3(0, -1, 0);
 	public static float clipHeight = 1.5f;
+
+	/**
+	 * флаг рендера. каждый кадр меняется на противоположный. для уменьшений расчетов в пределах одного кадра
+	 */
+	public static boolean frameFlag = false;
 
 	private Game _game;
 	private Environment _environment;
@@ -132,6 +136,7 @@ public class Render
 
 	public void render(Camera camera)
 	{
+		frameFlag = !frameFlag;
 		Skybox.updateSunPos();
 		_skybox.updateSkyParams();
 

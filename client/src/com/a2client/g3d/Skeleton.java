@@ -1,6 +1,7 @@
 package com.a2client.g3d;
 
 import com.a2client.g3d.math.DualQuat;
+import com.a2client.render.Render;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
@@ -22,13 +23,17 @@ public class Skeleton
 
 	private DualQuat[] _joint;
 	private DualQuat[] _jquat;
+	private boolean[] _state;
 
 	public Skeleton(SkeletonData data, Model model)
 	{
 		_model = model;
 		_data = data;
-		_jquat = new DualQuat[_data.getJointsCount()];
-		_joint = new DualQuat[_data.getJointsCount()];
+		int jointsCount = _data.getJointsCount();
+		_jquat = new DualQuat[jointsCount];
+		_joint = new DualQuat[jointsCount];
+		_state = new boolean[jointsCount];
+		resetState();
 	}
 
 	public void bind(ShaderProgram shader)
@@ -45,8 +50,10 @@ public class Skeleton
 		Gdx.gl20.glUniform4fv(location, 0, getFloatBuffer(jquat));
 	}
 
-	public void updateJoint(int idx)
+	private void updateJoint(int idx)
 	{
+		if (_state[idx] == Render.frameFlag && _joint[idx] != null) return;
+
 		DualQuat cjoint = _data.getJoints()[idx].getFrame();
 		DualQuat defaultJoint = new DualQuat(cjoint);
 
@@ -116,6 +123,19 @@ public class Skeleton
 			{
 				_joint[idx] = cjoint;
 			}
+		}
+		_state[idx] = Render.frameFlag;
+	}
+
+	public void resetState()
+	{
+		for (int i = 0; i < _state.length; i++)
+		{
+			_state[i] = !Render.frameFlag;
+		}
+		if (_parent != null)
+		{
+			_parent.resetState();
 		}
 	}
 

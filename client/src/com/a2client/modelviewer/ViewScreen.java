@@ -6,6 +6,7 @@ import com.a2client.g3d.ModelBatch;
 import com.a2client.g3d.ModelData;
 import com.a2client.gui.GUIGDX;
 import com.a2client.render.GameCamera;
+import com.a2client.render.Render;
 import com.a2client.render.skybox.Skybox;
 import com.a2client.screens.BaseScreen;
 import com.a2client.util.Keys;
@@ -110,6 +111,7 @@ public class ViewScreen extends BaseScreen
 	@Override
 	public void onUpdate()
 	{
+		Render.frameFlag = !Render.frameFlag;
 		if (Input.MouseBtns[0] && !_oldMouseButtons[0])
 		{
 			_cameraDrag = true;
