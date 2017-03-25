@@ -44,13 +44,14 @@ public class ViewScreen extends BaseScreen
 
 	//		private String MODEL_NAME = "rifle";
 //	private String MODEL_NAME = "handgun";
-	private String MODEL_NAME = "cube";
+	private String MODEL_NAME = "player";
 //	private String MODEL_NAME = "untitled";
 
 	private Model _equip;
 
 	public ViewScreen()
 	{
+		Skybox.sunPosition = new Vector3(-100, 50, -100);
 		ShaderProgram.pedantic = false;
 
 		_gameCamera = new GameCamera();
@@ -98,7 +99,8 @@ public class ViewScreen extends BaseScreen
 			}
 		}
 
-		_models.get(0).playAnimation("run");
+		_models.get(0).playAnimation("ArmatureAction.001");
+//		_models.get(0).playAnimation("run");
 	}
 
 	@Override
@@ -236,7 +238,7 @@ public class ViewScreen extends BaseScreen
 		_shader.setUniformf("u_skyColor", Skybox.fogColor.r, Skybox.fogColor.g, Skybox.fogColor.b);
 		_shader.setUniformf("u_density", Skybox.fogEnabled ? Skybox.fogDensity : 0f);
 		_shader.setUniformf("u_gradient", Skybox.fogGradient);
-		_shader.setUniformf("u_lightPosition", new Vector3(100, 1500, 100));
+		_shader.setUniformf("u_lightPosition", Skybox.sunPosition);
 
 		_shader.setUniformf("u_shadowDistance", -1);
 

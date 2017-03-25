@@ -70,9 +70,12 @@ void main() {
 		rSpecular.xyz *= rTexN.x;
 	}
 
-	float intensity = max(rVdotN, 0.35);
+
+
+	float intensity = max(rVdotN, 0.45);
 //	float intensity = max(NdotL, 0.45);
 //    outColor = intensity * texture(u_texture, texCoords);
+	float shadeIntensity = ceil(intensity * numShades)/numShades;
     outColor = intensity * texture(u_texture, texCoords);
 	if (outColor.a <= 0.01)
 		discard;
@@ -103,12 +106,10 @@ void main() {
 		lightFactor = lightFactor * 0.5 + 0.8;
 
 		outColor.xyz = outColor.xyz * lightFactor;
-//			outColor.xyz = vec3(1,1,1) * lightFactor;
 	}
+	outColor.xyz = outColor.xyz * shadeIntensity;
 	outColor = mix(vec4(u_skyColor, 1.0), outColor, visibility);
 
-
-//	outColor = vec4(shadowCoords);
 
 	fragColor2 = pack_depth(v_depth);
 }

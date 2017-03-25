@@ -266,4 +266,9 @@ public class ModelData
 	{
 		return _animations.get(name);
 	}
+
+	public Map<String, AnimationData> getAnimations()
+	{
+		return _animations;
+	}
 }
