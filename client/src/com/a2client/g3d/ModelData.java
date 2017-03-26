@@ -109,7 +109,7 @@ public class ModelData
 	private void loadAnimation(MyInputStream in) throws IOException
 	{
 		AnimationData data = AnimationLoader.load(in, _skeletonData);
-		_log.debug("loaded anim: " + data.getName());
+		_log.debug("loaded anim: " + data.getName() + " frames: " + data.getFramesCount() + " fps: " + data.getFps());
 		_animations.put(data.getName(), data);
 	}
 

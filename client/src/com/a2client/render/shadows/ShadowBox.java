@@ -67,7 +67,7 @@ public class ShadowBox
 	 */
 	protected void update()
 	{
-		SHADOW_DISTANCE = cam.getCameraDistance() * 1.2f + 10f;
+		SHADOW_DISTANCE = cam.getCameraDistance() * 2.2f + 10f;
 		calculateWidthsAndHeights();
 
 		Vector3 forward = cam.direction;

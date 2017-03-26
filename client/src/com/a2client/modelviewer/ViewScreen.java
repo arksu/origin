@@ -1,10 +1,13 @@
 package com.a2client.modelviewer;
 
+import com.a2client.Config;
 import com.a2client.Input;
 import com.a2client.g3d.Model;
 import com.a2client.g3d.ModelBatch;
 import com.a2client.g3d.ModelData;
+import com.a2client.gui.GUI;
 import com.a2client.gui.GUIGDX;
+import com.a2client.gui.GUI_StringList;
 import com.a2client.render.GameCamera;
 import com.a2client.render.Render;
 import com.a2client.render.skybox.Skybox;
@@ -19,9 +22,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import org.lwjgl.opengl.GL13;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.io.File;
 
 import static com.a2client.render.Render.makeShader;
 
@@ -31,7 +32,7 @@ import static com.a2client.render.Render.makeShader;
  */
 public class ViewScreen extends BaseScreen
 {
-	private List<Model> _models = new ArrayList<>();
+	private GUI_StringList _modelNames;
 
 	private GameCamera _gameCamera;
 	private ModelBatch _modelBatch;
@@ -42,65 +43,61 @@ public class ViewScreen extends BaseScreen
 	private boolean _isRotate = true;
 	private float _yOffset = 0;
 
-	//		private String MODEL_NAME = "rifle";
-//	private String MODEL_NAME = "handgun";
 	private String MODEL_NAME = "player";
-//	private String MODEL_NAME = "untitled";
 
+	private Model _activeModel;
 	private Model _equip;
 
 	public ViewScreen()
 	{
-		Skybox.sunPosition = new Vector3(-100, 50, -100);
+		_modelNames = new GUI_StringList(GUI.rootNormal())
+		{
+			@Override
+			public void doClick()
+			{
+				String s = getItem(getSelectedItem());
+				MODEL_NAME = s;
+				reloadModel();
+			}
+		};
+		_modelNames.setPos(10, 100);
+		_modelNames.setSize(140, 300);
+
+		findModelNames();
+		Skybox.sunPosition = new Vector3(100, 50, -100);
 		ShaderProgram.pedantic = false;
 
 		_gameCamera = new GameCamera();
 		_shader = makeShader("modelView");
 
 		_modelBatch = new ModelBatch();
-		ModelData modelData = new ModelData(MODEL_NAME);
-		ModelData modelData2 = null;// new ModelData("rifle");
 
-		Model rotatingModel = new Model(modelData);
-		_models.add(rotatingModel);
+		reloadModel();
+	}
 
-		_equip = new Model(new ModelData("handgun"));
-		_equip.setPos(0, 0, 0);
-
-		Random random = new Random();
-		for (int i = 0; i < 0; i++)
+	private void findModelNames()
+	{
+		_modelNames.clear();
+		File f = new File(Config.MODELS_DIR);
+		File[] files = f.listFiles();
+		if (files != null)
 		{
-			Model model;
-			if (random.nextInt(1) == 0)
+			for (File file : files)
 			{
-				model = new Model(modelData);
-			}
-			else
-			{
-				model = new Model(modelData2);
-			}
-			final int range = 10;
-			float x = random.nextInt(range) - range / 2;
-			float y = random.nextInt(range) - range / 2;
-			float z = random.nextInt(range) - range / 2;
-
-			model.setPos(x, y, z);
-			float a = random.nextFloat() * 360;
-			model.getTransform().rotate(0, 1, 0, a);
-			model.updateWorldTransform();
-
-			if (random.nextInt(2) == 0)
-			{
-				rotatingModel.addChild(model);
-			}
-			else
-			{
-				_models.add(model);
+				String name = file.getName();
+				if (name.endsWith(".mdl"))
+				{
+					_modelNames.Add(name.substring(0, name.length() - 4));
+				}
 			}
 		}
+	}
 
-		_models.get(0).playAnimation("ArmatureAction.001");
-//		_models.get(0).playAnimation("run");
+	private void reloadModel()
+	{
+		ModelData modelData = new ModelData(MODEL_NAME);
+		_activeModel = new Model(modelData);
+
 	}
 
 	@Override
@@ -146,19 +143,19 @@ public class ViewScreen extends BaseScreen
 		}
 		if (Input.KeyHit(Keys.R))
 		{
-			_models.get(0).playAnimation("run");
+			_activeModel.playAnimation("run");
 		}
 		if (Input.KeyHit(Keys.T))
 		{
-			_models.get(0).playAnimation("idle");
+			_activeModel.playAnimation("idle");
 		}
 		if (Input.KeyHit(Keys.F))
 		{
-			_models.get(0).playMergeAnimation("arms_up");
+			_activeModel.playMergeAnimation("arms_up");
 		}
 		if (Input.KeyHit(Keys.G))
 		{
-			_equip.bindTo(_models.get(0), "EquipHand.L");
+			_equip.bindTo(_activeModel, "EquipHand.L");
 		}
 		if (Input.KeyHit(Keys.B))
 		{
@@ -179,11 +176,14 @@ public class ViewScreen extends BaseScreen
 		tmp.rotate(0, 1, 0, _rotateAngle);
 //		tmp.scale(3, 3, 3);
 
-		_models.get(0).setPos(0, _yOffset, 0);
-		_models.get(0).setHeading(_rotateAngle, true);
+		if (_activeModel != null)
+		{
+			_activeModel.setPos(0, _yOffset, 0);
+			_activeModel.setHeading(_rotateAngle, true);
 
-		_equip.update();
-		_models.get(0).update();
+//		_equip.update();
+			_activeModel.update();
+		}
 
 		super.onUpdate();
 	}
@@ -211,9 +211,9 @@ public class ViewScreen extends BaseScreen
 
 		_modelBatch.begin(_gameCamera, _shader, false);
 		prepareShader();
-		for (Model model : _models)
+		if (_activeModel != null)
 		{
-			_modelBatch.render(model);
+			_modelBatch.render(_activeModel);
 		}
 //		_modelBatch.render(_equip);
 		_modelBatch.end();

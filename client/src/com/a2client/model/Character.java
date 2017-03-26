@@ -20,7 +20,7 @@ public class Character extends GameObject
 		_isMoving = moving;
 		if (_isMoving)
 		{
-			_model.playAnimation("run");
+			_model.playAnimation("walk");
 		}
 		else
 		{

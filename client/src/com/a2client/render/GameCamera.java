@@ -107,7 +107,8 @@ public class GameCamera extends PerspectiveCamera
 			position.y = Math.max(h, position.y);
 
 			// скажем смотреть на игрока
-			lookAt(_chaseObj.getWorldCoord());
+			Vector3 worldCoord = _chaseObj.getWorldCoord().cpy().add(0, 3, 0);
+			lookAt(worldCoord);
 
 //			position.add(0,5,0);
 		}

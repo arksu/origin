@@ -66,7 +66,7 @@ public class GUI_ContextMenu extends GUI_StringList
 		int w = 0;
 		for (int i = 0; i < getCount(); i++)
 		{
-			w = max(w, GUIGDX.getTextWidth(font_name, GetItem(i)));
+			w = max(w, GUIGDX.getTextWidth(font_name, getItem(i)));
 		}
 		w += 25;
 
