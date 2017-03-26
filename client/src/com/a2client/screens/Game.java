@@ -185,7 +185,7 @@ public class Game extends BaseScreen
 				}
 				else if (Input.KeyHit(Hotkey.EQUIP))
 				{
-					Player.getInstance().getEquip().toggle();
+					Player.getInstance().getEquipWindow().toggle();
 				}
 				else if (Input.KeyHit(Hotkey.CHAT_ENTER))
 				{

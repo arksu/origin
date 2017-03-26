@@ -12,9 +12,9 @@ import java.util.List;
  * окно экипировки
  * Created by arksu on 17.09.15.
  */
-public class Equip
+public class EquipWindow
 {
-	private static final Logger _log = LoggerFactory.getLogger(Equip.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(EquipWindow.class.getName());
 
 	/**
 	 * вещи в эквипе

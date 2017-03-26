@@ -174,7 +174,12 @@ public class ModelData
 			if (descMaterial == null)
 			{
 				ModelDesc.Material desc = new ModelDesc.Material();
-				desc.diffuse = _name + ".png";
+				String fname = _name + ".png";
+				if (!MyInputStream.fileExists(fname))
+				{
+					fname = "unknown.png";
+				}
+				desc.diffuse = fname;
 				_defaultMaterial = new Material(desc);
 			}
 			else

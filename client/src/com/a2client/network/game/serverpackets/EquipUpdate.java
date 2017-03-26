@@ -46,10 +46,10 @@ public class EquipUpdate extends GameServerPacket
 	@Override
 	public void run()
 	{
-		List<InventoryItem> equipItems = Player.getInstance().getEquip().getItems();
+		List<InventoryItem> equipItems = Player.getInstance().getEquipWindow().getItems();
 		equipItems.clear();
 		equipItems.addAll(_items);
 		// если есть открытый инвентарь - обновить содержимое
-		Player.getInstance().getEquip().onChange();
+		Player.getInstance().getEquipWindow().onChange();
 	}
 }

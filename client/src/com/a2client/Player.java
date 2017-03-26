@@ -1,7 +1,7 @@
 package com.a2client;
 
 import com.a2client.model.Action;
-import com.a2client.model.Equip;
+import com.a2client.model.EquipWindow;
 import com.a2client.model.Hand;
 import com.a2client.screens.Game;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ public class Player
 	/**
 	 * эквип игрока
 	 */
-	private final Equip _equip = new Equip();
+	private final EquipWindow _equipWindow = new EquipWindow();
 
 	/**
 	 * доступные действия для игрока
@@ -98,9 +98,9 @@ public class Player
 		}
 	}
 
-	public Equip getEquip()
+	public EquipWindow getEquipWindow()
 	{
-		return _equip;
+		return _equipWindow;
 	}
 
 	public void setActions(Action rootAction)

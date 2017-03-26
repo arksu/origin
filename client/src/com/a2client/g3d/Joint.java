@@ -51,6 +51,15 @@ public class Joint
 		_frame = new DualQuat(frame.getRot(), pos1);
 	}
 
+	public Joint(String name, DualQuat bind, DualQuat frame)
+	{
+		_name = name;
+		_parentName = "";
+		_bind = bind;
+		_frame = frame;
+		_parentIndex = -1;
+	}
+
 	public int getParentIndex()
 	{
 		return _parentIndex;

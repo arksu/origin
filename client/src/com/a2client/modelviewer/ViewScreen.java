@@ -143,7 +143,7 @@ public class ViewScreen extends BaseScreen
 		}
 		if (Input.KeyHit(Keys.R))
 		{
-			_activeModel.playAnimation("run");
+			_activeModel.playAnimation("walk");
 		}
 		if (Input.KeyHit(Keys.T))
 		{
@@ -151,11 +151,16 @@ public class ViewScreen extends BaseScreen
 		}
 		if (Input.KeyHit(Keys.F))
 		{
-			_activeModel.playMergeAnimation("arms_up");
+			ModelData data = new ModelData("apple");
+			Model model = new Model(data);
+			model.bindTo(_activeModel, "EquipHand.L");
 		}
 		if (Input.KeyHit(Keys.G))
 		{
-			_equip.bindTo(_activeModel, "EquipHand.L");
+//			_equip.bindTo(_activeModel, "EquipHand.L");
+			ModelData data = new ModelData("apple");
+			Model model = new Model(data);
+			model.bindTo(_activeModel, "EquipHand.R");
 		}
 		if (Input.KeyHit(Keys.B))
 		{

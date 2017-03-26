@@ -110,6 +110,12 @@ public class MyInputStream extends DataInputStream
 		return ZM.mul(m).mul(ZM.inverse());
 	}
 
+	public static boolean fileExists(String name)
+	{
+		File file = Gdx.files.internal(Config.MODELS_DIR + name).file();
+		return file != null && file.exists();
+	}
+
 	public static MyInputStream fromFile(String name)
 	{
 		try

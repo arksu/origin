@@ -2,7 +2,7 @@ package com.a2client.gamegui;
 
 import com.a2client.gui.GUI_Control;
 import com.a2client.gui.GUI_Window;
-import com.a2client.model.Equip;
+import com.a2client.model.EquipWindow;
 import com.a2client.model.InventoryItem;
 import com.a2client.util.Vec2i;
 import org.slf4j.Logger;
@@ -49,7 +49,7 @@ public class GUI_EquipWindow extends GUI_Window
 		setSize(190, 350);
 	}
 
-	public void assign(Equip equip)
+	public void assign(EquipWindow equipWindow)
 	{
 		for (GUI_InventoryItem item : _items.values())
 		{
@@ -58,7 +58,7 @@ public class GUI_EquipWindow extends GUI_Window
 		_items.clear();
 
 		// создаем и заполняем контролы слотов в которых есть вещи
-		for (InventoryItem item : equip.getItems())
+		for (InventoryItem item : equipWindow.getItems())
 		{
 			GUI_InventoryItem ctrl = new GUI_InventoryItem(this, item);
 			// укажем что это слот для эквипа

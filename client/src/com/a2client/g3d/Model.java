@@ -364,17 +364,19 @@ public class Model
 	{
 		other.addChild(this);
 
-		if (_skeleton != null)
+		if (_skeleton == null)
 		{
-			Skeleton otherSkeleton = other.getSkeleton();
-			int index = otherSkeleton.getJointIndex(boneName);
-			if (index < -1)
-			{
-				throw new RuntimeException("bone not found");
-			}
-			_skeleton.setParent(otherSkeleton, index);
-			_skeleton.resetState();
+			_skeleton = new Skeleton(SkeletonData.bindEquipData, this);
 		}
+
+		Skeleton otherSkeleton = other.getSkeleton();
+		int index = otherSkeleton.getJointIndex(boneName);
+		if (index < -1)
+		{
+			throw new RuntimeException("bone not found: " + boneName);
+		}
+		_skeleton.setParent(otherSkeleton, index);
+		_skeleton.resetState();
 	}
 
 	public void unbind()
