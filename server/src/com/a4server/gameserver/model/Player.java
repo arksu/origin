@@ -209,6 +209,27 @@ public class Player extends Human
 		{
 			getClient().sendPacket(new MapGrid(grid, getPos()._x, getPos()._y));
 		}
+
+		int c = 0;
+		do
+		{
+			try
+			{
+				if (grid.activate(this))
+				{
+					break;
+				}
+			}
+			catch (InterruptedException e)
+			{
+				throw new RuntimeException(e);
+			}
+			if (c++ > 20)
+			{
+				throw new RuntimeException("activate grid too much tries " + this._name);
+			}
+		}
+		while (true);
 	}
 
 	/**
