@@ -28,7 +28,7 @@ public class ObjectCache
 	{
 		_objects.add(object);
 		// запомним объект игрока, он много где пригодится
-		if (object.getObjectId() == Player.getInstance().getObjectId())
+		if (object.getObjectId() == PlayerData.getInstance().getObjectId())
 		{
 			_me = object;
 			// например тут. надо сказать камере к чему привязаться

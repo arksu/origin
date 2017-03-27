@@ -1,6 +1,6 @@
 package com.a2client.network.game.serverpackets;
 
-import com.a2client.Player;
+import com.a2client.PlayerData;
 import com.a2client.model.Hand;
 import com.a2client.network.game.GamePacketHandler;
 import org.slf4j.Logger;
@@ -48,6 +48,6 @@ public class PlayerHand extends GameServerPacket
 		{
 			hand = new Hand(_objectId, _w, _h, _offsetX, _offsetY, _icon);
 		}
-		Player.getInstance().setHand(hand);
+		PlayerData.getInstance().setHand(hand);
 	}
 }

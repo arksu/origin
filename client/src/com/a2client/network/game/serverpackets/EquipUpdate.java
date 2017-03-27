@@ -1,6 +1,6 @@
 package com.a2client.network.game.serverpackets;
 
-import com.a2client.Player;
+import com.a2client.PlayerData;
 import com.a2client.model.InventoryItem;
 import com.a2client.network.game.GamePacketHandler;
 
@@ -38,18 +38,18 @@ public class EquipUpdate extends GameServerPacket
 			int stage = readC();
 			int ticks = readH();
 			int ticksTotal = readH();
-			_items.add(new InventoryItem(Player.getInstance().getObjectId(),
-										 objectId, typeId, icon, q, 200, slotCode, w, h, stage, amount, ticks, ticksTotal));
+			_items.add(new InventoryItem(PlayerData.getInstance().getObjectId(),
+			                             objectId, typeId, icon, q, 200, slotCode, w, h, stage, amount, ticks, ticksTotal));
 		}
 	}
 
 	@Override
 	public void run()
 	{
-		List<InventoryItem> equipItems = Player.getInstance().getEquipWindow().getItems();
+		List<InventoryItem> equipItems = PlayerData.getInstance().getEquipWindow().getItems();
 		equipItems.clear();
 		equipItems.addAll(_items);
 		// если есть открытый инвентарь - обновить содержимое
-		Player.getInstance().getEquipWindow().onChange();
+		PlayerData.getInstance().getEquipWindow().onChange();
 	}
 }

@@ -2,7 +2,7 @@ package com.a2client.render;
 
 import com.a2client.Config;
 import com.a2client.ObjectCache;
-import com.a2client.Player;
+import com.a2client.PlayerData;
 import com.a2client.Terrain;
 import com.a2client.g3d.Model;
 import com.a2client.g3d.ModelBatch;
@@ -328,7 +328,7 @@ public class Render
 				// если объект попадает в поле зрения камеры
 				if (_modelBatch.render(model))
 				{
-					model.setUserData(o == _oldSelected && o.getObjectId() != Player.getInstance().getObjectId() && findIntersect ? Boolean.TRUE : Boolean.FALSE);
+					model.setUserData(o == _oldSelected && o.getObjectId() != PlayerData.getInstance().getObjectId() && findIntersect ? Boolean.TRUE : Boolean.FALSE);
 
 					// найдем текущий выбранный объект (в который попадает мышь)
 					// попадает ли луч из мыши в объект?

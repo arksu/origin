@@ -64,7 +64,7 @@ public class Game extends BaseScreen
 
 	public Game()
 	{
-		Player.init();
+		PlayerData.init();
 		ObjectCache.getInstance().clear();
 		Terrain.clear();
 
@@ -141,7 +141,7 @@ public class Game extends BaseScreen
 	public void dispose()
 	{
 		_render.dispose();
-		Player.getInstance().dispose();
+		PlayerData.getInstance().dispose();
 		ObjectCache.getInstance().clear();
 		InventoryCache.getInstance().clear();
 		Terrain.clear();
@@ -177,7 +177,7 @@ public class Game extends BaseScreen
 				if (Input.KeyHit(Hotkey.INVENTORY))
 				{
 					// по нажатию на таб - откроем инвентарь
-					Inventory inventory = InventoryCache.getInstance().get(Player.getInstance().getObjectId());
+					Inventory inventory = InventoryCache.getInstance().get(PlayerData.getInstance().getObjectId());
 					if (inventory != null)
 					{
 						inventory.toggle();
@@ -185,7 +185,7 @@ public class Game extends BaseScreen
 				}
 				else if (Input.KeyHit(Hotkey.EQUIP))
 				{
-					Player.getInstance().getEquipWindow().toggle();
+					PlayerData.getInstance().getEquipWindow().toggle();
 				}
 				else if (Input.KeyHit(Hotkey.CHAT_ENTER))
 				{

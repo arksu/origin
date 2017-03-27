@@ -1,5 +1,7 @@
 package com.a2client.model;
 
+import com.a2client.ModelManager;
+import com.a2client.g3d.Model;
 import com.a2client.network.game.serverpackets.ObjectAdd;
 
 /**
@@ -26,5 +28,11 @@ public class Character extends GameObject
 		{
 			_model.playAnimation("idle");
 		}
+	}
+
+	public void equip(int typeId, Equip.Slot slot)
+	{
+		Model model = ModelManager.getInstance().getModelByType(typeId);
+		model.bindTo(this._model, slot.getBoneName());
 	}
 }

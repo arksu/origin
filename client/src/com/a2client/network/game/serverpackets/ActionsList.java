@@ -1,6 +1,6 @@
 package com.a2client.network.game.serverpackets;
 
-import com.a2client.Player;
+import com.a2client.PlayerData;
 import com.a2client.model.Action;
 import com.a2client.network.game.GamePacketHandler;
 import com.google.gson.Gson;
@@ -36,6 +36,6 @@ public class ActionsList extends GameServerPacket
 	@Override
 	public void run()
 	{
-		Player.getInstance().setActions(_action);
+		PlayerData.getInstance().setActions(_action);
 	}
 }

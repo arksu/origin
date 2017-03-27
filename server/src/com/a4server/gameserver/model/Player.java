@@ -210,6 +210,8 @@ public class Player extends Human
 			getClient().sendPacket(new MapGrid(grid, getPos()._x, getPos()._y));
 		}
 
+		// надо "активировать" новый грид куда я вошел
+		// считаем количество попыток
 		int c = 0;
 		do
 		{
@@ -224,6 +226,7 @@ public class Player extends Human
 			{
 				throw new RuntimeException(e);
 			}
+			// если ну никак не получается активировать
 			if (c++ > 20)
 			{
 				throw new RuntimeException("activate grid too much tries " + this._name);

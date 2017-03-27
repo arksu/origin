@@ -1,6 +1,6 @@
 package com.a2client.network.game.serverpackets;
 
-import com.a2client.Player;
+import com.a2client.PlayerData;
 import com.a2client.network.game.GamePacketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class CharInfo extends GameServerPacket
 	@Override
 	public void run()
 	{
-		Player.getInstance().setObjectId(_objectId);
-		Player.getInstance().setName(_name);
+		PlayerData.getInstance().setObjectId(_objectId);
+		PlayerData.getInstance().setName(_name);
 	}
 }

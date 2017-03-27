@@ -11,10 +11,10 @@ import org.slf4j.LoggerFactory;
  * описывает класс моего персонажа и всего что с ним связано
  * параметры, статы, скиллы и прочее
  */
-public class Player
+public class PlayerData
 {
-	private static final Logger _log = LoggerFactory.getLogger(Player.class.getName());
-	private static Player _instance;
+	private static final Logger _log = LoggerFactory.getLogger(PlayerData.class.getName());
+	private static PlayerData _instance;
 
 	private int _objectId = -1;
 
@@ -62,9 +62,9 @@ public class Player
 	{
 		if (_instance != null)
 		{
-			_log.error("Player init: instance is not NULL!");
+			_log.error("PlayerData init: instance is not NULL!");
 		}
-		_instance = new Player();
+		_instance = new PlayerData();
 	}
 
 	public void dispose()
@@ -72,7 +72,7 @@ public class Player
 		_instance = null;
 	}
 
-	public static Player getInstance()
+	public static PlayerData getInstance()
 	{
 		return _instance;
 	}
