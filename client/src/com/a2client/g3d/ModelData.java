@@ -177,7 +177,7 @@ public class ModelData
 				String fname = _name + ".png";
 				if (!MyInputStream.fileExists(fname))
 				{
-					fname = "unknown.png";
+					fname = null;
 				}
 				desc.diffuse = fname;
 				_defaultMaterial = new Material(desc);

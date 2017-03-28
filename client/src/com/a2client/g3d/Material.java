@@ -52,11 +52,10 @@ public class Material
 			parameter.magFilter = Texture.TextureFilter.Nearest;
 		}
 
-		if (Utils.isEmpty(material.diffuse))
+		if (!Utils.isEmpty(material.diffuse))
 		{
-			throw new RuntimeException("no diffuse texture in material");
+			Main.getAssetManager().load(Config.MODELS_DIR + material.diffuse, Texture.class, parameter);
 		}
-		Main.getAssetManager().load(Config.MODELS_DIR + material.diffuse, Texture.class, parameter);
 
 		if (!Utils.isEmpty(material.normal))
 		{
@@ -69,7 +68,11 @@ public class Material
 		}
 
 		Main.getAssetManager().finishLoading();
-		_diffuse = Main.getAssetManager().get(Config.MODELS_DIR + material.diffuse, Texture.class);
+
+		if (!Utils.isEmpty(material.diffuse))
+		{
+			_diffuse = Main.getAssetManager().get(Config.MODELS_DIR + material.diffuse, Texture.class);
+		}
 		if (!Utils.isEmpty(material.normal))
 		{
 			_normal = Main.getAssetManager().get(Config.MODELS_DIR + material.normal, Texture.class);
@@ -86,30 +89,38 @@ public class Material
 		{
 			Gdx.gl.glActiveTexture(GL13.GL_TEXTURE1);
 			_normal.bind();
-			shader.setUniformf("u_normalMap", 1f);
+			shader.setUniformi("u_normalMapFlag", 1);
 		}
 		else
 		{
-			shader.setUniformf("u_normalMap", 0f);
+			shader.setUniformi("u_normalMapFlag", 0);
 		}
 
 		if (_specular != null)
 		{
 			Gdx.gl.glActiveTexture(GL13.GL_TEXTURE2);
 			_specular.bind();
-			shader.setUniformf("u_specularMap", 1f);
-
+			shader.setUniformi("u_specularMapFlag", 1);
 		}
 		else
 		{
-			shader.setUniformf("u_specularMap", 0f);
+			shader.setUniformi("u_specularMapFlag", 0);
 		}
 
-		Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
-		_diffuse.bind();
+		if (_diffuse != null)
+		{
+			Gdx.gl.glActiveTexture(GL13.GL_TEXTURE0);
+			_diffuse.bind();
+			shader.setUniformi("u_diffuseFlag", 1);
+		}
+		else
+		{
+			shader.setUniformi("u_diffuseFlag", 0);
+		}
 
-		// TODO
-		shader.setUniformf("u_shadowDistance", Config.getInstance()._renderShadows && _receiveShadows ? ShadowBox.SHADOW_DISTANCE : -1f);
+		shader.setUniformf(
+				"u_shadowDistance",
+				Config.getInstance()._renderShadows && _receiveShadows ? ShadowBox.SHADOW_DISTANCE : -1f);
 	}
 
 	public boolean isCastShadows()

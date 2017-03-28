@@ -10,10 +10,9 @@ uniform vec3 u_skyColor;
 uniform sampler2D u_shadowMap;
 uniform int u_selected;
 
-//uniform vec4 u_joints[128];
-
-uniform float u_specularMap;
-uniform float u_normalMap;
+uniform int u_specularMapFlag;
+uniform int u_normalMapFlag;
+uniform int u_diffuseFlag;
 
 in vec2 texCoords;
 in float visibility;
@@ -54,7 +53,7 @@ void main() {
 
 	vec3 rNormal;
 	vec4 rTexN;
-	if (u_normalMap > 0) {
+	if (u_normalMapFlag > 0) {
 		rTexN = texture(u_textureNormal, texCoords);
 		rNormal = normalize(mat3(v_tangent, v_binormal, v_normal) * (rTexN.xyz * 2.0 - 1.0)); // wyz
     } else {
@@ -64,9 +63,9 @@ void main() {
 	float rVdotN = dot(rViewVec, rNormal);
 
 	vec4 rSpecular = vec4(0.3);// uMaterial[cSpecular];
-	if (u_specularMap > 0) {
+	if (u_specularMapFlag > 0) {
 		rSpecular *= texture(u_textureSpecular, texCoords);
-	} else if (u_normalMap > 0) {
+	} else if (u_normalMapFlag > 0) {
 		rSpecular.xyz *= rTexN.x;
 	}
 
@@ -76,7 +75,11 @@ void main() {
 //	float intensity = max(NdotL, 0.45);
 //    outColor = intensity * texture(u_texture, texCoords);
 	float shadeIntensity = ceil(intensity * numShades)/numShades;
-    outColor = intensity * texture(u_texture, texCoords);
+	if (u_diffuseFlag > 0) {
+    	outColor = intensity * texture(u_texture, texCoords);
+    } else {
+    	outColor = intensity * vec4(1);
+    }
 	if (outColor.a <= 0.01)
 		discard;
 //    outColor += rSpecular;

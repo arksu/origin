@@ -33,6 +33,7 @@ import static com.a2client.render.Render.makeShader;
 public class ViewScreen extends BaseScreen
 {
 	private GUI_StringList _modelNames;
+	private GUI_StringList _modelAnimations;
 
 	private GameCamera _gameCamera;
 	private ModelBatch _modelBatch;
@@ -63,8 +64,20 @@ public class ViewScreen extends BaseScreen
 		_modelNames.setPos(10, 100);
 		_modelNames.setSize(140, 300);
 
+		_modelAnimations = new GUI_StringList(GUI.rootNormal())
+		{
+			@Override
+			public void doClick()
+			{
+				String s = getItem(getSelectedItem());
+				_activeModel.playAnimation(s);
+			}
+		};
+		_modelAnimations.setPos(10, 450);
+		_modelAnimations.setSize(140, 200);
+
 		findModelNames();
-		Skybox.sunPosition = new Vector3(100, 50, -100);
+		Skybox.sunPosition = new Vector3(100, 150, -100);
 		ShaderProgram.pedantic = false;
 
 		_gameCamera = new GameCamera();
@@ -98,6 +111,11 @@ public class ViewScreen extends BaseScreen
 		ModelData modelData = new ModelData(MODEL_NAME);
 		_activeModel = new Model(modelData);
 
+		_modelAnimations.clear();
+		for (String s : _activeModel.getData().getAnimations().keySet())
+		{
+			_modelAnimations.Add(s);
+		}
 	}
 
 	@Override

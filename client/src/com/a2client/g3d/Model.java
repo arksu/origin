@@ -100,12 +100,12 @@ public class Model
 
 		if (_skeleton != null)
 		{
-			modelBatch.getShader().setUniformf("u_skinMode", 1f);
+			modelBatch.getShader().setUniformi("u_skinFlag", 1);
 			_skeleton.bind(modelBatch.getShader());
 		}
 		else
 		{
-			modelBatch.getShader().setUniformf("u_skinMode", 0f);
+			modelBatch.getShader().setUniformi("u_skinFlag", 0);
 		}
 
 		if (_userData != null && _userData instanceof Boolean)

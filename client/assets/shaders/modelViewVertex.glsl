@@ -10,8 +10,8 @@ in vec2 a_bone0;
 in vec2 a_bone1;
 
 uniform mat4 u_worldTrans;
-uniform float u_normalMap;
-uniform float u_skinMode;
+uniform int u_normalMapFlag;
+uniform int u_skinFlag;
 
 uniform mat4 u_projViewTrans;
 uniform mat3 u_viewTrans;
@@ -54,7 +54,7 @@ void main() {
 	vec3 worldPosition;
 	vec4 qq0;
 
-	if (u_skinMode > 0) {
+	if (u_skinFlag > 0) {
 		vec2 rWeight;
 		// unpack weight
 //		rWeight.x = aJoint.z * (1.0 / 255.0);
@@ -90,14 +90,14 @@ void main() {
 	vec3 n = a_normal;// * 2.0 - 1.0;
 	vec4 b = a_binormal;// * 2.0 - 1.0;
 
-	if (u_skinMode > 0) {
-		if (u_normalMap > 0) {
+	if (u_skinFlag > 0) {
+		if (u_normalMapFlag > 0) {
 			v_tangent = MM * qrot(qq0, (cross(n, vec3(b)) * b.w));
 			v_binormal = MM * qrot(qq0, vec3(b));
     	}
     	v_normal = MM * qrot(qq0, n);
 	} else {
-		if (u_normalMap > 0) {
+		if (u_normalMapFlag > 0) {
 			v_tangent = MM * (cross(n, vec3(b)) * b.w);
 			v_binormal = MM * vec3(b);
 		}
