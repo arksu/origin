@@ -1,6 +1,10 @@
 package com.a2client.network.game.serverpackets;
 
+import com.a2client.ObjectCache;
 import com.a2client.PlayerData;
+import com.a2client.model.Character;
+import com.a2client.model.Equip;
+import com.a2client.model.GameObject;
 import com.a2client.model.InventoryItem;
 import com.a2client.network.game.GamePacketHandler;
 
@@ -57,6 +61,30 @@ public class EquipUpdate extends GameServerPacket
 			equipItems.addAll(_items);
 			// если есть открытый инвентарь - обновить содержимое
 			PlayerData.getInstance().getEquipWindow().onChange();
+		}
+
+		GameObject object = ObjectCache.getInstance().getObject(_objectId);
+		if (object != null && object instanceof Character)
+		{
+			List<Equip.Slot> binded = new ArrayList<>();
+			Character character = (Character) object;
+			for (InventoryItem item : _items)
+			{
+				binded.add(character.getEquip().bind(item));
+			}
+
+			List<Equip.Slot> toRemove = new ArrayList<>();
+			for (Equip.Slot slot : character.getEquip().getEquipped().keySet())
+			{
+				if (!binded.contains(slot))
+				{
+					toRemove.add(slot);
+				}
+			}
+			for (Equip.Slot slot : toRemove)
+			{
+				character.getEquip().unbind(slot);
+			}
 		}
 	}
 }

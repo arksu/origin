@@ -15,9 +15,10 @@ import java.util.List;
 public class ObjectCache
 {
 	private static final Logger _log = LoggerFactory.getLogger(ObjectCache.class.getName());
+
 	private static ObjectCache _instance;
 
-	List<GameObject> _objects = new ArrayList<>();
+	private final List<GameObject> _objects = new ArrayList<>();
 
 	/**
 	 * объект моего персонажа

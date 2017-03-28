@@ -46,6 +46,7 @@ public class GameObject
 		_objectId = pkt._objectId;
 		_typeId = pkt._typeId;
 		_interactive = false;
+		initModel();
 	}
 
 	public int getObjectId()
@@ -162,7 +163,6 @@ public class GameObject
 		if (_needInit)
 		{
 			_needInit = false;
-			initModel();
 		}
 
 		_model.update();
