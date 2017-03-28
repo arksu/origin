@@ -6,7 +6,7 @@ in vec2 a_texCoord0;
 in vec2 a_bone0;
 in vec2 a_bone1;
 
-uniform float u_skinMode;
+uniform int u_skinFlag;
 
 uniform mat4 u_projViewTrans;
 uniform mat4 u_worldTrans;
@@ -24,7 +24,7 @@ void main(void){
 	vec3 worldPosition;
 	vec4 qq0;
 
-	if (u_skinMode > 0) {
+	if (u_skinFlag > 0) {
 		vec2 rWeight;
 		// unpack weight
 //		rWeight.x = aJoint.z * (1.0 / 255.0);
