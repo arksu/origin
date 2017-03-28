@@ -27,7 +27,6 @@ public class EquipUpdate extends GameServerPacket
 	@Override
 	public void readImpl()
 	{
-		System.out.println("EquipUpdate");
 		_objectId = readD();
 		int count = readC();
 		while (count > 0)

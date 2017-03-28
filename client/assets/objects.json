@@ -38,7 +38,7 @@
 		// stoneAxe
 		"typeId": 16,
 		"scale": 0.2,
-		"model": "unknown"
+		"model": "axe"
 	},
 	{
 		// stoneKnife

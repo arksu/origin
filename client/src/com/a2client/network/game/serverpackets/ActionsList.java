@@ -30,7 +30,6 @@ public class ActionsList extends GameServerPacket
 		String list = readS();
 		// cписок шлем в json
 		_action = _gson.fromJson(list, Action.class);
-		_log.debug("recv actions: " + _action.list.length);
 	}
 
 	@Override

@@ -65,7 +65,7 @@ public class Equip
 		Slot slot = Slot.values()[item.getY()];
 		Item e = _equipped.get(slot);
 
-		if (e == null || e._item.getTypeId() != item.getTypeId())
+		if (e == null || e._item.getObjectId() != item.getObjectId())
 		{
 			if (e != null)
 			{
