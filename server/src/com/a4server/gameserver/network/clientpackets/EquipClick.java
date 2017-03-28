@@ -1,6 +1,6 @@
 package com.a4server.gameserver.network.clientpackets;
 
-import com.a4server.gameserver.model.EquipSlot;
+import com.a4server.gameserver.model.EquipItem;
 import com.a4server.gameserver.model.GameLock;
 import com.a4server.gameserver.model.Hand;
 import com.a4server.gameserver.model.Player;
@@ -42,7 +42,7 @@ public class EquipClick extends GameClientPacket
 	@Override
 	public void run()
 	{
-		EquipSlot.Slot slot = EquipSlot.getSlotType(_slotCode);
+		EquipItem.Slot slot = EquipItem.getSlotType(_slotCode);
 		_log.debug("obj=" + _objectId + " slot=" + slot + " offset=" + _offsetX + ", " + _offsetY + " mod=" + _mod);
 		Player player = client.getPlayer();
 		if (player != null && _btn == 0)
@@ -52,7 +52,7 @@ public class EquipClick extends GameClientPacket
 				// держим в руке что-то?
 				if (player.getHand() == null)
 				{
-					EquipSlot item = player.getEquip().getItems().remove(slot);
+					EquipItem item = player.getEquip().getItems().remove(slot);
 					if (item != null)
 					{
 						player.setHand(new Hand(player, item, 0, 0, _offsetX, _offsetY));

@@ -11,9 +11,9 @@ import java.sql.SQLException;
  * слот эквипа
  * Created by arksu on 14.09.15.
  */
-public class EquipSlot extends AbstractItem
+public class EquipItem extends AbstractItem
 {
-	private static final Logger _log = LoggerFactory.getLogger(EquipSlot.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(EquipItem.class.getName());
 
 	/**
 	 * слот эквипа
@@ -49,7 +49,7 @@ public class EquipSlot extends AbstractItem
 	 * @param rset строка из таблицы items
 	 * @throws SQLException
 	 */
-	public EquipSlot(GameObject object, ResultSet rset) throws SQLException
+	public EquipItem(GameObject object, ResultSet rset) throws SQLException
 	{
 		super(object, rset);
 		// код слота храним в y
@@ -59,7 +59,7 @@ public class EquipSlot extends AbstractItem
 	/**
 	 * создать копию на базе другой вещи (привести к типу)
 	 */
-	public EquipSlot(AbstractItem other)
+	public EquipItem(AbstractItem other)
 	{
 		super(other);
 	}

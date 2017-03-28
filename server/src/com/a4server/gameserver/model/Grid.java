@@ -467,7 +467,7 @@ public class Grid
 		if (template != null)
 		{
 			GameObject object;
-			Class<? extends GameObject> clazz = template.getClassName();
+			Class<? extends GameObject> clazz = template.getClazz();
 			if (clazz != null)
 			{
 				try

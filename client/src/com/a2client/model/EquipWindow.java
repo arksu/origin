@@ -1,7 +1,8 @@
 package com.a2client.model;
 
-import com.a2client.gui.GUI;
+import com.a2client.Lang;
 import com.a2client.gamegui.GUI_EquipWindow;
+import com.a2client.gui.GUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,6 +66,8 @@ public class EquipWindow
 			};
 			_wnd.assign(this);
 			_wnd.setPos(300, 100);
+			_wnd.setSize(260, 340);
+			_wnd.caption = Lang.getTranslate("equip");
 		}
 	}
 

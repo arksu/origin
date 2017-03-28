@@ -366,7 +366,7 @@ public class Model
 
 		if (_skeleton == null)
 		{
-			_skeleton = new Skeleton(SkeletonData.bindEquipData, this);
+			_skeleton = new Skeleton(SkeletonData.defaultEquipBone, this);
 		}
 
 		Skeleton otherSkeleton = other.getSkeleton();

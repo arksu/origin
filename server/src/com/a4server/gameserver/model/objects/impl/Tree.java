@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * деревья
  * Created by arksu on 22.08.16.
  */
 public class Tree extends GameObject

@@ -28,7 +28,10 @@ public interface ObjectTemplate
 	 */
 	String getName();
 
-	Class<? extends GameObject> getClassName();
+	/**
+	 * имя класса объекта (в котором реализована логика объекта)
+	 */
+	Class<? extends GameObject> getClazz();
 
 	CollisionTemplate getCollision();
 

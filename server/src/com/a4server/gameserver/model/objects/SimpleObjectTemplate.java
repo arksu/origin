@@ -116,7 +116,7 @@ public class SimpleObjectTemplate implements ObjectTemplate
 	}
 
 	@Override
-	public Class<? extends GameObject> getClassName()
+	public Class<? extends GameObject> getClazz()
 	{
 		return _class;
 	}

@@ -1,6 +1,7 @@
 package com.a2client.gamegui;
 
 import com.a2client.gui.GUI_Control;
+import com.a2client.gui.GUI_Image;
 import com.a2client.gui.GUI_Window;
 import com.a2client.model.EquipWindow;
 import com.a2client.model.InventoryItem;
@@ -33,20 +34,50 @@ public class GUI_EquipWindow extends GUI_Window
 
 	static
 	{
-		// позиции слотов
-		int py = 35;
+//		LHAND(0), RHAND(1),
+//		HEAD(2), BODY(3),
+//		PANTS(6),
+//		LFOOT(4), RFOOT(5);
 
-		for (int i = 0; i < 7; i++)
-		{
-			_slotPos.add(new Vec2i(10, py));
-			py += 40;
-		}
+		// Left hand
+		_slotPos.add(new Vec2i(200, 150));
+
+		// right hand
+		_slotPos.add(new Vec2i(15, 180));
+
+		// head
+		_slotPos.add(new Vec2i(10, 10));
+
+		// body
+		_slotPos.add(new Vec2i(10, 10));
+
+		// left foot
+		_slotPos.add(new Vec2i(10, 10));
+		// right foot
+		_slotPos.add(new Vec2i(10, 10));
+
+		// pants
+		_slotPos.add(new Vec2i(100, 180));
+
+		// позиции слотов
+//		int py = 100;
+
+//		for (int i = 0; i < 7; i++)
+//		{
+//			_slotPos.add(new Vec2i(10, py));
+//			py += 40;
+//		}
 	}
 
 	protected GUI_EquipWindow(GUI_Control parent)
 	{
 		super(parent);
-		setSize(190, 350);
+		setSize(260, 350);
+
+		GUI_Image image = new GUI_Image(this);
+		image.skin_element = "equip_man";
+		image.setPos(50, 40);
+		image.setSize(151, 284);
 	}
 
 	public void assign(EquipWindow equipWindow)

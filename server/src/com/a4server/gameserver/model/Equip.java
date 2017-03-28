@@ -2,6 +2,7 @@ package com.a4server.gameserver.model;
 
 import com.a4server.Database;
 import com.a4server.gameserver.model.inventory.AbstractItem;
+import com.a4server.gameserver.model.objects.ItemTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,7 @@ public class Equip
 	/**
 	 * грузим эквип из основной таблицы с вещами, x=200
 	 * y - определяет номер слота в котором находится вещь
-	 * x = 200, y = 200 это рука
+	 * x = 200, y = 200 это рука (что находится в курсоре клиента)
 	 */
 	public static final String LOAD_EQUIP = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal, del FROM items WHERE inventoryId=? AND x = 200 AND del=0";
 
@@ -34,7 +35,7 @@ public class Equip
 	 */
 	protected final int _objectId;
 
-	protected final Map<EquipSlot.Slot, EquipSlot> _items = new HashMap<>();
+	protected final Map<EquipItem.Slot, EquipItem> _items = new HashMap<>();
 
 	public Equip(Player player)
 	{
@@ -49,7 +50,7 @@ public class Equip
 		try
 		{
 			try (Connection con = Database.getInstance().getConnection();
-				 PreparedStatement ps = con.prepareStatement(LOAD_EQUIP))
+			     PreparedStatement ps = con.prepareStatement(LOAD_EQUIP))
 			{
 				ps.setInt(1, _objectId);
 				try (ResultSet rset = ps.executeQuery())
@@ -65,7 +66,7 @@ public class Equip
 						}
 						else
 						{
-							EquipSlot slot = new EquipSlot(_player, rset);
+							EquipItem slot = new EquipItem(_player, rset);
 							_items.put(slot.getSlot(), slot);
 						}
 					}
@@ -80,7 +81,7 @@ public class Equip
 		}
 	}
 
-	public Map<EquipSlot.Slot, EquipSlot> getItems()
+	public Map<EquipItem.Slot, EquipItem> getItems()
 	{
 		return _items;
 	}
@@ -88,14 +89,19 @@ public class Equip
 	/**
 	 * положить вещь в указанный слот
 	 */
-	public boolean putItem(AbstractItem item, EquipSlot.Slot slot)
+	public boolean putItem(AbstractItem item, EquipItem.Slot slot)
 	{
+		// если слот еще не занят
 		if (!_items.containsKey(slot))
 		{
-			EquipSlot slotItem = item instanceof EquipSlot ? (EquipSlot) item : new EquipSlot(item);
-			slotItem.setSlot(slot);
-			_items.put(slot, slotItem);
-			return true;
+			EquipItem equipItem = item instanceof EquipItem ? (EquipItem) item : new EquipItem(item);
+			ItemTemplate template = equipItem.getTemplate();
+			if (template.getEquipSlots() != null && template.getEquipSlots().contains(slot.name().toLowerCase()))
+			{
+				equipItem.setSlot(slot);
+				_items.put(slot, equipItem);
+				return true;
+			}
 		}
 		return false;
 	}

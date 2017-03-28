@@ -152,7 +152,6 @@ public class Game extends BaseScreen
 	@Override
 	public void onUpdate()
 	{
-		_actions.setPos(Gdx.graphics.getWidth() - _actions.size.x, Gdx.graphics.getHeight() - _actions.size.y);
 		if (_state == GameState.IN_GAME)
 		{
 			if (GUI.getInstance()._focusedControl == _chatEdit)
@@ -279,18 +278,12 @@ public class Game extends BaseScreen
 				" chunks: " + _render.getChunksRendered() + " / " + _render.getWaterChunksRendered() +
 				" selected: " + (_render.getSelected() != null ? "" + _render.getSelected() : "null") +
 				" objects: " + _render.getRenderedObjects() +
-//				" cam: " + _gameCamera.getCameraDistance()+
 				" gui: " + GUI.getInstance()._mouseInControl
 		;
 
 		_lblStatus2.caption =
 				" mesh switch=" + _render.getModelBatch().getSwitchMeshCounter() +
 				" material switch=" + _render.getModelBatch().getSwitchMaterialCounter();
-
-//		_lblStatus.caption =
-//				" sun: " + Skybox.sunTime +
-//				" sun y: " + Skybox.sunPosition.y;
-
 	}
 
 	@Override
@@ -306,6 +299,15 @@ public class Game extends BaseScreen
 		_gameCamera.onResize(width, height);
 		_gameArea.setSize(width, height);
 		_render.onResize(width, height);
+
+		_actions.setPos(Gdx.graphics.getWidth() - _actions.size.x, Gdx.graphics.getHeight() - _actions.size.y);
+		_btnExit.setPos(Gdx.graphics.getWidth() - 100, 0);
+
+		int hc = 100;
+		int wc = 200;
+		int py = Gdx.graphics.getHeight() - hc - 30;
+		_chatMemo.setPos(5, py);
+		_chatEdit.setPos(5, py + _chatMemo.getHeight() + 5);
 	}
 
 	public void setState(GameState state)

@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 
+import java.util.List;
+
 /**
  * шаблон для описания предмета инвентаря
  * Created by arksu on 24.02.15.
@@ -15,6 +17,9 @@ public class ItemTemplate
 
 	@SerializedName("height")
 	private int _height = 1;
+
+	@SerializedName("equip")
+	private List<String> _equipSlots;
 
 	private transient int _itemId;
 	private transient String _name;
@@ -64,6 +69,11 @@ public class ItemTemplate
 		return _height;
 	}
 
+	public List<String> getEquipSlots()
+	{
+		return _equipSlots;
+	}
+
 	public InventoryTemplate getInventory()
 	{
 		return _inventory;
@@ -83,7 +93,7 @@ public class ItemTemplate
 	public String toString()
 	{
 		return "(" + _name + " [" + _itemId + "] " + _width + "x" + _height +
-				(_inventory != null ? " " + _inventory.toString() : "") +
-				")";
+		       (_inventory != null ? " " + _inventory.toString() : "") +
+		       ")";
 	}
 }

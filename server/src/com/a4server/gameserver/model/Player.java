@@ -139,7 +139,7 @@ public class Player extends Human
 		}
 
 		@Override
-		public Class<? extends GameObject> getClassName()
+		public Class<? extends GameObject> getClazz()
 		{
 			return null;
 		}

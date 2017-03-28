@@ -8,7 +8,10 @@ import com.a2client.g3d.math.Quat;
  */
 public class SkeletonData
 {
-	public static SkeletonData bindEquipData;
+	/**
+	 * дефолтная кость для эквипа без скелета (единичная матрица)
+	 */
+	public static final SkeletonData defaultEquipBone;
 
 	static
 	{
@@ -18,7 +21,7 @@ public class SkeletonData
 				new DualQuat(new Quat(0.70710677f, 0, 0, 0.70710677f), new Quat(0, 0, 0, 0)),
 				new DualQuat(new Quat(-0.70710677f, 0, 0, 0.70710677f), new Quat(0, 0, 0, 0))
 		);
-		bindEquipData = new SkeletonData(joints);
+		defaultEquipBone = new SkeletonData(joints);
 	}
 
 	/**

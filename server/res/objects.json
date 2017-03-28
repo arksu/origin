@@ -51,6 +51,7 @@
 	"stoneAxe": {
 		"typeId": 16,
 		"item": {
+			"equip": ["lhand", "rhand"],
 			"width": 1,
 			"height": 2
 		}

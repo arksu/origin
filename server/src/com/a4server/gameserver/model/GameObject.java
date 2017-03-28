@@ -508,8 +508,8 @@ public class GameObject
 				    && moveResult.getObject().getObjectId() == _objectId)
 				// проверим что такой пункт еще реально есть по прибытии к объекту
 				{
-					List<String> contextMenu1 = getContextMenu(player);
-					if (contextMenu1 != null && contextMenu1.contains(item))
+					List<String> cm = getContextMenu(player);
+					if (cm != null && cm.contains(item))
 					{
 						contextRun(player, item);
 					}

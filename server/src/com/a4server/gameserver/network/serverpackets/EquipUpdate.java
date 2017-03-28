@@ -1,7 +1,7 @@
 package com.a4server.gameserver.network.serverpackets;
 
 import com.a4server.gameserver.model.Equip;
-import com.a4server.gameserver.model.EquipSlot;
+import com.a4server.gameserver.model.EquipItem;
 
 /**
  * Created by arksu on 16.09.15.
@@ -20,7 +20,7 @@ public class EquipUpdate extends GameServerPacket
 	{
 		writeC(0x1D);
 		writeC(_equip.getItems().size());
-		for (EquipSlot slot : _equip.getItems().values())
+		for (EquipItem slot : _equip.getItems().values())
 		{
 			writeC(slot.getCode());
 

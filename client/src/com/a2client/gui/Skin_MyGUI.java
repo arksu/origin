@@ -630,6 +630,14 @@ public class Skin_MyGUI extends Skin
 		x3 = -1;
 		y3 = -1;
 		addStates(el, w1, w2, w3, h1, h2, h3, x, x1, x2, x3, y, y1, y2, y3);
+
+		el = new SkinElement(this, "equip_man", "core_skin", 151, 284, new Rect(0, 0, 0, 0));
+		w1 = 151;
+		h1 = 284;
+		x = 747;
+		y = 3;
+		addStatesCenter(el, h1, w1, x, y);
+
 	}
 
 }
