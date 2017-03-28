@@ -169,14 +169,14 @@ public class ViewScreen extends BaseScreen
 		}
 		if (Input.KeyHit(Keys.F))
 		{
-			ModelData data = new ModelData("apple");
+			ModelData data = new ModelData("axe");
 			Model model = new Model(data);
 			model.bindTo(_activeModel, "EquipHand.L");
 		}
 		if (Input.KeyHit(Keys.G))
 		{
 //			_equip.bindTo(_activeModel, "EquipHand.L");
-			ModelData data = new ModelData("apple");
+			ModelData data = new ModelData("axe");
 			Model model = new Model(data);
 			model.bindTo(_activeModel, "EquipHand.R");
 		}
