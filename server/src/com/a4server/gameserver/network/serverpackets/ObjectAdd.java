@@ -7,7 +7,7 @@ import com.a4server.gameserver.model.GameObject;
  */
 public class ObjectAdd extends GameServerPacket
 {
-	GameObject _object;
+	private final GameObject _object;
 
 	public ObjectAdd(GameObject object)
 	{

@@ -87,7 +87,7 @@ public class SimpleObjectTemplate implements ObjectTemplate
 		else if ("item".equalsIgnoreCase(paramName))
 		{
 			_item = ItemTemplate.load(in, _typeId, _name, this);
-			ObjectsFactory.getInstance().addItemTemplate(_item.getItemId(), _item);
+			ObjectsFactory.getInstance().addItemTemplate(_item.getTypeId(), _item);
 		}
 	}
 

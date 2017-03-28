@@ -2,8 +2,6 @@ package com.a4server.gameserver.network.serverpackets;
 
 import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.inventory.InventoryItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -39,7 +37,7 @@ public class InventoryUpdate extends GameServerPacket
 			for (InventoryItem item : items.values())
 			{
 				writeD(item.getObjectId());
-				writeD(item.getTemplate().getItemId());
+				writeD(item.getTemplate().getTypeId());
 				writeS(item.getTemplate().getIconName());
 				writeD(item.getQ());
 				writeC(item.getX());

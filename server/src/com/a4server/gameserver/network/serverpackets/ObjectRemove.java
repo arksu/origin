@@ -5,7 +5,7 @@ package com.a4server.gameserver.network.serverpackets;
  */
 public class ObjectRemove extends GameServerPacket
 {
-	int _objectId;
+	private final int _objectId;
 
 	public ObjectRemove(int objectId)
 	{

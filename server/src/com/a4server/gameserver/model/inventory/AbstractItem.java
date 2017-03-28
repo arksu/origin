@@ -161,7 +161,7 @@ public class AbstractItem
 			 PreparedStatement statement = con.prepareStatement(STORE))
 		{
 			statement.setInt(1, _objectId);
-			statement.setInt(2, _template.getItemId());
+			statement.setInt(2, _template.getTypeId());
 			statement.setInt(3, _inventoryId);
 			statement.setInt(4, _x);
 			//noinspection SuspiciousNameCombination

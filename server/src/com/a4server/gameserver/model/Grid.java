@@ -17,6 +17,7 @@ import com.a4server.gameserver.model.collision.VirtualObject;
 import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
+import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import com.a4server.gameserver.network.serverpackets.MapGrid;
 import com.a4server.util.Rect;
 import com.a4server.util.Rnd;
@@ -549,7 +550,7 @@ public class Grid
 		if (update)
 		{
 			updateTiles();
-			broadcastEvent(new GridEvent(null, GridEvent.EventType.EVT_DEFAULT, new MapGrid(this, -1, -1)));
+			broadcastPacket(null, new MapGrid(this, -1, -1));
 		}
 	}
 
@@ -962,6 +963,27 @@ public class Grid
 			if (h.getAi() != null)
 			{
 				h.getAi().handleGridEvent(gridEvent);
+			}
+		}
+	}
+
+	/**
+	 * разослать пакет всем кто находится в гриде
+	 * пакет будет отослан только тем кто знает отправителя (находится в known list)
+	 * @param from объект отправитель пакета
+	 * @param pkt пакет
+	 */
+	public void broadcastPacket(GameObject from, GameServerPacket pkt)
+	{
+		for (Human h : _activeObjects)
+		{
+			if (!h.isDeleteing() && (from == null || h.getKnownKist().isKnownObject(from)))
+			{
+				Player actingPlayer = h.getActingPlayer();
+				if (actingPlayer != null)
+				{
+					actingPlayer.getClient().sendPacket(pkt);
+				}
 			}
 		}
 	}

@@ -17,11 +17,14 @@ public class EquipUpdate extends GameServerPacket
 		GamePacketHandler.AddPacketType(0x1D, EquipUpdate.class);
 	}
 
-	List<InventoryItem> _items = new ArrayList<>();
+	private List<InventoryItem> _items = new ArrayList<>();
+	private int _objectId;
 
 	@Override
 	public void readImpl()
 	{
+		System.out.println("EquipUpdate");
+		_objectId = readD();
 		int count = readC();
 		while (count > 0)
 		{
@@ -46,10 +49,14 @@ public class EquipUpdate extends GameServerPacket
 	@Override
 	public void run()
 	{
-		List<InventoryItem> equipItems = PlayerData.getInstance().getEquipWindow().getItems();
-		equipItems.clear();
-		equipItems.addAll(_items);
-		// если есть открытый инвентарь - обновить содержимое
-		PlayerData.getInstance().getEquipWindow().onChange();
+		// это мой эквип?
+		if (_objectId == PlayerData.getInstance().getObjectId())
+		{
+			List<InventoryItem> equipItems = PlayerData.getInstance().getEquipWindow().getItems();
+			equipItems.clear();
+			equipItems.addAll(_items);
+			// если есть открытый инвентарь - обновить содержимое
+			PlayerData.getInstance().getEquipWindow().onChange();
+		}
 	}
 }

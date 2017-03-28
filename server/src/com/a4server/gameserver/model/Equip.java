@@ -96,6 +96,7 @@ public class Equip
 		{
 			EquipItem equipItem = item instanceof EquipItem ? (EquipItem) item : new EquipItem(item);
 			ItemTemplate template = equipItem.getTemplate();
+			// определен ли в шаблоне список слотов и есть ли указанный слот в этом списке
 			if (template.getEquipSlots() != null && template.getEquipSlots().contains(slot.name().toLowerCase()))
 			{
 				equipItem.setSlot(slot);
@@ -104,5 +105,10 @@ public class Equip
 			}
 		}
 		return false;
+	}
+
+	public EquipItem takeItem(EquipItem.Slot slot)
+	{
+		return _items.remove(slot);
 	}
 }

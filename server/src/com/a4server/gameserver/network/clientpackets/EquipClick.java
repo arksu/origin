@@ -1,5 +1,6 @@
 package com.a4server.gameserver.network.clientpackets;
 
+import com.a4server.gameserver.Broadcast;
 import com.a4server.gameserver.model.EquipItem;
 import com.a4server.gameserver.model.GameLock;
 import com.a4server.gameserver.model.Hand;
@@ -52,11 +53,11 @@ public class EquipClick extends GameClientPacket
 				// держим в руке что-то?
 				if (player.getHand() == null)
 				{
-					EquipItem item = player.getEquip().getItems().remove(slot);
+					EquipItem item = player.getEquip().takeItem(slot);
 					if (item != null)
 					{
 						player.setHand(new Hand(player, item, 0, 0, _offsetX, _offsetY));
-						player.getClient().sendPacket(new EquipUpdate(player.getEquip()));
+						Broadcast.toGrid(player, new EquipUpdate(player.getObjectId(), player.getEquip()));
 					}
 				}
 				else
@@ -65,7 +66,7 @@ public class EquipClick extends GameClientPacket
 					if (player.getEquip().putItem(player.getHand().getItem(), slot))
 					{
 						player.setHand(null);
-						player.getClient().sendPacket(new EquipUpdate(player.getEquip()));
+						Broadcast.toGrid(player, new EquipUpdate(player.getObjectId(), player.getEquip()));
 					}
 				}
 			}

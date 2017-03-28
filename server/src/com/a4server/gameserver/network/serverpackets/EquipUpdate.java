@@ -8,10 +8,12 @@ import com.a4server.gameserver.model.EquipItem;
  */
 public class EquipUpdate extends GameServerPacket
 {
-	final Equip _equip;
+	private final Equip _equip;
+	private final int _objectId;
 
-	public EquipUpdate(Equip equip)
+	public EquipUpdate(int objectId, Equip equip)
 	{
+		_objectId = objectId;
 		_equip = equip;
 	}
 
@@ -19,13 +21,14 @@ public class EquipUpdate extends GameServerPacket
 	protected void write()
 	{
 		writeC(0x1D);
+		writeD(_objectId);
 		writeC(_equip.getItems().size());
 		for (EquipItem slot : _equip.getItems().values())
 		{
 			writeC(slot.getCode());
 
 			writeD(slot.getObjectId());
-			writeD(slot.getTemplate().getItemId());
+			writeD(slot.getTemplate().getTypeId());
 			writeS(slot.getTemplate().getIconName());
 			writeD(slot.getQ());
 			writeC(slot.getWidth());

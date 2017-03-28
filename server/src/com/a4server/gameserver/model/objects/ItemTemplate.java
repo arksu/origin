@@ -21,7 +21,7 @@ public class ItemTemplate
 	@SerializedName("equip")
 	private List<String> _equipSlots;
 
-	private transient int _itemId;
+	private transient int _typeId;
 	private transient String _name;
 
 	private transient ObjectTemplate _objectTemplate;
@@ -35,15 +35,15 @@ public class ItemTemplate
 	{
 		Gson gson = new Gson();
 		ItemTemplate template = gson.fromJson(in, ItemTemplate.class);
-		template._itemId = itemId;
+		template._typeId = itemId;
 		template._name = name;
 		template._objectTemplate = objectTemplate;
 		return template;
 	}
 
-	public int getItemId()
+	public int getTypeId()
 	{
-		return _itemId;
+		return _typeId;
 	}
 
 	public String getName()
@@ -92,7 +92,7 @@ public class ItemTemplate
 	@Override
 	public String toString()
 	{
-		return "(" + _name + " [" + _itemId + "] " + _width + "x" + _height +
+		return "(" + _name + " [" + _typeId + "] " + _width + "x" + _height +
 		       (_inventory != null ? " " + _inventory.toString() : "") +
 		       ")";
 	}
