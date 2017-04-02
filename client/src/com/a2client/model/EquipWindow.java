@@ -65,9 +65,8 @@ public class EquipWindow
 				}
 			};
 			_wnd.assign(this);
-			_wnd.setPos(300, 100);
-			_wnd.setSize(260, 340);
-			_wnd.caption = Lang.getTranslate("equip");
+			_wnd.setPos(700, 100);
+			_wnd.caption = Lang.getTranslate("Game.equip");
 		}
 	}
 

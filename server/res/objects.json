@@ -37,7 +37,7 @@
 		"inventory": {
 			"acceptAll": false,
 			"exclude": [
-				"stoneKnife",
+				"stone_knife",
 				"apple"
 			],
 			"width": 5,

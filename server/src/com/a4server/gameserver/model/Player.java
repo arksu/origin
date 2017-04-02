@@ -562,9 +562,13 @@ public class Player extends Human
 		list[idx++] = new Action("craft");
 		list[idx++] = new Action("online");
 
+		Action[] l3 = new Action[2];
+		l3[0] = new Action("foo");
+		l3[1] = new Action("bar");
+
 		Action[] l2 = new Action[2];
 		l2[0] = new Action("some1");
-		l2[1] = new Action("some2");
+		l2[1] = new Action("some2", l3);
 		list[idx++] = new Action("some", l2);
 
 		list[idx++] = new Action("tile_up");

@@ -46,10 +46,10 @@ public class GUI_EquipWindow extends GUI_Window
 		_slotPos.add(new Vec2i(15, 180));
 
 		// head
-		_slotPos.add(new Vec2i(10, 10));
+		_slotPos.add(new Vec2i(90, 35));
 
 		// body
-		_slotPos.add(new Vec2i(40, 10));
+		_slotPos.add(new Vec2i(100, 120));
 
 		// left foot
 		_slotPos.add(new Vec2i(120, 300));
@@ -58,15 +58,6 @@ public class GUI_EquipWindow extends GUI_Window
 
 		// pants
 		_slotPos.add(new Vec2i(100, 180));
-
-		// позиции слотов
-//		int py = 100;
-
-//		for (int i = 0; i < 7; i++)
-//		{
-//			_slotPos.add(new Vec2i(10, py));
-//			py += 40;
-//		}
 	}
 
 	protected GUI_EquipWindow(GUI_Control parent)

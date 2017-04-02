@@ -26,12 +26,20 @@ public class GUI_ActionsList extends GUI_Control
 
 	private final List<GUI_Icon> _guiIcons = new ArrayList<>();
 
+	private GUI_ActionsList _childs;
+
+	public GUI_ActionsList _parentList;
+
+	public int _level = 1;
+
+	public int _startPos = 0;
+
 	public GUI_ActionsList(GUI_Control parent)
 	{
 		super(parent);
 	}
 
-	public void add(Action action)
+	public void add(final Action action)
 	{
 		_actions.add(action);
 
@@ -40,18 +48,55 @@ public class GUI_ActionsList extends GUI_Control
 			@Override
 			public void doClick()
 			{
-				GUI_ActionsList.this.doClick(((Action) this.tag));
+				// если это контейнер для вложенного списка действий - откроем его
+				if (action.list != null && action.list.length > 0)
+				{
+					_childs = new GUI_ActionsList(GUI.rootNormal())
+					{
+						@Override
+						public void doClick(Action action)
+						{
+							GUI_ActionsList.this.doClick(action);
+						}
+					};
+					for (Action a : action.list)
+					{
+						_childs.add(a);
+					}
+					_childs._parentList = GUI_ActionsList.this;
+					_childs._level = GUI_ActionsList.this._level + 1;
+					_childs._startPos = this.pos.y;
+					_childs.place();
+				}
+				else
+				{
+					GUI_ActionsList.this.doClick(action);
+					GUI_ActionsList list = GUI_ActionsList.this;
+					while (list != null && list._parentList != null)
+					{
+						list.clear();
+						list.unlink();
+						list = list._parentList;
+					}
+				}
 			}
 		};
-		icon.tag = action;
 		icon._simpleHint = Lang.getTranslate("Game.action." + action.name);
 		_guiIcons.add(icon);
 	}
 
 	public void place()
 	{
-		int y = Gdx.graphics.getHeight() - _guiIcons.size() * (InventoryItem.HEIGHT + InventoryItem.MARGIN);
-		int x = Gdx.graphics.getWidth() - InventoryItem.WIDTH;
+		int y;
+		if (_parentList == null)
+		{
+			y = Gdx.graphics.getHeight() - _guiIcons.size() * (InventoryItem.HEIGHT + InventoryItem.MARGIN);
+		}
+		else
+		{
+			y = _startPos;
+		}
+		int x = Gdx.graphics.getWidth() - (InventoryItem.WIDTH + InventoryItem.MARGIN) * _level;
 		for (GUI_Icon icon : _guiIcons)
 		{
 			icon.setPos(x, y);
@@ -61,6 +106,10 @@ public class GUI_ActionsList extends GUI_Control
 
 	public void clear()
 	{
+		for (GUI_Icon icon : _guiIcons)
+		{
+			icon.unlink();
+		}
 		_actions.clear();
 	}
 

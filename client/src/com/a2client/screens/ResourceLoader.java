@@ -31,7 +31,7 @@ public class ResourceLoader implements Screen
 {
 	private static final Logger _log = LoggerFactory.getLogger(ResourceLoader.class.getName());
 
-	private static final int FADE_TIME = 300;
+	private static final int FADE_TIME = 100;
 
 	public static BitmapFont systemFont;
 	private State _state;
