@@ -17,6 +17,7 @@
 
 package com.a2client.gui;
 
+import com.a2client.Input;
 import com.a2client.gui.utils.DragInfo;
 
 import static com.a2client.gui.Skin.StateNormal;
@@ -39,8 +40,26 @@ public class GUI_Icon extends GUI_Control
 		}
 	}
 
+	public void doClick() {}
+
+	public boolean onMouseBtn(int btn, boolean down)
+	{
+		if (!enabled)
+		{
+			return false;
+		}
+
+		if (btn == Input.MB_LEFT && down && isMouseInMe())
+		{
+			doClick();
+			return true;
+		}
+		return false;
+	}
+
 	public void render()
 	{
+		getSkin().draw("hotbar_slot", abs_pos.x, abs_pos.y, size.x, size.y, StateNormal);
 		getSkin().draw(iname, abs_pos.x, abs_pos.y, size.x, size.y, StateNormal);
 	}
 

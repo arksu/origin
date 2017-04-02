@@ -233,7 +233,7 @@ public class GUI_Scrollbar extends GUI_Control
 
 				BtnDec = new GUI_Button(this)
 				{
-					public void DoClick()
+					public void doClick()
 					{
 						DoDec();
 					}
@@ -243,7 +243,7 @@ public class GUI_Scrollbar extends GUI_Control
 
 				BtnInc = new GUI_Button(this)
 				{
-					public void DoClick()
+					public void doClick()
 					{
 						DoInc();
 					}
@@ -268,7 +268,7 @@ public class GUI_Scrollbar extends GUI_Control
 
 				BtnDec = new GUI_Button(this)
 				{
-					public void DoClick()
+					public void doClick()
 					{
 						DoDec();
 					}
@@ -278,7 +278,7 @@ public class GUI_Scrollbar extends GUI_Control
 
 				BtnInc = new GUI_Button(this)
 				{
-					public void DoClick()
+					public void doClick()
 					{
 						DoInc();
 					}

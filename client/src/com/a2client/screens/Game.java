@@ -43,7 +43,7 @@ public class Game extends BaseScreen
 	private GUI_Button _btnExit;
 	public GUI_Memo _chatMemo;
 	private GUI_Edit _chatEdit;
-	public GUI_ActionsList _actions;
+	public GUI_ActionsList _rootActions;
 
 	private static Game _instance;
 	private GameState _state = GameState.ENTERING;
@@ -82,7 +82,7 @@ public class Game extends BaseScreen
 		_btnExit = new GUI_Button(GUI.rootNormal())
 		{
 			@Override
-			public void DoClick()
+			public void doClick()
 			{
 				Main.ReleaseAll();
 				Login.setStatus("disconnected");
@@ -121,7 +121,7 @@ public class Game extends BaseScreen
 		_chatEdit.setSize(_chatMemo.getWidth(), 20);
 		_chatEdit.setPos(5, py + _chatMemo.getHeight() + 5);
 
-		_actions = new GUI_ActionsList(GUI.rootNormal())
+		_rootActions = new GUI_ActionsList(GUI.rootNormal())
 		{
 			@Override
 			public void doClick(Action action)
@@ -129,8 +129,8 @@ public class Game extends BaseScreen
 				new ActionSelect(action.name).send();
 			}
 		};
-		_actions.setSize(150, 100);
-		_actions.setPos(Gdx.graphics.getWidth() - _actions.size.x, Gdx.graphics.getHeight() - _actions.size.y);
+		_rootActions.setSize(150, 100);
+		_rootActions.setPos(Gdx.graphics.getWidth() - _rootActions.size.x, Gdx.graphics.getHeight() - _rootActions.size.y);
 
 		_gameCamera = new GameCamera();
 		_render = new Render(this);
@@ -300,7 +300,7 @@ public class Game extends BaseScreen
 		_gameArea.setSize(width, height);
 		_render.onResize(width, height);
 
-		_actions.setPos(Gdx.graphics.getWidth() - _actions.size.x, Gdx.graphics.getHeight() - _actions.size.y);
+		_rootActions.setPos(Gdx.graphics.getWidth() - _rootActions.size.x, Gdx.graphics.getHeight() - _rootActions.size.y);
 		_btnExit.setPos(Gdx.graphics.getWidth() - 100, 0);
 
 		int hc = 100;

@@ -79,7 +79,7 @@ public class Login extends BaseScreen
 		btn_login = new GUI_Button(GUI.rootNormal())
 		{
 			@Override
-			public void DoClick()
+			public void doClick()
 			{
 				doLogin();
 			}
@@ -96,7 +96,7 @@ public class Login extends BaseScreen
 		btn_exit = new GUI_Button(GUI.rootNormal())
 		{
 			@Override
-			public void DoClick()
+			public void doClick()
 			{
 				System.exit(0);
 			}

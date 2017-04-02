@@ -43,7 +43,7 @@ public class GUI_SpinEdit extends GUI_Control
         super(parent);
         btn_dec = new GUI_Button(this)
         {
-            public void DoClick()
+            public void doClick()
             {
                 DoDec();
                 gui.setFocus(parent);
@@ -56,7 +56,7 @@ public class GUI_SpinEdit extends GUI_Control
         };
         btn_inc = new GUI_Button(this)
         {
-            public void DoClick()
+            public void doClick()
             {
                 DoInc();
                 gui.setFocus(parent);

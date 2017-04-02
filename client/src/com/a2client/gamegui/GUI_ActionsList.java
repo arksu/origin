@@ -1,9 +1,12 @@
 package com.a2client.gamegui;
 
+import com.a2client.Lang;
 import com.a2client.gui.GUI;
 import com.a2client.gui.GUI_Control;
 import com.a2client.gui.GUI_Icon;
 import com.a2client.model.Action;
+import com.a2client.model.InventoryItem;
+import com.badlogic.gdx.Gdx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,9 +35,28 @@ public class GUI_ActionsList extends GUI_Control
 	{
 		_actions.add(action);
 
-		GUI_Icon icon = new GUI_Icon(action.name, GUI.rootNormal());
-		icon.setPos(200, 200);
+		GUI_Icon icon = new GUI_Icon(action.name, GUI.rootNormal())
+		{
+			@Override
+			public void doClick()
+			{
+				GUI_ActionsList.this.doClick(((Action) this.tag));
+			}
+		};
+		icon.tag = action;
+		icon._simpleHint = Lang.getTranslate("Game.action." + action.name);
 		_guiIcons.add(icon);
+	}
+
+	public void place()
+	{
+		int y = Gdx.graphics.getHeight() - _guiIcons.size() * (InventoryItem.HEIGHT + InventoryItem.MARGIN);
+		int x = Gdx.graphics.getWidth() - InventoryItem.WIDTH;
+		for (GUI_Icon icon : _guiIcons)
+		{
+			icon.setPos(x, y);
+			y += InventoryItem.HEIGHT + InventoryItem.MARGIN;
+		}
 	}
 
 	public void clear()

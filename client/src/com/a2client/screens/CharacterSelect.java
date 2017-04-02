@@ -31,7 +31,7 @@ public class CharacterSelect extends BaseScreen
 		btnCreate = new GUI_Button(GUI.rootNormal())
 		{
 			@Override
-			public void DoClick()
+			public void doClick()
 			{
 				CharacterCreate.Show();
 			}
@@ -50,7 +50,7 @@ public class CharacterSelect extends BaseScreen
 			GUI_Button btn = new GUI_Button(GUI.rootNormal())
 			{
 				@Override
-				public void DoClick()
+				public void doClick()
 				{
 					charSelected(charId);
 				}
@@ -63,7 +63,7 @@ public class CharacterSelect extends BaseScreen
 			GUI_Button btnDelete = new GUI_Button(GUI.rootNormal())
 			{
 				@Override
-				public void DoClick()
+				public void doClick()
 				{
 					showDeleteConfirm(charId, cname);
 				}
@@ -78,7 +78,7 @@ public class CharacterSelect extends BaseScreen
 		btnExit = new GUI_Button(GUI.rootNormal())
 		{
 			@Override
-			public void DoClick()
+			public void doClick()
 			{
 				Main.ReleaseAll();
 				Login.setStatus("disconnected");
@@ -100,7 +100,7 @@ public class CharacterSelect extends BaseScreen
 		GUI_Button btnOk = new GUI_Button(wnd)
 		{
 			@Override
-			public void DoClick()
+			public void doClick()
 			{
 				charDelete(charId);
 				wnd.close();
@@ -113,7 +113,7 @@ public class CharacterSelect extends BaseScreen
 		GUI_Button btnCancel = new GUI_Button(wnd)
 		{
 			@Override
-			public void DoClick()
+			public void doClick()
 			{
 				wnd.close();
 			}

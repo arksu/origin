@@ -107,12 +107,14 @@ public class PlayerData
 	public void setActions(Action rootAction)
 	{
 		_rootAction = rootAction;
-		GUI_ActionsList actions = Game.getInstance()._actions;
+
+		GUI_ActionsList actions = Game.getInstance()._rootActions;
 
 		actions.clear();
 		for (Action action : _rootAction.list)
 		{
 			actions.add(action);
 		}
+		actions.place();
 	}
 }

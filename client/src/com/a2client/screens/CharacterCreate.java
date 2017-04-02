@@ -34,7 +34,7 @@ public class CharacterCreate extends BaseScreen
 		btnCreate = new GUI_Button(GUI.rootNormal())
 		{
 			@Override
-			public void DoClick()
+			public void doClick()
 			{
 				if (!editNickname.text.isEmpty())
 				{
@@ -50,7 +50,7 @@ public class CharacterCreate extends BaseScreen
 		btnExit = new GUI_Button(GUI.rootNormal())
 		{
 			@Override
-			public void DoClick()
+			public void doClick()
 			{
 				CharacterSelect.Show();
 			}

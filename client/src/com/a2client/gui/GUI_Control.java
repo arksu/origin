@@ -36,7 +36,7 @@ public class GUI_Control
 	public Vec2i margins = new Vec2i(12, 12);
 	public String skin_element = "";
 	// юзер тег
-	public String tag = "";
+	public Object tag = "";
 	// юезр тег целочисленный
 	public int tagi = 0;
 	// абсолютные координаты на экране
@@ -122,7 +122,9 @@ public class GUI_Control
 	public void unlinkChilds()
 	{
 		while (child != null)
+		{
 			child.unlink();
+		}
 	}
 
 	public void unlink()

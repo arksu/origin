@@ -42,7 +42,7 @@ public class GUI_ComboBox extends GUI_Control
         super(parent);
         drop_button = new GUI_Button(this)
         {
-            public void DoClick()
+            public void doClick()
             {
                 if (drop_list != null && !drop_list._terminated)
                     DoCollapse();

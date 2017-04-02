@@ -62,7 +62,7 @@ public class GUI_Window extends GUI_Control
     {
         return new GUI_Button(this)
         {
-            public void DoClick()
+            public void doClick()
             {
                 ((GUI_Window) parent).close();
             }

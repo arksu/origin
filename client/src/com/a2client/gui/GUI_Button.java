@@ -39,7 +39,7 @@ public class GUI_Button extends GUI_Control
         skin_element = "button";
     }
 
-    public void DoClick()
+    public void doClick()
     {
     }
 
@@ -67,7 +67,7 @@ public class GUI_Button extends GUI_Control
             {
                 if (pressed && isMouseInMe())
                 {
-                    DoClick();
+                    doClick();
                     pressed = false;
                     return true;
                 }
