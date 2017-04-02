@@ -9,10 +9,10 @@ in vec4 a_color;
 in vec2 a_bone0;
 in vec2 a_bone1;
 
-uniform mat4 u_worldTrans;
 uniform int u_normalMapFlag;
 uniform int u_skinFlag;
 
+uniform mat4 u_worldTrans;
 uniform mat4 u_projViewTrans;
 uniform mat3 u_viewTrans;
 uniform vec4 u_cameraPosition;
@@ -25,22 +25,18 @@ uniform float u_shadowDistance;
 
 uniform vec4 u_joints[MAX_JOINTS * 2];
 
-
 uniform float u_density;
 uniform float u_gradient;
 
 out vec2 texCoords;
 out float visibility;
-out vec3 normal;
 
 out vec3 v_viewVec;
 out vec3 v_normal;
 out vec3 v_binormal;
 out vec3 v_tangent;
 out float v_depth;
-out vec4 shadowCoords;
-
-out float NdotL;
+out vec4 v_shadowCoords;
 
 const vec4 diffuse = vec4(1,1,1,1);
 
@@ -81,8 +77,6 @@ void main() {
 	} else {
 		worldPosition = vec3(u_worldTrans * vec4(a_position, 1.0));
 	}
-
-    normal = normalize(a_normal);
 
 	v_viewVec = u_cameraPosition.xyz - worldPosition.xyz;
 
@@ -125,11 +119,11 @@ void main() {
 	// shadow
 	if (u_shadowDistance > 0) {
 		vec4 worldPosition1 = u_worldTrans * vec4(a_position, 1.0);
-		shadowCoords = u_toShadowMapSpace * worldPosition1;
+		v_shadowCoords = u_toShadowMapSpace * worldPosition1;
 		distance = distance - (u_shadowDistance - transitionDistance);
 		distance = distance / transitionDistance;
-		shadowCoords.w = clamp(1.0 - distance, 0.0, 1.0);
+		v_shadowCoords.w = clamp(1.0 - distance, 0.0, 1.0);
 	} else {
-		shadowCoords.w = -1.0;
+		v_shadowCoords.w = -1.0;
 	}
 }

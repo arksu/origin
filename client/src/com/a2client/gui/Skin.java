@@ -162,15 +162,15 @@ public class Skin
 			{
 				GUIGDX.getSpriteBatch().setColor(color);
 				GUIGDX.getSpriteBatch()
-						// переворачиваем по y
-						.draw(_tex, (float) x, (float) (Gdx.graphics.getHeight() - y), (float) w, (float) (-h), tx, ty,
-							  tw, th, false, true);
+				      // переворачиваем по y
+				      .draw(_tex, (float) x, (float) (Gdx.graphics.getHeight() - y), (float) w, (float) (-h), tx, ty,
+				            tw, th, false, true);
 			}
 			else
 			{
 				GUIGDX.getSpriteBatch().setColor(color);
 				GUIGDX.getSpriteBatch()
-						.draw(_reg, (float) x, (float) (Gdx.graphics.getHeight() - y - h), (float) w, (float) (h));
+				      .draw(_reg, (float) x, (float) (Gdx.graphics.getHeight() - y - h), (float) w, (float) (h));
 
 			}
 		}
@@ -518,14 +518,14 @@ public class Skin
 								ch = mCoord.h - cy;
 							}
 							spr.draw(x + mCoord.x + cx, y + mCoord.y + cy, cw, ch, state.texture_rect.x,
-									state.texture_rect.y, cw, ch, col);
+							         state.texture_rect.y, cw, ch, col);
 							cy += ch;
 						}
 					}
 					else
 					{
 						spr.draw(x + mCoord.x + cx, y + mCoord.y + cy, cw, mCoord.h, state.texture_rect.x,
-								state.texture_rect.y, cw, ch, col);
+						         state.texture_rect.y, cw, ch, col);
 					}
 					cx += cw;
 				}
@@ -541,7 +541,7 @@ public class Skin
 							ch = mCoord.h - cy;
 						}
 						spr.draw(x + mCoord.x + cx, y + mCoord.y + cy, mCoord.w, ch, state.texture_rect.x,
-								state.texture_rect.y, cw, ch, col);
+						         state.texture_rect.y, cw, ch, col);
 						cy += ch;
 					}
 				}
@@ -549,7 +549,7 @@ public class Skin
 				// если никак не тайлим - выводим текстуру стретчем
 				{
 					spr.draw(x + mCoord.x, y + mCoord.y, mCoord.w, mCoord.h, state.texture_rect.x, state.texture_rect.y,
-							state.texture_rect.w, state.texture_rect.h, col);
+					         state.texture_rect.w, state.texture_rect.h, col);
 				}
 			}
 		}
@@ -605,18 +605,18 @@ public class Skin
 	protected void addStates(SkinElement el, int w1, int w2, int w3, int h1, int h2, int h3, int wi1, int wi2, int hi1, int hi2, int x, int x1, int x2, int x3, int y, int y1, int y2, int y3)
 	{
 		addStates(el, w1, w2, w3, h1, h2, h3, wi1, wi2, hi1, hi2, x, y, x1, y1, x2, y2, x3, y3, -1, -1, -1, -1, -1, -1,
-				-1, -1);
+		          -1, -1);
 	}
 
 	protected void addStates(SkinElement el, int w1, int w2, int w3, int h1, int h2, int h3, int w_insert1, int w_insert2, // промежутки между полосами нарезки
-							 int h_insert1, int h_insert2, int x, int y,    // normal
-							 int x1, int y1, // hl
-							 int x2, int y2, // pressed
-							 int x3, int y3, // disable
-							 int x4, int y4, // check_normal
-							 int x5, int y5, // check_hl
-							 int x6, int y6, // check_pressel
-							 int x7, int y7)
+	                         int h_insert1, int h_insert2, int x, int y,    // normal
+	                         int x1, int y1, // hl
+	                         int x2, int y2, // pressed
+	                         int x3, int y3, // disable
+	                         int x4, int y4, // check_normal
+	                         int x5, int y5, // check_hl
+	                         int x6, int y6, // check_pressel
+	                         int x7, int y7)
 	{ // check_disable
 		SkinSubElement sub;
 		if (h1 > 0)
@@ -814,42 +814,50 @@ public class Skin
 				sub = new SkinSubElement(el, new Rect(w1 + w2, h1, w3, h2), Align_Right + Align_VStretch);
 				if (x != -1 && y != -1)
 				{
-					sub.addState(StateNormal,
+					sub.addState(
+							StateNormal,
 							new Rect(x + w1 + w2 + w_insert1 + w_insert2, y + h1 + h_insert1, w3, h2));
 				}
 				if (x1 != -1 && y1 != -1)
 				{
-					sub.addState(StateHighlight,
+					sub.addState(
+							StateHighlight,
 							new Rect(x1 + w1 + w2 + w_insert1 + w_insert2, y1 + h1 + h_insert1, w3, h2));
 				}
 				if (x2 != -1 && y2 != -1)
 				{
-					sub.addState(StatePressed,
+					sub.addState(
+							StatePressed,
 							new Rect(x2 + w1 + w2 + w_insert1 + w_insert2, y2 + h1 + h_insert1, w3, h2));
 				}
 				if (x3 != -1 && y3 != -1)
 				{
-					sub.addState(StateDisable,
+					sub.addState(
+							StateDisable,
 							new Rect(x3 + w1 + w2 + w_insert1 + w_insert2, y3 + h1 + h_insert1, w3, h2));
 				}
 				if (x4 != -1 && y4 != -1)
 				{
-					sub.addState(StateNormal_Checked,
+					sub.addState(
+							StateNormal_Checked,
 							new Rect(x4 + w1 + w2 + w_insert1 + w_insert2, y4 + h1 + h_insert1, w3, h2));
 				}
 				if (x5 != -1 && y5 != -1)
 				{
-					sub.addState(StateHighlight_Checked,
+					sub.addState(
+							StateHighlight_Checked,
 							new Rect(x5 + w1 + w2 + w_insert1 + w_insert2, y5 + h1 + h_insert1, w3, h2));
 				}
 				if (x6 != -1 && y6 != -1)
 				{
-					sub.addState(StatePressed_Checked,
+					sub.addState(
+							StatePressed_Checked,
 							new Rect(x6 + w1 + w2 + w_insert1 + w_insert2, y6 + h1 + h_insert1, w3, h2));
 				}
 				if (x7 != -1 && y7 != -1)
 				{
-					sub.addState(StateDisable_Checked,
+					sub.addState(
+							StateDisable_Checked,
 							new Rect(x7 + w1 + w2 + w_insert1 + w_insert2, y7 + h1 + h_insert1, w3, h2));
 				}
 			}
@@ -898,42 +906,50 @@ public class Skin
 				sub = new SkinSubElement(el, new Rect(w1, h1 + h2, w2, h3), Align_HStretch + Align_Bottom);
 				if (x != -1 && y != -1)
 				{
-					sub.addState(StateNormal,
+					sub.addState(
+							StateNormal,
 							new Rect(x + w1 + w_insert1, y + h1 + h2 + h_insert1 + h_insert2, w2, h3));
 				}
 				if (x1 != -1 && y1 != -1)
 				{
-					sub.addState(StateHighlight,
+					sub.addState(
+							StateHighlight,
 							new Rect(x1 + w1 + w_insert1, y1 + h1 + h2 + h_insert1 + h_insert2, w2, h3));
 				}
 				if (x2 != -1 && y2 != -1)
 				{
-					sub.addState(StatePressed,
+					sub.addState(
+							StatePressed,
 							new Rect(x2 + w1 + w_insert1, y2 + h1 + h2 + h_insert1 + h_insert2, w2, h3));
 				}
 				if (x3 != -1 && y3 != -1)
 				{
-					sub.addState(StateDisable,
+					sub.addState(
+							StateDisable,
 							new Rect(x3 + w1 + w_insert1, y3 + h1 + h2 + h_insert1 + h_insert2, w2, h3));
 				}
 				if (x4 != -1 && y4 != -1)
 				{
-					sub.addState(StateNormal_Checked,
+					sub.addState(
+							StateNormal_Checked,
 							new Rect(x4 + w1 + w_insert1, y4 + h1 + h2 + h_insert1 + h_insert2, w2, h3));
 				}
 				if (x5 != -1 && y5 != -1)
 				{
-					sub.addState(StateHighlight_Checked,
+					sub.addState(
+							StateHighlight_Checked,
 							new Rect(x5 + w1 + w_insert1, y5 + h1 + h2 + h_insert1 + h_insert2, w2, h3));
 				}
 				if (x6 != -1 && y6 != -1)
 				{
-					sub.addState(StatePressed_Checked,
+					sub.addState(
+							StatePressed_Checked,
 							new Rect(x6 + w1 + w_insert1, y6 + h1 + h2 + h_insert1 + h_insert2, w2, h3));
 				}
 				if (x7 != -1 && y7 != -1)
 				{
-					sub.addState(StateDisable_Checked,
+					sub.addState(
+							StateDisable_Checked,
 							new Rect(x7 + w1 + w_insert1, y7 + h1 + h2 + h_insert1 + h_insert2, w2, h3));
 				}
 			}
@@ -942,46 +958,60 @@ public class Skin
 				sub = new SkinSubElement(el, new Rect(w1 + w2, h1 + h2, w3, h3), Align_Right + Align_Bottom);
 				if (x != -1 && y != -1)
 				{
-					sub.addState(StateNormal,
+					sub.addState(
+							StateNormal,
 							new Rect(x + w1 + w2 + w_insert1 + w_insert2, y + h1 + h2 + h_insert1 + h_insert2, w3,
-									h3));
+							         h3));
 				}
 				if (x1 != -1 && y1 != -1)
 				{
-					sub.addState(StateHighlight,
+					sub.addState(
+							StateHighlight,
 							new Rect(x1 + w1 + w2 + w_insert1 + w_insert2, y1 + h1 + h2 + h_insert1 + h_insert2,
-									w3, h3));
+							         w3, h3));
 				}
 				if (x2 != -1 && y2 != -1)
 				{
-					sub.addState(StatePressed,
+					sub.addState(
+							StatePressed,
 							new Rect(x2 + w1 + w2 + w_insert1 + w_insert2, y2 + h1 + h2 + h_insert1 + h_insert2,
-									w3, h3));
+							         w3, h3));
 				}
 				if (x3 != -1 && y3 != -1)
 				{
-					sub.addState(StateDisable,
+					sub.addState(
+							StateDisable,
 							new Rect(x3 + w1 + w2 + w_insert1 + w_insert2, y3 + h1 + h2 + h_insert1 + h_insert2,
-									w3, h3));
+							         w3, h3));
 				}
 				if (x4 != -1 && y4 != -1)
 				{
-					sub.addState(StateNormal_Checked,
+					sub.addState(
+							StateNormal_Checked,
 							new Rect(x4 + w1 + w2 + w_insert1 + w_insert2, y4 + h1 + h2 + h_insert1 + h_insert2,
-									w3, h3));
+							         w3, h3));
 				}
 				if (x5 != -1 && y5 != -1)
-					sub.addState(StateHighlight_Checked,
+				{
+					sub.addState(
+							StateHighlight_Checked,
 							new Rect(x5 + w1 + w2 + w_insert1 + w_insert2, y5 + h1 + h2 + h_insert1 + h_insert2,
-									w3, h3));
+							         w3, h3));
+				}
 				if (x6 != -1 && y6 != -1)
-					sub.addState(StatePressed_Checked,
+				{
+					sub.addState(
+							StatePressed_Checked,
 							new Rect(x6 + w1 + w2 + w_insert1 + w_insert2, y6 + h1 + h2 + h_insert1 + h_insert2,
-									w3, h3));
+							         w3, h3));
+				}
 				if (x7 != -1 && y7 != -1)
-					sub.addState(StateDisable_Checked,
+				{
+					sub.addState(
+							StateDisable_Checked,
 							new Rect(x7 + w1 + w2 + w_insert1 + w_insert2, y7 + h1 + h2 + h_insert1 + h_insert2,
-									w3, h3));
+							         w3, h3));
+				}
 			}
 		}
 	}
@@ -1010,7 +1040,7 @@ public class Skin
 		{
 			SkinElement el;
 			// вместо имени текстуры - имя региона, по которому и будем создавать спрайт из атласа
-			el = new SkinElement(this, r.name, r, r.originalWidth, r.originalHeight, new Rect(0, 0, 0, 0));
+			el = new SkinElement(this, "icon_" + r.name, r, r.originalWidth, r.originalHeight, new Rect(0, 0, 0, 0));
 			addStatesCenter(el, r.packedHeight, r.packedWidth, 0, 0);
 		}
 	}

@@ -21,33 +21,38 @@ import com.a2client.gui.utils.DragInfo;
 
 import static com.a2client.gui.Skin.StateNormal;
 
-public class GUI_Icon extends GUI_DragControl
+public class GUI_Icon extends GUI_Control
 {
-    public String iname;
+	public String iname;
 
-    public GUI_Icon(String name)
-    {
-        setSize(32, 32);
-        iname = name;
-    }
+	public GUI_Icon(String name, GUI_Control parent)
+	{
+		super(parent);
+		setSize(32, 32);
+		if (getSkin().hasElement("icon_" + name))
+		{
+			iname = "icon_" + name;
+		}
+		else
+		{
+			iname = "icon_unknown";
+		}
+	}
 
-    public void render()
-    {
-        if (getSkin().hasElement("icon_" + iname))
-            getSkin().draw("icon_" + iname, abs_pos.x, abs_pos.y, size.x, size.y, StateNormal);
-        else
-            getSkin().draw("icon_unknown", abs_pos.x, abs_pos.y, size.x, size.y, StateNormal);
-    }
+	public void render()
+	{
+		getSkin().draw(iname, abs_pos.x, abs_pos.y, size.x, size.y, StateNormal);
+	}
 
-    public void endDrag(DragInfo info)
-    {
-        // если дропнули не на слот а тащили с хотбар
-        // TODO : поддержка GUI_HotbarSlot
-        //        if (!(gui.mouse_in_control instanceof GUI_HotbarSlot) && (drag_parent instanceof GUI_HotbarSlot))
-        //        {
-        //            чистим слот
-        //            ((GUI_HotbarSlot) drag_parent).ClearSlot();
-        //        }
-    }
+	public void endDrag(DragInfo info)
+	{
+		// если дропнули не на слот а тащили с хотбар
+		// TODO : поддержка GUI_HotbarSlot
+		//        if (!(gui.mouse_in_control instanceof GUI_HotbarSlot) && (drag_parent instanceof GUI_HotbarSlot))
+		//        {
+		//            чистим слот
+		//            ((GUI_HotbarSlot) drag_parent).ClearSlot();
+		//        }
+	}
 
 }

@@ -1,5 +1,6 @@
 package com.a2client;
 
+import com.a2client.gamegui.GUI_ActionsList;
 import com.a2client.model.Action;
 import com.a2client.model.EquipWindow;
 import com.a2client.model.Hand;
@@ -106,10 +107,12 @@ public class PlayerData
 	public void setActions(Action rootAction)
 	{
 		_rootAction = rootAction;
-		Game.getInstance()._actions.clear();
+		GUI_ActionsList actions = Game.getInstance()._actions;
+
+		actions.clear();
 		for (Action action : _rootAction.list)
 		{
-			Game.getInstance()._actions.add(action.name, Lang.getTranslate("Game.action." + action.name));
+			actions.add(action);
 		}
 	}
 }

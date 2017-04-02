@@ -16,17 +16,13 @@ uniform int u_diffuseFlag;
 
 in vec2 texCoords;
 in float visibility;
-in vec3 normal;
-
-in float NdotL;
 
 in vec3 v_viewVec;
 in vec3 v_normal;
 in vec3 v_binormal;
 in vec3 v_tangent;
-
 in float v_depth;
-in vec4 shadowCoords;
+in vec4 v_shadowCoords;
 
 const float numShades = 16.0;
 
@@ -93,19 +89,19 @@ void main() {
 //	outColor = vec4(u_joints[0].x);
 
 // shadows
-	if (shadowCoords.w >= 0) {
+	if (v_shadowCoords.w >= 0) {
 		float totalShadowWeight = 0.0;
 
 		for (int x = -pcfCount; x <= pcfCount; x++) {
 			for (int y = -pcfCount; y <= pcfCount; y++) {
-				float objectNearestLihgt = texture(u_shadowMap, shadowCoords.xy + vec2(x, y) * texelSize).r;
-				if (shadowCoords.z > objectNearestLihgt + 0.005) {
+				float objectNearestLihgt = texture(u_shadowMap, v_shadowCoords.xy + vec2(x, y) * texelSize).r;
+				if (v_shadowCoords.z > objectNearestLihgt + 0.005) {
 					totalShadowWeight += 1.0;
 				}
 			}
 		}
 		totalShadowWeight /= totalTexels;
-		float lightFactor = 1.0 - (totalShadowWeight * shadowCoords.w);
+		float lightFactor = 1.0 - (totalShadowWeight * v_shadowCoords.w);
 		lightFactor = lightFactor * 0.5 + 0.8;
 
 		outColor.xyz = outColor.xyz * lightFactor;

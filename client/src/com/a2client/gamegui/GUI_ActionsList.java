@@ -1,8 +1,9 @@
 package com.a2client.gamegui;
 
-import com.a2client.gui.GUIGDX;
+import com.a2client.gui.GUI;
 import com.a2client.gui.GUI_Control;
-import com.a2client.gui.GUI_ListBox;
+import com.a2client.gui.GUI_Icon;
+import com.a2client.model.Action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,80 +15,32 @@ import java.util.List;
  * крафт строительство и тд
  * Created by arksu on 12.08.16.
  */
-public class GUI_ActionsList extends GUI_ListBox
+public class GUI_ActionsList extends GUI_Control
 {
 	private static final Logger _log = LoggerFactory.getLogger(GUI_ActionsList.class.getName());
 
-	private class Item
-	{
-		String caption;
-		String tag;
+	private final List<Action> _actions = new ArrayList<>();
 
-		public Item(String caption, String tag)
-		{
-			this.caption = caption;
-			this.tag = tag;
-		}
-	}
-
-	protected final List<Item> _list = new ArrayList<>();
-
-	protected String _fontName = "default";
+	private final List<GUI_Icon> _guiIcons = new ArrayList<>();
 
 	public GUI_ActionsList(GUI_Control parent)
 	{
 		super(parent);
 	}
 
-	public String getItemCaption(int index)
+	public void add(Action action)
 	{
-		if (index < 0 || index >= _list.size())
-		{
-			return "";
-		}
-		return _list.get(index).caption;
-	}
+		_actions.add(action);
 
-	public String getItemTag(int index)
-	{
-		if (index < 0 || index >= _list.size())
-		{
-			return "";
-		}
-		return _list.get(index).tag;
-	}
-
-	@Override
-	public int getCount()
-	{
-		return _list.size();
-	}
-
-	@Override
-	public int getItemHeight(int index)
-	{
-		if (index < 0 || index >= _list.size())
-		{
-			return 0;
-		}
-		return GUIGDX.getTextHeight(_fontName, getItemCaption(index)) + 2;
-	}
-
-	@Override
-	protected void drawItem(int index, int x, int y, int w, int h)
-	{
-		GUIGDX.Text(_fontName, x, y, getItemCaption(index));
-	}
-
-	public void add(String tag, String caption)
-	{
-		_list.add(new Item(caption, tag));
-		onInsertItem(0);
+		GUI_Icon icon = new GUI_Icon(action.name, GUI.rootNormal());
+		icon.setPos(200, 200);
+		_guiIcons.add(icon);
 	}
 
 	public void clear()
 	{
-		_list.clear();
-		onDeleteItem(0);
+		_actions.clear();
 	}
+
+	public void doClick(Action action) {}
 }

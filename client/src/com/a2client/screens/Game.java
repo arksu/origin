@@ -4,6 +4,7 @@ import com.a2client.*;
 import com.a2client.gamegui.GUI_ActionsList;
 import com.a2client.gamegui.GUI_GameArea;
 import com.a2client.gui.*;
+import com.a2client.model.Action;
 import com.a2client.model.GameObject;
 import com.a2client.model.Inventory;
 import com.a2client.network.game.clientpackets.ActionSelect;
@@ -123,10 +124,9 @@ public class Game extends BaseScreen
 		_actions = new GUI_ActionsList(GUI.rootNormal())
 		{
 			@Override
-			public void doClick()
+			public void doClick(Action action)
 			{
-				String item = getItemTag(getSelectedItem());
-				new ActionSelect(item).send();
+				new ActionSelect(action.name).send();
 			}
 		};
 		_actions.setSize(150, 100);

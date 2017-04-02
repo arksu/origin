@@ -433,6 +433,13 @@ public class Skin_MyGUI extends Skin
 		y = 2;
 		addStatesCenter(el, h1, w1, x, y);
 
+		el = new SkinElement(this, "icon_unknown", "core_skin", 34, 34, new Rect(0, 0, 0, 0));
+		w1 = 34;
+		h1 = 34;
+		x = 695;
+		y = 2;
+		addStatesCenter(el, h1, w1, x, y);
+
 		el = new SkinElement(this, "icon_run_1", "core_skin", 5, 5, new Rect(0, 0, 0, 0));
 		w1 = 5;
 		h1 = 5;

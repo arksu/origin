@@ -2,59 +2,66 @@ icons0.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-icon_apple
+bottle
   rotate: false
-  xy: 31, 89
-  size: 31, 30
-  orig: 31, 30
-  offset: 0, -1
-  index: -1
-icon_bottle
-  rotate: false
-  xy: 110, 0
+  xy: 1, 1
   size: 13, 32
   orig: 13, 32
-  offset: 9, 0
+  offset: 8, 0
   index: -1
-icon_branch
+unknown
   rotate: false
-  xy: 62, 89
+  xy: 16, 1
+  size: 17, 28
+  orig: 17, 28
+  offset: 8, -2
+  index: -1
+stone
+  rotate: false
+  xy: 35, 1
+  size: 19, 18
+  orig: 19, 18
+  offset: 8, -7
+  index: -1
+seed
+  rotate: false
+  xy: 56, 1
+  size: 20, 21
+  orig: 20, 21
+  offset: 7, -6
+  index: -1
+branch
+  rotate: false
+  xy: 78, 1
   size: 28, 30
   orig: 28, 30
   offset: 1, -1
   index: -1
-icon_carrot
+stone_axe
   rotate: false
-  xy: 0, 89
-  size: 31, 32
-  orig: 31, 32
-  offset: 1, 0
-  index: -1
-icon_seed
-  rotate: false
-  xy: 90, 0
-  size: 20, 22
-  orig: 20, 22
-  offset: 7, -5
-  index: -1
-icon_stone
-  rotate: false
-  xy: 90, 22
-  size: 19, 18
-  orig: 19, 18
-  offset: 7, -7
-  index: -1
-icon_stoneAxe
-  rotate: false
-  xy: 0, 0
+  xy: 1, 35
   size: 31, 63
   orig: 31, 63
   offset: 0, -2
   index: -1
-icon_stoneKnife
+apple
   rotate: false
-  xy: 0, 63
+  xy: 34, 35
+  size: 32, 30
+  orig: 32, 30
+  offset: 0, -1
+  index: -1
+carrot
+  rotate: false
+  xy: 68, 35
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+stone_knife
+  rotate: false
+  xy: 1, 100
   size: 63, 26
   orig: 63, 26
-  offset: 1, -1
+  offset: 0, -5
   index: -1

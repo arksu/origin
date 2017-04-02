@@ -1,16 +1,16 @@
 {
-	"appleTree": {
+	"apple_tree": {
 		"typeId": 11,
 		"class": "tree"
 	},
-	"oakTree": {
+	"oak_tree": {
 		"typeId": 12,
 		"size": 20
 	},
-	"firTree": {
+	"fir_tree": {
 		"typeId": 13
 	},
-	"pineTree": {
+	"pine_tree": {
 		"typeId": 14,
 		"collision": {
 			"all": true,
@@ -32,7 +32,7 @@
 			"height": 3
 		}
 	},
-	"customBag": {
+	"custom_bag": {
 		"typeId": 18,
 		"inventory": {
 			"acceptAll": false,
@@ -48,7 +48,7 @@
 			"height": 1
 		}
 	},
-	"stoneAxe": {
+	"stone_axe": {
 		"typeId": 16,
 		"item": {
 			"equip": ["lhand", "rhand"],
@@ -56,7 +56,7 @@
 			"height": 2
 		}
 	},
-	"stoneKnife": {
+	"stone_knife": {
 		"typeId": 17,
 		"item": {
 			"width": 2,
