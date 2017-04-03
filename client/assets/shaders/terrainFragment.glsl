@@ -20,7 +20,7 @@ const float shadowMapSize = 2048.0;
 const float texelSize = 1.0 / shadowMapSize;
 
 void main() {
-	float intensity = max(NdotL, 0.25);
+	float intensity = max(NdotL, 0.45);
 	float shadeIntensity = ceil(intensity * numShades) / numShades;
 
     outColor = shadeIntensity * texture(u_texture, texCoords);

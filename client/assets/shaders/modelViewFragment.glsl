@@ -65,16 +65,12 @@ void main() {
 		rSpecular.xyz *= rTexN.x;
 	}
 
-
-
 	float intensity = max(rVdotN, 0.45);
-//	float intensity = max(NdotL, 0.45);
-//    outColor = intensity * texture(u_texture, texCoords);
 	float shadeIntensity = ceil(intensity * numShades)/numShades;
 	if (u_diffuseFlag > 0) {
-    	outColor = intensity * texture(u_texture, texCoords);
+    	outColor = texture(u_texture, texCoords);
     } else {
-    	outColor = intensity * vec4(1);
+    	outColor = vec4(1);
     }
 	if (outColor.a <= 0.01)
 		discard;
@@ -86,7 +82,6 @@ void main() {
 //	outColor = vec4(w1);
 //    outColor2 = vec4(0);
 
-//	outColor = vec4(u_joints[0].x);
 
 // shadows
 	if (v_shadowCoords.w >= 0) {

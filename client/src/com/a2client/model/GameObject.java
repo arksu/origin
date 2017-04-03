@@ -12,6 +12,8 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Random;
+
 import static com.a2client.Terrain.TILE_SIZE;
 
 /**
@@ -190,6 +192,8 @@ public class GameObject
 				_model.playAnimation("idle");
 			}
 		}
+		Random random = new Random();
+		_model.setHeading(random.nextFloat() * 360, true);
 	}
 
 	public void updateCoord()

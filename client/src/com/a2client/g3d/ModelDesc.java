@@ -63,6 +63,6 @@ public class ModelDesc
 		/**
 		 * принимает ли на себя тени этот меш
 		 */
-		boolean receiveShadows = false;
+		boolean receiveShadows = true;
 	}
 }
