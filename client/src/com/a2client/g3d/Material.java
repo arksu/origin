@@ -33,10 +33,16 @@ public class Material
 	 */
 	private boolean _receiveShadows;
 
+	/**
+	 * рисовать черную обводку у объектов если включен постпроцессинг
+	 */
+	private boolean _outline = true;
+
 	public Material(ModelDesc.Material material)
 	{
 		_castShadows = material.castShadows;
 		_receiveShadows = material.receiveShadows;
+		_outline = material.outline;
 
 		TextureLoader.TextureParameter parameter = new TextureLoader.TextureParameter();
 
@@ -116,6 +122,15 @@ public class Material
 		else
 		{
 			shader.setUniformi("u_diffuseFlag", 0);
+		}
+
+		if (_outline)
+		{
+			shader.setUniformi("u_outlineFlag", 1);
+		}
+		else
+		{
+			shader.setUniformi("u_outlineFlag", 0);
 		}
 
 		shader.setUniformf(

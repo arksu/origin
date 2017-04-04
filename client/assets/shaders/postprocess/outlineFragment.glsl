@@ -50,7 +50,7 @@ void main() {
 	} else {
 		dcolor = vec4(0,0,0,1);
 	}
-    if(d1 != 0 && depth > 0.0003) {
+    if(d1 != 0 && depth > 0.0002) {
         fragColor = mix(dcolor, texture(u_texture, v_texCoords2), 0.3);
     } else {
     	fragColor = texture(u_texture, v_texCoords2);

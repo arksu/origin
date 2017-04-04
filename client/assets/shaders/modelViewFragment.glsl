@@ -13,6 +13,7 @@ uniform int u_selected;
 uniform int u_specularMapFlag;
 uniform int u_normalMapFlag;
 uniform int u_diffuseFlag;
+uniform int u_outlineFlag;
 
 in vec2 texCoords;
 in float visibility;
@@ -105,5 +106,9 @@ void main() {
 	outColor = mix(vec4(u_skyColor, 1.0), outColor, visibility);
 
 
-	fragColor2 = pack_depth(v_depth);
+	if (u_outlineFlag > 0) {
+		fragColor2 = pack_depth(v_depth);
+	} else {
+		fragColor2 = pack_depth(0.0001);
+	}
 }

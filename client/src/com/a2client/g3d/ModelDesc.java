@@ -64,5 +64,10 @@ public class ModelDesc
 		 * принимает ли на себя тени этот меш
 		 */
 		boolean receiveShadows = true;
+
+		/**
+		 * рисовать черную обводку у объектов если включен постпроцессинг
+		 */
+		boolean outline = true;
 	}
 }
