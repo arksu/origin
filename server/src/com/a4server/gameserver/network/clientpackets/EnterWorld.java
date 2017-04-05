@@ -40,8 +40,8 @@ public class EnterWorld extends GameClientPacket
 			sendPacket(new CharInfo(cha));
 
 			// сначала гриды
-			int px = client.getActiveChar().getPos()._x;
-			int py = client.getActiveChar().getPos()._y;
+			int px = client.getActiveChar().getPos().getX();
+			int py = client.getActiveChar().getPos().getY();
 			for (Grid grid : client.getActiveChar().getGrids())
 			{
 				sendPacket(new MapGrid(grid, px, py));

@@ -2,6 +2,8 @@ package com.a2client.network.game.serverpackets;
 
 import com.a2client.ObjectCache;
 import com.a2client.network.game.GamePacketHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by arksu on 11.02.15.
@@ -12,6 +14,8 @@ public class ObjectMove extends GameServerPacket
 	{
 		GamePacketHandler.AddPacketType(0x14, ObjectMove.class);
 	}
+
+	private static final Logger _log = LoggerFactory.getLogger(ObjectMove.class.getName());
 
 	private int _objectId;
 	private int _tox;
@@ -34,6 +38,7 @@ public class ObjectMove extends GameServerPacket
 	@Override
 	public void run()
 	{
+		_log.debug("move to " + _tox + ", " + _toy);
 		ObjectCache.getInstance().getObject(_objectId).move(_tox, _toy, _vx, _vy, _speed);
 	}
 }

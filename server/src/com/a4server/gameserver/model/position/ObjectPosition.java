@@ -22,13 +22,13 @@ public class ObjectPosition
 	/**
 	 * абсолютные мировые координаты
 	 */
-	public volatile int _x;
-	public volatile int _y;
+	private volatile int _x;
+	private volatile int _y;
 
 	/**
 	 * уровень земли
 	 */
-	public volatile int _level;
+	private volatile int _level;
 
 	/**
 	 * грид в котором находимся

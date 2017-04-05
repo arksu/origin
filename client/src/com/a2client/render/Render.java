@@ -91,8 +91,6 @@ public class Render
 	private Mesh testQuad1;
 	private Mesh testQuad2;
 
-//	ModelInstance _testModel;
-
 	public static Matrix4 toShadowMapSpace;
 
 	public Render(Game game)
@@ -128,8 +126,6 @@ public class Render
 		// for debug
 		testQuad1 = createTestQuad(0.7f, -1, 0.3f);
 		testQuad2 = createTestQuad(0.7f, 0, 0.3f);
-
-//		_testModel = ModelManager.getInstance().getModelByType(2);
 
 		Icosahedron.init();
 	}
@@ -529,7 +525,6 @@ public class Render
 		_modelShader.setUniformf("u_skyColor", Skybox.fogColor.r, Skybox.fogColor.g, Skybox.fogColor.b);
 		_modelShader.setUniformf("u_density", Skybox.fogEnabled ? Skybox.fogDensity : 0f);
 		_modelShader.setUniformf("u_gradient", Skybox.fogGradient);
-//		_modelShader.setUniformf("u_lightPosition", new Vector3(1000, 1500, 100));
 		_modelShader.setUniformf("u_lightPosition", Skybox.sunPosition);
 
 		if (Config.getInstance()._renderShadows)

@@ -40,7 +40,10 @@ public class ObjectAdd extends GameServerPacket
 	@Override
 	public void run()
 	{
-//		_log.debug("ObjectAdd " + _objectId + " type=" + _typeId + " (" + _x + ", " + _y + ")");
+		if (_typeId == 1)
+		{
+			_log.debug("ObjectAdd " + _objectId + " " + _name + " type=" + _typeId + " (" + _x + ", " + _y + ")");
+		}
 		GameObject object;
 		if (_typeId == 1)
 		{

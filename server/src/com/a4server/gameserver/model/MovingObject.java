@@ -120,7 +120,7 @@ public abstract class MovingObject extends GameObject
 		getPos().setXY(x, y);
 		storeInDb();
 		// расскажем всем что мы остановились
-		GridEvent gridEvent = new GridEvent(this, GridEvent.EventType.EVT_STOP_MOVE, new ObjectPos(getObjectId(), getPos()._x, getPos()._y));
+		GridEvent gridEvent = new GridEvent(this, GridEvent.EventType.EVT_STOP_MOVE, new ObjectPos(getObjectId(), getPos().getX(), getPos().getY()));
 		getPos().getGrid().broadcastEvent(gridEvent);
 	}
 
@@ -176,7 +176,7 @@ public abstract class MovingObject extends GameObject
 		{
 			for (int j = -1; j <= 1; j++)
 			{
-				Grid grid = World.getInstance().getGrid(gridX + i, gridY + j, getPos()._level);
+				Grid grid = World.getInstance().getGrid(gridX + i, gridY + j, getPos().getLevel());
 				if (grid != null)
 				{
 					_grids.add(grid);
@@ -223,7 +223,7 @@ public abstract class MovingObject extends GameObject
 			{
 				for (int j = -1; j <= 1; j++)
 				{
-					Grid grid = World.getInstance().getGrid(gridX + i, gridY + j, getPos()._level);
+					Grid grid = World.getInstance().getGrid(gridX + i, gridY + j, getPos().getLevel());
 					// если грид существует
 					if (grid != null)
 					{

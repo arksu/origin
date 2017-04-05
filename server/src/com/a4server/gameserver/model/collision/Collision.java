@@ -61,7 +61,7 @@ public class Collision
 			for (GameObject obj : grid.getObjects())
 			{
 				// условие отбора объекта
-				if ((filterRect.isPointInside(obj.getPos()._x, obj.getPos()._y) &&
+				if ((filterRect.isPointInside(obj.getPos().getX(), obj.getPos().getY()) &&
 				     // это НЕ я
 				     obj.getObjectId() != object.getObjectId() &&
 				     // todo то что несем на себе не дает коллизий
@@ -81,7 +81,7 @@ public class Collision
 		Rect vrr = null;
 		for (GameObject obj : objects)
 		{
-			ro = obj.getBoundRect().clone().move(obj.getPos()._x, obj.getPos()._y);
+			ro = obj.getBoundRect().clone().move(obj.getPos().getX(), obj.getPos().getY());
 			if (rr.isIntersect(ro))
 			{
 				return new CollisionResult(obj, fromX, fromY);
@@ -144,7 +144,7 @@ public class Collision
 			rr = object.getBoundRect().clone().move(inx, iny);
 			for (GameObject obj : objects)
 			{
-				ro = obj.getBoundRect().clone().move(obj.getPos()._x, obj.getPos()._y);
+				ro = obj.getBoundRect().clone().move(obj.getPos().getX(), obj.getPos().getY());
 				if (rr.isIntersect(ro))
 				{
 					return new CollisionResult(obj, (int) Math.round(cx), (int) Math.round(cy));

@@ -203,7 +203,7 @@ public class MouseClick extends GameClientPacket
 		switch (cursor)
 		{
 			case TileUp:
-				grid = World.getInstance().getGridInWorldCoord(x, y, player.getPos()._level);
+				grid = World.getInstance().getGridInWorldCoord(x, y, player.getPos().getLevel());
 				n = World.getTileIndex(x, y);
 				tile = grid.getTile(n);
 
@@ -213,7 +213,7 @@ public class MouseClick extends GameClientPacket
 				break;
 
 			case TileDown:
-				grid = World.getInstance().getGridInWorldCoord(x, y, player.getPos()._level);
+				grid = World.getInstance().getGridInWorldCoord(x, y, player.getPos().getLevel());
 				n = World.getTileIndex(x, y);
 				tile = grid.getTile(n);
 
@@ -223,7 +223,7 @@ public class MouseClick extends GameClientPacket
 				break;
 
 			case TileSand:
-				grid = World.getInstance().getGridInWorldCoord(x, y, player.getPos()._level);
+				grid = World.getInstance().getGridInWorldCoord(x, y, player.getPos().getLevel());
 				n = World.getTileIndex(x, y);
 				tile = grid.getTile(n);
 				tile.setType(Tile.TileType.TILE_SAND);
@@ -231,7 +231,7 @@ public class MouseClick extends GameClientPacket
 				break;
 
 			case TileGrass:
-				grid = World.getInstance().getGridInWorldCoord(x, y, player.getPos()._level);
+				grid = World.getInstance().getGridInWorldCoord(x, y, player.getPos().getLevel());
 				n = World.getTileIndex(x, y);
 				tile = grid.getTile(n);
 				tile.setType(Tile.TileType.TILE_GRASS);

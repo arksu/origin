@@ -53,8 +53,8 @@ public abstract class MoveController
 		if (object != null)
 		{
 			// получим текущие координаты
-			_currentX = object.getPos()._x;
-			_currentY = object.getPos()._y;
+			_currentX = object.getPos().getX();
+			_currentY = object.getPos().getY();
 			_storedX = _currentX;
 			_storedY = _currentY;
 		}
@@ -128,7 +128,7 @@ public abstract class MoveController
 	                          Move.MoveType moveType,
 	                          VirtualObject virtualObject)
 	{
-		CollisionResult collision = checkColiision(toX, toY, moveType, virtualObject);
+		CollisionResult collision = checkColiision(toX, toY, moveType, virtualObject, true);
 		switch (collision.getResultType())
 		{
 			// коллизий нет
@@ -176,7 +176,8 @@ public abstract class MoveController
 	protected CollisionResult checkColiision(double toX,
 	                                         double toY,
 	                                         Move.MoveType moveType,
-	                                         VirtualObject virtualObject)
+	                                         VirtualObject virtualObject,
+	                                         boolean isMove)
 	{
 		Grid grid = _activeObject.getPos().getGrid();
 		// а теперь пошла самая магия!)))
@@ -197,7 +198,7 @@ public abstract class MoveController
 						                           (int) Math.round(_currentY),
 						                           (int) Math.round(toX),
 						                           (int) Math.round(toY),
-						                           moveType, virtualObject, true);
+						                           moveType, virtualObject, isMove);
 					}
 					else
 					{

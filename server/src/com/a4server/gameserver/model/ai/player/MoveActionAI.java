@@ -55,7 +55,7 @@ public class MoveActionAI extends PlayerAI
 
 		if (target.getPos().getDistance(_player.getPos()) < 2000)
 		{
-			_player.startMove(new MoveToPoint(target.getPos()._x, target.getPos()._y));
+			_player.startMove(new MoveToPoint(target.getPos().getX(), target.getPos().getY()));
 		}
 	}
 }

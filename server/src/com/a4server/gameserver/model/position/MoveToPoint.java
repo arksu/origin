@@ -101,7 +101,7 @@ public class MoveToPoint extends MoveController
 		double tmpY = _currentY + (tdy / td) * d;
 
 		// проверим коллизию на передвижение за 1 тик
-		return (checkColiision(tmpX, tmpY, _moveType, null) == CollisionResult.NONE);
+		return (checkColiision(tmpX, tmpY, _moveType, null, false) == CollisionResult.NONE);
 	}
 
 	/**
@@ -111,12 +111,13 @@ public class MoveToPoint extends MoveController
 	@Override
 	public GameServerPacket makeMovePacket()
 	{
-		return new ObjectMove(_activeObject.getObjectId(),
-							  _activeObject.getPos()._x,
-							  _activeObject.getPos()._y,
-							  _toX,
-							  _toY,
-							  (int) Math.round(_activeObject.getMoveSpeed())
+		return new ObjectMove(
+				_activeObject.getObjectId(),
+				_activeObject.getPos().getX(),
+				_activeObject.getPos().getY(),
+				_toX,
+				_toY,
+				(int) Math.round(_activeObject.getMoveSpeed())
 		);
 	}
 

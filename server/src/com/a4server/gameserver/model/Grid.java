@@ -569,13 +569,13 @@ public class Grid
 	 */
 	public CollisionResult trySpawnNear(GameObject object, int len, boolean moveLen) throws Exception
 	{
-		if (object.getPos()._level != _level)
+		if (object.getPos().getLevel() != _level)
 		{
 			throw new RuntimeException("trySpawn not in player grid! " + object + " " + this.toString());
 		}
 
-		int x = object.getPos()._x;
-		int y = object.getPos()._y;
+		int x = object.getPos().getX();
+		int y = object.getPos().getY();
 		if (x < (_x * GRID_FULL_SIZE) || x >= ((_x + 1) * GRID_FULL_SIZE) ||
 		    y < (_y * GRID_FULL_SIZE) || y >= ((_y + 1) * GRID_FULL_SIZE))
 		{
@@ -801,21 +801,21 @@ public class Grid
 			}
 
 			// гриды залочены, проходим итерациями и ищем коллизию
-			CollisionResult result = Collision
-					.checkCollision(object, fromX, fromY, toX, toY, moveType, virtual, grids, 0);
+			CollisionResult result =
+					Collision.checkCollision(object, fromX, fromY, toX, toY, moveType, virtual, grids, 0);
 
 			// узнаем переместился ли объект из одного грида в другой
 			// и только в том случае если в передвижении участвует больше 1 грида
 			if (isMove && grids.size() > 1)
 			{
-				int fx = toX;
-				int fy = toY;
+				int finalX = toX;
+				int finalY = toY;
 				if (result.getResultType() != CollisionResult.CollisionType.COLLISION_NONE)
 				{
-					fx = result.getX();
-					fy = result.getY();
+					finalX = result.getX();
+					finalY = result.getY();
 				}
-				grid = World.getInstance().getGridInWorldCoord(fx, fy, _level);
+				grid = World.getInstance().getGridInWorldCoord(finalX, finalY, _level);
 				// реально передвинулись в тот грид
 				if (grid != this && grids.contains(grid))
 				{
@@ -824,7 +824,7 @@ public class Grid
 					// вся эта байда с залочиванием и получением списка гридов делалась именно для этого
 					// получился свой велосипед по типу транзакций для обеспечения целостности данных между гридами
 					_log.debug("swap grids " + object + " " + this + " >> " + grid);
-					_objects.remove(object);
+					this._objects.remove(object);
 					grid._objects.add(object);
 				}
 			}
@@ -925,12 +925,14 @@ public class Grid
 
 	public void deactivate(Player player)
 	{
+		_log.debug("deactivate " + toString() + " " + player.toString());
 		_activeObjects.remove(player);
 		// если грид больше не активен
 		if (_activeObjects.isEmpty())
 		{
 			// скажем миру что обновлять этот грид больше не надо
 			World.getInstance().removeActiveGrid(this);
+			_log.debug("grid is empty!");
 		}
 	}
 

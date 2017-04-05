@@ -207,7 +207,7 @@ public class Player extends Human
 	{
 		if (getClient() != null)
 		{
-			getClient().sendPacket(new MapGrid(grid, getPos()._x, getPos()._y));
+			getClient().sendPacket(new MapGrid(grid, getPos().getX(), getPos().getY()));
 		}
 
 		// надо "активировать" новый грид куда я вошел
@@ -233,6 +233,12 @@ public class Player extends Human
 			}
 		}
 		while (true);
+	}
+
+	@Override
+	protected void onLeaveGrid(Grid grid)
+	{
+		grid.deactivate(this);
 	}
 
 	/**
@@ -403,8 +409,8 @@ public class Player extends Human
 			try (Connection con = Database.getInstance().getConnection();
 			     PreparedStatement ps = con.prepareStatement(UPDATE_CHARACTER))
 			{
-				ps.setInt(1, getPos()._x);
-				ps.setInt(2, getPos()._y);
+				ps.setInt(1, getPos().getX());
+				ps.setInt(2, getPos().getY());
 				ps.setInt(3, getObjectId());
 				ps.execute();
 			}
@@ -444,7 +450,7 @@ public class Player extends Human
 	public double getMoveSpeed()
 	{
 		// todo getMoveSpeed
-		return 39f;
+		return 79f;
 	}
 
 	// нагенерить объектов в гриде
