@@ -15,6 +15,7 @@ public class Cursor
 	public enum CursorName
 	{
 		Arrow("arrow"),
+		Spawn("spawn"),
 
 		TileUp("tile_up"),
 		TileDown("tile_down"),
@@ -29,26 +30,33 @@ public class Cursor
 		}
 	}
 
-	private CursorName _current;
+	private CursorName _name;
+	private int _typeId = 0;
 	private final Player _player;
 
 	public Cursor(Player player)
 	{
-		_current = CursorName.Arrow;
+		_name = CursorName.Arrow;
 		_player = player;
 	}
 
-	public CursorName get()
+	public CursorName getName()
 	{
-		return _current;
+		return _name;
 	}
 
-	public void set(CursorName current)
+	public int getTypeId()
 	{
-		if (_current != current)
+		return _typeId;
+	}
+
+	public void set(CursorName current, int typeId)
+	{
+		if (_name != current || _typeId != typeId)
 		{
-			_current = current;
-			_player.getClient().sendPacket(new CursorSet(_current._name));
+			_name = current;
+			_typeId = typeId;
+			_player.getClient().sendPacket(new CursorSet(_name._name, typeId));
 		}
 	}
 }

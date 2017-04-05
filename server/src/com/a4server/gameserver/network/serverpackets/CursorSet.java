@@ -11,10 +11,12 @@ public class CursorSet extends GameServerPacket
 	private static final Logger _log = LoggerFactory.getLogger(CursorSet.class.getName());
 
 	private final String _name;
+	private final int _typeId;
 
-	public CursorSet(String name)
+	public CursorSet(String name, int typeId)
 	{
 		_name = name;
+		_typeId = typeId;
 	}
 
 	@Override
@@ -22,5 +24,6 @@ public class CursorSet extends GameServerPacket
 	{
 		writeC(0x22);
 		writeS(_name);
+		writeD(_typeId);
 	}
 }

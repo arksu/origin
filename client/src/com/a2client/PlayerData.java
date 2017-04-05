@@ -8,6 +8,8 @@ import com.a2client.screens.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 /**
  * описывает класс моего персонажа и всего что с ним связано
  * параметры, статы, скиллы и прочее
@@ -37,7 +39,7 @@ public class PlayerData
 	/**
 	 * доступные действия для игрока
 	 */
-	private Action _rootAction;
+	private List<Action> _actions;
 
 	public void setObjectId(int myObjectId)
 	{
@@ -104,14 +106,14 @@ public class PlayerData
 		return _equipWindow;
 	}
 
-	public void setActions(Action rootAction)
+	public void setActions(List<Action> list)
 	{
-		_rootAction = rootAction;
+		_actions = list;
 
 		GUI_ActionsList actions = Game.getInstance()._rootActions;
 
 		actions.clear();
-		for (Action action : _rootAction.list)
+		for (Action action : _actions)
 		{
 			actions.add(action);
 		}

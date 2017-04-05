@@ -34,32 +34,39 @@ public class ActionSelect extends GameClientPacket
 		{
 			try (GameLock ignored = player.tryLock())
 			{
-				Cursor.CursorName cursor = Arrow;
 				if ("online".equals(_name))
 				{
 
 				}
-				else if ("tile_up".equals(_name))
+				else if ("spawn_pine".equals(_name))
 				{
-					cursor = TileUp;
+					player.setCursor(Spawn, 14);
 				}
-				else if ("tile_down".equals(_name))
+				else
 				{
-					cursor = TileDown;
+					Cursor.CursorName cursor = Arrow;
+					if ("tile_up".equals(_name))
+					{
+						cursor = TileUp;
+					}
+					else if ("tile_down".equals(_name))
+					{
+						cursor = TileDown;
+					}
+					else if ("tile_sand".equals(_name))
+					{
+						cursor = TileSand;
+					}
+					else if ("tile_grass".equals(_name))
+					{
+						cursor = TileGrass;
+					}
+					player.setCursor(cursor, 0);
 				}
-				else if ("tile_sand".equals(_name))
-				{
-					cursor = TileSand;
-				}
-				else if ("tile_grass".equals(_name))
-				{
-					cursor = TileGrass;
-				}
-				player.setCursor(cursor);
 			}
 			catch (Exception e)
 			{
-				_log.error("ActionSelect error: "+e.getMessage(), e);
+				_log.error("ActionSelect error: " + e.getMessage(), e);
 			}
 		}
 	}

@@ -23,6 +23,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * игрок и все что с ним связано
@@ -517,18 +519,18 @@ public class Player extends Human
 		return 4;
 	}
 
-	public Cursor.CursorName getCursor()
+	public Cursor getCursor()
 	{
-		return _cursor.get();
+		return _cursor;
 	}
 
 	/**
 	 * сменить текущий курсор у игрока. имзенится только если реально отличается от текущего
 	 * пошлет пакет на клиент
 	 */
-	public void setCursor(Cursor.CursorName value)
+	public void setCursor(Cursor.CursorName value, int typeId)
 	{
-		_cursor.set(value);
+		_cursor.set(value, typeId);
 	}
 
 	public Hand getHand()
@@ -560,29 +562,25 @@ public class Player extends Human
 		return true;
 	}
 
-	public Action[] getActions()
+	public List<Action> getActions()
 	{
 		// todo: actions
-		Action[] list = new Action[9];
-		int idx = 0;
-		list[idx++] = new Action("craft");
-		list[idx++] = new Action("online");
+		List<Action> list = new ArrayList<>();
+		list.add(new Action("craft"));
+		list.add(new Action("build"));
 
-		Action[] l3 = new Action[2];
-		l3[0] = new Action("foo");
-		l3[1] = new Action("bar");
+		// debug features
+		list.add(new Action("online"));
+		Action spawn = new Action("spawn");
+		list.add(spawn);
+		spawn.add(new Action("spawn_pine"));
 
-		Action[] l2 = new Action[2];
-		l2[0] = new Action("some1");
-		l2[1] = new Action("some2", l3);
-		list[idx++] = new Action("some", l2);
-
-		list[idx++] = new Action("tile_up");
-		list[idx++] = new Action("tile_down");
-		list[idx++] = new Action("tile_sand");
-		list[idx++] = new Action("tile_grass");
-		list[idx++] = new Action("tile_leaf");
-		list[idx++] = new Action("tile_fir");
+		list.add(new Action("tile_up"));
+		list.add(new Action("tile_down"));
+		list.add(new Action("tile_sand"));
+		list.add(new Action("tile_grass"));
+		list.add(new Action("tile_leaf"));
+		list.add(new Action("tile_fir"));
 		return list;
 	}
 

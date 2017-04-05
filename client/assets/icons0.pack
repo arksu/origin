@@ -2,66 +2,73 @@ icons0.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-bottle
-  rotate: false
-  xy: 1, 1
-  size: 13, 32
-  orig: 13, 32
-  offset: 8, 0
-  index: -1
-unknown
-  rotate: false
-  xy: 16, 1
-  size: 17, 28
-  orig: 17, 28
-  offset: 8, -2
-  index: -1
-stone
-  rotate: false
-  xy: 35, 1
-  size: 19, 18
-  orig: 19, 18
-  offset: 8, -7
-  index: -1
-seed
-  rotate: false
-  xy: 56, 1
-  size: 20, 21
-  orig: 20, 21
-  offset: 7, -6
-  index: -1
-branch
-  rotate: false
-  xy: 78, 1
-  size: 28, 30
-  orig: 28, 30
-  offset: 1, -1
-  index: -1
-stone_axe
-  rotate: false
-  xy: 1, 35
-  size: 31, 63
-  orig: 31, 63
-  offset: 0, -2
-  index: -1
 apple
   rotate: false
-  xy: 34, 35
+  xy: 1, 1
   size: 32, 30
   orig: 32, 30
   offset: 0, -1
   index: -1
+bottle
+  rotate: false
+  xy: 35, 1
+  size: 13, 32
+  orig: 13, 32
+  offset: 8, 0
+  index: -1
+branch
+  rotate: false
+  xy: 1, 35
+  size: 28, 30
+  orig: 28, 30
+  offset: 1, -1
+  index: -1
 carrot
   rotate: false
-  xy: 68, 35
+  xy: 31, 35
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-stone_knife
+craft
   rotate: false
-  xy: 1, 100
-  size: 63, 26
-  orig: 63, 26
-  offset: 0, -5
+  xy: 1, 69
+  size: 29, 28
+  orig: 29, 28
+  offset: 1, -1
+  index: -1
+seed
+  rotate: false
+  xy: 32, 69
+  size: 20, 21
+  orig: 20, 21
+  offset: 7, -6
+  index: -1
+spawn
+  rotate: false
+  xy: 1, 99
+  size: 17, 17
+  orig: 17, 17
+  offset: 8, -7
+  index: -1
+stone
+  rotate: false
+  xy: 20, 99
+  size: 19, 18
+  orig: 19, 18
+  offset: 8, -7
+  index: -1
+stone_axe
+  rotate: false
+  xy: 1, 119
+  size: 31, 63
+  orig: 31, 63
+  offset: 0, -2
+  index: -1
+unknown
+  rotate: false
+  xy: 34, 119
+  size: 17, 28
+  orig: 17, 28
+  offset: 8, -2
   index: -1

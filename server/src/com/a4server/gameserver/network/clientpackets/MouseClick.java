@@ -65,7 +65,7 @@ public class MouseClick extends GameClientPacket
 		{
 			try (GameLock ignored = player.tryLock())
 			{
-				if (player.getCursor() == Arrow)
+				if (player.getCursor().getName() == Arrow)
 				{
 					switch (_button)
 					{
@@ -195,7 +195,7 @@ public class MouseClick extends GameClientPacket
 	{
 		if (button != BUTTON_PRIMARY) return;
 
-		Cursor.CursorName cursor = player.getCursor();
+		Cursor.CursorName cursor = player.getCursor().getName();
 		_log.debug("mouse click with cursor: " + cursor);
 		Grid grid;
 		int n;

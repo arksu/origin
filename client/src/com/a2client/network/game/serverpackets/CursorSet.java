@@ -19,16 +19,19 @@ public class CursorSet extends GameServerPacket
 
 	private String _name;
 
+	private int _typeId;
+
 	@Override
 	public void readImpl()
 	{
 		_name = readS();
+		_typeId = readD();
 	}
 
 	@Override
 	public void run()
 	{
-		_log.debug("cursor set: " + _name);
+		_log.debug("cursor set: " + _name + " : " + _typeId);
 		Cursor.getInstance().setCursor(_name);
 	}
 }
