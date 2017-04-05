@@ -4,7 +4,9 @@ import com.a4server.gameserver.model.*;
 import com.a4server.gameserver.model.ai.player.MoveActionAI;
 import com.a4server.gameserver.model.inventory.AbstractItem;
 import com.a4server.gameserver.model.inventory.InventoryItem;
+import com.a4server.gameserver.model.objects.ObjectsFactory;
 import com.a4server.gameserver.model.position.MoveToPoint;
+import com.a4server.gameserver.model.position.ObjectPosition;
 import com.a4server.gameserver.network.serverpackets.InventoryUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,7 +114,10 @@ public class MouseClick extends GameClientPacket
 				}
 				else
 				{
-					cursorClick(player, _x, _y, _button);
+					if (_isDown)
+					{
+						cursorClick(player, _x, _y, _button);
+					}
 				}
 			}
 			catch (Exception e)
@@ -237,6 +242,17 @@ public class MouseClick extends GameClientPacket
 				tile.setType(Tile.TileType.TILE_GRASS);
 				grid.setTile(tile, n, true);
 				break;
+
+			case Spawn:
+				grid = World.getInstance().getGridInWorldCoord(x, y, player.getPos().getLevel());
+				int typeId = player.getCursor().getTypeId();
+				GameObject object = ObjectsFactory.getInstance().createObject(typeId);
+				object.setPos(new ObjectPosition(x, y, grid.getLevel(), grid, object));
+				if (object.getPos().trySpawn())
+				{
+					object.store();
+				}
+				player.setCursor(Arrow, 0);
 		}
 	}
 }

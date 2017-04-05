@@ -78,7 +78,7 @@ public class GameServer
 
 		ThreadPoolManager.getInstance();
 		logPrintSection("Objects");
-		ObjectsFactory.getInstance().LoadInternalConfig();
+		ObjectsFactory.getInstance().loadInternalConfig();
 		logPrintSection("World");
 		GameTimeController.init();
 		World.getInstance();

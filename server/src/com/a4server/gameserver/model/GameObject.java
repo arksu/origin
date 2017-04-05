@@ -122,7 +122,7 @@ public class GameObject
 	public GameObject(Grid grid, ResultSet rset) throws SQLException
 	{
 		_objectId = rset.getInt("id");
-		_pos = new ObjectPosition(rset.getInt("x"), rset.getInt("y"), grid.getLevel(), grid);
+		_pos = new ObjectPosition(rset.getInt("x"), rset.getInt("y"), grid.getLevel(), grid, this);
 		int typeId = rset.getInt("type");
 		_quality = rset.getInt("q");
 		_template = ObjectsFactory.getInstance().getTemplate(typeId);

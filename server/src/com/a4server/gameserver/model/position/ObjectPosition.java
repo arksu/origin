@@ -43,13 +43,13 @@ public class ObjectPosition
 	/**
 	 * мы точно знаем где находится объект (загрузка объектов грида из базы)
 	 */
-	public ObjectPosition(int x, int y, int level, Grid grid)
+	public ObjectPosition(int x, int y, int level, Grid grid, GameObject activeObject)
 	{
 		_x = x;
 		_y = y;
 		_level = level;
 		_grid = grid;
-		_activeObject = null;
+		_activeObject = activeObject;
 	}
 
 	/**
@@ -279,7 +279,7 @@ public class ObjectPosition
 	@Override
 	public ObjectPosition clone()
 	{
-		return new ObjectPosition(_x, _y, _level, _grid);
+		return new ObjectPosition(_x, _y, _level, _grid, _activeObject);
 	}
 
 	public boolean equals(ObjectPosition p)

@@ -29,6 +29,12 @@
 		"model": "pine"
 	},
 	{
+		// pine Tree
+		"typeId": 14,
+		"scale": 0.2,
+		"model": "pine"
+	},
+	{
 		// stone
 		"typeId": 21,
 		"scale": 0.5,

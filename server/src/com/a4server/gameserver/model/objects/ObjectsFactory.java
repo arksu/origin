@@ -1,5 +1,7 @@
 package com.a4server.gameserver.model.objects;
 
+import com.a4server.gameserver.idfactory.IdFactory;
+import com.a4server.gameserver.model.GameObject;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import org.slf4j.Logger;
@@ -26,7 +28,7 @@ public class ObjectsFactory
 	private Map<Integer, ObjectTemplate> _templates = new HashMap<>();
 	private Map<Integer, ItemTemplate> _itemTemplates = new HashMap<>();
 
-	public void LoadInternalConfig()
+	public void loadInternalConfig()
 	{
 		if (_isLoaded)
 		{
@@ -50,7 +52,7 @@ public class ObjectsFactory
 						_templates.put(template.getTypeId(), template);
 						break;
 					default:
-						_log.warn("LoadInternalConfig: wrong token " + tkn.name());
+						_log.warn("loadInternalConfig: wrong token " + tkn.name());
 						break;
 				}
 			}
@@ -59,15 +61,15 @@ public class ObjectsFactory
 		}
 		catch (UnsupportedEncodingException e)
 		{
-			_log.error("LoadInternalConfig: unsupported encoding", e);
+			_log.error("loadInternalConfig: unsupported encoding", e);
 		}
 		catch (IOException e)
 		{
-			_log.error("LoadInternalConfig: io error", e);
+			_log.error("loadInternalConfig: io error", e);
 		}
 		catch (Exception e)
 		{
-			_log.error("LoadInternalConfig unexpected error: " + e.getMessage());
+			_log.error("loadInternalConfig unexpected error: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -108,6 +110,35 @@ public class ObjectsFactory
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * создать новый объект по его типу
+	 * @param typeId тип нового объекта
+	 * @return инстанс объекта, он никуда не добавлен (нет координат). но у него есть уникальный ид.
+	 */
+	public GameObject createObject(int typeId)
+	{
+		ObjectTemplate template = getTemplate(typeId);
+		Class<? extends GameObject> clazz = template.getClazz();
+		int id = IdFactory.getInstance().getNextId();
+		GameObject object;
+		if (clazz != null)
+		{
+			try
+			{
+				object = clazz.getDeclaredConstructor(int.class, ObjectTemplate.class).newInstance(id, template);
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException("failed create game object type=" + typeId + " " + e.getMessage(), e);
+			}
+		}
+		else
+		{
+			object = new GameObject(id, template);
+		}
+		return object;
 	}
 
 	public static ObjectsFactory getInstance()

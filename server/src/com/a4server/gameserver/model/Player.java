@@ -533,6 +533,11 @@ public class Player extends Human
 		_cursor.set(value, typeId);
 	}
 
+	public void setCursor(Cursor.CursorName value)
+	{
+		setCursor(value, 0);
+	}
+
 	public Hand getHand()
 	{
 		return _hand;
