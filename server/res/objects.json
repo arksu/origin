@@ -11,14 +11,7 @@
 		"typeId": 13
 	},
 	"pine_tree": {
-		"typeId": 14,
-		"collision": {
-			"all": true,
-			"exclude": [
-				"player",
-				"rabbit"
-			]
-		}
+		"typeId": 14
 	},
 	"box": {
 		"typeId": 15,
