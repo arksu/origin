@@ -125,7 +125,7 @@ public abstract class CustomGLFrameBuffer implements Disposable
 	/**
 	 * how much bits per pixel in depth buffer
 	 */
-	protected int depthBufferSize = GL20.GL_DEPTH_COMPONENT16;
+	protected int depthBufferSize = GL30.GL_DEPTH_COMPONENT24;
 
 	/**
 	 * format

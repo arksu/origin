@@ -105,6 +105,7 @@ public class Main extends com.badlogic.gdx.Game
 		cfg.width = config.getScreenWidth();
 		cfg.height = config.getScreenHeight();
 		cfg.useHDPI = false;
+		cfg.depth = 24;
 
 		new LwjglApplication(new Main(), cfg);
 	}
