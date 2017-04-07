@@ -46,6 +46,11 @@ public class Config
 	/**
 	 * размер пула потоков для general заданий
 	 */
+	public static int THREAD_P_EFFECTS;
+
+	/**
+	 * размер пула потоков для general заданий
+	 */
 	public static int THREAD_P_GENERAL;
 
 	/**
@@ -94,7 +99,8 @@ public class Config
 		NET_PACKET_RECV_QUEUE_SIZE = 16;
 		DEBUG = true;
 		DATABASE_CONNECTION_CLOSE_TIME = 500;
-		THREAD_P_GENERAL = 2;
+		THREAD_P_GENERAL = 4;
+		THREAD_P_EFFECTS = 3;
 
 		if (Server.serverMode == Server.MODE_GAMESERVER)
 		{

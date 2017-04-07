@@ -5,13 +5,16 @@
 	},
 	"oak_tree": {
 		"typeId": 12,
-		"size": 20
+		"size": 20,
+		"class": "tree"
 	},
 	"fir_tree": {
-		"typeId": 13
+		"typeId": 13,
+		"class": "tree"
 	},
 	"pine_tree": {
-		"typeId": 14
+		"typeId": 14,
+		"class": "tree"
 	},
 	"box": {
 		"typeId": 15,

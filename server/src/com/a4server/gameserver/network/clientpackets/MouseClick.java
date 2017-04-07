@@ -124,7 +124,6 @@ public class MouseClick extends GameClientPacket
 			{
 				_log.error("MouseClick error:" + e.getMessage(), e);
 			}
-
 		}
 	}
 
@@ -252,7 +251,7 @@ public class MouseClick extends GameClientPacket
 				{
 					object.store();
 				}
-				player.setCursor(Arrow, 0);
+				player.setCursor(Arrow);
 		}
 	}
 }

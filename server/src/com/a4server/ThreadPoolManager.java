@@ -19,6 +19,11 @@ public class ThreadPoolManager
 	protected ScheduledThreadPoolExecutor _generalScheduledThreadPool;
 
 	/**
+	 * пул для эффектов / бафов
+	 */
+	protected ScheduledThreadPoolExecutor _effectsScheduledThreadPool;
+
+	/**
 	 * temp workaround for VM issue
 	 */
 	private static final long MAX_DELAY = Long.MAX_VALUE / 1000000 / 2;
@@ -35,7 +40,13 @@ public class ThreadPoolManager
 
 	protected ThreadPoolManager()
 	{
-		_generalScheduledThreadPool = new ScheduledThreadPoolExecutor(Config.THREAD_P_GENERAL, new PriorityThreadFactory("GeneralSTPool", Thread.NORM_PRIORITY));
+		_generalScheduledThreadPool = new ScheduledThreadPoolExecutor(
+				Config.THREAD_P_GENERAL,
+				new PriorityThreadFactory("GeneralSTPool", Thread.NORM_PRIORITY));
+
+		_effectsScheduledThreadPool = new ScheduledThreadPoolExecutor(
+				Config.THREAD_P_EFFECTS,
+				new PriorityThreadFactory("EffectsSTPool", Thread.NORM_PRIORITY));
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package com.a4server.gameserver.network.serverpackets;
 
-import com.a4server.gameserver.model.Action;
+import com.a4server.gameserver.model.ActionItem;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -15,22 +15,22 @@ import java.util.List;
 public class ActionsList extends GameServerPacket
 {
 	private static final Gson _gson = new GsonBuilder().create();
-	private static final Type listType = new TypeToken<ArrayList<Action>>() {}.getType();
+	private static final Type listType = new TypeToken<ArrayList<ActionItem>>() {}.getType();
 
 	/**
 	 * список действий в json
 	 */
-	private final List<Action> _actions;
+	private final List<ActionItem> _actionItems;
 
-	public ActionsList(List<Action> actions)
+	public ActionsList(List<ActionItem> actionItems)
 	{
-		_actions = actions;
+		_actionItems = actionItems;
 	}
 
 	@Override
 	protected void write()
 	{
 		writeC(0x20);
-		writeS(_gson.toJson(_actions, listType));
+		writeS(_gson.toJson(_actionItems, listType));
 	}
 }

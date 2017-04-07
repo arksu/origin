@@ -71,6 +71,8 @@ public class Player extends Human
 
 	private final Cursor _cursor;
 
+	private Action _action;
+
 	public Player(int objectId, ResultSet rset, PlayerTemplate template)
 	{
 		super(objectId, template);
@@ -384,7 +386,6 @@ public class Player extends Human
 
 	/**
 	 * активировать окружающие гриды
-	 * @throws InterruptedException
 	 */
 	public void activateGrids() throws InterruptedException
 	{
@@ -567,25 +568,29 @@ public class Player extends Human
 		return true;
 	}
 
-	public List<Action> getActions()
+	public List<ActionItem> getActions()
 	{
 		// todo: actions
-		List<Action> list = new ArrayList<>();
-		list.add(new Action("craft"));
-		list.add(new Action("build"));
+		List<ActionItem> list = new ArrayList<>();
+		list.add(new ActionItem("craft"));
+		list.add(new ActionItem("build"));
 
 		// debug features
-		list.add(new Action("online"));
-		Action spawn = new Action("spawn");
-		list.add(spawn);
-		spawn.add(new Action("spawn_pine"));
+		if (_accessLevel > 0)
+		{
+			list.add(new ActionItem("online"));
+			ActionItem spawn = new ActionItem("spawn");
+			list.add(spawn);
+			spawn.add(new ActionItem("spawn_pine"));
 
-		list.add(new Action("tile_up"));
-		list.add(new Action("tile_down"));
-		list.add(new Action("tile_sand"));
-		list.add(new Action("tile_grass"));
-		list.add(new Action("tile_leaf"));
-		list.add(new Action("tile_fir"));
+			list.add(new ActionItem("tile_up"));
+			list.add(new ActionItem("tile_down"));
+			list.add(new ActionItem("tile_sand"));
+			list.add(new ActionItem("tile_grass"));
+			list.add(new ActionItem("tile_leaf"));
+			list.add(new ActionItem("tile_fir"));
+		}
+
 		return list;
 	}
 

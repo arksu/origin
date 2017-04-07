@@ -152,7 +152,9 @@ public class GameTimeController extends Thread
 		}
 		int secs = _tickCount / TICKS_PER_SECOND;
 		int hours = secs / 3600;
-		_log.info("Server time: " + _tickCount + " ticks, " + secs + " real secs, " + hours + " hours");
+		int days = hours / 24;
+		_log.info("Server time: " + _tickCount + " ticks, real: "
+		          + secs + " secs, " + days + " days and " + (hours % 24) + " hours");
 	}
 
 	/**
@@ -229,14 +231,7 @@ public class GameTimeController extends Thread
 					if (getGameTicks() - gameTickTimer > 10)
 					{
 						// запишем значение времени в базу
-						ThreadPoolManager.getInstance().scheduleGeneral(new Runnable()
-						{
-							@Override
-							public final void run()
-							{
-								store();
-							}
-						}, 0);
+						ThreadPoolManager.getInstance().scheduleGeneral(this::store, 0);
 						gameTickTimer = getGameTicks();
 					}
 				}

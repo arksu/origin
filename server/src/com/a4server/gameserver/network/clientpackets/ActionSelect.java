@@ -61,7 +61,7 @@ public class ActionSelect extends GameClientPacket
 					{
 						cursor = TileGrass;
 					}
-					player.setCursor(cursor, 0);
+					player.setCursor(cursor);
 				}
 			}
 			catch (Exception e)
