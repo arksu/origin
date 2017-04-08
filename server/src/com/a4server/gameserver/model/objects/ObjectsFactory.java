@@ -112,6 +112,16 @@ public class ObjectsFactory
 		return null;
 	}
 
+	public GameObject createObject(String templateName)
+	{
+		ObjectTemplate template = getTemplate(templateName);
+		if (template != null)
+		{
+			return createObject(template.getTypeId());
+		}
+		throw new RuntimeException("object with name: " + templateName + " is not found");
+	}
+
 	/**
 	 * создать новый объект по его типу
 	 * @param typeId тип нового объекта

@@ -1,12 +1,12 @@
 package com.a4server.gameserver.model.position;
 
 import com.a4server.Config;
+import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Human;
 import com.a4server.gameserver.model.MovingObject;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
-import com.a4server.gameserver.model.collision.VirtualObject;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,7 +126,7 @@ public abstract class MoveController
 	protected boolean process(double toX,
 	                          double toY,
 	                          Move.MoveType moveType,
-	                          VirtualObject virtualObject)
+	                          GameObject virtualObject)
 	{
 		CollisionResult collision = checkColiision(toX, toY, moveType, virtualObject, true);
 		switch (collision.getResultType())
@@ -176,7 +176,7 @@ public abstract class MoveController
 	protected CollisionResult checkColiision(double toX,
 	                                         double toY,
 	                                         Move.MoveType moveType,
-	                                         VirtualObject virtualObject,
+	                                         GameObject virtualObject,
 	                                         boolean isMove)
 	{
 		Grid grid = _activeObject.getPos().getGrid();

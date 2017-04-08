@@ -138,7 +138,7 @@ public class MouseClick extends GameClientPacket
 				case COLLISION_OBJECT:
 					object = moveResult.getObject();
 					// наша цель совпадает с тем куда пришли?
-					if (object != null && object.getObjectId() == objectId && !object.isDeleteing())
+					if (object != null && object.getObjectId() == objectId && !object.isDeleting())
 					{
 						_log.debug("interact with object " + object.toString());
 						// надо провести взаимодействие с этим объектом

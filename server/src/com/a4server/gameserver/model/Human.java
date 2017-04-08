@@ -27,6 +27,11 @@ public abstract class Human extends MovingObject
 	protected AI _ai = null;
 
 	/**
+	 * действие которое выполняет объект в данный момент
+	 */
+	private Action _action;
+
+	/**
 	 * объекты которые известны мне, инфа о которых отправляется и синхронизирована с клиентом
 	 * любое добалвение в этот список, а равно как и удаление из него должно быть
 	 * синхронизировано с клиентом
@@ -271,5 +276,37 @@ public abstract class Human extends MovingObject
 		{
 			_ai.begin();
 		}
+	}
+
+	public void doAction(int ticks, GameObject target, Runnable callback)
+	{
+		setAction(new Action(this, ticks, target, callback));
+	}
+
+	protected void setAction(Action action)
+	{
+		if (_action != null)
+		{
+			_action.stop();
+		}
+
+		_action = action;
+
+		if (action != null)
+		{
+			action.start();
+		}
+	}
+
+	@Override
+	public void clearLinkedObject()
+	{
+		// если прилинкованный объект очищается и это объект над которым производится действие - сбросим действие
+		if (_action != null && _linkedObject == _action.getTarget())
+		{
+			_log.debug("clear action linked object, reset action");
+			setAction(null);
+		}
+		super.clearLinkedObject();
 	}
 }

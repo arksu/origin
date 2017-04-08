@@ -13,7 +13,6 @@ import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.collision.Collision;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
-import com.a4server.gameserver.model.collision.VirtualObject;
 import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
@@ -697,7 +696,7 @@ public class Grid
 	                                                   int fromX, int fromY,
 	                                                   int toX, int toY,
 	                                                   Move.MoveType moveType,
-	                                                   VirtualObject virtual,
+	                                                   GameObject virtual,
 	                                                   boolean isMove)
 			throws GridLoadException
 	{
@@ -946,11 +945,11 @@ public class Grid
 	 */
 	public void broadcastEvent(GridEvent gridEvent)
 	{
-		_log.debug("broadcastEvent " + gridEvent);
+//		_log.debug("broadcastEvent " + gridEvent);
 		for (Human h : _activeObjects)
 		{
 			// если игрок обработал это событие. и оно касается его
-			if (!h.isDeleteing() && h.handleGridEvent(gridEvent))
+			if (!h.isDeleting() && h.handleGridEvent(gridEvent))
 			{
 				// отправим пакет
 				if (h.isPlayer())
@@ -979,7 +978,7 @@ public class Grid
 	{
 		for (Human h : _activeObjects)
 		{
-			if (!h.isDeleteing() && (from == null || h.getKnownKist().isKnownObject(from)))
+			if (!h.isDeleting() && (from == null || h.getKnownKist().isKnownObject(from)))
 			{
 				Player actingPlayer = h.getActingPlayer();
 				if (actingPlayer != null)

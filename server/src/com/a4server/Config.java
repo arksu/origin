@@ -49,6 +49,11 @@ public class Config
 	public static int THREAD_P_EFFECTS;
 
 	/**
+	 * размер пула потоков для действий
+	 */
+	public static int THREAD_P_ACTIONS;
+
+	/**
 	 * размер пула потоков для general заданий
 	 */
 	public static int THREAD_P_GENERAL;
@@ -100,7 +105,8 @@ public class Config
 		DEBUG = true;
 		DATABASE_CONNECTION_CLOSE_TIME = 500;
 		THREAD_P_GENERAL = 4;
-		THREAD_P_EFFECTS = 3;
+		THREAD_P_EFFECTS = 2;
+		THREAD_P_ACTIONS = 2;
 
 		if (Server.serverMode == Server.MODE_GAMESERVER)
 		{

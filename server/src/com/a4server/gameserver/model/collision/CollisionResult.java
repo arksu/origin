@@ -39,7 +39,6 @@ public class CollisionResult
 	private CollisionType _resultType;
 	private Tile _tile = null;
 	private GameObject _object = null;
-	private VirtualObject _virtualObject = null;
 	private int _x = -1;
 	private int _y = -1;
 
@@ -71,9 +70,10 @@ public class CollisionResult
 		_y = y;
 	}
 
-	public CollisionResult(VirtualObject virtualObject)
+	// TODO
+	public CollisionResult(GameObject virtualObject)
 	{
-		_virtualObject = virtualObject;
+		_object = virtualObject;
 	}
 
 	public CollisionType getResultType()
@@ -101,11 +101,6 @@ public class CollisionResult
 		return _object;
 	}
 
-	public VirtualObject getVirtualObject()
-	{
-		return _virtualObject;
-	}
-
 	@Override
 	public String toString()
 	{
@@ -119,7 +114,7 @@ public class CollisionResult
 				result += ": " + _tile.toString();
 				break;
 			case COLLISION_VIRTUAL:
-				result += ": " + _virtualObject.toString();
+				result += ": " + _object.toString();
 				break;
 		}
 		return result;

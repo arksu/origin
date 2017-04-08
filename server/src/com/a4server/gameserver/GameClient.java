@@ -173,7 +173,7 @@ public class GameClient extends NetClient
 	 */
 	public Player getPlayer()
 	{
-		return _activeChar != null ? (!_activeChar.isDeleteing() ? _activeChar : null) : null;
+		return _activeChar != null ? (!_activeChar.isDeleting() ? _activeChar : null) : null;
 	}
 
 	public void setActiveChar(Player pActiveChar)

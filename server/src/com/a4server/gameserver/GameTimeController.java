@@ -43,6 +43,11 @@ public class GameTimeController extends Thread
 	public static final int TICKS_PER_IG_DAY = SECONDS_PER_IG_DAY * TICKS_PER_SECOND;
 	public static final int TICKS_PER_IG_MINUTE = TICKS_PER_IG_DAY / (24 * 60);
 
+	/**
+	 * сколько длится тик для игрового действия
+	 */
+	public static final int GAME_ACTION_PERIOD = 500;
+
 	private static GameTimeController _instance;
 
 	private volatile int _tickCount;

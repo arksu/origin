@@ -24,6 +24,11 @@ public class ThreadPoolManager
 	protected ScheduledThreadPoolExecutor _effectsScheduledThreadPool;
 
 	/**
+	 * пул для действий (отсчет тиков и исполнение действий)
+	 */
+	protected ScheduledThreadPoolExecutor _actionsScheduledThreadPool;
+
+	/**
 	 * temp workaround for VM issue
 	 */
 	private static final long MAX_DELAY = Long.MAX_VALUE / 1000000 / 2;
@@ -47,6 +52,10 @@ public class ThreadPoolManager
 		_effectsScheduledThreadPool = new ScheduledThreadPoolExecutor(
 				Config.THREAD_P_EFFECTS,
 				new PriorityThreadFactory("EffectsSTPool", Thread.NORM_PRIORITY));
+
+		_actionsScheduledThreadPool = new ScheduledThreadPoolExecutor(
+				Config.THREAD_P_EFFECTS,
+				new PriorityThreadFactory("ActionsSTPool", Thread.NORM_PRIORITY));
 	}
 
 	/**
@@ -82,6 +91,32 @@ public class ThreadPoolManager
 		{
 			delay = ThreadPoolManager.validateDelay(delay);
 			return _generalScheduledThreadPool.schedule(new RunnableWrapper(r), delay, TimeUnit.MILLISECONDS);
+		}
+		catch (RejectedExecutionException e)
+		{
+			return null; /* shutdown, ignore */
+		}
+	}
+
+	public ScheduledFuture<?> scheduleEffectAtFixedRate(Runnable task, long initialDelay, long period)
+	{
+		try
+		{
+			return _effectsScheduledThreadPool.scheduleAtFixedRate(
+					new RunnableWrapper(task), initialDelay, period, TimeUnit.MILLISECONDS);
+		}
+		catch (RejectedExecutionException e)
+		{
+			return null; /* shutdown, ignore */
+		}
+	}
+
+	public ScheduledFuture<?> scheduleActionAtFixedRate(Runnable task, long initialDelay, long period)
+	{
+		try
+		{
+			return _effectsScheduledThreadPool.scheduleAtFixedRate(
+					new RunnableWrapper(task), initialDelay, period, TimeUnit.MILLISECONDS);
 		}
 		catch (RejectedExecutionException e)
 		{

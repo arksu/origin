@@ -87,7 +87,7 @@ public class GameObject
 	/**
 	 * объект в процессе удаления из мира и ни на какие события больше не должен реагировать
 	 */
-	protected boolean _isDeleteing = false;
+	protected boolean _isDeleting = false;
 
 	/**
 	 * блокировка на все операции с объектом
@@ -164,7 +164,7 @@ public class GameObject
 		}
 		catch (Exception e)
 		{
-			_log.warn("failed update xy item pos " + toString(), e);
+			_log.warn("failed store object " + toString(), e);
 		}
 		return false;
 	}
@@ -190,7 +190,7 @@ public class GameObject
 			statement.setInt(2, _objectId);
 			statement.executeUpdate();
 			con.close();
-			_isDeleteing = value;
+			_isDeleting = value;
 			return true;
 		}
 		catch (Exception e)
@@ -213,6 +213,11 @@ public class GameObject
 	public int getQuality()
 	{
 		return _quality;
+	}
+
+	public void setQuality(int quality)
+	{
+		_quality = quality;
 	}
 
 	public ObjectTemplate getTemplate()
@@ -253,9 +258,9 @@ public class GameObject
 		return _boundRect;
 	}
 
-	public boolean isDeleteing()
+	public boolean isDeleting()
 	{
-		return _isDeleteing;
+		return _isDeleting;
 	}
 
 	/**
@@ -296,7 +301,7 @@ public class GameObject
 	{
 		try
 		{
-			return !_isDeleteing && _lock.tryLock(time, TimeUnit.MILLISECONDS);
+			return !_isDeleting && _lock.tryLock(time, TimeUnit.MILLISECONDS);
 		}
 		catch (InterruptedException e)
 		{
@@ -498,7 +503,7 @@ public class GameObject
 		_log.debug("contextSelected: " + item);
 
 		// проверим что такой пункт есть в меню
-		List<String> contextMenu = getContextMenu(player);
+		final List<String> contextMenu = getContextMenu(player);
 		if (contextMenu != null && contextMenu.contains(item))
 		{
 			player.setAi(new MoveActionAI(player, _objectId, moveResult ->
@@ -506,6 +511,7 @@ public class GameObject
 				// убедимся что прибыли к нужному объекту
 				if (moveResult.getResultType() == CollisionResult.CollisionType.COLLISION_OBJECT
 				    && moveResult.getObject().getObjectId() == _objectId)
+
 				// проверим что такой пункт еще реально есть по прибытии к объекту
 				{
 					List<String> cm = getContextMenu(player);

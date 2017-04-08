@@ -71,8 +71,6 @@ public class Player extends Human
 
 	private final Cursor _cursor;
 
-	private Action _action;
-
 	public Player(int objectId, ResultSet rset, PlayerTemplate template)
 	{
 		super(objectId, template);
@@ -276,7 +274,7 @@ public class Player extends Human
 	 */
 	public void deleteMe()
 	{
-		_isDeleteing = true;
+		_isDeleting = true;
 
 		// деактивировать занятые гриды
 		for (Grid g : _grids)
@@ -660,5 +658,6 @@ public class Player extends Human
 		}
 		return false;
 	}
+
 
 }

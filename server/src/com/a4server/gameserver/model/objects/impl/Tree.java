@@ -49,5 +49,21 @@ public class Tree extends GameObject
 		{
 			player.generateItem(ObjectsFactory.getInstance().getTemplate("branch").getTypeId(), getQuality(), true);
 		}
+		else if ("chop".equals(contextItem))
+		{
+			player.doAction(5, this, () ->
+			{
+				_log.debug("run chop!");
+				GameObject log = ObjectsFactory.getInstance().createObject("log");
+
+				log.setQuality(getQuality());
+				// TODO
+//				log.setPos();
+				if (!log.getPos().trySpawn() || !log.store())
+				{
+					_log.error("failed spawn log tree");
+				}
+			});
+		}
 	}
 }

@@ -4,6 +4,8 @@ import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Player;
 
 /**
+ * список объектов о которых знает игрок
+ * отправляем пакеты о добавлении / удалении объектов для клиента
  * Created by arksu on 08.03.17.
  */
 public class PcKnownList extends ObjectKnownList

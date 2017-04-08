@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.a4server.gameserver.model.collision.CollisionResult.CollisionType.COLLISION_OBJECT;
+import static com.a4server.gameserver.model.collision.CollisionResult.CollisionType.COLLISION_VIRTUAL;
+
 /**
  * объект который может передвигаться в мире
  * Created by arksu on 09.01.2015.
@@ -30,6 +33,13 @@ public abstract class MovingObject extends GameObject
 	 * результат передвижения
 	 */
 	protected CollisionResult _moveResult = null;
+
+	/**
+	 * объект с которым "столкнулись" (прилинковались), может быть виртуальный или реальный
+	 * если реальный, то при удалении его из known списка должны занулить и здесь.
+	 * то есть это реальный объект с которым мы взаимодействуем
+	 */
+	protected GameObject _linkedObject = null;
 
 	/**
 	 * список гридов в которых находится объект. 9 штук.
@@ -65,11 +75,11 @@ public abstract class MovingObject extends GameObject
 	 */
 	public void startMove(MoveController controller)
 	{
-		unlinkFromAll();
 		controller.setActiveObject(this);
 		// сначала проверим возможно ли вообще движение?
 		if (controller.canStartMoving())
 		{
+			unlinkFromAll();
 			// если уже стоял контроллер - возможно двигались.
 			if (_moveController != null)
 			{
@@ -78,6 +88,10 @@ public abstract class MovingObject extends GameObject
 			}
 			_moveController = controller;
 			_moveResult = null;
+			if (_linkedObject != null)
+			{
+				clearLinkedObject();
+			}
 			// расскажем всем что мы начали движение, тут же отправится пакет клиенту
 			GridEvent gridEvent = new GridEvent(
 					this,
@@ -117,6 +131,13 @@ public abstract class MovingObject extends GameObject
 		_log.debug("stopMove: " + result.toString() + " at " + x + ", " + y);
 		_moveController = null;
 		_moveResult = result;
+		if (_moveResult.getResultType() == COLLISION_OBJECT ||
+		    _moveResult.getResultType() == COLLISION_VIRTUAL)
+		{
+			_linkedObject = _moveResult.getObject();
+			_log.debug("set linkedObject: " + _linkedObject);
+		}
+
 		getPos().setXY(x, y);
 		storeInDb();
 		// расскажем всем что мы остановились
@@ -272,5 +293,26 @@ public abstract class MovingObject extends GameObject
 	 */
 	protected void onLeaveGrid(Grid grid)
 	{
+	}
+
+	public GameObject getLinkedObject()
+	{
+		return _linkedObject;
+	}
+
+	public void clearLinkedObject()
+	{
+		_log.debug("clearLinkedObject");
+		_linkedObject = null;
+	}
+
+	@Override
+	public void unlink(GameObject other)
+	{
+		if (other != null && other == _linkedObject)
+		{
+			clearLinkedObject();
+		}
+		super.unlink(other);
 	}
 }
