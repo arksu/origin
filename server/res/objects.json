@@ -83,5 +83,16 @@
 			"width": 1,
 			"height": 1
 		}
+	},
+	"tree_log": {
+		"typeId": 23,
+		"collision": {
+			"all": false
+		},
+		"class": "tree_log"
+	},
+	"pine_stump": {
+		"typeId": 24,
+		"class": "stump"
 	}
 }

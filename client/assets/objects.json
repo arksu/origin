@@ -7,14 +7,14 @@
 	{
 		// player
 		"typeId": 1,
-//		"model": "cube",
+		//		"model": "cube",
 		"model": "player",
-//		"model": "trex",
-//		"model": "Rabbit",
-//		"model": "stone",
-//		"model": "unknown",
-//		"model": "pine_tree_1",
-//		"model": "rabbit.g3dj",
+		//		"model": "trex",
+		//		"model": "Rabbit",
+		//		"model": "stone",
+		//		"model": "unknown",
+		//		"model": "pine_tree_1",
+		//		"model": "rabbit.g3dj",
 		"scale": 1
 	},
 	{
@@ -54,19 +54,26 @@
 	{
 		// apple
 		"typeId": 19,
-		"scale": 0.3,
 		"model": "apple"
 	},
 	{
 		// board
 		"typeId": 20,
-		"scale": 0.5,
 		"model": "board"
 	},
 	{
 		// branch
 		"typeId": 22,
-		"scale": 0.1,
 		"model": "branch"
+	},
+	{
+		// tree log
+		"typeId": 23,
+		"model": "tree_log"
+	},
+	{
+		// pine_stump
+		"typeId": 24,
+		"model": "pine_stump"
 	}
 ]

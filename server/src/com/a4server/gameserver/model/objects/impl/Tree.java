@@ -5,6 +5,9 @@ import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
+import com.a4server.gameserver.model.position.ObjectPosition;
+import com.a4server.util.Rnd;
+import com.a4server.util.Vec2i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,16 +57,49 @@ public class Tree extends GameObject
 			player.doAction(5, this, () ->
 			{
 				_log.debug("run chop!");
-				GameObject log = ObjectsFactory.getInstance().createObject("log");
-
-				log.setQuality(getQuality());
-				// TODO
-//				log.setPos();
-				if (!log.getPos().trySpawn() || !log.store())
-				{
-					_log.error("failed spawn log tree");
-				}
+				spawnLog(40, player);
+				spawnLog(90, player);
+				delete();
+				spawnStump();
 			});
+		}
+	}
+
+	private void spawnLog(final int offset, final Player player)
+	{
+		GameObject log = ObjectsFactory.getInstance().createObject("tree_log");
+
+		log.setQuality(getQuality());
+
+		ObjectPosition pos = log.setPos(new ObjectPosition(this.getPos(), log));
+
+		Vec2i d = this.getPos().sub(player.getPos());
+
+		double l = d.len();
+		double dx = (d.x / l) * offset;
+		double dy = (d.y / l) * offset;
+
+		pos.addXY((int) Math.round(dx), (int) Math.round(dy));
+		pos.setHeading(Vec2i.z.direction(d));
+
+		if (!log.getPos().trySpawn() || !log.store())
+		{
+			_log.error("failed spawn log tree");
+		}
+	}
+
+	private void spawnStump()
+	{
+		GameObject stump = ObjectsFactory.getInstance().createObject("pine_stump");
+
+		stump.setQuality(getQuality());
+
+		ObjectPosition pos = stump.setPos(new ObjectPosition(this.getPos(), stump));
+		pos.setHeading(Rnd.get(360));
+
+		if (!stump.getPos().trySpawn() || !stump.store())
+		{
+			_log.error("failed spawn stump");
 		}
 	}
 }

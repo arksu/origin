@@ -1,6 +1,4 @@
-package com.a2client.util;
-
-import com.badlogic.gdx.math.Vector2;
+package com.a4server.util;
 
 public class Vec2i
 {
@@ -198,12 +196,15 @@ public class Vec2i
 		{
 			return 0;
 		}
-		double a = Math.atan2(vector.y, vector.x);
+		double xf = vector.x;
+		double yf = vector.y;
+		double a = Math.atan(xf / yf);
+//		double a = Math.atan(yf / xf);
 		if (a < 0)
 		{
 			a = Math.PI + Math.PI + a;
 		}
-		return (int) Math.round(a / (Math.PI / 4) + 6) % 8;
+		return (int) Math.round(Math.toDegrees(a));
 	}
 
 	public float directionf(Vec2i to_point)
@@ -223,14 +224,13 @@ public class Vec2i
 		return (Math.sqrt((dx * dx) + (dy * dy)));
 	}
 
+	public double len()
+	{
+		return (Math.sqrt((x * x) + (y * y)));
+	}
+
 	public int area()
 	{
 		return x * y;
 	}
-
-	public Vector2 getVector2()
-	{
-		return new Vector2(x, y);
-	}
-
 }

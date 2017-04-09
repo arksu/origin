@@ -32,9 +32,9 @@ public class GameObject
 {
 	private static final Logger _log = LoggerFactory.getLogger(GameObject.class.getName());
 
-	public static final String LOAD_OBJECTS = "SELECT id, x, y, type, q, hp, data, create_tick, last_tick FROM sg_0_obj WHERE del=0 AND grid = ?";
+	public static final String LOAD_OBJECTS = "SELECT id, x, y, heading, type, q, hp, data, create_tick, last_tick FROM sg_0_obj WHERE del=0 AND grid = ?";
 
-	public static final String STORE = "REPLACE INTO sg_0_obj (id, grid, x, y, type, q, create_tick) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	public static final String STORE = "REPLACE INTO sg_0_obj (id, grid, x, y, heading, type, q, create_tick) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 	public static final String MARK_DELETED = "UPDATE sg_0_obj SET del=? WHERE id=?";
 
@@ -122,7 +122,11 @@ public class GameObject
 	public GameObject(Grid grid, ResultSet rset) throws SQLException
 	{
 		_objectId = rset.getInt("id");
-		_pos = new ObjectPosition(rset.getInt("x"), rset.getInt("y"), grid.getLevel(), grid, this);
+		_pos = new ObjectPosition(
+				rset.getInt("x"),
+				rset.getInt("y"),
+				rset.getInt("heading"),
+				grid.getLevel(), grid, this);
 		int typeId = rset.getInt("type");
 		_quality = rset.getInt("q");
 		_template = ObjectsFactory.getInstance().getTemplate(typeId);
@@ -155,9 +159,10 @@ public class GameObject
 			statement.setInt(2, getPos().getGrid().getId());
 			statement.setInt(3, getPos().getX());
 			statement.setInt(4, getPos().getY());
-			statement.setInt(5, getTemplate().getTypeId());
-			statement.setInt(6, getQuality());
-			statement.setInt(7, GameTimeController.getInstance().getTickCount());
+			statement.setInt(5, getPos().getHeading());
+			statement.setInt(6, getTemplate().getTypeId());
+			statement.setInt(7, getQuality());
+			statement.setInt(8, GameTimeController.getInstance().getTickCount());
 			statement.executeUpdate();
 			con.close();
 			return true;
@@ -264,10 +269,29 @@ public class GameObject
 	}
 
 	/**
+	 * удалить объект из базы и из мира
+	 */
+	public void delete()
+	{
+		if (markDeleted())
+		{
+			getGrid().tryLock();
+			try
+			{
+				getGrid().removeObject(this);
+			}
+			finally
+			{
+				getGrid().unlock();
+			}
+		}
+	}
+
+	/**
 	 * установить позицию объекту. можем сделать это только 1 раз когда объект еще не инициализирован (при создании)
 	 * @param pos позиция
 	 */
-	public void setPos(ObjectPosition pos)
+	public ObjectPosition setPos(ObjectPosition pos)
 	{
 		if (_pos == null)
 		{
@@ -277,6 +301,7 @@ public class GameObject
 		{
 			throw new RuntimeException("try set pos, when != null");
 		}
+		return pos;
 	}
 
 	/**

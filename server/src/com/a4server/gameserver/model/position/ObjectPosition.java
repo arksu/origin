@@ -7,6 +7,7 @@ import com.a4server.gameserver.model.MovingObject;
 import com.a4server.gameserver.model.World;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.util.Rnd;
+import com.a4server.util.Vec2i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +31,8 @@ public class ObjectPosition
 	 */
 	private volatile int _level;
 
+	private volatile int _heading = 0;
+
 	/**
 	 * грид в котором находимся
 	 */
@@ -43,10 +46,11 @@ public class ObjectPosition
 	/**
 	 * мы точно знаем где находится объект (загрузка объектов грида из базы)
 	 */
-	public ObjectPosition(int x, int y, int level, Grid grid, GameObject activeObject)
+	public ObjectPosition(int x, int y, int heading, int level, Grid grid, GameObject activeObject)
 	{
 		_x = x;
 		_y = y;
+		_heading = heading;
 		_level = level;
 		_grid = grid;
 		_activeObject = activeObject;
@@ -55,10 +59,11 @@ public class ObjectPosition
 	/**
 	 * позиция для объекта который спавнится (игрок может и не заспавнится на свою прошлую позицию)
 	 */
-	public ObjectPosition(int x, int y, int level, GameObject activeObject)
+	public ObjectPosition(int x, int y, int heading, int level, GameObject activeObject)
 	{
 		_x = x;
 		_y = y;
+		_heading = heading;
 		_level = level;
 		_grid = null;
 		_activeObject = activeObject;
@@ -164,6 +169,23 @@ public class ObjectPosition
 		setXY((int) Math.round(x), (int) Math.round(y));
 	}
 
+	public void addXY(int x, int y)
+	{
+		_x += x;
+		_y += y;
+		updateGrid();
+	}
+
+	public Vec2i sub(ObjectPosition other)
+	{
+		return new Vec2i(_x - other._x, _y - other._y);
+	}
+
+	public void setHeading(int heading)
+	{
+		_heading = heading;
+	}
+
 	public int getX()
 	{
 		return _x;
@@ -172,6 +194,11 @@ public class ObjectPosition
 	public int getY()
 	{
 		return _y;
+	}
+
+	public int getHeading()
+	{
+		return _heading;
 	}
 
 	public int getLevel()
@@ -279,7 +306,7 @@ public class ObjectPosition
 	@Override
 	public ObjectPosition clone()
 	{
-		return new ObjectPosition(_x, _y, _level, _grid, _activeObject);
+		return new ObjectPosition(_x, _y, _heading, _level, _grid, _activeObject);
 	}
 
 	public boolean equals(ObjectPosition p)

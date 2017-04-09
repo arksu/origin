@@ -139,6 +139,7 @@ CREATE TABLE `sg_0_obj` (
   `grid` int(10) unsigned NOT NULL COMMENT 'номер грида',
   `x` int(11) NOT NULL,
   `y` int(11) NOT NULL,
+  `heading` SMALLINT(5) NOT NULL,
   `type` smallint(5) unsigned NOT NULL COMMENT 'тип',
   `q` smallint(5) unsigned NOT NULL DEFAULT '10' COMMENT 'качество',
   `hp` smallint(5) unsigned NOT NULL DEFAULT '100',

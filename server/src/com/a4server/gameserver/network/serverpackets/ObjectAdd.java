@@ -22,6 +22,7 @@ public class ObjectAdd extends GameServerPacket
 		writeD(_object.getTypeId());
 		writeD(_object.getPos().getX());
 		writeD(_object.getPos().getY());
+		writeH(_object.getPos().getHeading());
 		writeS(_object.getName());
 		writeS(_object.getTitle());
 	}

@@ -16,6 +16,9 @@ public class ObjectClasses
 	public static void init()
 	{
 		_classes.put("tree", Tree.class);
+		_classes.put("tree_log", TreeLog.class);
+		_classes.put("stump", Stump.class);
+
 		_classes.put("stone", Stone.class);
 	}
 

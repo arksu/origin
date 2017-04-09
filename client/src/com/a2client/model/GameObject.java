@@ -12,8 +12,6 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Random;
-
 import static com.a2client.Terrain.TILE_SIZE;
 
 /**
@@ -27,6 +25,7 @@ public class GameObject
 	private int _objectId;
 	private int _typeId;
 	private Vector2 _coord;
+	private int _heading;
 	private String _name;
 	private String _title;
 	private boolean _interactive;
@@ -44,6 +43,7 @@ public class GameObject
 		_name = pkt._name;
 		_title = pkt._title;
 		_coord = new Vector2(pkt._x, pkt._y);
+		_heading = pkt._heading;
 		updateCoord();
 		_objectId = pkt._objectId;
 		_typeId = pkt._typeId;
@@ -191,9 +191,8 @@ public class GameObject
 			{
 				_model.playAnimation("idle");
 			}
+			_model.setHeading(_heading, true);
 		}
-		Random random = new Random();
-		_model.setHeading(random.nextFloat() * 360, true);
 	}
 
 	public void updateCoord()

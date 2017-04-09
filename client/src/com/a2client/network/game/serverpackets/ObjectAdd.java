@@ -23,6 +23,7 @@ public class ObjectAdd extends GameServerPacket
 	public int _typeId;
 	public int _x;
 	public int _y;
+	public int _heading;
 	public String _name;
 	public String _title;
 
@@ -33,6 +34,7 @@ public class ObjectAdd extends GameServerPacket
 		_typeId = readD();
 		_x = readD();
 		_y = readD();
+		_heading = readH();
 		_name = readS();
 		_title = readS();
 	}

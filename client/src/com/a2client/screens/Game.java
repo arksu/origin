@@ -313,7 +313,6 @@ public class Game extends BaseScreen
 		_actionProgress.setY(100);
 
 		int hc = 100;
-		int wc = 200;
 		int py = Gdx.graphics.getHeight() - hc - 30;
 		_chatMemo.setPos(5, py);
 		_chatEdit.setPos(5, py + _chatMemo.getHeight() + 5);

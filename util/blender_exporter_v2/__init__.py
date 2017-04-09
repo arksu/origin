@@ -48,7 +48,7 @@ class OriginExportClass(bpy.types.Operator, ExportHelper, IOMDLOrientationHelper
     do_binormals = BoolProperty(
         name="Export mesh binormals",
         description="Export mesh binormals for normal map, use only with normal map",
-        default=True,
+        default=False,
     )
 
     do_mesh_modifers = BoolProperty(
@@ -59,19 +59,19 @@ class OriginExportClass(bpy.types.Operator, ExportHelper, IOMDLOrientationHelper
     do_skeleton = BoolProperty(
         name="Export skeleton",
         description="Export skeleton (armature)",
-        default=True,
+        default=False,
     )
 
     do_anims = BoolProperty(
         name="Export animations",
         description="Export animations",
-        default=True,
+        default=False,
     )
 
     do_all_anims = BoolProperty(
         name="Export ALL animation actions",
         description="Export all anims (anim actions), else export only current animation",
-        default=True,
+        default=False,
     )
 
     scaleFactor = FloatProperty(

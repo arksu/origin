@@ -450,7 +450,7 @@ public class Grid
 		}
 		catch (SQLException e)
 		{
-			_log.warn("Cant load grid " + toString());
+			_log.error("Cant load grid " + toString(), e);
 			throw new RuntimeException("Cant load grid " + toString());
 		}
 		_log.debug("objects loaded: " + objLoaded);

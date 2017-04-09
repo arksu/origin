@@ -87,7 +87,10 @@ public class Player extends Human
 			//                    player._lastAccess = rset.getLong("lastAccess");
 			//                    player.setOnlineTime(rset.getLong("onlinetime"));
 			//                    player.getCreateDate().setTime(rset.getDate("createDate"));
-			_pos = new ObjectPosition(rset.getInt("x"), rset.getInt("y"), rset.getInt("lvl"), this);
+			_pos = new ObjectPosition(rset.getInt("x"),
+			                          rset.getInt("y"),
+			                          0,
+			                          rset.getInt("lvl"), this);
 		}
 		catch (SQLException e)
 		{
@@ -658,6 +661,5 @@ public class Player extends Human
 		}
 		return false;
 	}
-
 
 }

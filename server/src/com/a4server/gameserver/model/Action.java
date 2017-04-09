@@ -89,7 +89,6 @@ public class Action implements Runnable
 	public void run()
 	{
 		_count++;
-		System.out.println("++++ " + _count);
 		if (_count > _totalCount && !_isDone)
 		{
 			stop();

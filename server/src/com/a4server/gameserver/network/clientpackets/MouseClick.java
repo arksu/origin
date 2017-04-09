@@ -246,7 +246,7 @@ public class MouseClick extends GameClientPacket
 				grid = World.getInstance().getGridInWorldCoord(x, y, player.getPos().getLevel());
 				int typeId = player.getCursor().getTypeId();
 				GameObject object = ObjectsFactory.getInstance().createObject(typeId);
-				object.setPos(new ObjectPosition(x, y, grid.getLevel(), grid, object));
+				object.setPos(new ObjectPosition(x, y, 0, grid.getLevel(), grid, object));
 				if (object.getPos().trySpawn())
 				{
 					object.store();
