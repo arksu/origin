@@ -129,4 +129,10 @@ public class Tile
 	{
 		_height = height;
 	}
+
+	@Override
+	public String toString()
+	{
+		return this._type.name() + "[" + this._type.getCode() + "]";
+	}
 }

@@ -207,7 +207,8 @@ public class Collision
 		for (Grid grid : grids)
 		{
 			// границы грида
-			Rect gr = new Rect(Grid.GRID_FULL_SIZE).move(grid.getCoordX(), grid.getCoordY());
+			Rect gr = new Rect(0, 0, Grid.GRID_FULL_SIZE, Grid.GRID_FULL_SIZE);
+			gr.move(grid.getCoordX(), grid.getCoordY());
 			// точка внутри грида?
 			if (gr.isPointInside(x, y))
 			{
