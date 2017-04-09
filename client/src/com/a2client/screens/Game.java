@@ -44,6 +44,7 @@ public class Game extends BaseScreen
 	public GUI_Memo _chatMemo;
 	private GUI_Edit _chatEdit;
 	public GUI_ActionsList _rootActions;
+	private GUI_Progressbar _actionProgress;
 
 	private static Game _instance;
 	private GameState _state = GameState.ENTERING;
@@ -53,7 +54,6 @@ public class Game extends BaseScreen
 	 */
 	private Vec2i _worldMousePos;
 	private Vector3 _terrainPoint;
-	private boolean[] _mouseBtns = new boolean[3];
 
 	private Render _render;
 	private GameCamera _gameCamera;
@@ -131,6 +131,11 @@ public class Game extends BaseScreen
 		};
 		_rootActions.setSize(150, 100);
 		_rootActions.setPos(Gdx.graphics.getWidth() - _rootActions.size.x, Gdx.graphics.getHeight() - _rootActions.size.y);
+
+		_actionProgress = new GUI_Progressbar(GUI.rootNormal());
+		_actionProgress.setSize(200, 15);
+		_actionProgress.setValue(0);
+		_actionProgress.hide();
 
 		_gameCamera = new GameCamera();
 		_render = new Render(this);
@@ -301,7 +306,11 @@ public class Game extends BaseScreen
 		_render.onResize(width, height);
 
 		_rootActions.setPos(Gdx.graphics.getWidth() - _rootActions.size.x, Gdx.graphics.getHeight() - _rootActions.size.y);
+		_rootActions.place();
 		_btnExit.setPos(Gdx.graphics.getWidth() - 100, 0);
+
+		_actionProgress.centerX();
+		_actionProgress.setY(100);
 
 		int hc = 100;
 		int wc = 200;
@@ -328,6 +337,11 @@ public class Game extends BaseScreen
 	public Render getRender()
 	{
 		return _render;
+	}
+
+	public GUI_Progressbar getActionProgress()
+	{
+		return _actionProgress;
 	}
 
 	static public Game getInstance()

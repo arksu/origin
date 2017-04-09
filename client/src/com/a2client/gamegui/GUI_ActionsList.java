@@ -102,6 +102,10 @@ public class GUI_ActionsList extends GUI_Control
 			icon.setPos(x, y);
 			y += InventoryItem.HEIGHT + InventoryItem.MARGIN;
 		}
+		if (_childs != null)
+		{
+			_childs.place();
+		}
 	}
 
 	public void clear()

@@ -54,13 +54,13 @@ public class GUI_Progressbar extends GUI_Control
         GUIGDX.fillRect(abs_pos, new Vec2i(w, size.y), color);
     }
 
-    public void SetValue(int val)
+    public void setValue(int val)
     {
         value = val;
         value = value > max ? max : value < min ? min : value;
     }
 
-    public void SetMax(int val)
+    public void setMax(int val)
     {
         max = val;
     }

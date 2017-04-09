@@ -1,6 +1,7 @@
 package com.a4server.gameserver.model;
 
 import com.a4server.ThreadPoolManager;
+import com.a4server.gameserver.network.serverpackets.ActionProgress;
 
 import java.util.concurrent.Future;
 
@@ -13,33 +14,44 @@ import static com.a4server.gameserver.GameTimeController.GAME_ACTION_PERIOD;
 public class Action implements Runnable
 {
 	private final Human _actor;
+
+	private final Player _player;
+
 	/**
 	 * сколько всего тиков надо сделать
 	 */
-	int _totalCount;
+	private int _totalCount;
 
 	/**
 	 * сколько тиков уже сделано
 	 */
-	int _count;
+	private int _count;
 
 	/**
 	 * код который надо выполнить по завершению
 	 */
-	Runnable _callback;
+	private Runnable _callback;
 
 	/**
 	 * объект с которым производим действие
 	 */
-	GameObject _target;
+	private GameObject _target;
 
-	Future<?> _task;
+	private Future<?> _task;
 
-	boolean _isDone = false;
+	private boolean _isDone = false;
 
 	public Action(Human actor, int totalCount, GameObject target, Runnable callback)
 	{
 		_actor = actor;
+		if (actor instanceof Player)
+		{
+			_player = ((Player) actor);
+		}
+		else
+		{
+			_player = null;
+		}
 		_count = 0;
 		_totalCount = totalCount;
 		_callback = callback;
@@ -54,6 +66,10 @@ public class Action implements Runnable
 	public void start()
 	{
 		_task = ThreadPoolManager.getInstance().scheduleActionAtFixedRate(this, GAME_ACTION_PERIOD, GAME_ACTION_PERIOD);
+		if (_player != null)
+		{
+			_player.getClient().sendPacket(new ActionProgress(_target.getObjectId(), _count, _totalCount));
+		}
 	}
 
 	public void stop()
@@ -62,6 +78,10 @@ public class Action implements Runnable
 		{
 			_task.cancel(false);
 			_task = null;
+			if (_player != null)
+			{
+				_player.getClient().sendPacket(ActionProgress.EMPTY);
+			}
 		}
 	}
 
@@ -69,12 +89,19 @@ public class Action implements Runnable
 	public void run()
 	{
 		_count++;
-		System.out.println("++++ "+_count);
-		if (_count >= _totalCount && !_isDone)
+		System.out.println("++++ " + _count);
+		if (_count > _totalCount && !_isDone)
 		{
 			stop();
 			_isDone = true;
 			_callback.run();
+		}
+		else
+		{
+			if (_player != null)
+			{
+				_player.getClient().sendPacket(new ActionProgress(_target.getObjectId(), _count, _totalCount));
+			}
 		}
 	}
 }
