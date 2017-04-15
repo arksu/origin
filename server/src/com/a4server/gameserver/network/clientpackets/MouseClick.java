@@ -206,6 +206,14 @@ public class MouseClick extends GameClientPacket
 		Tile tile;
 		switch (cursor)
 		{
+			case LiftUp:
+				if (_objectId != 0)
+				{
+					moveToObject(player, _objectId);
+				}
+				player.setCursor(Arrow);
+				break;
+
 			case TileUp:
 				grid = World.getInstance().getGridInWorldCoord(x, y, player.getPos().getLevel());
 				n = World.getTileIndex(x, y);

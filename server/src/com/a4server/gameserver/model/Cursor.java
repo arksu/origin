@@ -15,6 +15,7 @@ public class Cursor
 	public enum CursorName
 	{
 		Arrow("arrow"),
+		LiftUp("lift_up"),
 		Spawn("spawn"),
 
 		TileUp("tile_up"),

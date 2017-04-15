@@ -38,6 +38,10 @@ public class ActionSelect extends GameClientPacket
 				{
 
 				}
+				else if ("lift_up".equals(_name))
+				{
+					player.setCursor(LiftUp);
+				}
 				else if ("spawn_pine".equals(_name))
 				{
 					player.setCursor(Spawn, 14);

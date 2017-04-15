@@ -573,6 +573,7 @@ public class Player extends Human
 	{
 		// todo: actions
 		List<ActionItem> list = new ArrayList<>();
+		list.add(new ActionItem("lift_up"));
 		list.add(new ActionItem("craft"));
 		list.add(new ActionItem("build"));
 
