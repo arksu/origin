@@ -42,6 +42,11 @@ public abstract class MoveController
 	 */
 	private long _lastMoveTime;
 
+	/**
+	 * расстояние до конечной точки при котором считаем что уже дошли куда надо
+	 */
+	protected static final double FINAL_DELTA = 0.5f;
+
 	public MoveController()
 	{
 		_lastMoveTime = System.currentTimeMillis();
@@ -60,17 +65,30 @@ public abstract class MoveController
 		}
 	}
 
-	/**
-	 * находится ли объект в реально движении или стоит на месте
-	 * @return движется ли?
-	 */
-	public abstract boolean isMoving();
+	protected abstract int getToX();
+
+	protected abstract int getToY();
 
 	/**
-	 * возможно ли начать движение
-	 * @return да или нет
+	 * как именно двигаемся. тип передвижения
 	 */
-	public abstract boolean canStartMoving();
+	protected abstract Move.MoveType getMoveType();
+
+	/**
+	 * виртуальный объект для обсчета коллизий
+	 */
+	protected GameObject getVirtualObject()
+	{
+		return null;
+	}
+
+	/**
+	 * ид объекта - цели, если движемся к явно указанному объекту
+	 */
+	protected int getTargetObjectId()
+	{
+		return 0;
+	}
 
 	/**
 	 * создать пакет о том как движется объект
@@ -82,7 +100,63 @@ public abstract class MoveController
 	 * внутренняя реализация движения. надо определить куда должны передвинутся за тик
 	 * @return движение завершено? (истина ежели уперлись во чтото или прибыли в пункт назначения)
 	 */
-	public abstract boolean movingImpl(double dt);
+	public boolean movingImpl(double dt)
+	{
+		int toX = getToX();
+		int toY = getToY();
+
+		// вычислим единичный вектор
+		double tdx = toX - _currentX;
+		double tdy = toY - _currentY;
+		double td = Math.sqrt(Math.pow(tdx, 2) + Math.pow(tdy, 2));
+		// расстояние которое прошли за 1 тик. не более оставшегося до конечной точки
+		double d = Math.min(dt * _activeObject.getMoveSpeed(), td);
+
+		// помножим расстояние которое должны пройти на единичный вектор
+		double tmpX = _currentX + (tdx / td) * d;
+		double tmpY = _currentY + (tdy / td) * d;
+
+		if (process(tmpX, tmpY, getMoveType(), getVirtualObject()))
+		{
+			td = Math.sqrt(Math.pow(_currentX - toX, 2) + Math.pow(_currentY - toY, 2));
+
+			// предел расстояния до конечной точки на котором считаем что пришли куда надо
+			boolean arrive = td <= FINAL_DELTA;
+			// если уже дошли - остановим движение
+			if (arrive)
+			{
+				_activeObject.stopMove(CollisionResult.NONE, toX, toY);
+			}
+			return arrive;
+		}
+		// без проблем передвинутся не удалось. завершим движение
+		return true;
+	}
+
+	/**
+	 * возможно ли начать движение
+	 * @return да или нет
+	 */
+	public boolean canStartMoving()
+	{
+		// COPYPAST! ^^^ movingImpl
+
+		// время прошедшее с последнего апдейта. пока тупо захардкодим
+		double dt = 0.1f;
+		// вычислим единичный вектор
+		double tdx = getToX() - _currentX;
+		double tdy = getToY() - _currentY;
+		double td = Math.sqrt(Math.pow(tdx, 2) + Math.pow(tdy, 2));
+		// расстояние которое прошли за 1 тик. не более оставшегося до конечной точки
+		double d = Math.min(dt * _activeObject.getMoveSpeed(), td);
+
+		// помножим расстояние которое должны пройти на единичный вектор
+		double tmpX = _currentX + (tdx / td) * d;
+		double tmpY = _currentY + (tdy / td) * d;
+
+		// проверим коллизию на передвижение за 1 тик
+		return (checkColiision(tmpX, tmpY, getMoveType(), null, false) == CollisionResult.NONE);
+	}
 
 	/**
 	 * обработать тик передвижения

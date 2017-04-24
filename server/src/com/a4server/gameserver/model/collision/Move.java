@@ -13,10 +13,10 @@ public class Move
 	public enum MoveType
 	{
 		// используется только когда объект спавнится в мир, или телепорт в другое место
-		MOVE_SPAWN,
+		SPAWN,
 		// передвижение по суше
-		MOVE_WALK,
+		WALK,
 		// плывет по воде
-		MOVE_SWIMMING
+		SWIMMING
 	}
 }

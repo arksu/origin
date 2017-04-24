@@ -8,5 +8,10 @@
 		"name": "tile_down",
 		"x": 15,
 		"y": 26
+	},
+	{
+		"name": "lift_up",
+		"x": 15,
+		"y": 6
 	}
 ]

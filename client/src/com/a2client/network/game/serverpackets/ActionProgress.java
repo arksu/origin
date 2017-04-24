@@ -29,8 +29,6 @@ public class ActionProgress extends GameServerPacket
 	@Override
 	public void run()
 	{
-		System.out.println("action: " + _count);
-
 		GUI_Progressbar progress = Game.getInstance().getActionProgress();
 		if (_targetObjectId == 0)
 		{

@@ -1,5 +1,6 @@
 package com.a4server.gameserver.model.position;
 
+import com.a4server.gameserver.model.collision.Move;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +13,23 @@ public class MoveFollow extends MoveController
 {
 	private static final Logger _log = LoggerFactory.getLogger(MoveFollow.class.getName());
 
+	// TODO
 	@Override
-	public boolean isMoving()
+	protected int getToX()
 	{
-		return false;
+		return 0;
+	}
+
+	@Override
+	protected int getToY()
+	{
+		return 0;
+	}
+
+	@Override
+	protected Move.MoveType getMoveType()
+	{
+		return null;
 	}
 
 	@Override

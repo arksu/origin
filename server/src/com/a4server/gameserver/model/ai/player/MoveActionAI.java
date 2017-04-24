@@ -4,7 +4,7 @@ import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.event.GridEvent;
-import com.a4server.gameserver.model.position.MoveToPoint;
+import com.a4server.gameserver.model.position.MoveToObject;
 
 /**
  * поведение для движения к объекту и взаимодействия с ним
@@ -12,7 +12,7 @@ import com.a4server.gameserver.model.position.MoveToPoint;
  */
 public class MoveActionAI extends PlayerAI
 {
-	private int _targetObjectId;
+	private final int _targetObjectId;
 
 	private final ArrivedCallback _arrivedCallback;
 
@@ -55,7 +55,7 @@ public class MoveActionAI extends PlayerAI
 
 		if (target.getPos().getDistance(_player.getPos()) < 2000)
 		{
-			_player.startMove(new MoveToPoint(target.getPos().getX(), target.getPos().getY()));
+			_player.startMove(new MoveToObject(target));
 		}
 	}
 }

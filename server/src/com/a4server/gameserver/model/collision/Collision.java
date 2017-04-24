@@ -64,7 +64,9 @@ public class Collision
 				if ((filterRect.isPointInside(obj.getPos().getX(), obj.getPos().getY()) &&
 				     // это НЕ я
 				     obj.getObjectId() != object.getObjectId() &&
+
 				     // todo то что несем на себе не дает коллизий
+
 				     // дают ли объекты между собой коллизию?
 				     getCollision(object, obj, false)) ||
 				    // если это цель, она должна давать коллизию
@@ -269,10 +271,10 @@ public class Collision
 	{
 		switch (moveType)
 		{
-			case MOVE_WALK:
-			case MOVE_SPAWN:
+			case WALK:
+			case SPAWN:
 				return tile.getType() == TILE_WATER_DEEP;
-			case MOVE_SWIMMING:
+			case SWIMMING:
 				return tile.getType() != TILE_WATER_DEEP && tile.getType() != TILE_WATER_LOW;
 			default:
 				return true;

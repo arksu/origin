@@ -637,11 +637,11 @@ public class Grid
 			_log.debug("try spawn (" + x + ", " + y + ") >> (" + toX + ", " + toY + ")");
 			if (moveLen)
 			{
-				result = checkCollision(object, x, y, toX, toY, Move.MoveType.MOVE_SPAWN, null, false);
+				result = checkCollision(object, x, y, toX, toY, Move.MoveType.SPAWN, null, false);
 			}
 			else
 			{
-				result = checkCollision(object, toX, toY, toX, toY, Move.MoveType.MOVE_SPAWN, null, false);
+				result = checkCollision(object, toX, toY, toX, toY, Move.MoveType.SPAWN, null, false);
 			}
 
 			switch (result.getResultType())
