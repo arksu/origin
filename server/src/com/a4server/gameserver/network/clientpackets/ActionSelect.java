@@ -32,7 +32,7 @@ public class ActionSelect extends GameClientPacket
 		Player player = client.getPlayer();
 		if (player != null)
 		{
-			try (GameLock ignored = player.tryLock())
+			try (GameLock ignored = player.lock())
 			{
 				if ("online".equals(_name))
 				{

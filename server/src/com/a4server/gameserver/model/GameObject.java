@@ -19,6 +19,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -89,7 +91,7 @@ public class GameObject
 	/**
 	 * объект который несем над собой
 	 */
-	protected Set<GameObject> _lift = ConcurrentHashMap.newKeySet(1);
+	protected List<GameObject> _lift = Collections.synchronizedList(new ArrayList<>(1));
 
 	/**
 	 * объект в процессе удаления из мира и ни на какие события больше не должен реагировать
@@ -282,14 +284,9 @@ public class GameObject
 	{
 		if (markDeleted())
 		{
-			getGrid().tryLock();
-			try
+			try (GameLock ignored = getGrid().lock())
 			{
 				getGrid().removeObject(this);
-			}
-			finally
-			{
-				getGrid().unlock();
 			}
 		}
 	}
@@ -315,11 +312,11 @@ public class GameObject
 	 * попытаться захватить блокировку на этот объект
 	 * @return истина если блокировку получили
 	 */
-	public GameLock tryLock()
+	public GameLock lock()
 	{
 		if (tryLock(WAIT_LOCK))
 		{
-			return new GameLock(this);
+			return new GameLock(this._lock);
 		}
 		throw new RuntimeException("failed get game object lock: " + this);
 	}
@@ -596,7 +593,7 @@ public class GameObject
 		return null;
 	}
 
-	public Set<GameObject> getLift()
+	public List<GameObject> getLift()
 	{
 		return _lift;
 	}
@@ -604,15 +601,22 @@ public class GameObject
 	public void addLift(GameObject o)
 	{
 		_lift.add(o);
+		Grid grid = o.getGrid();
+		try (GameLock ignored = grid.lock())
+		{
+			// сначала расскажем всем что объект привязали к другому
+			grid.broadcastPacket(o, new ObjectLift(o.getObjectId(), this.getObjectId()));
+
+			// и только потом удалим его нафиг из грида и мира
+			grid.removeObject(o);
+		}
 	}
 
+	/**
+	 * объект сменил грид при движении
+	 */
 	public void swapGrids(Grid old, Grid n)
 	{
-
-	}
-
-	protected void swapGridsDb(Grid old, Grid n)
-	{
-		store();
+		// TODO
 	}
 }

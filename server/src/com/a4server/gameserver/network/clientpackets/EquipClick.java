@@ -48,7 +48,7 @@ public class EquipClick extends GameClientPacket
 		Player player = client.getPlayer();
 		if (player != null && _btn == 0)
 		{
-			try (GameLock ignored = player.tryLock())
+			try (GameLock ignored = player.lock())
 			{
 				// держим в руке что-то?
 				if (player.getHand() == null)

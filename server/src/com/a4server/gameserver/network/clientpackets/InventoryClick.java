@@ -59,7 +59,7 @@ public class InventoryClick extends GameClientPacket
 		Player player = client.getPlayer();
 		if (player != null && _btn == 0)
 		{
-			try (GameLock ignored = player.tryLock())
+			try (GameLock ignored = player.lock())
 			{
 				// держим в руке что-то?
 				if (player.getHand() == null)
@@ -88,7 +88,7 @@ public class InventoryClick extends GameClientPacket
 					if (item != null)
 					{
 						GameObject object = item.getParentInventory().getObject();
-						try (GameLock ignored2 = object.tryLock())
+						try (GameLock ignored2 = object.lock())
 						{
 							InventoryItem taked = item.getParentInventory().takeItem(item);
 

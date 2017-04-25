@@ -37,7 +37,8 @@ public class GamePacketHandler
 			ActionsList.class,
 			CursorSet.class,
 			ContextMenu.class,
-			ActionProgress.class
+			ActionProgress.class,
+			ObjectLift.class
 	};
 
 	static public void InitPackets()

@@ -30,7 +30,7 @@ public class ContextSelect extends GameClientPacket
 		Player player = client.getPlayer();
 		if (player != null)
 		{
-			try (GameLock ignored = player.tryLock())
+			try (GameLock ignored = player.lock())
 			{
 				GameObject object = player.getKnownKist().getKnownObjects().get(_objectId);
 				if (object.getContextMenu(player).contains(_item))

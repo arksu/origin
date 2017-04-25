@@ -850,11 +850,6 @@ public class Grid
 		}
 	}
 
-	public boolean tryLockSafe(int time) throws InterruptedException
-	{
-		return _loaded && _mainLock.tryLock(time, TimeUnit.MILLISECONDS);
-	}
-
 	public void unlock()
 	{
 		if (_loaded)
@@ -864,9 +859,21 @@ public class Grid
 	}
 
 	/**
+	 * заблокировать грид для различных действий с его объектами
+	 */
+	public GameLock lock()
+	{
+		if (tryLock())
+		{
+			return new GameLock(_mainLock);
+		}
+		throw new RuntimeException("failed get lock for grid: " + this.toString());
+	}
+
+	/**
 	 * попробовать залочить для обсчета коллизий
 	 */
-	public boolean tryLock()
+	private boolean tryLock()
 	{
 		try
 		{
@@ -877,6 +884,11 @@ public class Grid
 			_log.warn("Timeout wait tryLock " + this);
 			return false;
 		}
+	}
+
+	public boolean tryLockSafe(int time) throws InterruptedException
+	{
+		return _loaded && _mainLock.tryLock(time, TimeUnit.MILLISECONDS);
 	}
 
 	/**
@@ -979,7 +991,7 @@ public class Grid
 	/**
 	 * разослать пакет всем кто находится в гриде
 	 * пакет будет отослан только тем кто знает отправителя (находится в known list)
-	 * @param from объект отправитель пакета
+	 * @param from объект отправитель пакета, проверяем что отправитель будет в known list у получателя
 	 * @param pkt пакет
 	 */
 	public void broadcastPacket(GameObject from, GameServerPacket pkt)

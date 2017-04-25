@@ -66,7 +66,7 @@ public class MouseClick extends GameClientPacket
 		Player player = client.getPlayer();
 		if (player != null)
 		{
-			try (GameLock ignored = player.tryLock())
+			try (GameLock ignored = player.lock())
 			{
 				if (player.getCursor().getName() == Arrow)
 				{
@@ -137,24 +137,11 @@ public class MouseClick extends GameClientPacket
 					// наша цель совпадает с тем куда пришли?
 					if (object != null && object.getObjectId() == objectId && !object.isDeleting())
 					{
-						_log.debug("interact with object " + object.toString());
-						// надо провести взаимодействие с этим объектом
-						player.beginInteract(object);
-					}
-					break;
-
-				case COLLISION_NONE:
-					// коллизии нет. мы знаем этот объект?
-					object = player.getKnownKist().getKnownObjects().get(objectId);
-
-					// если мы находимся точно в его позиции
-					// этот объект вещь? т.е. вещь валяется на земле
-					if (object.getPos().equals(player.getPos()) && object.isItem())
-					{
-						Grid grid = player.getGrid();
-						if (grid.tryLock())
+						// этот объект вещь? т.е. вещь валяется на земле
+						if (object.isItem())
 						{
-							try
+							Grid grid = object.getGrid();
+							try (GameLock ignored = grid.lock())
 							{
 								// найдем вещь в базе
 								AbstractItem item = AbstractItem.load(player, objectId);
@@ -181,12 +168,20 @@ public class MouseClick extends GameClientPacket
 									}
 								}
 							}
-							finally
-							{
-								grid.unlock();
-							}
+						}
+						else
+						{
+							_log.debug("interact with object " + object.toString());
+							// надо провести взаимодействие с этим объектом
+							player.beginInteract(object);
 						}
 					}
+					break;
+
+				case COLLISION_NONE:
+					// коллизии нет. мы знаем этот объект?
+					object = player.getKnownKist().getKnownObjects().get(objectId);
+
 					break;
 			}
 		}));
@@ -213,7 +208,7 @@ public class MouseClick extends GameClientPacket
 						    && !moveResult.getObject().isDeleting()
 						    && moveResult.getObject().getObjectId() == _objectId)
 						{
-							try (GameLock ignored = player.tryLock(); GameLock ignored2 = moveResult.getObject().tryLock())
+							try (GameLock ignored = player.lock(); GameLock ignored2 = moveResult.getObject().lock())
 							{
 								_log.debug("LIFT UP");
 								player.addLift(moveResult.getObject());
