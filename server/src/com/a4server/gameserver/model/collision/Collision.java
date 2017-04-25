@@ -61,14 +61,16 @@ public class Collision
 			for (GameObject obj : grid.getObjects())
 			{
 				// условие отбора объекта
-				if ((filterRect.isPointInside(obj.getPos().getX(), obj.getPos().getY()) &&
+				if ((filterRect.isPointInside(obj.getPos().getX(), obj.getPos().getY())
 				     // это НЕ я
-				     obj.getObjectId() != object.getObjectId() &&
+				     && obj.getObjectId() != object.getObjectId()
+
+				     && !obj.isDeleting()
 
 				     // todo то что несем на себе не дает коллизий
 
 				     // дают ли объекты между собой коллизию?
-				     getCollision(object, obj, false)) ||
+				     && getCollision(object, obj, false)) ||
 				    // если это цель, она должна давать коллизию
 				    (obj.getObjectId() == targetObjId && getCollision(object, obj, true)))
 				{

@@ -1,6 +1,7 @@
 package com.a4server.gameserver.model.position;
 
 import com.a4server.gameserver.model.GameObject;
+import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
 import com.a4server.gameserver.network.serverpackets.ObjectMove;
@@ -40,12 +41,6 @@ public class MoveToObject extends MoveController
 	}
 
 	@Override
-	protected int getTargetObjectId()
-	{
-		return _object.getObjectId();
-	}
-
-	@Override
 	public boolean canStartMoving()
 	{
 		// объект был удален. двигатся больше некуда
@@ -67,6 +62,12 @@ public class MoveToObject extends MoveController
 		}
 
 		return super.movingImpl(dt);
+	}
+
+	@Override
+	protected void onArrived(int x, int y)
+	{
+		_activeObject.stopMove(new CollisionResult(_object, x, y), x, y);
 	}
 
 	/**

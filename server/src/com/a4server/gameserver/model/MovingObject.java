@@ -125,6 +125,8 @@ public abstract class MovingObject extends GameObject
 
 	/**
 	 * прекратить движение объекта по той или иной причине
+	 * @param x координаты в которых остановились. установим их объекту
+	 * @param y координаты в которых остановились. установим их объекту
 	 */
 	public void stopMove(CollisionResult result, int x, int y)
 	{

@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.a4server.gameserver.model.Cursor.CursorName.Arrow;
+import static com.a4server.gameserver.model.collision.CollisionResult.CollisionType.COLLISION_OBJECT;
 
 /**
  * клик по карте (тайлы, объекты)
@@ -87,7 +88,7 @@ public class MouseClick extends GameClientPacket
 								// кликнули в объект?
 								else if (_objectId != 0 && _objectId != player.getObjectId())
 								{
-									moveToObject(player, _objectId);
+									moveToObjectAction(player, _objectId);
 								}
 								else
 								{
@@ -127,7 +128,7 @@ public class MouseClick extends GameClientPacket
 		}
 	}
 
-	private void moveToObject(final Player player, final int objectId)
+	private void moveToObjectAction(final Player player, final int objectId)
 	{
 		// клик по объекту. бежим к нему и делаем действие над ним
 		player.setAi(new MoveActionAI(player, _objectId, moveResult ->
@@ -209,7 +210,16 @@ public class MouseClick extends GameClientPacket
 			case LiftUp:
 				if (_objectId != 0)
 				{
-					moveToObject(player, _objectId);
+					player.setAi(new MoveActionAI(player, _objectId, moveResult ->
+					{
+						if (moveResult.getResultType() == COLLISION_OBJECT
+						    && moveResult.getObject() != null
+						    && !moveResult.getObject().isDeleting()
+						    && moveResult.getObject().getObjectId() == _objectId)
+						{
+							_log.debug("LIFT UP");
+						}
+					}));
 				}
 				player.setCursor(Arrow);
 				break;

@@ -83,14 +83,6 @@ public abstract class MoveController
 	}
 
 	/**
-	 * ид объекта - цели, если движемся к явно указанному объекту
-	 */
-	protected int getTargetObjectId()
-	{
-		return 0;
-	}
-
-	/**
 	 * создать пакет о том как движется объект
 	 * @return пакет
 	 */
@@ -125,12 +117,17 @@ public abstract class MoveController
 			// если уже дошли - остановим движение
 			if (arrive)
 			{
-				_activeObject.stopMove(CollisionResult.NONE, toX, toY);
+				onArrived(toX, toY);
 			}
 			return arrive;
 		}
 		// без проблем передвинутся не удалось. завершим движение
 		return true;
+	}
+
+	protected void onArrived(int x, int y)
+	{
+		_activeObject.stopMove(CollisionResult.NONE, x, y);
 	}
 
 	/**
