@@ -127,7 +127,7 @@ public abstract class MoveController
 
 	protected void onArrived(int x, int y)
 	{
-		_activeObject.stopMove(CollisionResult.NONE, x, y);
+		_activeObject.stopMove(CollisionResult.NONE);
 	}
 
 	/**
@@ -175,7 +175,7 @@ public abstract class MoveController
 				if (Math.pow(Config.UPDATE_DB_DISTANCE, 2) < (Math.pow(dx, 2) + Math.pow(dy, 2)))
 				{
 					// обновим состояние базе
-					_activeObject.storeInDb();
+					_activeObject.storePosition();
 					_storedX = _currentX;
 					_storedY = _currentY;
 				}
@@ -205,7 +205,6 @@ public abstract class MoveController
 			// коллизий нет
 			case COLLISION_NONE:
 				// можно ставить новую позицию объекту
-				_activeObject.getPos().setXY(toX, toY);
 				_currentX = toX;
 				_currentY = toY;
 
@@ -220,17 +219,11 @@ public abstract class MoveController
 				return true;
 
 			case COLLISION_FAIL:
-				_activeObject.stopMove(
-						collision,
-						(int) Math.round(_currentX),
-						(int) Math.round(_currentY));
+				_activeObject.stopMove(collision);
 				return false;
 
 			default:
-				_activeObject.stopMove(
-						collision,
-						collision.getX(),
-						collision.getY());
+				_activeObject.stopMove(collision);
 				return false;
 		}
 

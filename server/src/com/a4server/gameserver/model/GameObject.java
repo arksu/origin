@@ -36,6 +36,8 @@ public class GameObject
 
 	public static final String STORE = "REPLACE INTO sg_0_obj (id, grid, x, y, heading, type, q, create_tick) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
+	public static final String DELETE = "DELETE FROM sg_0_obj WHERE id=?";
+
 	public static final String MARK_DELETED = "UPDATE sg_0_obj SET del=? WHERE id=?";
 
 	/**
@@ -83,6 +85,11 @@ public class GameObject
 	 * если у меня тут есть ктото, то и у оного в списке есть я
 	 */
 	protected final Set<GameObject> _interactWith = ConcurrentHashMap.newKeySet(2);
+
+	/**
+	 * объект который несем над собой
+	 */
+	protected Set<GameObject> _lift;
 
 	/**
 	 * объект в процессе удаления из мира и ни на какие события больше не должен реагировать
@@ -369,7 +376,7 @@ public class GameObject
 	public String toString()
 	{
 		return "(" + getClass().getSimpleName() + ": " + (!_name
-				.isEmpty() ? _name + " " : "") + "id=" + _objectId + ")";
+				.isEmpty() ? _name + " " : "") + "id=" + _objectId + " " + getPos() + ")";
 	}
 
 	@Override
@@ -474,7 +481,7 @@ public class GameObject
 	 */
 	protected void setInteractive(boolean value)
 	{
-		_log.debug("setInteractive " + value);
+		_log.debug(toString() + " setInteractive " + value);
 
 		// TODO !! слать пакет интерактива! см beginInteract
 		new ObjectInteractive(_objectId, value);
@@ -573,6 +580,9 @@ public class GameObject
 		return false;
 	}
 
+	/**
+	 * это инвентарная вещь?
+	 */
 	public boolean isItem()
 	{
 		return _template.getItem() != null;
@@ -584,5 +594,25 @@ public class GameObject
 	public Player getActingPlayer()
 	{
 		return null;
+	}
+
+	public Set<GameObject> getLift()
+	{
+		return _lift;
+	}
+
+	public void addLift(GameObject o)
+	{
+		_lift.add(o);
+	}
+
+	public void swapGrids(Grid old, Grid n)
+	{
+
+	}
+
+	protected void swapGridsDb(Grid old, Grid n)
+	{
+		store();
 	}
 }

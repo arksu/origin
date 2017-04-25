@@ -87,10 +87,10 @@ public class Player extends Human
 			//                    player._lastAccess = rset.getLong("lastAccess");
 			//                    player.setOnlineTime(rset.getLong("onlinetime"));
 			//                    player.getCreateDate().setTime(rset.getDate("createDate"));
-			_pos = new ObjectPosition(rset.getInt("x"),
+			setPos(new ObjectPosition(rset.getInt("x"),
 			                          rset.getInt("y"),
 			                          0,
-			                          rset.getInt("lvl"), this);
+			                          rset.getInt("lvl"), this));
 		}
 		catch (SQLException e)
 		{
@@ -254,7 +254,8 @@ public class Player extends Human
 	@Override
 	public GameServerPacket makeAddToWorldPacket()
 	{
-		GameServerPacket pkt = new ObjectAdd(this);
+		GameServerPacket pkt = super.makeAddToWorldPacket();
+
 		pkt
 				// раз это персонаж, отправим его представление, то как он должен выглядеть
 				.addNext(new PlayerAppearance(_appearance))
@@ -315,7 +316,7 @@ public class Player extends Human
 		{
 			_isOnline = false;
 			// также тут надо сохранить состояние перса в базу.
-			storeInDb();
+			storePosition();
 			if (_moveController != null)
 			{
 				_moveController.setActiveObject(null);
@@ -406,10 +407,9 @@ public class Player extends Human
 	 */
 	@SuppressWarnings("SuspiciousNameCombination")
 	@Override
-	public void storeInDb()
+	public void storePosition()
 	{
-		// todo player storeInDb
-		_log.debug("storeInDb " + toString());
+		_log.debug("storePosition " + toString());
 		try
 		{
 			try (Connection con = Database.getInstance().getConnection();
@@ -423,7 +423,7 @@ public class Player extends Human
 		}
 		catch (SQLException e)
 		{
-			_log.warn("failed: storeInDb " + e.getMessage());
+			_log.warn("failed: storePosition " + e.getMessage());
 		}
 	}
 
@@ -665,4 +665,12 @@ public class Player extends Human
 		return false;
 	}
 
+	@Override
+	public void addLift(GameObject o)
+	{
+		// если что-то уже держим над собой не разрешаем поднимать еще
+		if (_lift.size() > 0) return;
+
+		super.addLift(o);
+	}
 }

@@ -72,7 +72,7 @@ public class MoveToObject extends MoveController
 	@Override
 	protected void onArrived(int x, int y)
 	{
-		_activeObject.stopMove(new CollisionResult(_object, x, y), x, y);
+		_activeObject.stopMove(new CollisionResult(_object, x, y));
 	}
 
 	/**

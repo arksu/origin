@@ -70,10 +70,6 @@ public class EquipClick extends GameClientPacket
 					}
 				}
 			}
-			catch (Exception e)
-			{
-				_log.error("EquipClick error: " + e.getMessage(), e);
-			}
 		}
 	}
 }

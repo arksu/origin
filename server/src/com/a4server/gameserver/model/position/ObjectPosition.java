@@ -164,18 +164,6 @@ public class ObjectPosition
 		updateGrid();
 	}
 
-	public void setXY(double x, double y)
-	{
-		setXY((int) Math.round(x), (int) Math.round(y));
-	}
-
-	public void addXY(int x, int y)
-	{
-		_x += x;
-		_y += y;
-		updateGrid();
-	}
-
 	public Vec2i sub(ObjectPosition other)
 	{
 		return new Vec2i(_x - other._x, _y - other._y);

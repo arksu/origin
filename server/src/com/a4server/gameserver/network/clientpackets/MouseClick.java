@@ -121,10 +121,6 @@ public class MouseClick extends GameClientPacket
 					}
 				}
 			}
-			catch (Exception e)
-			{
-				_log.error("MouseClick error:" + e.getMessage(), e);
-			}
 		}
 	}
 
@@ -217,7 +213,11 @@ public class MouseClick extends GameClientPacket
 						    && !moveResult.getObject().isDeleting()
 						    && moveResult.getObject().getObjectId() == _objectId)
 						{
-							_log.debug("LIFT UP");
+							try (GameLock ignored = player.tryLock(); GameLock ignored2 = moveResult.getObject().tryLock())
+							{
+								_log.debug("LIFT UP");
+								player.addLift(moveResult.getObject());
+							}
 						}
 					}));
 				}

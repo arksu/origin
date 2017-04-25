@@ -801,19 +801,23 @@ public class Grid
 
 			// гриды залочены, проходим итерациями и ищем коллизию
 			CollisionResult result =
-					Collision.checkCollision(object, fromX, fromY, toX, toY, moveType, virtual, grids, 0);
+					Collision.checkCollision(object, fromX, fromY, toX, toY,
+					                         moveType, virtual, grids,
+					                         0);
+
+			int finalX = toX;
+			int finalY = toY;
+			if (result.getResultType() != CollisionResult.CollisionType.COLLISION_NONE)
+			{
+				finalX = result.getX();
+				finalY = result.getY();
+			}
+			object.getPos().setXY(finalX, finalY);
 
 			// узнаем переместился ли объект из одного грида в другой
 			// и только в том случае если в передвижении участвует больше 1 грида
 			if (isMove && grids.size() > 1)
 			{
-				int finalX = toX;
-				int finalY = toY;
-				if (result.getResultType() != CollisionResult.CollisionType.COLLISION_NONE)
-				{
-					finalX = result.getX();
-					finalY = result.getY();
-				}
 				grid = World.getInstance().getGridInWorldCoord(finalX, finalY, _level);
 				// реально передвинулись в тот грид
 				if (grid != this && grids.contains(grid))
@@ -825,6 +829,7 @@ public class Grid
 					_log.debug("swap grids " + object + " " + this + " >> " + grid);
 					this._objects.remove(object);
 					grid._objects.add(object);
+					object.swapGrids(this, grid);
 				}
 			}
 

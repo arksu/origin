@@ -79,7 +79,7 @@ public class Tree extends GameObject
 		double dx = (d.x / l) * offset;
 		double dy = (d.y / l) * offset;
 
-		pos.addXY((int) Math.round(dx), (int) Math.round(dy));
+		pos.setXY(pos.getX() + (int) Math.round(dx), pos.getY() + (int) Math.round(dy));
 		pos.setHeading(Vec2i.z.direction(d));
 
 		if (!log.getPos().trySpawn() || !log.store())

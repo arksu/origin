@@ -68,10 +68,6 @@ public class ActionSelect extends GameClientPacket
 					player.setCursor(cursor);
 				}
 			}
-			catch (Exception e)
-			{
-				_log.error("ActionSelect error: " + e.getMessage(), e);
-			}
 		}
 	}
 }

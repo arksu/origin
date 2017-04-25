@@ -63,6 +63,12 @@ public class CharacterSelect extends GameClientPacket
 					// добавим игрока в мир чтобы нельзя было повторно зайти персом
 					if (World.getInstance().addPlayer(cha))
 					{
+						cha.setClient(client);
+						// говорим клиенту показать экран загрузки мира
+						client.sendPacket(new CharSelected(cha));
+
+						client.sendPacket(cha.makeInitClientPacket());
+
 						// пробуем заспавнить игрока
 						if (!trySpawn(cha))
 						{
@@ -102,14 +108,9 @@ public class CharacterSelect extends GameClientPacket
 
 						// последние штрихи
 						cha.updateLastChar();
-						cha.setClient(client);
 						client.setActiveChar(cha);
 						cha.setOnlineStatus(true);
 
-						// говорим клиенту показать экран загрузки мира
-						client.sendPacket(new CharSelected(cha));
-
-						client.sendPacket(cha.makeInitClientPacket());
 
 						client.setState(GameClient.GameClientState.IN_GAME);
 					}

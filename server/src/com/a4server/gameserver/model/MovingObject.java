@@ -1,6 +1,7 @@
 package com.a4server.gameserver.model;
 
 import com.a4server.Config;
+import com.a4server.Database;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.event.GridEvent;
@@ -10,6 +11,8 @@ import com.a4server.gameserver.network.serverpackets.ObjectPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +26,8 @@ import static com.a4server.gameserver.model.collision.CollisionResult.CollisionT
 public abstract class MovingObject extends GameObject
 {
 	private static final Logger _log = LoggerFactory.getLogger(MovingObject.class.getName());
+
+	public static final String UPDATE_POSITION = "UPDATE sg_0_obj SET x=?, y=? WHERE id=?";
 
 	/**
 	 * контроллер который управляет передвижением объекта
@@ -60,8 +65,26 @@ public abstract class MovingObject extends GameObject
 	/**
 	 * сохранить состояние объекта в базу (позиция)
 	 */
-	public void storeInDb()
+	public void storePosition()
 	{
+		_log.debug("storePosition " + toString());
+		String query = UPDATE_POSITION;
+		query = query.replaceFirst("sg_0", "sg_" + Integer.toString(getPos().getGrid().getSg()));
+
+		// query queue
+		try (Connection con = Database.getInstance().getConnection();
+		     PreparedStatement statement = con.prepareStatement(query))
+		{
+			statement.setInt(1, getPos().getX());
+			statement.setInt(2, getPos().getY());
+			statement.setInt(3, _objectId);
+			statement.executeUpdate();
+			con.close();
+		}
+		catch (Exception e)
+		{
+			_log.warn("failed storePosition " + toString(), e);
+		}
 	}
 
 	public MoveController getMoveController()
@@ -84,7 +107,7 @@ public abstract class MovingObject extends GameObject
 			if (_moveController != null)
 			{
 				// сохраним состояние объекта в базу
-				storeInDb();
+				storePosition();
 			}
 			_moveController = controller;
 			_moveResult = null;
@@ -125,12 +148,10 @@ public abstract class MovingObject extends GameObject
 
 	/**
 	 * прекратить движение объекта по той или иной причине
-	 * @param x координаты в которых остановились. установим их объекту
-	 * @param y координаты в которых остановились. установим их объекту
 	 */
-	public void stopMove(CollisionResult result, int x, int y)
+	public void stopMove(CollisionResult result)
 	{
-		_log.debug("stopMove: " + result.toString() + " at " + x + ", " + y);
+		_log.debug("stopMove: " + result.toString() + " at " + getPos());
 		_moveController = null;
 		_moveResult = result;
 		if (_moveResult.getResultType() == COLLISION_OBJECT ||
@@ -140,8 +161,7 @@ public abstract class MovingObject extends GameObject
 			_log.debug("set linkedObject: " + _linkedObject);
 		}
 
-		getPos().setXY(x, y);
-		storeInDb();
+		storePosition();
 		// расскажем всем что мы остановились
 		GridEvent gridEvent = new GridEvent(this, GridEvent.EventType.EVT_STOP_MOVE, new ObjectPos(getObjectId(), getPos().getX(), getPos().getY()));
 		getPos().getGrid().broadcastEvent(gridEvent);

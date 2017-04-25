@@ -38,10 +38,6 @@ public class ContextSelect extends GameClientPacket
 					object.contextSelected(player, _item);
 				}
 			}
-			catch (Exception e)
-			{
-				_log.error("ContextSelect error:" + e.getMessage(), e);
-			}
 		}
 	}
 }
