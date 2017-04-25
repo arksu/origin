@@ -71,18 +71,23 @@ public abstract class BaseSendPacket
 	 * позволяет указать очередность отправки пакетов. и одним пакетом отправить сразу группу пакетов
 	 * например при добавлении в мир
 	 * @param pkt пакет
-	 * @return следующий пакет
 	 */
 	public BaseSendPacket addNext(BaseSendPacket pkt)
 	{
-		_next = pkt;
-		pkt._prev = this;
-		return pkt;
+		BaseSendPacket last = this;
+		while (last._next != null)
+		{
+			last = last._next;
+		}
+
+		last._next = pkt;
+		pkt._prev = last;
+
+		return this;
 	}
 
 	/**
 	 * 1 byte int
-	 * @param value
 	 */
 	protected void writeC(int value)
 	{
@@ -91,7 +96,6 @@ public abstract class BaseSendPacket
 
 	/**
 	 * 2 byte int
-	 * @param value
 	 */
 	protected void writeH(int value)
 	{
@@ -101,7 +105,6 @@ public abstract class BaseSendPacket
 
 	/**
 	 * 4 byte int
-	 * @param value
 	 */
 	protected void writeD(int value)
 	{
@@ -126,7 +129,6 @@ public abstract class BaseSendPacket
 
 	/**
 	 * string
-	 * @param text
 	 */
 	protected void writeS(String text)
 	{

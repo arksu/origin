@@ -255,14 +255,16 @@ public class Player extends Human
 	public GameServerPacket makeAddToWorldPacket()
 	{
 		GameServerPacket pkt = new ObjectAdd(this);
-		BaseSendPacket next = pkt
+		pkt
 				// раз это персонаж, отправим его представление, то как он должен выглядеть
 				.addNext(new PlayerAppearance(_appearance))
 				.addNext(new EquipUpdate(_objectId, _equip));
+
 		if (_hand != null)
 		{
-			next.addNext(new PlayerHand(_hand));
+			pkt.addNext(new PlayerHand(_hand));
 		}
+
 		return pkt;
 	}
 

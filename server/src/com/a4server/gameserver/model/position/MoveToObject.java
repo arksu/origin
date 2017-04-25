@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * движение к заданному объекту
  * Created by arksu on 24.08.16.
  */
 public class MoveToObject extends MoveController
@@ -64,6 +65,10 @@ public class MoveToObject extends MoveController
 		return super.movingImpl(dt);
 	}
 
+	/**
+	 * если прибыли в точку где находится объект и он не дал коллизий
+	 * принудительно создадим коллизию, нужно для корректной работы логики с объектами которые не дают коллизий
+	 */
 	@Override
 	protected void onArrived(int x, int y)
 	{
