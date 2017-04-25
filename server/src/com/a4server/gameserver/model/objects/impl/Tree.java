@@ -71,15 +71,17 @@ public class Tree extends GameObject
 
 		log.setQuality(getQuality());
 
-		ObjectPosition pos = log.setPos(new ObjectPosition(this.getPos(), log));
-
 		Vec2i d = this.getPos().sub(player.getPos());
 
 		double l = d.len();
 		double dx = (d.x / l) * offset;
 		double dy = (d.y / l) * offset;
 
-		pos.setXY(pos.getX() + (int) Math.round(dx), pos.getY() + (int) Math.round(dy));
+		ObjectPosition pos = log.setPos(new ObjectPosition(
+				this.getPos().getX() + (int) Math.round(dx),
+				this.getPos().getY() + (int) Math.round(dy),
+				0, this.getPos().getLevel(),
+				log));
 		pos.setHeading(Vec2i.z.direction(d));
 
 		if (!log.getPos().trySpawn() || !log.store())

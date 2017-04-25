@@ -1,5 +1,6 @@
 package com.a4server.gameserver.network.clientpackets;
 
+import com.a4server.gameserver.model.GameLock;
 import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Hand;
 import com.a4server.gameserver.model.Player;
@@ -56,9 +57,9 @@ public class InventoryClick extends GameClientPacket
 	{
 		_log.debug("obj=" + _objectId + " inv=" + _inventoryId + " (" + _x + ", " + _y + ")" + " offset=" + _offsetX + ", " + _offsetY + " mod=" + _mod);
 		Player player = client.getPlayer();
-		if (player != null && _btn == 0 && player.tryLock(WAIT_LOCK))
+		if (player != null && _btn == 0)
 		{
-			try
+			try (GameLock ignored = player.tryLock())
 			{
 				// держим в руке что-то?
 				if (player.getHand() == null)
@@ -86,37 +87,31 @@ public class InventoryClick extends GameClientPacket
 					// пробуем взять вещь из инвентаря
 					if (item != null)
 					{
-						if (item.getParentInventory().getObject().tryLock(WAIT_LOCK))
+						GameObject object = item.getParentInventory().getObject();
+						try (GameLock ignored2 = object.tryLock())
 						{
-							try
-							{
-								InventoryItem taked = item.getParentInventory().takeItem(item);
+							InventoryItem taked = item.getParentInventory().takeItem(item);
 
-								// взяли вещь из инвентаря
-								if (taked != null)
+							// взяли вещь из инвентаря
+							if (taked != null)
+							{
+								object.sendInteractPacket(new InventoryUpdate(item.getParentInventory()));
+								// какая кнопка была зажата
+								switch (_mod)
 								{
-									item.getParentInventory().getObject().sendInteractPacket(new InventoryUpdate(item.getParentInventory()));
-									// какая кнопка была зажата
-									switch (_mod)
-									{
-										case Utils.MOD_ALT:
-											// сразу перекинем вещь в инвентарь
-											if (!putItem(player, taked, -1, -1))
-											{
-												setHand(player, taked);
-											}
-											break;
-
-										default:
-											// ничего не нажато. пихаем в руку
+									case Utils.MOD_ALT:
+										// сразу перекинем вещь в инвентарь
+										if (!putItem(player, taked, -1, -1))
+										{
 											setHand(player, taked);
-											break;
-									}
+										}
+										break;
+
+									default:
+										// ничего не нажато. пихаем в руку
+										setHand(player, taked);
+										break;
 								}
-							}
-							finally
-							{
-								item.getParentInventory().getObject().unlock();
 							}
 						}
 					}
@@ -135,10 +130,6 @@ public class InventoryClick extends GameClientPacket
 						player.setHand(null);
 					}
 				}
-			}
-			finally
-			{
-				player.unlock();
 			}
 		}
 	}

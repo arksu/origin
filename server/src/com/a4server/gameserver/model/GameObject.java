@@ -89,7 +89,7 @@ public class GameObject
 	/**
 	 * объект который несем над собой
 	 */
-	protected Set<GameObject> _lift;
+	protected Set<GameObject> _lift = ConcurrentHashMap.newKeySet(1);
 
 	/**
 	 * объект в процессе удаления из мира и ни на какие события больше не должен реагировать

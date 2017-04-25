@@ -15,14 +15,14 @@ public class GameLock implements AutoCloseable
 
 	public GameLock(GameObject object)
 	{
-		_log.debug("GameLock " + this + " created");
+		_log.debug("GameLock " + object.toString() + this.hashCode() + " created");
 		_object = object;
 	}
 
 	@Override
 	public void close() throws RuntimeException
 	{
-		_log.debug("GameLock " + this.toString() + " closed");
+		_log.debug("GameLock " + _object.toString() + this.hashCode() + " closed");
 		_object.unlock();
 	}
 }

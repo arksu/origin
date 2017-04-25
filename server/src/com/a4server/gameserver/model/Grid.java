@@ -805,31 +805,34 @@ public class Grid
 					                         moveType, virtual, grids,
 					                         0);
 
-			int finalX = toX;
-			int finalY = toY;
-			if (result.getResultType() != CollisionResult.CollisionType.COLLISION_NONE)
+			if (isMove)
 			{
-				finalX = result.getX();
-				finalY = result.getY();
-			}
-			object.getPos().setXY(finalX, finalY);
-
-			// узнаем переместился ли объект из одного грида в другой
-			// и только в том случае если в передвижении участвует больше 1 грида
-			if (isMove && grids.size() > 1)
-			{
-				grid = World.getInstance().getGridInWorldCoord(finalX, finalY, _level);
-				// реально передвинулись в тот грид
-				if (grid != this && grids.contains(grid))
+				int finalX = toX;
+				int finalY = toY;
+				if (result.getResultType() != CollisionResult.CollisionType.COLLISION_NONE)
 				{
-					// все условия соблюдены. знаем куда надо передвинуть объект
-					// поскольку все гриды залочены - спокойно делаем свое черное дело
-					// вся эта байда с залочиванием и получением списка гридов делалась именно для этого
-					// получился свой велосипед по типу транзакций для обеспечения целостности данных между гридами
-					_log.debug("swap grids " + object + " " + this + " >> " + grid);
-					this._objects.remove(object);
-					grid._objects.add(object);
-					object.swapGrids(this, grid);
+					finalX = result.getX();
+					finalY = result.getY();
+				}
+				object.getPos().setXY(finalX, finalY);
+
+				// узнаем переместился ли объект из одного грида в другой
+				// и только в том случае если в передвижении участвует больше 1 грида
+				if (grids.size() > 1)
+				{
+					grid = World.getInstance().getGridInWorldCoord(finalX, finalY, _level);
+					// реально передвинулись в тот грид
+					if (grid != this && grids.contains(grid))
+					{
+						// все условия соблюдены. знаем куда надо передвинуть объект
+						// поскольку все гриды залочены - спокойно делаем свое черное дело
+						// вся эта байда с залочиванием и получением списка гридов делалась именно для этого
+						// получился свой велосипед по типу транзакций для обеспечения целостности данных между гридами
+						_log.debug("swap grids " + object + " " + this + " >> " + grid);
+						this._objects.remove(object);
+						grid._objects.add(object);
+						object.swapGrids(this, grid);
+					}
 				}
 			}
 
