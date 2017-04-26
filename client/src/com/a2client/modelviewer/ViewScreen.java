@@ -161,7 +161,7 @@ public class ViewScreen extends BaseScreen
 		}
 		if (Input.KeyHit(Keys.R))
 		{
-			_activeModel.playAnimation("walk");
+			_activeModel.playMergeAnimation("arms_up");
 		}
 		if (Input.KeyHit(Keys.T))
 		{

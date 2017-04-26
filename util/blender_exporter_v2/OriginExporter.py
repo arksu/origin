@@ -363,26 +363,28 @@ def write_all_anims(fw, obj, do_all_anims):
             bpy.context.scene.frame_end = a.frame_range.y
             obj.animation_data.action = a
             write_string(fw, a.name)
-            write_anim(fw, obj)
+            write_anim(fw, obj, a)
         obj.animation_data.action = default_action
     else:
         write_string(fw, default_action.name)
-        write_anim(fw, obj)
+        write_anim(fw, obj, None)
 
     return 1
 
-def write_anim(fw, obj):
-    # if frameRange == None:
+def write_anim(fw, obj, action):
     startFrame = bpy.context.scene.frame_start
     endFrame = bpy.context.scene.frame_end
-    # else:
-    #     startFrame, endFrame = frameRange
-
-    armature = bpy.data.armatures[obj.name]
 
     pBones = obj.pose.bones
 
     print ("arm :", obj, " pbones: ", pBones, " frames: ", startFrame, " - ", endFrame)
+
+    present_bones = set()
+    if (action != None):
+        for f in action.fcurves:
+            present_bones.add(f.group.name)
+        print ("present_bones:")
+        print (present_bones)
 
     # frames count
     fcount = endFrame - startFrame + 1
@@ -396,7 +398,8 @@ def write_anim(fw, obj):
         bpy.context.scene.frame_set(frame)
         print("set frame ", frame)
         for b in bones_list:
-            pBone = pBones[b.getName()]
+            bname = b.getName()
+            pBone = pBones[bname]
             bone_parent = pBone.parent
             while bone_parent:
                 if bone_parent.bone.use_deform:
@@ -411,7 +414,7 @@ def write_anim(fw, obj):
                 diffMatrix = obj.matrix_world * pBoneMatrix
 
             # одинаковые матрицы. запишем флаг для пропуска этой кости по флагам
-            if cmp_matrix(bind_pose[b.name], diffMatrix) and bone_parent:
+            if (cmp_matrix(bind_pose[b.name], diffMatrix) or (not (bname in present_bones))) and bone_parent:
                 fw(struct.pack('>B', 0))
             else:
                 fw(struct.pack('>B', 1))
