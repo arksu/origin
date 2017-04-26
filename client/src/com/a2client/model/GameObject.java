@@ -12,6 +12,9 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.a2client.Terrain.TILE_SIZE;
 
 /**
@@ -37,6 +40,8 @@ public class GameObject
 	private boolean _needInit = true;
 
 	private Vector3 _worldCoord;
+
+	private final Map<Integer, Model> _lift = new HashMap<>();
 
 	public GameObject(ObjectAdd pkt)
 	{
@@ -84,6 +89,11 @@ public class GameObject
 	public Model getModel()
 	{
 		return _model;
+	}
+
+	public Map<Integer, Model> getLift()
+	{
+		return _lift;
 	}
 
 	public void setCoord(int x, int y)

@@ -28,7 +28,7 @@ public class Equip
 	 */
 	public static final String LOAD_EQUIP = "SELECT id, itemId, x, y, q, amount, stage, ticks, ticksTotal, del FROM items WHERE inventoryId=? AND x = 200 AND del=0";
 
-	protected final Player _player;
+	protected final Human _human;
 
 	/**
 	 * ид игрока
@@ -37,10 +37,10 @@ public class Equip
 
 	protected final Map<EquipItem.Slot, EquipItem> _items = new HashMap<>();
 
-	public Equip(Player player)
+	public Equip(Human human)
 	{
-		_player = player;
-		_objectId = player.getObjectId();
+		_human = human;
+		_objectId = human.getObjectId();
 		load();
 	}
 
@@ -61,12 +61,16 @@ public class Equip
 						// это слот рука?
 						if (y == 200)
 						{
-							AbstractItem handItem = new AbstractItem(_player, rset);
-							_player.setHand(new Hand(_player, handItem, 0, 0, 10, 10));
+							if (_human.isPlayer())
+							{
+								Player player = ((Player) _human);
+								AbstractItem handItem = new AbstractItem(_human, rset);
+								player.setHand(new Hand(player, handItem, 0, 0, 10, 10));
+							}
 						}
 						else
 						{
-							EquipItem slot = new EquipItem(_player, rset);
+							EquipItem slot = new EquipItem(_human, rset);
 							_items.put(slot.getSlot(), slot);
 						}
 					}

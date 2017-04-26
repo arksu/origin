@@ -647,7 +647,8 @@ public class GameObject
 		if (object != null)
 		{
 			// разошлем в грид пакет
-			Broadcast.toGrid(this, new ObjectLift(this));
+			ObjectLift pkt = new ObjectLift(this);
+			Broadcast.toGrid(this, pkt);
 		}
 		return object;
 	}

@@ -240,4 +240,9 @@ public class Animation
 			_state[i] = !Render.frameFlag;
 		}
 	}
+
+	public String getName()
+	{
+		return _data.getName();
+	}
 }

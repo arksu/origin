@@ -67,8 +67,6 @@ public class Player extends Human
 	 */
 	private Hand _hand;
 
-	private final Equip _equip;
-
 	private final Cursor _cursor;
 
 	public Player(int objectId, ResultSet rset, PlayerTemplate template)
@@ -99,9 +97,6 @@ public class Player extends Human
 		}
 
 		setVisibleDistance(900);
-
-		// сначала грузим папердоллл! от него может зависеть размер инвентаря
-		_equip = new Equip(this);
 
 		_inventory = new Inventory(this, getInventoryWidth(), getInventoryHeight());
 
@@ -277,7 +272,7 @@ public class Player extends Human
 		pkt
 				// раз это персонаж, отправим его представление, то как он должен выглядеть
 				.addNext(new PlayerAppearance(_appearance))
-				.addNext(new EquipUpdate(_objectId, _equip));
+				.addNext(new EquipUpdate(_objectId, getEquip()));
 
 		if (_hand != null)
 		{
@@ -372,11 +367,6 @@ public class Player extends Human
 	public Inventory getInventory()
 	{
 		return _inventory;
-	}
-
-	public Equip getEquip()
-	{
-		return _equip;
 	}
 
 	public void setOnlineStatus(boolean status)

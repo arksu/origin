@@ -264,7 +264,7 @@ public class Model
 
 	private void updateBoundingBox()
 	{
-		updateBoundingBox(false);
+		updateBoundingBox(true);
 	}
 
 	public void updateBoundingBox(boolean force)
@@ -354,9 +354,28 @@ public class Model
 		AnimationData animationData = _data.getAnimation(name);
 		if (animationData != null)
 		{
+			removeMergeAnimation(name);
+
 			Animation animation = new Animation(animationData);
 			animation.play(Animation.LoopMode.Last);
 			_mergeAnimations.add(0, animation);
+		}
+	}
+
+	public void removeMergeAnimation(String name)
+	{
+		Animation found = null;
+		for (Animation animation : _mergeAnimations)
+		{
+			if (animation.getName().equals(name))
+			{
+				found = animation;
+				break;
+			}
+		}
+		if (found != null)
+		{
+			_mergeAnimations.remove(found);
 		}
 	}
 

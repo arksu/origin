@@ -37,7 +37,8 @@ public class Equip
 	private static class Item
 	{
 		private Model _model;
-		InventoryItem _item;
+		private InventoryItem _item;
+		private boolean _isBinded = true;
 
 		public Item(Model model, InventoryItem item)
 		{
@@ -87,6 +88,34 @@ public class Equip
 		if (e != null)
 		{
 			e._model.unbind();
+		}
+	}
+
+	public void unbindHands(boolean val)
+	{
+		for (Map.Entry<Slot, Item> entry : _equipped.entrySet())
+		{
+			Slot slot = entry.getKey();
+			if (slot == Slot.LHand || slot == Slot.RHand)
+			{
+				Item item = entry.getValue();
+				if (val)
+				{
+					if (item._isBinded)
+					{
+						item._model.unbind();
+						item._isBinded = false;
+					}
+				}
+				else
+				{
+					if (!item._isBinded)
+					{
+						item._model.bindTo(_character.getModel(), slot.getBoneName());
+						item._isBinded = true;
+					}
+				}
+			}
 		}
 	}
 }

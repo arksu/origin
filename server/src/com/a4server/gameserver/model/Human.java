@@ -31,6 +31,8 @@ public abstract class Human extends MovingObject
 	 */
 	private Action _action;
 
+	private final Equip _equip;
+
 	/**
 	 * объекты которые известны мне, инфа о которых отправляется и синхронизирована с клиентом
 	 * любое добалвение в этот список, а равно как и удаление из него должно быть
@@ -54,6 +56,9 @@ public abstract class Human extends MovingObject
 	{
 		super(objectId, template);
 		initKnownList();
+
+		// грузим папердоллл
+		_equip = new Equip(this);
 	}
 
 	protected void initKnownList()
@@ -69,6 +74,11 @@ public abstract class Human extends MovingObject
 	public AI getAi()
 	{
 		return _ai;
+	}
+
+	public Equip getEquip()
+	{
+		return _equip;
 	}
 
 	public void setVisibleDistance(int visibleDistance)
