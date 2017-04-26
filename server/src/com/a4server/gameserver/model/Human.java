@@ -278,6 +278,12 @@ public abstract class Human extends MovingObject
 		}
 	}
 
+	/**
+	 * выполнить игровое действие
+	 * @param ticks сколько тиков длится действие
+	 * @param target объект над которым производим действие
+	 * @param callback обработчик окончания действия
+	 */
 	public void doAction(int ticks, GameObject target, Runnable callback)
 	{
 		setAction(new Action(this, ticks, target, callback));

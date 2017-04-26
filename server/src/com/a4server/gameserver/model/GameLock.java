@@ -17,14 +17,14 @@ public class GameLock implements AutoCloseable
 
 	public GameLock(ReentrantLock lock)
 	{
-		_log.debug("GameLock " + this.hashCode() + " created");
+//		_log.debug("GameLock " + this.hashCode() + " created");
 		_lock = lock;
 	}
 
 	@Override
 	public void close() throws RuntimeException
 	{
-		_log.debug("GameLock " + this.hashCode() + " closed");
+//		_log.debug("GameLock " + this.hashCode() + " closed");
 		_lock.unlock();
 	}
 }

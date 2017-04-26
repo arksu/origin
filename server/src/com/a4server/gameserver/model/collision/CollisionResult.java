@@ -113,9 +113,9 @@ public class CollisionResult
 			case COLLISION_TILE:
 				result += ": " + _tile.toString();
 				break;
-			case COLLISION_VIRTUAL:
-				result += ": " + _object.toString();
-				break;
+//			case COLLISION_VIRTUAL:
+//				result += ": " + .toString();
+//				break;
 		}
 		return result;
 	}

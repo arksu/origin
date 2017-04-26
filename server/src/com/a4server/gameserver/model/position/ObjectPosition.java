@@ -106,6 +106,11 @@ public class ObjectPosition
 	 */
 	public boolean trySpawn()
 	{
+		return trySpawn(5, 5);
+	}
+
+	public boolean trySpawn(int tries, int nearTries)
+	{
 		// получаем грид в указанной позиции
 		Grid grid = World.getInstance().getGridInWorldCoord(_x, _y, _level);
 		if (grid != null && _activeObject != null)
@@ -115,7 +120,7 @@ public class ObjectPosition
 			{
 				CollisionResult result;
 				// сначала пытаемся 5 раз заспавнить в указанные координаты
-				for (int tries = 0; tries < 5; tries++)
+				for (int t = 0; t < tries; t++)
 				{
 					result = grid.trySpawn(_activeObject);
 					if (result != null && result.getResultType() == CollisionResult.CollisionType.COLLISION_NONE)
@@ -126,7 +131,7 @@ public class ObjectPosition
 					Thread.sleep(Rnd.get(20, 120));
 				}
 				// ежели не получилось туда. спавним рядом
-				for (int tries = 0; tries < 10; tries++)
+				for (int t = 0; t < nearTries; t++)
 				{
 					result = grid.trySpawnNear(_activeObject, Grid.TILE_SIZE * 3, false);
 					if (result != null && result.getResultType() == CollisionResult.CollisionType.COLLISION_NONE)

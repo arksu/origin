@@ -2,9 +2,12 @@ package com.a4server.gameserver.model.ai.player;
 
 import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Player;
+import com.a4server.gameserver.model.ai.ArrivedCallback;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.model.position.MoveToObject;
+
+import static com.a4server.gameserver.model.collision.CollisionResult.CollisionType.COLLISION_OBJECT;
 
 /**
  * поведение для движения к объекту и взаимодействия с ним
@@ -16,22 +19,21 @@ public class MoveActionAI extends PlayerAI
 
 	private final ArrivedCallback _arrivedCallback;
 
-	public interface ArrivedCallback
-	{
-		void onArrived(CollisionResult moveResult);
-	}
-
-	public MoveActionAI(Player player, int objectId, ArrivedCallback callback)
+	public MoveActionAI(Player player, int targetObjectId, ArrivedCallback callback)
 	{
 		super(player);
-		_targetObjectId = objectId;
+		_targetObjectId = targetObjectId;
 		_arrivedCallback = callback;
 	}
 
 	@Override
 	public void onArrived(CollisionResult moveResult)
 	{
-		if (_arrivedCallback != null)
+		if (_arrivedCallback != null
+		    && moveResult.getResultType() == COLLISION_OBJECT
+		    && moveResult.getObject() != null
+		    && !moveResult.getObject().isDeleting()
+		    && moveResult.getObject().getObjectId() == _targetObjectId)
 		{
 			_arrivedCallback.onArrived(moveResult);
 		}
@@ -50,12 +52,21 @@ public class MoveActionAI extends PlayerAI
 	@Override
 	public void begin()
 	{
-		GameObject target = _player.getKnownKist().getKnownObjects().get(_targetObjectId);
-		// TODO move to object
-
-		if (target.getPos().getDistance(_player.getPos()) < 2000)
+		// проверим прилинкованный объект (возле которого уже стоим)
+		GameObject linkedObject = _player.getLinkedObject();
+		// если он совпадает с нашей целью - сразу вызовем каллбак
+		if (linkedObject != null && linkedObject.getObjectId() == _targetObjectId)
 		{
-			_player.startMove(new MoveToObject(target));
+			_arrivedCallback.onArrived(new CollisionResult(linkedObject, -1, -1));
+		}
+		else
+		{
+			GameObject target = _player.getKnownKist().getKnownObjects().get(_targetObjectId);
+
+			if (target.getPos().getDistance(_player.getPos()) < 3000)
+			{
+				_player.startMove(new MoveToObject(target));
+			}
 		}
 	}
 }

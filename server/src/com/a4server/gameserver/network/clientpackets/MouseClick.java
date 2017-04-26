@@ -2,6 +2,8 @@ package com.a4server.gameserver.network.clientpackets;
 
 import com.a4server.gameserver.model.*;
 import com.a4server.gameserver.model.ai.player.MoveActionAI;
+import com.a4server.gameserver.model.ai.player.MoveVirtualAI;
+import com.a4server.gameserver.model.collision.VirtualObject;
 import com.a4server.gameserver.model.inventory.AbstractItem;
 import com.a4server.gameserver.model.inventory.InventoryItem;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
@@ -12,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.a4server.gameserver.model.Cursor.CursorName.Arrow;
-import static com.a4server.gameserver.model.collision.CollisionResult.CollisionType.COLLISION_OBJECT;
 
 /**
  * клик по карте (тайлы, объекты)
@@ -115,11 +116,29 @@ public class MouseClick extends GameClientPacket
 							}
 							else
 							{
-								// попали по земле
-								GameObject lift = player.getLift(0);
-								if (lift != null)
+								if (_isDown)
 								{
-									GameObject delift = player.removeLift(0);
+									// попали по земле
+									GameObject lift = player.getLift(0);
+									if (lift != null)
+									{
+										player.setAi(new MoveVirtualAI(player, new VirtualObject(_x, _y, lift), moveResult ->
+										{
+											try (GameLock ignored2 = player.lock())
+											{
+												if (player.getLift(0) == lift)
+												{
+													_log.debug("arrive virtual: " + moveResult);
+													lift.getPos().setXY(_x, _y);
+													lift.getPos().setHeading(player.getPos().getHeading());
+													if (lift.getPos().trySpawn(1, 0))
+													{
+														player.removeLift(0);
+													}
+												}
+											}
+										}));
+									}
 								}
 							}
 							break;
@@ -143,56 +162,45 @@ public class MouseClick extends GameClientPacket
 		player.setAi(new MoveActionAI(player, _objectId, moveResult ->
 		{
 			GameObject object;
-			switch (moveResult.getResultType())
+			object = moveResult.getObject();
+
+			// этот объект вещь? т.е. вещь валяется на земле
+			if (object.isItem())
 			{
-				case COLLISION_OBJECT:
-					object = moveResult.getObject();
-					// наша цель совпадает с тем куда пришли?
-					if (object != null && object.getObjectId() == objectId && !object.isDeleting())
+				Grid grid = object.getGrid();
+				try (GameLock ignored = grid.lock())
+				{
+					// найдем вещь в базе
+					AbstractItem item = AbstractItem.load(player, objectId);
+					if (item != null)
 					{
-						// этот объект вещь? т.е. вещь валяется на земле
-						if (object.isItem())
+						// вещь обязательно должна быть помечена как удаленная
+						if (!item.isDeleted())
 						{
-							Grid grid = object.getGrid();
-							try (GameLock ignored = grid.lock())
-							{
-								// найдем вещь в базе
-								AbstractItem item = AbstractItem.load(player, objectId);
-								if (item != null)
-								{
-									// вещь обязательно должна быть помечена как удаленная
-									if (!item.isDeleted())
-									{
-										throw new RuntimeException("pickup item is not deleted! " + item);
-									}
-
-									// положим вещь в инвентарь игрока
-									InventoryItem putItem = player.getInventory().putItem(item);
-									// сначала пометим объект в базе как удаленный, а с вещи наоборот снимем пометку
-									if (putItem != null && object.markDeleted(true) && putItem.markDeleted(false))
-									{
-										// сохраним в базе
-										putItem.store();
-
-										// разошлем всем пакет с удалением объекта из мира
-										grid.removeObject(object);
-
-										player.sendInteractPacket(new InventoryUpdate(player.getInventory()));
-									}
-								}
-							}
+							throw new RuntimeException("pickup item is not deleted! " + item);
 						}
-						else
+
+						// положим вещь в инвентарь игрока
+						InventoryItem putItem = player.getInventory().putItem(item);
+						// сначала пометим объект в базе как удаленный, а с вещи наоборот снимем пометку
+						if (putItem != null && object.markDeleted(true) && putItem.markDeleted(false))
 						{
-							_log.debug("interact with object " + object.toString());
-							// надо провести взаимодействие с этим объектом
-							player.beginInteract(object);
+							// сохраним в базе
+							putItem.store();
+
+							// разошлем всем пакет с удалением объекта из мира
+							grid.removeObject(object);
+
+							player.sendInteractPacket(new InventoryUpdate(player.getInventory()));
 						}
 					}
-					break;
-
-				case COLLISION_NONE:
-					break;
+				}
+			}
+			else
+			{
+				_log.debug("interact with object " + object.toString());
+				// надо провести взаимодействие с этим объектом
+				player.beginInteract(object);
 			}
 		}));
 	}
@@ -213,16 +221,11 @@ public class MouseClick extends GameClientPacket
 				{
 					player.setAi(new MoveActionAI(player, _objectId, moveResult ->
 					{
-						if (moveResult.getResultType() == COLLISION_OBJECT
-						    && moveResult.getObject() != null
-						    && !moveResult.getObject().isDeleting()
-						    && moveResult.getObject().getObjectId() == _objectId)
+						GameObject object = moveResult.getObject();
+						try (GameLock ignored = player.lock(); GameLock ignored2 = object.lock())
 						{
-							try (GameLock ignored = player.lock(); GameLock ignored2 = moveResult.getObject().lock())
-							{
-								_log.debug("LIFT UP");
-								player.addLift(moveResult.getObject(), 0);
-							}
+							_log.debug("LIFT UP");
+							player.addLift(object, 0);
 						}
 					}));
 				}

@@ -13,6 +13,7 @@ import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.collision.Collision;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
+import com.a4server.gameserver.model.collision.VirtualObject;
 import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
@@ -696,7 +697,7 @@ public class Grid
 	                                                   int fromX, int fromY,
 	                                                   int toX, int toY,
 	                                                   Move.MoveType moveType,
-	                                                   GameObject virtual,
+	                                                   VirtualObject virtual,
 	                                                   boolean isMove)
 			throws GridLoadException
 	{

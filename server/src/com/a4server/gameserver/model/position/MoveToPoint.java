@@ -1,8 +1,6 @@
 package com.a4server.gameserver.model.position;
 
 import com.a4server.gameserver.model.collision.Move;
-import com.a4server.gameserver.network.serverpackets.GameServerPacket;
-import com.a4server.gameserver.network.serverpackets.ObjectMove;
 
 /**
  * движение объекта к заданной точке на карте
@@ -39,22 +37,4 @@ public class MoveToPoint extends MoveController
 	{
 		return Move.MoveType.WALK;
 	}
-
-	/**
-	 * создать пакет о передвижении объекта
-	 * @return пакет
-	 */
-	@Override
-	public GameServerPacket makeMovePacket()
-	{
-		return new ObjectMove(
-				_activeObject.getObjectId(),
-				_activeObject.getPos().getX(),
-				_activeObject.getPos().getY(),
-				_toX,
-				_toY,
-				(int) Math.round(_activeObject.getMoveSpeed())
-		);
-	}
-
 }

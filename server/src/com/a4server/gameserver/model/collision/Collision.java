@@ -43,10 +43,9 @@ public class Collision
 	public static final int WORLD_BUFFER_SIZE = Grid.TILE_SIZE * 5;
 
 	public static CollisionResult checkCollision(GameObject object, int fromX, int fromY, int toX, int toY,
-	                                             Move.MoveType moveType, GameObject virtual, List<Grid> grids,
+	                                             Move.MoveType moveType, VirtualObject virtual, List<Grid> grids,
 	                                             int targetObjId)
 	{
-
 		// проверим координаты на выход за пределы мира
 		if (checkWorldLimit(fromX, fromY) || checkWorldLimit(toX, toY))
 		{
@@ -103,11 +102,11 @@ public class Collision
 
 		if (virtual != null)
 		{
-			vrr = virtual.getBoundRect().clone().move(virtual.getPos().getX(), virtual.getPos().getY());
+			vrr = virtual.getBoundRect().clone().move(virtual.getX(), virtual.getY());
 		}
 
 		// проверим виртуальную коллизию
-		if (virtual != null && getCollision(object, virtual, false))
+		if (virtual != null && getCollision(object, virtual.getObject(), false))
 		{
 			if (rr.isIntersect(vrr))
 			{
@@ -163,7 +162,7 @@ public class Collision
 			}
 
 			// проверим виртуальную коллизию
-			if (virtual != null && getCollision(object, virtual, false))
+			if (virtual != null && getCollision(object, virtual.getObject(), false))
 			{
 				if (vrr.isIntersect(rr))
 				{

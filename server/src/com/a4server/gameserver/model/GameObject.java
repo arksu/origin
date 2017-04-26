@@ -1,9 +1,9 @@
 package com.a4server.gameserver.model;
 
 import com.a4server.Database;
+import com.a4server.gameserver.Broadcast;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.model.ai.player.MoveActionAI;
-import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.inventory.Inventory;
 import com.a4server.gameserver.model.objects.InventoryTemplate;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
@@ -539,17 +539,10 @@ public class GameObject
 		{
 			player.setAi(new MoveActionAI(player, _objectId, moveResult ->
 			{
-				// убедимся что прибыли к нужному объекту
-				if (moveResult.getResultType() == CollisionResult.CollisionType.COLLISION_OBJECT
-				    && moveResult.getObject().getObjectId() == _objectId)
-
-				// проверим что такой пункт еще реально есть по прибытии к объекту
+				List<String> cm = getContextMenu(player);
+				if (cm != null && cm.contains(item))
 				{
-					List<String> cm = getContextMenu(player);
-					if (cm != null && cm.contains(item))
-					{
-						contextRun(player, item);
-					}
+					contextRun(player, item);
 				}
 			}));
 		}
@@ -605,6 +598,10 @@ public class GameObject
 		return _lift.get(index);
 	}
 
+	/**
+	 * добавить прилинкованный объект
+	 * @param index слот в который садим объект
+	 */
 	public void addLift(GameObject o, int index)
 	{
 		Grid grid = o.getGrid();
@@ -622,9 +619,20 @@ public class GameObject
 		}
 	}
 
+	/**
+	 * удалить объект ил прилинкованных слотов
+	 * @param index слот
+	 */
 	public GameObject removeLift(int index)
 	{
-		return _lift.remove(index);
+		GameObject object = _lift.remove(index);
+		// если реально удалили
+		if (object != null)
+		{
+			// разошлем в грид пакет
+			Broadcast.toGrid(this, new ObjectLift(this));
+		}
+		return object;
 	}
 
 	/**

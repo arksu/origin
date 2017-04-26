@@ -1,13 +1,14 @@
 package com.a4server.gameserver.model.position;
 
 import com.a4server.Config;
-import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Human;
 import com.a4server.gameserver.model.MovingObject;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
+import com.a4server.gameserver.model.collision.VirtualObject;
 import com.a4server.gameserver.network.serverpackets.GameServerPacket;
+import com.a4server.gameserver.network.serverpackets.ObjectMove;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +78,7 @@ public abstract class MoveController
 	/**
 	 * виртуальный объект для обсчета коллизий
 	 */
-	protected GameObject getVirtualObject()
+	protected VirtualObject getVirtualObject()
 	{
 		return null;
 	}
@@ -86,7 +87,17 @@ public abstract class MoveController
 	 * создать пакет о том как движется объект
 	 * @return пакет
 	 */
-	public abstract GameServerPacket makeMovePacket();
+	public GameServerPacket makeMovePacket()
+	{
+		return new ObjectMove(
+				_activeObject.getObjectId(),
+				_activeObject.getPos().getX(),
+				_activeObject.getPos().getY(),
+				getToX(),
+				getToY(),
+				(int) Math.round(_activeObject.getMoveSpeed())
+		);
+	}
 
 	/**
 	 * внутренняя реализация движения. надо определить куда должны передвинутся за тик
@@ -197,7 +208,7 @@ public abstract class MoveController
 	protected boolean process(double toX,
 	                          double toY,
 	                          Move.MoveType moveType,
-	                          GameObject virtualObject)
+	                          VirtualObject virtualObject)
 	{
 		CollisionResult collision = checkColiision(toX, toY, moveType, virtualObject, true);
 		switch (collision.getResultType())
@@ -240,7 +251,7 @@ public abstract class MoveController
 	protected CollisionResult checkColiision(double toX,
 	                                         double toY,
 	                                         Move.MoveType moveType,
-	                                         GameObject virtualObject,
+	                                         VirtualObject virtualObject,
 	                                         boolean isMove)
 	{
 		Grid grid = _activeObject.getPos().getGrid();
