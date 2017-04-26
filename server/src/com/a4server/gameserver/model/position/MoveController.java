@@ -175,7 +175,7 @@ public abstract class MoveController
 				if (Math.pow(Config.UPDATE_DB_DISTANCE, 2) < (Math.pow(dx, 2) + Math.pow(dy, 2)))
 				{
 					// обновим состояние базе
-					_activeObject.storePosition();
+					_activeObject.getPos().store();
 					_storedX = _currentX;
 					_storedY = _currentY;
 				}

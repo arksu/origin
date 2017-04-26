@@ -1,6 +1,7 @@
 package com.a4server.gameserver.model.position;
 
 import com.a4server.Config;
+import com.a4server.Database;
 import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.MovingObject;
@@ -10,6 +11,14 @@ import com.a4server.util.Rnd;
 import com.a4server.util.Vec2i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import static com.a4server.gameserver.model.GameObject.DELETE;
+import static com.a4server.gameserver.model.GameObject.UPDATE_POSITION;
+import static com.a4server.gameserver.model.Player.UPDATE_CHARACTER_POS;
 
 /**
  * описание позиции объекта в игровом мире
@@ -32,6 +41,13 @@ public class ObjectPosition
 	private volatile int _level;
 
 	private volatile int _heading = 0;
+
+	private boolean _isStored = false;
+
+	/**
+	 * последние сохраненные данные
+	 */
+	private int _storedSuperGrid;
 
 	/**
 	 * грид в котором находимся
@@ -124,7 +140,7 @@ public class ObjectPosition
 			}
 			catch (Exception e)
 			{
-				_log.error("trySpawn error: " + e.getMessage(), e);
+				throw new RuntimeException(e);
 			}
 		}
 		_log.debug("spawn failed " + toString());
@@ -291,6 +307,7 @@ public class ObjectPosition
 		}
 	}
 
+	@SuppressWarnings("MethodDoesntCallSuperMethod")
 	@Override
 	public ObjectPosition clone()
 	{
@@ -300,6 +317,91 @@ public class ObjectPosition
 	public boolean equals(ObjectPosition p)
 	{
 		return _x == p._x && _y == p._y && _level == p._level;
+	}
+
+	@SuppressWarnings("SuspiciousNameCombination")
+	public void store()
+	{
+		if (_activeObject.isPlayer())
+		{
+			_log.debug("storePosition " + toString());
+			try
+			{
+				try (Connection con = Database.getInstance().getConnection();
+				     PreparedStatement ps = con.prepareStatement(UPDATE_CHARACTER_POS))
+				{
+					ps.setInt(1, _x);
+					ps.setInt(2, _y);
+					ps.setInt(3, _activeObject.getObjectId());
+					ps.execute();
+				}
+				_isStored = true;
+			}
+			catch (SQLException e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
+		else
+		{
+			// если сменился супергрид объекта - надо перенести целиком объект из одного в другой
+			if (_storedSuperGrid != _grid.getSg())
+			{
+				// TODO проверить корректность механизма
+				try
+				{
+					// удаляем целиком объкт из старого супергрида
+					String query = DELETE;
+					query = query.replaceFirst("sg_0", "sg_" + Integer.toString(_storedSuperGrid));
+					try (Connection con = Database.getInstance().getConnection();
+					     PreparedStatement ps = con.prepareStatement(query))
+					{
+						ps.setInt(1, _activeObject.getObjectId());
+						ps.execute();
+					}
+					// сохраним, при этом он запишется уже в новый
+					_activeObject.store();
+					_storedSuperGrid = _grid.getSg();
+				}
+				catch (SQLException e)
+				{
+					throw new RuntimeException(e);
+				}
+			}
+			else
+			{
+				_log.debug("storePosition " + toString());
+				String query = UPDATE_POSITION;
+				query = query.replaceFirst("sg_0", "sg_" + Integer.toString(_grid.getSg()));
+
+				// query queue
+				try (Connection con = Database.getInstance().getConnection();
+				     PreparedStatement statement = con.prepareStatement(query))
+				{
+					statement.setInt(1, _x);
+					statement.setInt(2, _y);
+					statement.setInt(3, _heading);
+					statement.setInt(4, _grid.getId());
+					statement.setInt(5, _activeObject.getObjectId());
+					statement.executeUpdate();
+					con.close();
+				}
+				catch (SQLException e)
+				{
+					throw new RuntimeException(e);
+				}
+			}
+			_isStored = true;
+		}
+
+		// также сохраним в базу позицию всех объектов которые несем
+		for (GameObject lift : _activeObject.getLift().values())
+		{
+			ObjectPosition pos = lift.getPos();
+			pos.setXY(_x, _y);
+			pos.setHeading(_heading);
+			pos.store();
+		}
 	}
 
 	@Override

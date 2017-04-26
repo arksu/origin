@@ -63,6 +63,7 @@ public class ObjectKnownList
 //		if (getActiveObject().)
 
 		boolean result = getKnownObjects().put(object.getObjectId(), object) == null;
+		// если в списке реально не было, добавим также в список игроков
 		if (result && object.isPlayer())
 		{
 			getKnownPlayers().put(object.getObjectId(), object.getActingPlayer());

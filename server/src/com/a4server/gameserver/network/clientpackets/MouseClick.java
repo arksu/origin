@@ -104,17 +104,30 @@ public class MouseClick extends GameClientPacket
 						case BUTTON_SECONDARY:
 							// клик по объекту?
 							GameObject object = player.getKnownKist().getKnownObjects().get(_objectId);
-							if (object != null && !_isDown)
+							if (object != null)
 							{
-								// пкм по объекту - посмотрим что сделает объект
-								_log.debug("actionClick on object: " + object);
-								object.actionClick(player);
+								if (!_isDown)
+								{
+									// пкм по объекту - посмотрим что сделает объект
+									_log.debug("actionClick on object: " + object);
+									object.actionClick(player);
+								}
+							}
+							else
+							{
+								// попали по земле
+								GameObject lift = player.getLift(0);
+								if (lift != null)
+								{
+									GameObject delift = player.removeLift(0);
+								}
 							}
 							break;
 					}
 				}
 				else
 				{
+					// есть курсор
 					if (_isDown)
 					{
 						cursorClick(player, _x, _y, _button);
@@ -179,9 +192,6 @@ public class MouseClick extends GameClientPacket
 					break;
 
 				case COLLISION_NONE:
-					// коллизии нет. мы знаем этот объект?
-					object = player.getKnownKist().getKnownObjects().get(objectId);
-
 					break;
 			}
 		}));
@@ -211,7 +221,7 @@ public class MouseClick extends GameClientPacket
 							try (GameLock ignored = player.lock(); GameLock ignored2 = moveResult.getObject().lock())
 							{
 								_log.debug("LIFT UP");
-								player.addLift(moveResult.getObject());
+								player.addLift(moveResult.getObject(), 0);
 							}
 						}
 					}));

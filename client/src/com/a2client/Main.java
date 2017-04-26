@@ -100,7 +100,7 @@ public class Main extends com.badlogic.gdx.Game
 		cfg.useGL30 = true;
 		cfg.vSyncEnabled = config._vSync;
 		cfg.foregroundFPS = config._framePerSecond;
-		cfg.backgroundFPS = config._reduceInBackground ? 5 : config._framePerSecond;
+		cfg.backgroundFPS = config._reduceInBackground ? 2 : config._framePerSecond;
 		cfg.samples = config._MSAASamples;
 		cfg.width = config.getScreenWidth();
 		cfg.height = config.getScreenHeight();

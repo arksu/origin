@@ -19,9 +19,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -41,6 +40,8 @@ public class GameObject
 	public static final String DELETE = "DELETE FROM sg_0_obj WHERE id=?";
 
 	public static final String MARK_DELETED = "UPDATE sg_0_obj SET del=? WHERE id=?";
+
+	public static final String UPDATE_POSITION = "UPDATE sg_0_obj SET x=?, y=?, heading=?, grid=? WHERE id=?";
 
 	/**
 	 * ид объекта, задается лишь единожды
@@ -89,9 +90,10 @@ public class GameObject
 	protected final Set<GameObject> _interactWith = ConcurrentHashMap.newKeySet(2);
 
 	/**
-	 * объект который несем над собой
+	 * объект который несем над собой, или в котором едем. по сути это контейнер для вложенных объектов
+	 * они больше не находятся в гриде, а обслуживаются только объектом который их "несет/везет"
 	 */
-	protected List<GameObject> _lift = Collections.synchronizedList(new ArrayList<>(1));
+	protected Map<Integer, GameObject> _lift = new ConcurrentHashMap<>();
 
 	/**
 	 * объект в процессе удаления из мира и ни на какие события больше не должен реагировать
@@ -593,23 +595,36 @@ public class GameObject
 		return null;
 	}
 
-	public List<GameObject> getLift()
+	public Map<Integer, GameObject> getLift()
 	{
 		return _lift;
 	}
 
-	public void addLift(GameObject o)
+	public GameObject getLift(int index)
 	{
-		_lift.add(o);
+		return _lift.get(index);
+	}
+
+	public void addLift(GameObject o, int index)
+	{
 		Grid grid = o.getGrid();
 		try (GameLock ignored = grid.lock())
 		{
-			// сначала расскажем всем что объект привязали к другому
-			grid.broadcastPacket(o, new ObjectLift(o.getObjectId(), this.getObjectId()));
+			if (!_lift.containsKey(index))
+			{
+				_lift.put(index, o);
+				// сначала расскажем всем что объект привязали к другому
+				grid.broadcastPacket(o, new ObjectLift(this));
 
-			// и только потом удалим его нафиг из грида и мира
-			grid.removeObject(o);
+				// и только потом удалим его нафиг из грида и мира
+				grid.removeObject(o);
+			}
 		}
+	}
+
+	public GameObject removeLift(int index)
+	{
+		return _lift.remove(index);
 	}
 
 	/**
