@@ -249,16 +249,32 @@ public class Collision
 		{
 			return false;
 		}
-		ObjectTemplate template = obj2.getTemplate();
-		if (template != null)
+
+		boolean c1 = true;
+		ObjectTemplate template1 = obj2.getTemplate();
+		if (template1 != null)
 		{
-			CollisionTemplate collisionTemplate = template.getCollision();
+			CollisionTemplate collisionTemplate = template1.getCollision();
 			if (collisionTemplate != null)
 			{
-				return collisionTemplate.getCollision(obj1);
+				c1 = collisionTemplate.getCollision(obj1);
 			}
 		}
-		return true;
+
+		boolean c2 = true;
+		if (c1)
+		{
+			ObjectTemplate template2 = obj1.getTemplate();
+			if (template2 != null)
+			{
+				CollisionTemplate collisionTemplate = template2.getCollision();
+				if (collisionTemplate != null)
+				{
+					c2 = collisionTemplate.getCollision(obj2);
+				}
+			}
+		}
+		return c1 && c2;
 	}
 
 	/**

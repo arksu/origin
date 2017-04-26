@@ -539,10 +539,13 @@ public class GameObject
 		{
 			player.setAi(new MoveActionAI(player, _objectId, moveResult ->
 			{
-				List<String> cm = getContextMenu(player);
-				if (cm != null && cm.contains(item))
+				try (GameLock ignored = player.lock())
 				{
-					contextRun(player, item);
+					List<String> cm = getContextMenu(player);
+					if (cm != null && cm.contains(item))
+					{
+						contextRun(player, item);
+					}
 				}
 			}));
 		}

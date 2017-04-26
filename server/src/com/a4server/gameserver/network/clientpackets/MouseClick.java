@@ -118,10 +118,11 @@ public class MouseClick extends GameClientPacket
 							{
 								if (_isDown)
 								{
-									// попали по земле
+									// держим что-то над головой?
 									GameObject lift = player.getLift(0);
 									if (lift != null)
 									{
+										// движемся в точку куда должны поставить объект
 										player.setAi(new MoveVirtualAI(player, new VirtualObject(_x, _y, lift), moveResult ->
 										{
 											try (GameLock ignored2 = player.lock())
@@ -168,7 +169,7 @@ public class MouseClick extends GameClientPacket
 			if (object.isItem())
 			{
 				Grid grid = object.getGrid();
-				try (GameLock ignored = grid.lock())
+				try (GameLock ignored = grid.lock(); GameLock ignored2 = player.lock())
 				{
 					// найдем вещь в базе
 					AbstractItem item = AbstractItem.load(player, objectId);
