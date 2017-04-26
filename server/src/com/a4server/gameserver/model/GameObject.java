@@ -195,6 +195,8 @@ public class GameObject
 
 	public boolean markDeleted(boolean value)
 	{
+		if (isPlayer()) return true;
+
 		String query = MARK_DELETED;
 		query = query.replaceFirst("sg_0", "sg_" + Integer.toString(getPos().getGrid().getSg()));
 
@@ -289,6 +291,18 @@ public class GameObject
 			try (GameLock ignored = getGrid().lock())
 			{
 				getGrid().removeObject(this);
+			}
+
+			if (_lift.size() > 0)
+			{
+				for (GameObject object : _lift.values())
+				{
+					object.getPos().setXY(getPos().getX(), getPos().getY());
+					if (object.getPos().trySpawn())
+					{
+						object.getPos().store();
+					}
+				}
 			}
 		}
 	}

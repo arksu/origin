@@ -89,7 +89,8 @@
 		"collision": {
 			"all": false
 		},
-		"class": "tree_log"
+		"class": "tree_log",
+		"lift": true
 	},
 	"pine_stump": {
 		"typeId": 24,

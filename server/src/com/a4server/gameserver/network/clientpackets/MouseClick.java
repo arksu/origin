@@ -220,15 +220,19 @@ public class MouseClick extends GameClientPacket
 			case LiftUp:
 				if (_objectId != 0)
 				{
-					player.setAi(new MoveActionAI(player, _objectId, moveResult ->
+					GameObject target = player.getKnownKist().getKnownObjects().get(_objectId);
+					if (target != null && target.getTemplate().isLiftable())
 					{
-						GameObject object = moveResult.getObject();
-						try (GameLock ignored = player.lock(); GameLock ignored2 = object.lock())
+						player.setAi(new MoveActionAI(player, _objectId, moveResult ->
 						{
-							_log.debug("LIFT UP");
-							player.addLift(object, 0);
-						}
-					}));
+							GameObject object = moveResult.getObject();
+							try (GameLock ignored = player.lock(); GameLock ignored2 = object.lock())
+							{
+								_log.debug("LIFT UP");
+								player.addLift(object, 0);
+							}
+						}));
+					}
 				}
 				player.setCursor(Arrow);
 				break;

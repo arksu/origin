@@ -166,6 +166,12 @@ public class Player extends Human
 		{
 			return null;
 		}
+
+		@Override
+		public boolean isLiftable()
+		{
+			return false;
+		}
 	}
 
 	@Override
@@ -246,6 +252,18 @@ public class Player extends Human
 		grid.deactivate(this);
 	}
 
+	@Override
+	public void delete()
+	{
+		super.delete();
+
+		// деактивировать занятые гриды
+		for (Grid g : _grids)
+		{
+			g.deactivate(this);
+		}
+	}
+
 	/**
 	 * создает пакет при добавлении игрока в мир, его основные параметры
 	 * пакет остылается всем окружающим, поэтому тут должно быть все что связано с отображением игрока в мире
@@ -282,29 +300,7 @@ public class Player extends Human
 	{
 		_isDeleting = true;
 
-		// деактивировать занятые гриды
-		for (Grid g : _grids)
-		{
-			g.deactivate(this);
-		}
-		Grid grid = getPos().getGrid();
-		if (grid != null)
-		{
-			try
-			{
-				grid.tryLockSafe(Grid.MAX_WAIT_LOCK);
-				grid.removeObject(this);
-			}
-			catch (InterruptedException e)
-			{
-				_log.warn("deleteMe: InterruptedException");
-				e.printStackTrace();
-			}
-			finally
-			{
-				grid.unlock();
-			}
-		}
+		delete();
 
 		// удалим игрока из мира
 		if (!World.getInstance().removePlayer(getObjectId()))

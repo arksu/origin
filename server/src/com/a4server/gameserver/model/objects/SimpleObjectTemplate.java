@@ -20,6 +20,7 @@ public class SimpleObjectTemplate implements ObjectTemplate
 	private int _typeId;
 	private int _width = 10;
 	private int _height = 10;
+	private boolean _isLiftable = false;
 	private Class<? extends GameObject> _class;
 	private CollisionTemplate _collision = null;
 	private InventoryTemplate _inventory = null;
@@ -89,6 +90,10 @@ public class SimpleObjectTemplate implements ObjectTemplate
 			_item = ItemTemplate.load(in, _typeId, _name, this);
 			ObjectsFactory.getInstance().addItemTemplate(_item.getTypeId(), _item);
 		}
+		else if ("lift".equalsIgnoreCase(paramName))
+		{
+			_isLiftable = in.nextBoolean();
+		}
 	}
 
 	@Override
@@ -137,5 +142,11 @@ public class SimpleObjectTemplate implements ObjectTemplate
 	public ItemTemplate getItem()
 	{
 		return _item;
+	}
+
+	@Override
+	public boolean isLiftable()
+	{
+		return _isLiftable;
 	}
 }

@@ -38,4 +38,9 @@ public interface ObjectTemplate
 	InventoryTemplate getInventory();
 
 	ItemTemplate getItem();
+
+	/**
+	 * можно ли поднимать над собой?
+	 */
+	boolean isLiftable();
 }
