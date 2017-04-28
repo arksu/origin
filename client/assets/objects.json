@@ -1,8 +1,7 @@
 [
 	{
 		"typeId": 0,
-		"model": "unknown",
-		"scale": 0.5
+		"model": "unknown"
 	},
 	{
 		// player
@@ -19,31 +18,26 @@
 	},
 	{
 		"typeId": 2,
-		"model": "fern",
-		"scale": 0.2
+		"model": "fern"
 	},
 	{
 		// appleTree
 		"typeId": 11,
-		"scale": 0.2,
 		"model": "pine"
 	},
 	{
 		// pine Tree
 		"typeId": 14,
-		"scale": 0.2,
 		"model": "pine"
 	},
 	{
 		// stone
 		"typeId": 21,
-		"scale": 0.5,
-		"model": "stone"
+		"model": "stone_obj"
 	},
 	{
 		// stoneAxe
 		"typeId": 16,
-		"scale": 0.2,
 		"model": "axe"
 	},
 	{
@@ -55,6 +49,11 @@
 		// apple
 		"typeId": 19,
 		"model": "apple"
+	},
+	{
+		// stone
+		"typeId": 25,
+		"model": "stone"
 	},
 	{
 		// board
