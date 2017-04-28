@@ -37,37 +37,44 @@ craft
   orig: 29, 28
   offset: 1, -1
   index: -1
-seed
+lift_up
   rotate: false
   xy: 32, 34
+  size: 12, 19
+  orig: 12, 19
+  offset: 10, -6
+  index: -1
+seed
+  rotate: false
+  xy: 46, 34
   size: 20, 20
   orig: 20, 20
   offset: 7, -6
   index: -1
 spawn
   rotate: false
-  xy: 54, 34
+  xy: 68, 34
   size: 17, 17
   orig: 17, 17
   offset: 8, -7
   index: -1
 stone
   rotate: false
-  xy: 73, 34
+  xy: 87, 34
   size: 19, 18
   orig: 19, 18
   offset: 8, -7
   index: -1
 stone_axe
   rotate: false
-  xy: 94, 34
+  xy: 1, 64
   size: 31, 63
   orig: 31, 63
   offset: 0, -2
   index: -1
 unknown
   rotate: false
-  xy: 1, 99
+  xy: 34, 64
   size: 17, 28
   orig: 17, 28
   offset: 8, -2

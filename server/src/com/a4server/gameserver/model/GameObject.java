@@ -293,10 +293,12 @@ public class GameObject
 				getGrid().removeObject(this);
 			}
 
+			// если есть что-то вложенное внутри
 			if (_lift.size() > 0)
 			{
 				for (GameObject object : _lift.values())
 				{
+					// все это попытаемся заспавнить рядом
 					object.getPos().setXY(getPos().getX(), getPos().getY());
 					if (object.getPos().trySpawn())
 					{

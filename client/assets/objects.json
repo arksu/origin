@@ -6,15 +6,7 @@
 	{
 		// player
 		"typeId": 1,
-		//		"model": "cube",
-		"model": "player",
-		//		"model": "trex",
-		//		"model": "Rabbit",
-		//		"model": "stone",
-		//		"model": "unknown",
-		//		"model": "pine_tree_1",
-		//		"model": "rabbit.g3dj",
-		"scale": 1
+		"model": "player"
 	},
 	{
 		"typeId": 2,

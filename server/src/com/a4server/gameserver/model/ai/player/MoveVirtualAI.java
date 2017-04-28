@@ -28,7 +28,10 @@ public class MoveVirtualAI extends PlayerAI
 	{
 		if (_arrivedCallback != null)
 		{
-			_arrivedCallback.onArrived(moveResult);
+			if (moveResult.getResultType() == CollisionResult.CollisionType.COLLISION_NONE)
+			{
+				_arrivedCallback.onArrived(moveResult);
+			}
 		}
 	}
 

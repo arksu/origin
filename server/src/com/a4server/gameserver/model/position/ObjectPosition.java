@@ -180,6 +180,10 @@ public class ObjectPosition
 	 */
 	public void setXY(int x, int y)
 	{
+		Vec2i d = new Vec2i(_x - x, _y - y);
+		_log.debug("d=" + d);
+		_heading = Vec2i.z.direction(d);
+		_log.debug("_heading=" + _heading);
 		_x = x;
 		_y = y;
 		updateGrid();
