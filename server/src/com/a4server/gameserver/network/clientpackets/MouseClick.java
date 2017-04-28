@@ -76,6 +76,8 @@ public class MouseClick extends GameClientPacket
 						case BUTTON_PRIMARY:
 							if (_isDown)
 							{
+								GameObject object = player.getKnownKist().getKnownObjects().get(_objectId);
+
 								// в руке что-то держим?
 								if (player.getHand() != null)
 								{
@@ -87,7 +89,8 @@ public class MouseClick extends GameClientPacket
 									}
 								}
 								// кликнули в объект?
-								else if (_objectId != 0 && _objectId != player.getObjectId())
+								else if (_objectId != 0 && _objectId != player.getObjectId()
+								         && object != null && !object.isDeleting())
 								{
 									moveToObjectAction(player, _objectId);
 								}
@@ -104,41 +107,40 @@ public class MouseClick extends GameClientPacket
 
 						case BUTTON_SECONDARY:
 							// клик по объекту?
-							GameObject object = player.getKnownKist().getKnownObjects().get(_objectId);
-							if (object != null)
+
+							if (!_isDown)
 							{
-								if (!_isDown)
+								// держим что-то над головой?
+								GameObject lift = player.getLift(0);
+								if (lift != null)
 								{
-									// пкм по объекту - посмотрим что сделает объект
-									_log.debug("actionClick on object: " + object);
-									object.actionClick(player);
-								}
-							}
-							else
-							{
-								if (!_isDown)
-								{
-									// держим что-то над головой?
-									GameObject lift = player.getLift(0);
-									if (lift != null)
+									// движемся в точку куда должны поставить объект
+									player.setAi(new MoveVirtualAI(player, new VirtualObject(_x, _y, lift), moveResult ->
 									{
-										// движемся в точку куда должны поставить объект
-										player.setAi(new MoveVirtualAI(player, new VirtualObject(_x, _y, lift), moveResult ->
+										try (GameLock ignored2 = player.lock())
 										{
-											try (GameLock ignored2 = player.lock())
+											if (player.getLift(0) == lift)
 											{
-												if (player.getLift(0) == lift)
+												_log.debug("arrive virtual: " + moveResult);
+												lift.getPos().setXY(_x, _y);
+												lift.getPos().setHeading(player.getPos().getHeading());
+												if (lift.getPos().trySpawn(1, 0))
 												{
-													_log.debug("arrive virtual: " + moveResult);
-													lift.getPos().setXY(_x, _y);
-													lift.getPos().setHeading(player.getPos().getHeading());
-													if (lift.getPos().trySpawn(1, 0))
-													{
-														player.removeLift(0);
-													}
+													player.removeLift(0);
 												}
 											}
-										}));
+										}
+									}));
+								}
+								else
+								{
+									GameObject object = player.getKnownKist().getKnownObjects().get(_objectId);
+									if (object != null && !object.isDeleting())
+									{
+
+										// пкм по объекту - посмотрим что сделает объект
+										_log.debug("actionClick on object: " + object);
+										object.actionClick(player);
 									}
 								}
 							}
@@ -196,12 +198,6 @@ public class MouseClick extends GameClientPacket
 						}
 					}
 				}
-			}
-			else
-			{
-				_log.debug("interact with object " + object.toString());
-				// надо провести взаимодействие с этим объектом
-				player.beginInteract(object);
 			}
 		}));
 	}

@@ -364,6 +364,11 @@ public class GameObject
 		_lock.unlock();
 	}
 
+	public boolean isLocked()
+	{
+		return _lock.isLocked();
+	}
+
 	/**
 	 * создать пакет о добавлении меня в мир
 	 * @return пакет
@@ -418,40 +423,31 @@ public class GameObject
 	}
 
 	/**
-	 * начать взаимодействие с другим объектом
+	 * я (игрок) начинаю взаимодействие с другим объектом
 	 * @param other другой объект c которым мы будем взаимодействовать
 	 */
 	public void beginInteract(GameObject other)
 	{
-		// TODO убрать interact, слить в одно. различие только в interactImpl(other);
-
-		boolean wasEmpty = _interactWith.isEmpty();
-		if (_interactWith.add(other))
+		if (other != null)
 		{
-			other.interact(this);
-			if (wasEmpty)
-			{
-				// изменилось состояние
-				// создадим для этого событие чтобы уведомить остальных
-				setInteractive(true);
-			}
+			this.interact(other, false);
+			other.interact(this, true);
 		}
 	}
 
 	/**
-	 * взаимодействие с другим объектом
+	 * я (подчиненный) взаимодействую с другим объектом
 	 * @param other другой объект который взаимодействует со мной
 	 */
-	protected void interact(GameObject other)
+	protected void interact(GameObject other, boolean impl)
 	{
-		if (other == null)
-		{
-			return;
-		}
 		boolean wasEmpty = _interactWith.isEmpty();
 		if (_interactWith.add(other))
 		{
-			interactImpl(other);
+			if (impl)
+			{
+				interactImpl(other);
+			}
 			if (wasEmpty)
 			{
 				// изменилось состояние
@@ -498,9 +494,7 @@ public class GameObject
 	{
 		_log.debug(toString() + " setInteractive " + value);
 
-		// TODO !! слать пакет интерактива! см beginInteract
-		new ObjectInteractive(_objectId, value);
-
+		Broadcast.toGrid(this, new ObjectInteractive(_objectId, value));
 	}
 
 	/**
@@ -513,6 +507,7 @@ public class GameObject
 			o.unlink(this);
 		}
 		_interactWith.clear();
+		setInteractive(false);
 	}
 
 	/**
@@ -577,12 +572,24 @@ public class GameObject
 	/**
 	 * клик мышкой по объекту для совершения действия (пкм на объекте)
 	 */
-	public void actionClick(Player player)
+	public void actionClick(final Player player)
 	{
-		List<String> contextMenu = getContextMenu(player);
-		if (contextMenu != null)
+		// если у объекта есть инвентарь - надо подойти к объекту и открыть его
+		if (getTemplate().getInventory() != null)
 		{
-			player.getClient().sendPacket(new ContextMenu(_objectId, contextMenu));
+			// клик по объекту. бежим к нему и делаем действие над ним
+			player.setAi(new MoveActionAI(player, getObjectId(), moveResult ->
+			{
+				player.beginInteract(this);
+			}));
+		}
+		else
+		{
+			List<String> contextMenu = getContextMenu(player);
+			if (contextMenu != null)
+			{
+				player.getClient().sendPacket(new ContextMenu(_objectId, contextMenu));
+			}
 		}
 	}
 
@@ -623,12 +630,17 @@ public class GameObject
 	 */
 	public void addLift(GameObject o, int index)
 	{
+		if (!o.isLocked())
+		{
+			throw new IllegalStateException("object is not locked");
+		}
 		Grid grid = o.getGrid();
 		try (GameLock ignored = grid.lock())
 		{
 			if (!_lift.containsKey(index))
 			{
 				_lift.put(index, o);
+				o.unlinkFromAll();
 				// сначала расскажем всем что объект привязали к другому
 				grid.broadcastPacket(o, new ObjectLift(this));
 

@@ -2,6 +2,7 @@ package com.a2client.model;
 
 import com.a2client.ModelManager;
 import com.a2client.Terrain;
+import com.a2client.g3d.Animation;
 import com.a2client.g3d.Model;
 import com.a2client.network.game.serverpackets.ObjectAdd;
 import com.a2client.util.Utils;
@@ -126,6 +127,10 @@ public class GameObject
 
 	public void setInteractive(boolean interactive)
 	{
+		if (_interactive != interactive)
+		{
+			_model.playAnimation(interactive ? "open" : "close", 1f, 0.3f, Animation.LoopMode.Last);
+		}
 		_interactive = interactive;
 	}
 

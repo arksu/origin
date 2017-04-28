@@ -340,11 +340,16 @@ public class Model
 
 	public void playAnimation(String name)
 	{
+		playAnimation(name, 1.0f, 0.3f, Animation.LoopMode.Repeat);
+	}
+
+	public void playAnimation(String name, float blendWeight, float blendTime, Animation.LoopMode loopMode)
+	{
 		AnimationData animationData = _data.getAnimation(name);
 		if (animationData != null)
 		{
 			Animation animation = new Animation(animationData);
-			animation.play();
+			animation.play(blendWeight, blendTime, loopMode);
 			_animations.add(0, animation);
 		}
 	}

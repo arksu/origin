@@ -48,7 +48,7 @@ public class GUI_GameArea extends GUI_Control
 				{
 					// закончим вращение перетаскивание камеры
 					cameraEndDrag = _game.getCamera().getStartDrag() != null
-									&& !_game.getCamera().getStartDrag().equals(new Vec2i(Gdx.input.getX(), Gdx.input.getY()));
+					                && !_game.getCamera().getStartDrag().equals(new Vec2i(Gdx.input.getX(), Gdx.input.getY()));
 					_game.getCamera().startDrag(null);
 				}
 			}
@@ -57,7 +57,10 @@ public class GUI_GameArea extends GUI_Control
 			if (_game.getWorldMousePos() != null)
 			{
 				int action = -1;
-				if (btn == BUTTON_ACTION_PRIMARY && (!cameraEndDrag || BUTTON_ACTION_PRIMARY != BUTTON_CAMERA)) action = 0;
+				if (btn == BUTTON_ACTION_PRIMARY && (!cameraEndDrag || BUTTON_ACTION_PRIMARY != BUTTON_CAMERA))
+				{
+					action = 0;
+				}
 				if (btn == BUTTON_ACTION_SECONDARY && (!cameraEndDrag || BUTTON_ACTION_SECONDARY != BUTTON_CAMERA))
 				{
 					action = 1;
