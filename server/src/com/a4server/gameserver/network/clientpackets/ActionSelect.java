@@ -3,6 +3,8 @@ package com.a4server.gameserver.network.clientpackets;
 import com.a4server.gameserver.model.Cursor;
 import com.a4server.gameserver.model.GameLock;
 import com.a4server.gameserver.model.Player;
+import com.a4server.gameserver.model.objects.ObjectTemplate;
+import com.a4server.gameserver.model.objects.ObjectsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,9 +44,18 @@ public class ActionSelect extends GameClientPacket
 				{
 					player.setCursor(LiftUp);
 				}
-				else if ("spawn_pine".equals(_name))
+//				else if ("spawn_pine".equals(_name))
+//				{
+//					player.setCursor(Spawn, 14);
+//				}
+				else if (_name.startsWith("spawn_"))
 				{
-					player.setCursor(Spawn, 14);
+					String obname = _name.substring(6);
+					ObjectTemplate template = ObjectsFactory.getInstance().getTemplate(obname);
+					if (template != null)
+					{
+						player.setCursor(Spawn, template.getTypeId());
+					}
 				}
 				else
 				{

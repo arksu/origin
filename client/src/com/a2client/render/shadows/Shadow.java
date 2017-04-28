@@ -19,7 +19,7 @@ import static com.badlogic.gdx.math.Matrix4.*;
  */
 public class Shadow
 {
-	private static final int SHADOW_MAP_SIZE = 2048;
+	private static final int SHADOW_MAP_SIZE = 4096;
 
 	private final DepthFrameBuffer _frameBuffer;
 

@@ -116,7 +116,7 @@ public class MouseClick extends GameClientPacket
 							}
 							else
 							{
-								if (_isDown)
+								if (!_isDown)
 								{
 									// держим что-то над головой?
 									GameObject lift = player.getLift(0);
@@ -223,15 +223,24 @@ public class MouseClick extends GameClientPacket
 					GameObject target = player.getKnownKist().getKnownObjects().get(_objectId);
 					if (target != null && target.getTemplate().isLiftable())
 					{
-						player.setAi(new MoveActionAI(player, _objectId, moveResult ->
+						if (target.getPos().getDistance(player.getPos()) > 2)
 						{
-							GameObject object = moveResult.getObject();
-							try (GameLock ignored = player.lock(); GameLock ignored2 = object.lock())
+							player.setAi(new MoveActionAI(player, _objectId, moveResult ->
 							{
-								_log.debug("LIFT UP");
-								player.addLift(object, 0);
+								GameObject object = moveResult.getObject();
+								try (GameLock ignored = player.lock(); GameLock ignored2 = object.lock())
+								{
+									player.addLift(object, 0);
+								}
+							}));
+						}
+						else
+						{
+							try (GameLock ignored2 = target.lock())
+							{
+								player.addLift(target, 0);
 							}
-						}));
+						}
 					}
 				}
 				player.setCursor(Arrow);

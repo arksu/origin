@@ -4,6 +4,7 @@ import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Grid;
 import com.a4server.gameserver.model.Player;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
+import com.a4server.gameserver.model.objects.ObjectsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,5 +36,16 @@ public class Stone extends GameObject
 		List<String> list = new ArrayList<>();
 		list.add("chip_stone");
 		return list;
+	}
+
+	@Override
+	protected void contextRun(Player player, String contextItem)
+	{
+		_log.debug("context: " + contextItem);
+
+		if ("chip_stone".equals(contextItem))
+		{
+			player.generateItem(ObjectsFactory.getInstance().getTemplate("stone").getTypeId(), getQuality(), true);
+		}
 	}
 }

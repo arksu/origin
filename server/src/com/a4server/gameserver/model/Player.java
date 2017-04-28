@@ -544,9 +544,13 @@ public class Player extends Human
 		if (_accessLevel > 0)
 		{
 			list.add(new ActionItem("online"));
+
 			ActionItem spawn = new ActionItem("spawn");
 			list.add(spawn);
-			spawn.add(new ActionItem("spawn_pine"));
+			spawn.add(new ActionItem("spawn_pine_tree"));
+			spawn.add(new ActionItem("spawn_apple_tree"));
+			spawn.add(new ActionItem("spawn_box"));
+			spawn.add(new ActionItem("spawn_stone"));
 
 			list.add(new ActionItem("tile_up"));
 			list.add(new ActionItem("tile_down"));
