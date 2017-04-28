@@ -42,8 +42,6 @@ public class ObjectPosition
 
 	private volatile int _heading = 0;
 
-	private boolean _isStored = false;
-
 	/**
 	 * последние сохраненные данные
 	 */
@@ -180,10 +178,6 @@ public class ObjectPosition
 	 */
 	public void setXY(int x, int y)
 	{
-		Vec2i d = new Vec2i(_x - x, _y - y);
-		_log.debug("d=" + d);
-		_heading = Vec2i.z.direction(d);
-		_log.debug("_heading=" + _heading);
 		_x = x;
 		_y = y;
 		updateGrid();
@@ -238,19 +232,19 @@ public class ObjectPosition
 	 */
 	protected void setGrid(Grid value)
 	{
-		if ((_grid != null) && (getActiveObject() != null))
-		{
-			if (value != null)
-			{
-				// ставим не нулл
-				// в старом гриде надо обновить состояние зон?????
-			}
-			else
-			{
-				// ставим нулл
-				// в старом гриде удалим игрока из всех зон??????
-			}
-		}
+//		if ((_grid != null) && (getActiveObject() != null))
+//		{
+//			if (value != null)
+//			{
+		// ставим не нулл
+		// в старом гриде надо обновить состояние зон?????
+//			}
+//			else
+//			{
+		// ставим нулл
+		// в старом гриде удалим игрока из всех зон??????
+//			}
+//		}
 
 		// проинформируем объект что перешли в другой грид
 		if (getActiveObject() instanceof MovingObject)
@@ -333,7 +327,6 @@ public class ObjectPosition
 	{
 		if (_activeObject.isPlayer())
 		{
-			_log.debug("storePosition " + toString());
 			try
 			{
 				try (Connection con = Database.getInstance().getConnection();
@@ -344,7 +337,6 @@ public class ObjectPosition
 					ps.setInt(3, _activeObject.getObjectId());
 					ps.execute();
 				}
-				_isStored = true;
 			}
 			catch (SQLException e)
 			{
@@ -379,7 +371,6 @@ public class ObjectPosition
 			}
 			else
 			{
-				_log.debug("storePosition " + toString());
 				String query = UPDATE_POSITION;
 				query = query.replaceFirst("sg_0", "sg_" + Integer.toString(_grid.getSg()));
 
@@ -400,7 +391,6 @@ public class ObjectPosition
 					throw new RuntimeException(e);
 				}
 			}
-			_isStored = true;
 		}
 
 		// также сохраним в базу позицию всех объектов которые несем

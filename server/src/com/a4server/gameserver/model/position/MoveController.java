@@ -119,8 +119,26 @@ public abstract class MoveController
 		double tmpX = _currentX + (tdx / td) * d;
 		double tmpY = _currentY + (tdy / td) * d;
 
+		int heading = -1;
+		if (d > 1)
+		{
+			if (tdy != 0 && tdx != 0)
+			{
+				double a = Math.atan2(tdx, tdy);
+				if (a < 0)
+				{
+					a += Math.PI + Math.PI;
+				}
+				heading = (int) Math.round(Math.toDegrees(a));
+			}
+		}
+
 		if (process(tmpX, tmpY, getMoveType(), getVirtualObject()))
 		{
+			if (heading >= 0)
+			{
+				_activeObject.getPos().setHeading(heading);
+			}
 			td = Math.sqrt(Math.pow(_currentX - toX, 2) + Math.pow(_currentY - toY, 2));
 
 			// предел расстояния до конечной точки на котором считаем что пришли куда надо
@@ -145,7 +163,12 @@ public abstract class MoveController
 	 * возможно ли начать движение
 	 * @return да или нет
 	 */
-	public boolean canStartMoving()
+	public boolean start()
+	{
+		return checkStartCollision() == CollisionResult.NONE;
+	}
+
+	public CollisionResult checkStartCollision()
 	{
 		// COPYPAST! ^^^ movingImpl
 
@@ -163,7 +186,7 @@ public abstract class MoveController
 		double tmpY = _currentY + (tdy / td) * d;
 
 		// проверим коллизию на передвижение за 1 тик
-		return (checkColiision(tmpX, tmpY, getMoveType(), null, false) == CollisionResult.NONE);
+		return checkColiision(tmpX, tmpY, getMoveType(), null, false);
 	}
 
 	/**

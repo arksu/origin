@@ -13,6 +13,10 @@
 		"model": "fern"
 	},
 	{
+		"typeId": 15,
+		"model": "chest"
+	},
+	{
 		// appleTree
 		"typeId": 11,
 		"model": "pine"

@@ -40,15 +40,15 @@ public class MoveToObject extends MoveController
 	}
 
 	@Override
-	public boolean canStartMoving()
+	public CollisionResult checkStartCollision()
 	{
 		// объект был удален. двигатся больше некуда
 		if (_object.isDeleting())
 		{
-			return false;
+			return CollisionResult.FAIL;
 		}
 
-		return super.canStartMoving();
+		return super.checkStartCollision();
 	}
 
 	@Override

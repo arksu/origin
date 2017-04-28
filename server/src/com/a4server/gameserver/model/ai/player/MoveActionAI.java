@@ -65,7 +65,13 @@ public class MoveActionAI extends PlayerAI
 
 			if (target.getPos().getDistance(_player.getPos()) < 3000)
 			{
-				_player.startMove(new MoveToObject(target));
+				CollisionResult result = _player.startMove(new MoveToObject(target));
+
+				// движение почему то не началось, проверим коллизию - может мы уже там куда нам надо
+				if (_player.getMoveController() == null)
+				{
+					onArrived(result);
+				}
 			}
 		}
 	}

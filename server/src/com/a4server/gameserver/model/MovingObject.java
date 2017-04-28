@@ -65,12 +65,14 @@ public abstract class MovingObject extends GameObject
 	/**
 	 * начать передвижение объекта
 	 * @param controller контроллер движения
+	 * @return результат коллизии если вдруг не началось движение можно проверить куда упираемся
 	 */
-	public void startMove(MoveController controller)
+	public CollisionResult startMove(MoveController controller)
 	{
 		controller.setActiveObject(this);
 		// сначала проверим возможно ли вообще движение?
-		if (controller.canStartMoving())
+		CollisionResult startCollision = controller.checkStartCollision();
+		if (startCollision == CollisionResult.NONE)
 		{
 			unlinkFromAll();
 			// если уже стоял контроллер - возможно двигались.
@@ -96,11 +98,16 @@ public abstract class MovingObject extends GameObject
 		}
 		else
 		{
+			if (_moveController != null)
+			{
+				stopMove(startCollision);
+			}
 			if (Config.DEBUG)
 			{
 				_log.debug("cant start move");
 			}
 		}
+		return startCollision;
 	}
 
 	/**

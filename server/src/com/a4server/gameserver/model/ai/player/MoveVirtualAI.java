@@ -7,6 +7,9 @@ import com.a4server.gameserver.model.collision.VirtualObject;
 import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.model.position.MoveToVirtual;
 
+import static com.a4server.gameserver.model.collision.CollisionResult.CollisionType.COLLISION_NONE;
+import static com.a4server.gameserver.model.collision.CollisionResult.CollisionType.COLLISION_VIRTUAL;
+
 /**
  * Created by arksu on 26.04.17.
  */
@@ -28,7 +31,7 @@ public class MoveVirtualAI extends PlayerAI
 	{
 		if (_arrivedCallback != null)
 		{
-			if (moveResult.getResultType() == CollisionResult.CollisionType.COLLISION_NONE)
+			if (moveResult.getResultType() == COLLISION_NONE || moveResult.getResultType() == COLLISION_VIRTUAL)
 			{
 				_arrivedCallback.onArrived(moveResult);
 			}

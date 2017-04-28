@@ -13,3 +13,5 @@ server/tmp
 
 client/logs
 server/logs
+
+*.blend1

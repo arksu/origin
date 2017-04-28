@@ -549,7 +549,7 @@ public class Player extends Human
 			list.add(spawn);
 			spawn.add(new ActionItem("spawn_pine_tree"));
 			spawn.add(new ActionItem("spawn_apple_tree"));
-			spawn.add(new ActionItem("spawn_box"));
+			spawn.add(new ActionItem("spawn_chest"));
 			spawn.add(new ActionItem("spawn_stone"));
 
 			list.add(new ActionItem("tile_up"));

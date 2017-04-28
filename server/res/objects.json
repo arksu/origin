@@ -16,8 +16,9 @@
 		"typeId": 14,
 		"class": "tree"
 	},
-	"box": {
+	"chest": {
 		"typeId": 15,
+		"lift": true,
 		"inventory": {
 			"acceptAll": true,
 			"exclude": [

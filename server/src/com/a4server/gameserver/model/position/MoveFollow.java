@@ -33,20 +33,8 @@ public class MoveFollow extends MoveController
 	}
 
 	@Override
-	public boolean canStartMoving()
-	{
-		return false;
-	}
-
-	@Override
 	public GameServerPacket makeMovePacket()
 	{
 		return null;
-	}
-
-	@Override
-	public boolean movingImpl(double dt)
-	{
-		return false;
 	}
 }
