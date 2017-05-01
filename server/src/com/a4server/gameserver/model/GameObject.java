@@ -468,6 +468,12 @@ public class GameObject
 		if (_inventory != null)
 		{
 			// todo открыть инвентарь объекта
+			Player player = other.getActingPlayer();
+			if (player != null)
+			{
+				// TODO
+//				player.sendInteractPacket();
+			}
 		}
 	}
 

@@ -340,7 +340,7 @@ public class Grid
 	/**
 	 * задание загрузки грида
 	 */
-	class LoadGridTask implements Runnable
+	private static class LoadGridTask implements Runnable
 	{
 		private final Grid _grid;
 
