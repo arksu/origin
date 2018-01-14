@@ -2,6 +2,7 @@
 
 subprojects {
     apply plugin: 'java'
+    distsDirName = 'distr'
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
     apply plugin: 'idea'

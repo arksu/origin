@@ -1,18 +1,9 @@
 # client
 
 game client for MMO game Origin
-http://origin-world.com
 
+build client distributive:
 
-to build client distributive just run:
+```gradle build``` - distributive will be in ./build/distr
 
-```gradle build```
-
-distributive will be in ./build/dist
-
-
-also you can use 
-
-```gradle rc```
-
-for build and run the client
+also you can start client from sources by gradle  - ```gradle rc```

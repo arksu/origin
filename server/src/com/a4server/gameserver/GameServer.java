@@ -56,7 +56,7 @@ public class GameServer
 		_instance = new GameServer();
 	}
 
-	public GameServer() throws Exception
+	private GameServer() throws Exception
 	{
 		Config.load();
 		ObjectClasses.init();
@@ -66,7 +66,7 @@ public class GameServer
 
 		long serverLoadStart = System.currentTimeMillis();
 		_instance = this;
-		_log.info(getClass().getSimpleName() + ": used mem:" + getUsedMemoryMB() + "MB");
+		_log.info(getClass().getSimpleName() + ": used mem: " + getUsedMemoryMB() + "MB");
 
 		IdFactory _idFactory = IdFactory.getInstance();
 

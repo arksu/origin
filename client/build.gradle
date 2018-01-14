@@ -22,12 +22,12 @@ dependencies {
 
 jar {
     manifest {
-        def manifestClasspath = configurations.runtime.collect{ "./libs/"+it.getName() }.join(' ')
-        attributes (
+        def manifestClasspath = configurations.runtime.collect { "./libs/" + it.getName() }.join(' ')
+        attributes(
                 'Implementation-Title': 'Origin game client',
-                'Implementation-URL'  : 'http://www.origin-world.com/',
-                'Main-Class'          : 'com.a2client.Main',
-                'Class-Path'          : manifestClasspath
+                'Implementation-URL': 'http://ark.su/',
+                'Main-Class': 'com.a2client.Main',
+                'Class-Path': manifestClasspath
         )
     }
 }
@@ -44,12 +44,14 @@ task zip(type: Zip, dependsOn: build) {
 
     def fileName = 'Origin_Client_' + new Date().format("yyyy-MM-dd")
     baseName = fileName
-    println 'Build in build/distributions/' + fileName + '.zip'
+    doLast {
+        println 'Built in build/distr/' + fileName + '.zip'
+    }
 }
 
 build.finalizedBy(zip)
 
-task "rc" (type:JavaExec, dependsOn:[classes]) {
+task "rc"(type: JavaExec, dependsOn: [classes]) {
     main = 'com.a2client.Main'
     classpath = sourceSets.main.runtimeClasspath
     args = ['-s', 'localhost', '-p', '2040', '-q', '-g', '127.0.0.1']

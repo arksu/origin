@@ -18,7 +18,7 @@ def generalManifest = manifest {
     attributes('Built-By': System.getProperty('user.name'),
             'Built-Date': new Date().format("yyyy-MM-dd HH:mm:ss"),
             'Implementation-URL': 'http://www.origin-world.com/',
-            'Class-Path': configurations.runtime.collect{ "../libs/"+it.getName() }.join(' '))
+            'Class-Path': configurations.runtime.collect { "../libs/" + it.getName() }.join(' '))
 }
 
 task jarGameServer(type: Jar, dependsOn: classes) {
@@ -97,7 +97,9 @@ task zip(type: Zip, dependsOn: build) {
 
     def fileName = 'Origin_Server_' + new Date().format("yyyy-MM-dd")
     baseName = fileName
-    println 'Build in build/distributions/' + fileName + '.zip'
+    doLast {
+        println 'Built in build/distr/' + fileName + '.zip'
+    }
 }
 
 build.finalizedBy(zip)
@@ -108,13 +110,6 @@ build.finalizedBy(zip)
 task "rg"(type: JavaExec, dependsOn: [classes]) {
     main = 'com.a4server.gameserver.GameServer'
     classpath = sourceSets.main.runtimeClasspath
-}
-
-// run game server with init db
-task "rgi"(type: JavaExec, dependsOn: [classes]) {
-    main = 'com.a4server.gameserver.GameServer'
-    classpath = sourceSets.main.runtimeClasspath
-    args = ['-initdb']
 }
 
 // run map import into game
