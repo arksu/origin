@@ -23,6 +23,9 @@ import com.a2client.util.Align;
 import com.a2client.util.Vec2i;
 import com.badlogic.gdx.graphics.Color;
 
+/**
+ * простая подсказка над контролом
+ */
 public class SimpleHint
 {
     static String hint_font = "default";

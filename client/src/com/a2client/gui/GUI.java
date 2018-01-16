@@ -49,7 +49,7 @@ public class GUI
 	private boolean[] _mouseBtns = new boolean[3];
 
 	// отступ от мыши для хинта
-	private static final int HINT_OFFSET = 15;
+	private static final int HINT_OFFSET = 10;
 
 	static public GUI getInstance() { return _instance; }
 
@@ -162,6 +162,7 @@ public class GUI
 		int y = _mousePos.y;
 
 		// ищем куда вывести хинт
+		// сначала определимся с X
 		if (x + HINT_OFFSET + w > Config.getInstance().getScreenWidth())
 		{
 			x = Config.getInstance().getScreenWidth() - w;
@@ -170,13 +171,15 @@ public class GUI
 		{
 			x += HINT_OFFSET;
 		}
-		if (y + HINT_OFFSET + h > Config.getInstance().getScreenHeight())
+
+		// определимся с Y
+		if (y - HINT_OFFSET - h < 0)
 		{
-			y -= (h + 5);
+			y += 5;
 		}
 		else
 		{
-			y += HINT_OFFSET;
+			y -= HINT_OFFSET + h;
 		}
 
 		// выводим хинт
