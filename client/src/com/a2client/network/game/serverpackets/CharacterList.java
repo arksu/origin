@@ -15,18 +15,20 @@ public class CharacterList extends GameServerPacket
 		GamePacketHandler.AddPacketType(0x03, CharacterList.class);
 	}
 
-	static public final List<CharacterData> _chars = new ArrayList<CharacterData>();
+	static public final List<CharacterData> _chars = new ArrayList<>();
 	static public int _last_char;
 
 	public class CharacterData
 	{
 		public String _char_name;
 		public int _char_id;
+		public boolean _last;
 
 		protected CharacterData()
 		{
 			_char_id = readD();
 			_char_name = readS();
+			_last = readC() == 1;
 		}
 	}
 
@@ -48,13 +50,13 @@ public class CharacterList extends GameServerPacket
 	public void run()
 	{
 		CharacterSelect.Show();
-		if (Config.getInstance()._quickLoginMode)
+		if (Config.getInstance()._loginLastChar)
 		{
 			if (Main.getInstance().getScreen() instanceof CharacterSelect)
 			{
 				((CharacterSelect) Main.getInstance().getScreen()).charSelected(_last_char);
 			}
 		}
-		Config.getInstance()._quickLoginMode = false;
+		Config.getInstance()._loginLastChar = false;
 	}
 }

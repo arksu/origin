@@ -89,6 +89,9 @@ public class Config
 	@Option(name = "-p", usage = "password")
 	public String _password;
 
+	@Option(name = "-last", usage = "fast login by use last character")
+	public boolean _loginLastChar = false;
+
 	/**
 	 * раземры экрана в полноэкранном режиме
 	 */

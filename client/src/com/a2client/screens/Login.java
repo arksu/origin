@@ -33,7 +33,7 @@ public class Login extends BaseScreen
 	/**
 	 * gui контролы экрана логина
 	 */
-	GUI_Button btn_login, btn_exit, btn_options;
+	private GUI_Button btn_login, btn_exit, btn_options;
 	GUI_Label lbl_login, lbl_password, lbl_status;
 	GUI_Edit edit_login, edit_password;
 	GUI_Texture logo;
@@ -145,6 +145,8 @@ public class Login extends BaseScreen
 		btn_login.enabled = false;
 		edit_login.enabled = false;
 		edit_password.enabled = false;
+
+		Config.getInstance()._quickLoginMode = false;
 
 		if (Net.getConnection() != null)
 		{

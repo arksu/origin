@@ -55,7 +55,8 @@ public class CharacterSelect extends BaseScreen
 					charSelected(charId);
 				}
 			};
-			btn.caption = c._char_name;
+			// добавим * если это последний использованный чар
+			btn.caption = (c._last ? "* " : "") + c._char_name;
 			btn.setPos(0, posY);
 			btn.setSize(150, 25);
 			btn.centerX();
