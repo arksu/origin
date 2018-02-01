@@ -36,7 +36,7 @@ public class Player extends Human
 
 	private static final String LOAD_CHARACTER = "SELECT account, charName, x, y, lvl, accessLevel, face, hairColor, hairStyle, sex, lastAccess, onlineTime, title, createDate FROM characters WHERE del=0 AND charId = ?";
 	private static final String UPDATE_LAST_CHAR = "UPDATE accounts SET lastChar = ? WHERE login = ?";
-	public static final String UPDATE_CHARACTER_POS = "UPDATE characters SET x=?, y=? WHERE charId=?";
+	public static final String UPDATE_CHARACTER_POS = "UPDATE characters SET x=?, y=?, onlineTime=? WHERE charId=?";
 
 	private GameClient _client = null;
 
@@ -54,6 +54,11 @@ public class Player extends Human
 	 * уровень доступа. 0 - обычный игрок
 	 */
 	private int _accessLevel;
+
+	/**
+	 * время проведенное в игре
+	 */
+	private long _onlineTime;
 
 	/**
 	 * игрок онлайн?
@@ -81,9 +86,9 @@ public class Player extends Human
 			_account = rset.getString("account");
 			_name = rset.getString("charName");
 			_title = rset.getString("title");
+			_onlineTime = rset.getLong("onlinetime");
 
 			//                    player._lastAccess = rset.getLong("lastAccess");
-			//                    player.setOnlineTime(rset.getLong("onlinetime"));
 			//                    player.getCreateDate().setTime(rset.getDate("createDate"));
 			setPos(new ObjectPosition(rset.getInt("x"),
 			                          rset.getInt("y"),
@@ -372,6 +377,11 @@ public class Player extends Human
 	public void setOnlineStatus(boolean status)
 	{
 		_isOnline = status;
+	}
+
+	public long getOnlineTime()
+	{
+		return _onlineTime;
 	}
 
 	/**

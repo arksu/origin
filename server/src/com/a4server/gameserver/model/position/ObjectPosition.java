@@ -2,10 +2,7 @@ package com.a4server.gameserver.model.position;
 
 import com.a4server.Config;
 import com.a4server.Database;
-import com.a4server.gameserver.model.GameObject;
-import com.a4server.gameserver.model.Grid;
-import com.a4server.gameserver.model.MovingObject;
-import com.a4server.gameserver.model.World;
+import com.a4server.gameserver.model.*;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.util.Rnd;
 import com.a4server.util.Vec2i;
@@ -334,7 +331,8 @@ public class ObjectPosition
 				{
 					ps.setInt(1, _x);
 					ps.setInt(2, _y);
-					ps.setInt(3, _activeObject.getObjectId());
+					ps.setLong(3, ((Player) _activeObject).getOnlineTime());
+					ps.setInt(4, _activeObject.getObjectId());
 					ps.execute();
 				}
 			}
