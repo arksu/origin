@@ -41,6 +41,8 @@ public class GUI_InventoryItem extends GUI_Control
 		_item = item;
 		_x = _item.getX();
 		_y = _item.getY();
+
+		_simpleHint = "<" + item.getIcon() + "> q=" + item.getQ() + " cnt=" + item.getAmount();
 	}
 
 	/**
@@ -77,9 +79,9 @@ public class GUI_InventoryItem extends GUI_Control
 	public boolean contains(int x, int y)
 	{
 		return _item != null &&
-				x >= _item.getX() && y >= _item.getY() &&
-				x < _item.getX() + _item.getWidth() &&
-				y < _item.getY() + _item.getHeight();
+		       x >= _item.getX() && y >= _item.getY() &&
+		       x < _item.getX() + _item.getWidth() &&
+		       y < _item.getY() + _item.getHeight();
 	}
 
 	/**
