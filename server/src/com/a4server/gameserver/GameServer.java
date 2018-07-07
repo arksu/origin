@@ -24,8 +24,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.Locale;
+
+import static com.a4server.Config.IS_WEBSOCKET_SERVER;
 
 /**
  * Created by arksu on 01.01.2015.
@@ -105,7 +108,16 @@ public class GameServer
 
 		try
 		{
-			StartListen();
+			if (IS_WEBSOCKET_SERVER)
+			{
+				GameWebsocket gameWebsocket = new GameWebsocket(new InetSocketAddress(Config.GAME_SERVER_HOST, 8080));
+				gameWebsocket.run();
+				_log.info(getClass().getSimpleName() + ": started websocket");
+			}
+			else
+			{
+				StartListenNetty();
+			}
 		}
 		catch (Exception e)
 		{
@@ -115,7 +127,7 @@ public class GameServer
 
 	}
 
-	private void StartListen() throws Exception
+	private void StartListenNetty() throws Exception
 	{
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup(Config.GAME_NET_WORKER_THREADS);
@@ -144,11 +156,11 @@ public class GameServer
 			// the current allocation pool, freeMemory the unused memory in the
 			// allocation pool
 			long freeMem = ((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory())
-					+ Runtime.getRuntime().freeMemory()) / 1048576;
+			                + Runtime.getRuntime().freeMemory()) / 1048576;
 			long totalMem = Runtime.getRuntime().maxMemory() / 1048576;
 			long usedMem = Runtime.getRuntime().totalMemory() / 1048576;
 			_log.info(getClass()
-							  .getSimpleName() + ": Started, free memory " + freeMem + " Mb of " + totalMem + " Mb used :" + usedMem + " Mb");
+					          .getSimpleName() + ": Started, free memory " + freeMem + " Mb of " + totalMem + " Mb used :" + usedMem + " Mb");
 
 			future.sync().channel().closeFuture().sync();
 		}

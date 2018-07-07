@@ -19,6 +19,8 @@ public class Config
 
 	public static boolean DEBUG;
 
+	public static boolean IS_WEBSOCKET_SERVER = true;
+
 	public static String LOGIN_BIND_ADDRESS;
 	// куда коннектится клиенту
 	public static String GAME_SERVER_HOST;
