@@ -16,36 +16,37 @@ public class GameWebsocket extends WebSocketServer
 	public GameWebsocket(InetSocketAddress address)
 	{
 		super(address);
+		setReuseAddr(true);
 		setTcpNoDelay(true);
 	}
 
 	@Override
 	public void onOpen(WebSocket conn, ClientHandshake handshake)
 	{
-		_log.debug("open");
+		_log.debug("ws open: " + conn.getRemoteSocketAddress().toString());
 	}
 
 	@Override
 	public void onClose(WebSocket conn, int code, String reason, boolean remote)
 	{
-		_log.debug("close");
+		_log.debug("ws close");
 	}
 
 	@Override
 	public void onMessage(WebSocket conn, String message)
 	{
-		_log.debug("message");
+		_log.debug("ws message");
 	}
 
 	@Override
 	public void onError(WebSocket conn, Exception ex)
 	{
-		_log.debug("error");
+		_log.debug("ws error: " + ex.getMessage());
 	}
 
 	@Override
 	public void onStart()
 	{
-		_log.debug("start");
+		_log.debug("ws started");
 	}
 }
