@@ -4,10 +4,15 @@ import com.a4server.loginserver.LoginClient;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.msgpack.core.MessagePack;
+import org.msgpack.core.MessageUnpacker;
+import org.msgpack.value.ImmutableValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 
 public class GameWebsocket extends WebSocketServer
 {
@@ -35,7 +40,24 @@ public class GameWebsocket extends WebSocketServer
 	@Override
 	public void onMessage(WebSocket conn, String message)
 	{
-		_log.debug("ws message");
+		_log.debug("ws message: " + message);
+	}
+
+	@Override
+	public void onMessage(WebSocket conn, ByteBuffer message)
+	{
+		_log.debug("ws message bin: " + message);
+
+		MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(message);
+		try
+		{
+			ImmutableValue value = unpacker.unpackValue();
+			System.out.println(value);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override

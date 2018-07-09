@@ -112,7 +112,7 @@ public class GameServer
 			{
 				GameWebsocket gameWebsocket = new GameWebsocket(new InetSocketAddress(Config.GAME_SERVER_HOST, 8080));
 				gameWebsocket.run();
-				_log.info(getClass().getSimpleName() + ": started websocket");
+				_log.info(getClass().getSimpleName() + ": websocket finished");
 			}
 			else
 			{
