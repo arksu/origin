@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
@@ -48,16 +49,17 @@ public class GameWebsocket extends WebSocketServer
 	{
 		_log.debug("ws message bin: " + message);
 
-		MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(message);
+		byte[] bytes = message.array();
+		String s = null;
 		try
 		{
-			ImmutableValue value = unpacker.unpackValue();
-			System.out.println(value);
+			s = new String(bytes,"UTF-8");
 		}
-		catch (IOException e)
+		catch (UnsupportedEncodingException e)
 		{
 			e.printStackTrace();
 		}
+		_log.debug("s: " + s);
 	}
 
 	@Override
