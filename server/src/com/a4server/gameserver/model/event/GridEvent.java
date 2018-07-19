@@ -1,7 +1,7 @@
 package com.a4server.gameserver.model.event;
 
 import com.a4server.gameserver.model.GameObject;
-import com.a4server.gameserver.network.serverpackets.GameServerPacket;
+import com.a4server.gameserver.network.packets.serverpackets.GameServerPacket;
 
 /**
  * базовое игровое событие

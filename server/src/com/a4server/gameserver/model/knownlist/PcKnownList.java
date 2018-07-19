@@ -1,6 +1,6 @@
 package com.a4server.gameserver.model.knownlist;
 
-import com.a4server.gameserver.GameClient;
+import com.a4server.gameserver.network.packets.GamePktClient;
 import com.a4server.gameserver.model.GameObject;
 import com.a4server.gameserver.model.Player;
 
@@ -41,7 +41,7 @@ public class PcKnownList extends ObjectKnownList
 			return false;
 		}
 
-		GameClient client = getActivePlayer().getClient();
+		GamePktClient client = getActivePlayer().getClient();
 		if (client != null)
 		{
 			client.sendPacket(object.makeRemoveFromWorldPacket());

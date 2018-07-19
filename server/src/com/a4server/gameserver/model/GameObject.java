@@ -9,7 +9,7 @@ import com.a4server.gameserver.model.objects.InventoryTemplate;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
 import com.a4server.gameserver.model.position.ObjectPosition;
-import com.a4server.gameserver.network.serverpackets.*;
+import com.a4server.gameserver.network.packets.serverpackets.*;
 import com.a4server.util.Rect;
 import com.a4server.util.network.BaseSendPacket;
 import org.slf4j.Logger;

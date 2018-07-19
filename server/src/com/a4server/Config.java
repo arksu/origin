@@ -25,6 +25,8 @@ public class Config
 	// куда коннектится клиенту
 	public static String GAME_SERVER_HOST;
 	public static int GAME_SERVER_PORT;
+	public static int GAME_WEBSOCKET_SERVER_PORT;
+
 	public static int PORT_LOGIN;
 	// сколько потоков обслуживают сеть
 	public static int LOGIN_NET_WORKER_THREADS;
@@ -88,6 +90,8 @@ public class Config
 		WORLD_SG_WIDTH = 1;
 		WORLD_SG_HEIGHT = 1;
 		WORLD_LEVELS = 5;
+
+		GAME_WEBSOCKET_SERVER_PORT = 8080;
 	}
 
 	public static void loadLoginServerConfig()

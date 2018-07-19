@@ -1,7 +1,6 @@
 package com.a4server.gameserver.model;
 
 import com.a4server.Database;
-import com.a4server.gameserver.GameClient;
 import com.a4server.gameserver.GameTimeController;
 import com.a4server.gameserver.idfactory.IdFactory;
 import com.a4server.gameserver.model.inventory.AbstractItem;
@@ -13,7 +12,9 @@ import com.a4server.gameserver.model.objects.InventoryTemplate;
 import com.a4server.gameserver.model.objects.ItemTemplate;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.ObjectPosition;
-import com.a4server.gameserver.network.serverpackets.*;
+import com.a4server.gameserver.network.packets.GamePktClient;
+import com.a4server.gameserver.network.packets.serverpackets.*;
+import com.a4server.gameserver.network.websocket.GameClient;
 import com.a4server.util.Rnd;
 import com.a4server.util.network.BaseSendPacket;
 import org.slf4j.Logger;
@@ -38,7 +39,9 @@ public class Player extends Human
 	private static final String UPDATE_LAST_CHAR = "UPDATE accounts SET lastChar = ? WHERE login = ?";
 	public static final String UPDATE_CHARACTER_POS = "UPDATE characters SET x=?, y=?, onlineTime=? WHERE charId=?";
 
-	private GameClient _client = null;
+	private GamePktClient _client = null;
+
+	private GameClient _websocketClient = null;
 
 	/**
 	 * представление игрока (цвет волос, пол и тд)
@@ -343,7 +346,7 @@ public class Player extends Human
 		}
 	}
 
-	public void setClient(GameClient client)
+	public void setClient(GamePktClient client)
 	{
 		if (_client != null && client != null)
 		{
@@ -352,9 +355,19 @@ public class Player extends Human
 		_client = client;
 	}
 
-	public GameClient getClient()
+	public GamePktClient getClient()
 	{
 		return _client;
+	}
+
+	public GameClient getWebsocketClient()
+	{
+		return _websocketClient;
+	}
+
+	public void setWebsocketClient(GameClient websocketClient)
+	{
+		_websocketClient = websocketClient;
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package com.a4server.gameserver;
 
 import com.a4server.gameserver.model.GameObject;
-import com.a4server.gameserver.network.serverpackets.GameServerPacket;
+import com.a4server.gameserver.network.packets.serverpackets.GameServerPacket;
 
 /**
  * рассылка различных уведомлений / событий / пакетов

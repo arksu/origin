@@ -7,8 +7,8 @@ import com.a4server.gameserver.model.MovingObject;
 import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.collision.Move;
 import com.a4server.gameserver.model.collision.VirtualObject;
-import com.a4server.gameserver.network.serverpackets.GameServerPacket;
-import com.a4server.gameserver.network.serverpackets.ObjectMove;
+import com.a4server.gameserver.network.packets.serverpackets.GameServerPacket;
+import com.a4server.gameserver.network.packets.serverpackets.ObjectMove;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

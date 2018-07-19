@@ -1,7 +1,7 @@
 package com.a4server.gameserver.model;
 
 import com.a4server.ThreadPoolManager;
-import com.a4server.gameserver.network.serverpackets.ActionProgress;
+import com.a4server.gameserver.network.packets.serverpackets.ActionProgress;
 
 import java.util.concurrent.Future;
 

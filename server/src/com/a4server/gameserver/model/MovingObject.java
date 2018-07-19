@@ -6,7 +6,7 @@ import com.a4server.gameserver.model.collision.CollisionResult;
 import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.MoveController;
-import com.a4server.gameserver.network.serverpackets.ObjectPos;
+import com.a4server.gameserver.network.packets.serverpackets.ObjectPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

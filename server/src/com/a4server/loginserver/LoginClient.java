@@ -64,14 +64,9 @@ public class LoginClient extends NetClient
 			try
 			{
 				final ChannelFuture f = _channel.writeAndFlush(new LoginFail(reason));
-				f.addListener(new ChannelFutureListener()
-				{
-					@Override
-					public void operationComplete(ChannelFuture future)
-					{
-						assert f == future;
-						_channel.close();
-					}
+				f.addListener((ChannelFutureListener) future -> {
+					assert f == future;
+					_channel.close();
 				});
 			}
 			catch (Exception e)

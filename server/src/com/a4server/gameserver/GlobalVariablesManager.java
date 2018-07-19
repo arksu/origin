@@ -23,13 +23,12 @@ public class GlobalVariablesManager
 	public final void saveVarInt(String var, int val)
 	{
 		try (Connection con = Database.getInstance().getConnection();
-			 PreparedStatement statement = con.prepareStatement(SAVE_VAR_INT))
+		     PreparedStatement statement = con.prepareStatement(SAVE_VAR_INT))
 		{
 			statement.setString(1, var);
 			statement.setInt(2, val);
 			statement.setInt(3, val);
 			statement.executeUpdate();
-			con.close();
 		}
 		catch (Exception e)
 		{
@@ -40,7 +39,7 @@ public class GlobalVariablesManager
 	public final int getVarInt(String var)
 	{
 		try (Connection con = Database.getInstance().getConnection();
-			 PreparedStatement statement = con.prepareStatement(LOAD_VAR_INT))
+		     PreparedStatement statement = con.prepareStatement(LOAD_VAR_INT))
 		{
 			statement.setString(1, var);
 			try (ResultSet rset = statement.executeQuery())

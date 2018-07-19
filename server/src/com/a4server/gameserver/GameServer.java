@@ -8,7 +8,9 @@ import com.a4server.gameserver.idfactory.IdFactory;
 import com.a4server.gameserver.model.World;
 import com.a4server.gameserver.model.objects.ObjectsFactory;
 import com.a4server.gameserver.model.objects.impl.ObjectClasses;
-import com.a4server.gameserver.network.GameServerHandler;
+import com.a4server.gameserver.network.packets.GamePktClient;
+import com.a4server.gameserver.network.packets.GameServerHandler;
+import com.a4server.gameserver.network.websocket.GameWebsocketServer;
 import com.a4server.util.network.AsyncPacketReader;
 import com.a4server.util.network.PacketDecoder;
 import com.a4server.util.network.PacketEncoder;
@@ -38,7 +40,7 @@ public class GameServer
 	private static Logger _log;
 	private static GameServer _instance;
 	private InetAddress _bindAddress = null;
-	private final AsyncPacketReader<GameClient> _reader;
+	private final AsyncPacketReader<GamePktClient> _reader;
 
 	public static void main(String[] args) throws Exception
 	{
@@ -110,8 +112,8 @@ public class GameServer
 		{
 			if (IS_WEBSOCKET_SERVER)
 			{
-				GameWebsocket gameWebsocket = new GameWebsocket(new InetSocketAddress(Config.GAME_SERVER_HOST, 8080));
-				gameWebsocket.run();
+				GameWebsocketServer gameWebsocketServer = new GameWebsocketServer(new InetSocketAddress(Config.GAME_SERVER_HOST, Config.GAME_WEBSOCKET_SERVER_PORT));
+				gameWebsocketServer.run();
 				_log.info(getClass().getSimpleName() + ": websocket finished");
 			}
 			else

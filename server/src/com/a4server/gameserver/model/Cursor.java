@@ -1,6 +1,6 @@
 package com.a4server.gameserver.model;
 
-import com.a4server.gameserver.network.serverpackets.CursorSet;
+import com.a4server.gameserver.network.packets.serverpackets.CursorSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

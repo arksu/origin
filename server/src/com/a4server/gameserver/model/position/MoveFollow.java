@@ -1,7 +1,7 @@
 package com.a4server.gameserver.model.position;
 
 import com.a4server.gameserver.model.collision.Move;
-import com.a4server.gameserver.network.serverpackets.GameServerPacket;
+import com.a4server.gameserver.network.packets.serverpackets.GameServerPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -6,7 +6,7 @@ import com.a4server.gameserver.model.event.GridEvent;
 import com.a4server.gameserver.model.knownlist.ObjectKnownList;
 import com.a4server.gameserver.model.objects.ObjectTemplate;
 import com.a4server.gameserver.model.position.ObjectPosition;
-import com.a4server.gameserver.network.clientpackets.ChatMessage;
+import com.a4server.gameserver.network.packets.clientpackets.ChatMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
